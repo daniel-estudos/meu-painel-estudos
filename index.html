@@ -127,11 +127,11 @@
             cursor: pointer;
         }
 
-        .reminder-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+        .reminder-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
 
+        /* Lembretes com Cores */
         .reminder-item {
-            background: rgba(255, 255, 255, 0.85);
-            padding: 6px 8px;
+            padding: 6px 10px;
             border-radius: 6px;
             font-size: 0.75rem;
             font-weight: 700;
@@ -139,12 +139,18 @@
             justify-content: space-between;
             align-items: center;
             color: #000000;
-            border: 1px solid rgba(0,0,0,0.05);
+            border-left: 5px solid #000000;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
+
+        .reminder-red { background: #fee2e2; border-left-color: #dc2626; }
+        .reminder-yellow { background: #fef9c3; border-left-color: #ca8a04; }
+        .reminder-green { background: #dcfce7; border-left-color: #16a34a; }
+        .reminder-default { background: rgba(255, 255, 255, 0.9); border-left-color: #475569; }
 
         .reminder-item span { cursor: pointer; color: #dc2626; font-weight: bold; margin-left: 6px; }
 
-        /* Bate-Papo Avançado */
+        /* Bate-Papo */
         .chat-box { display: flex; flex-direction: column; gap: 10px; }
 
         .chat-messages {
@@ -208,7 +214,6 @@
             font-size: 0.75rem;
         }
 
-        /* Banner de Resposta Ativa */
         .reply-preview {
             display: none;
             background: rgba(255, 255, 255, 0.9);
@@ -303,10 +308,9 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // VARIÁVEIS DE ADMIN E RESPOSTA
         let isAdmin = false;
         const ADMIN_PASSWORD = "404";
-        let activeReplyTarget = null; // Guarda a mensagem que está sendo respondida
+        let activeReplyTarget = null;
 
         window.toggleAdmin = function() {
             if (!isAdmin) {
@@ -328,15 +332,23 @@
             }
         };
 
-        // Lembretes
+        // Lembretes com Cores
         window.addReminder = async function(subjectId) {
             const text = prompt("Digite o lembrete para compartilhar com a turma:");
             if (!text || !text.trim()) return;
+
+            const colorOption = prompt("Escolha a cor do lembrete:\n1 - 🔴 Vermelho (Provas/Testes)\n2 - 🟡 Amarelo (Trabalhos/Entregas)\n3 - 🟢 Verde (Leitura/Tarefas)\n4 - ⚪ Padrão (Avisos Gerais)\n\nDigite o número da opção (1 a 4):", "4");
+
+            let colorClass = 'reminder-default';
+            if (colorOption === '1') colorClass = 'reminder-red';
+            else if (colorOption === '2') colorClass = 'reminder-yellow';
+            else if (colorOption === '3') colorClass = 'reminder-green';
 
             try {
                 await addDoc(collection(db, "reminders"), {
                     subjectId: subjectId,
                     text: text.trim(),
+                    colorClass: colorClass,
                     createdAt: new Date()
                 });
             } catch (e) { console.error("Erro:", e); }
@@ -360,7 +372,8 @@
                 const list = document.getElementById(`list-${data.subjectId}`);
                 if (list) {
                     const div = document.createElement('div');
-                    div.className = 'reminder-item';
+                    const colorClass = data.colorClass || 'reminder-default';
+                    div.className = `reminder-item ${colorClass}`;
                     div.innerHTML = `${data.text} <span onclick="window.deleteReminder('${documento.id}')">✕</span>`;
                     list.appendChild(div);
                 }
@@ -440,10 +453,8 @@
                 const div = document.createElement('div');
                 div.className = 'chat-msg';
                 
-                // Formatação da hora
                 const displayTime = data.time || (data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '');
 
-                // Bloco de Citação / Resposta
                 let replyHtml = '';
                 if (data.replyTo) {
                     replyHtml = `
@@ -607,7 +618,6 @@
         <div class="chat-box">
             <div class="chat-messages" id="chatMessages"></div>
             
-            <!-- Banner de Citação ao Responder -->
             <div class="reply-preview" id="replyPreview">
                 <span id="replyTargetText"></span>
                 <span class="reply-preview-cancel" onclick="cancelReply()">✕</span>
