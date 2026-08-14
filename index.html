@@ -60,13 +60,20 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.06);
         }
 
+        .card-header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
         .card-title {
             font-size: 0.75rem;
             font-weight: 800;
             color: #000000;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            margin-bottom: 12px;
+            margin: 0;
         }
 
         .schedule-grid {
@@ -123,17 +130,13 @@
         .reminder-item span { cursor: pointer; color: #dc2626; font-weight: bold; margin-left: 6px; }
 
         /* Bate-Papo */
-        .chat-box {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+        .chat-box { display: flex; flex-direction: column; gap: 10px; }
 
         .chat-messages {
             background: var(--surface-card);
             border-radius: 12px;
             padding: 12px;
-            height: 200px;
+            height: 220px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
@@ -148,18 +151,22 @@
             font-size: 0.82rem;
             color: #000000;
             border: 1px solid rgba(0,0,0,0.05);
-        }
-
-        .chat-author {
-            font-weight: 800;
-            color: #15803d;
-            margin-right: 6px;
-        }
-
-        .chat-inputs {
             display: flex;
-            gap: 8px;
+            justify-content: space-between;
+            align-items: center;
         }
+
+        .chat-author { font-weight: 800; color: #15803d; margin-right: 6px; }
+        
+        .delete-btn {
+            color: #dc2626;
+            cursor: pointer;
+            font-weight: bold;
+            margin-left: 10px;
+            font-size: 0.75rem;
+        }
+
+        .chat-inputs { display: flex; gap: 8px; }
 
         .chat-inputs input {
             padding: 10px 12px;
@@ -174,6 +181,31 @@
 
         .chat-name { width: 120px; }
         .chat-text { flex: 1; }
+
+        .admin-controls { display: flex; gap: 6px; }
+
+        .btn-admin {
+            background: rgba(0,0,0,0.1);
+            color: #000;
+            border: 1px solid rgba(0,0,0,0.2);
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-clear {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: none;
+        }
 
         .timer-box { display: flex; align-items: center; justify-content: space-between; }
         .time-display { font-size: 2rem; font-weight: 800; color: #000000; }
@@ -209,10 +241,10 @@
         }
     </style>
 
-    <!-- Firebase SDK Sincronizado -->
+    <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyC09EhGx9GSo4IUxjgWXJxqksnKgOU4khQ",
@@ -226,6 +258,30 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // VARIÁVEIS DE ADMIN
+        let isAdmin = false;
+        const ADMIN_PASSWORD = "1234"; // ⬅️ SUA SENHA AQUI
+
+        window.toggleAdmin = function() {
+            if (!isAdmin) {
+                const pass = prompt("Digite a senha de administrador:");
+                if (pass === ADMIN_PASSWORD) {
+                    isAdmin = true;
+                    alert("Modo Administrador Ativado!");
+                    document.getElementById('btnClearChat').style.display = 'inline-block';
+                    document.getElementById('btnAdminToggle').textContent = "🔓 Admin Ativo";
+                    renderChat();
+                } else if (pass !== null) {
+                    alert("Senha incorreta!");
+                }
+            } else {
+                isAdmin = false;
+                document.getElementById('btnClearChat').style.display = 'none';
+                document.getElementById('btnAdminToggle').textContent = "🔑 Admin";
+                renderChat();
+            }
+        };
+
         // Lembretes
         window.addReminder = async function(subjectId) {
             const text = prompt("Digite o lembrete para compartilhar com a turma:");
@@ -237,17 +293,13 @@
                     text: text.trim(),
                     createdAt: new Date()
                 });
-            } catch (e) {
-                console.error("Erro ao salvar:", e);
-            }
+            } catch (e) { console.error("Erro:", e); }
         };
 
         window.deleteReminder = async function(docId) {
             try {
                 await deleteDoc(doc(db, "reminders", docId));
-            } catch (e) {
-                console.error("Erro ao apagar:", e);
-            }
+            } catch (e) { console.error("Erro:", e); }
         };
 
         onSnapshot(collection(db, "reminders"), (snapshot) => {
@@ -270,6 +322,8 @@
         });
 
         // Bate-Papo
+        let currentChatSnapshot = [];
+
         window.sendMessage = async function() {
             const nameInput = document.getElementById('chatName');
             const textInput = document.getElementById('chatText');
@@ -286,25 +340,50 @@
                     createdAt: new Date()
                 });
                 textInput.value = '';
-            } catch (e) {
-                console.error("Erro ao enviar mensagem:", e);
+            } catch (e) { console.error("Erro ao enviar:", e); }
+        };
+
+        window.deleteChatMessage = async function(msgId) {
+            if (!isAdmin) return;
+            try {
+                await deleteDoc(doc(db, "chat", msgId));
+            } catch (e) { console.error("Erro ao apagar mensagem:", e); }
+        };
+
+        window.clearEntireChat = async function() {
+            if (!isAdmin) return;
+            if (confirm("Tem certeza que deseja apagar TODO o histórico do chat?")) {
+                try {
+                    const querySnapshot = await getDocs(collection(db, "chat"));
+                    querySnapshot.forEach(async (documento) => {
+                        await deleteDoc(doc(db, "chat", documento.id));
+                    });
+                } catch (e) { console.error("Erro ao limpar chat:", e); }
             }
         };
 
-        const q = query(collection(db, "chat"), orderBy("createdAt", "asc"));
-        onSnapshot(q, (snapshot) => {
+        function renderChat() {
             const chatContainer = document.getElementById('chatMessages');
             chatContainer.innerHTML = '';
 
-            snapshot.forEach((documento) => {
+            currentChatSnapshot.forEach((documento) => {
                 const data = documento.data();
                 const div = document.createElement('div');
                 div.className = 'chat-msg';
-                div.innerHTML = `<span class="chat-author">${data.author}:</span> ${data.text}`;
+                
+                let deleteHtml = isAdmin ? `<span class="delete-btn" onclick="window.deleteChatMessage('${documento.id}')">✕</span>` : '';
+                
+                div.innerHTML = `<div><span class="chat-author">${data.author}:</span> ${data.text}</div>${deleteHtml}`;
                 chatContainer.appendChild(div);
             });
 
             chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        const q = query(collection(db, "chat"), orderBy("createdAt", "asc"));
+        onSnapshot(q, (snapshot) => {
+            currentChatSnapshot = snapshot;
+            renderChat();
         });
     </script>
 </head>
@@ -336,9 +415,9 @@
             
             <div class="day-block">
                 <span class="day-title">Segunda-feira</span>
-                <span class="subject-name">Controle de Qualidade Microbiológico</span>
-                <span class="subject-info">⏰ 13:00 - 16:30</span>
-                <span class="subject-info">👨‍🏫 Daniela Borges</span>
+                <span class="subject-name">Controle de Qualidade Microbiológico</span>[cite: 1]
+                <span class="subject-info">⏰ 13:00 - 16:30</span>[cite: 1]
+                <span class="subject-info">👨‍🏫 Daniela Borges</span>[cite: 1]
                 <div class="reminders-section">
                     <div class="reminders-header">
                         <span class="reminders-title">📌 Lembretes</span>
@@ -350,9 +429,9 @@
 
             <div class="day-block">
                 <span class="day-title">Terça-feira</span>
-                <span class="subject-name">Controle de Qualidade de Alimentos</span>
-                <span class="subject-info">⏰ 13:00 - 16:30</span>
-                <span class="subject-info">👩‍🏫 Pamela Cristina</span>
+                <span class="subject-name">Controle de Qualidade de Alimentos</span>[cite: 1]
+                <span class="subject-info">⏰ 13:00 - 16:30</span>[cite: 1]
+                <span class="subject-info">👩‍🏫 Pamela Cristina</span>[cite: 1]
                 <div class="reminders-section">
                     <div class="reminders-header">
                         <span class="reminders-title">📌 Lembretes</span>
@@ -364,9 +443,9 @@
 
             <div class="day-block">
                 <span class="day-title">Quarta-feira (1º Bloco)</span>
-                <span class="subject-name">Pesquisa e Des. de Medicamentos</span>
-                <span class="subject-info">⏰ 13:00 - 15:30</span>
-                <span class="subject-info">👨‍🏫 Leonardo Borges</span>
+                <span class="subject-name">Pesquisa e Des. de Medicamentos</span>[cite: 1]
+                <span class="subject-info">⏰ 13:00 - 15:30</span>[cite: 1]
+                <span class="subject-info">👨‍🏫 Leonardo Borges</span>[cite: 1]
                 <div class="reminders-section">
                     <div class="reminders-header">
                         <span class="reminders-title">📌 Lembretes</span>
@@ -378,9 +457,9 @@
 
             <div class="day-block">
                 <span class="day-title">Quarta-feira (2º Bloco)</span>
-                <span class="subject-name">Serviços Clínicos Farmacêuticos II</span>
-                <span class="subject-info">⏰ 15:40 - 19:50</span>
-                <span class="subject-info">👩‍🏫 Anna Paula</span>
+                <span class="subject-name">Serviços Clínicos Farmacêuticos II</span>[cite: 1]
+                <span class="subject-info">⏰ 15:40 - 19:50</span>[cite: 1]
+                <span class="subject-info">👩‍🏫 Anna Paula</span>[cite: 1]
                 <div class="reminders-section">
                     <div class="reminders-header">
                         <span class="reminders-title">📌 Lembretes</span>
@@ -392,9 +471,9 @@
 
             <div class="day-block">
                 <span class="day-title">Quinta-feira</span>
-                <span class="subject-name">Economia e Gestão Farmacêutica</span>
-                <span class="subject-info">⏰ 13:00 - 16:30</span>
-                <span class="subject-info">👨‍🏫 João Nilson</span>
+                <span class="subject-name">Economia e Gestão Farmacêutica</span>[cite: 1]
+                <span class="subject-info">⏰ 13:00 - 16:30</span>[cite: 1]
+                <span class="subject-info">👨‍🏫 João Nilson</span>[cite: 1]
                 <div class="reminders-section">
                     <div class="reminders-header">
                         <span class="reminders-title">📌 Lembretes</span>
@@ -406,9 +485,9 @@
 
             <div class="day-block">
                 <span class="day-title">Sexta-feira</span>
-                <span class="subject-name">Controle de Qualidade em Lab.</span>
-                <span class="subject-info">⏰ 13:00 - 15:30</span>
-                <span class="subject-info">👩‍🏫 Nathália Cristina</span>
+                <span class="subject-name">Controle de Qualidade em Lab.</span>[cite: 1]
+                <span class="subject-info">⏰ 13:00 - 15:30</span>[cite: 1]
+                <span class="subject-info">👩‍🏫 Nathália Cristina</span>[cite: 1]
                 <div class="reminders-section">
                     <div class="reminders-header">
                         <span class="reminders-title">📌 Lembretes</span>
@@ -421,9 +500,15 @@
         </div>
     </div>
 
-    <!-- Bate-Papo com Amigos -->
+    <!-- Bate-Papo Com Painel de Moderação -->
     <div class="card">
-        <div class="card-title">💬 Bate-Papo da Turma</div>
+        <div class="card-header-flex">
+            <span class="card-title">💬 Bate-Papo da Turma</span>
+            <div class="admin-controls">
+                <button class="btn-admin" id="btnAdminToggle" onclick="toggleAdmin()">🔑 Admin</button>
+                <button class="btn-clear" id="btnClearChat" onclick="clearEntireChat()">🗑️ Limpar Chat</button>
+            </div>
+        </div>
         <div class="chat-box">
             <div class="chat-messages" id="chatMessages"></div>
             <div class="chat-inputs">
