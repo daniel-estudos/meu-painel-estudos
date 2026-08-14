@@ -1,1038 +1,208 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Central de Estudos | UEG</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- API do Jitsi Comunitário Sem Autenticação -->
-    <script src="https://meet.element.io/external_api.js"></script>
-
-    <style>
-        :root {
-            --surface: rgba(255, 255, 255, 0.45);
-            --surface-card: rgba(255, 255, 255, 0.65);
-            --text-main: #000000;
-            --border: rgba(255, 255, 255, 0.5);
-            --accent: #15803d; 
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
-
-        body {
-            background: url('https://images8.alphacoders.com/135/thumb-1920-1354012.png') no-repeat center center fixed;
-            background-size: cover;
-            color: var(--text-main);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 30px 15px;
-            min-height: 100vh;
-            transition: background 0.5s ease-in-out;
-        }
-
-        body.app-active {
-            background: url('https://images3.alphacoders.com/136/thumb-1920-1365092.jpeg') no-repeat center center fixed;
-            background-size: cover;
-        }
-
-        .offline-status {
-            display: none;
-            background: #f59e0b;
-            color: #000;
-            text-align: center;
-            padding: 6px 12px;
-            font-size: 0.75rem;
-            font-weight: 800;
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
-
-        #loginScreen {
-            background: rgba(255, 255, 255, 0.40);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 35px 25px;
-            max-width: 380px;
-            width: 100%;
-            text-align: center;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        #loginScreen h2 { font-size: 1.3rem; font-weight: 800; color: #000000; }
-        #loginScreen p { font-size: 0.85rem; font-weight: 700; color: #000000; }
-
-        #loginScreen input {
-            padding: 12px 16px;
-            border-radius: 10px;
-            border: 1px solid rgba(0,0,0,0.15);
-            background: rgba(255,255,255,0.85);
-            font-size: 0.95rem;
-            font-weight: 700;
-            text-align: center;
-            outline: none;
-            color: #000;
-        }
-
-        #loginScreen button {
-            padding: 12px;
-            border-radius: 10px;
-            border: none;
-            background: #000000;
-            color: white;
-            font-size: 0.9rem;
-            font-weight: 800;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        #loginScreen button:hover { opacity: 0.85; }
-
-        .app-container {
-            max-width: 1150px;
-            width: 100%;
-            display: none;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        header {
-            background: var(--surface);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            padding: 16px 24px;
-            border-radius: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid var(--border);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        h1 { font-size: 1.25rem; font-weight: 800; color: #000000; }
-        
-        .btn-video-call {
-            background: #000000;
-            color: white;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            font-weight: 800;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: 0.2s;
-        }
-
-        .btn-video-call:hover { opacity: 0.85; transform: translateY(-1px); }
-
-        .header-datetime {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 2px;
-        }
-
-        .digital-clock {
-            font-size: 1.1rem;
-            font-weight: 800;
-            color: #000000;
-            letter-spacing: 0.03em;
-        }
-
-        .date { font-size: 0.8rem; color: #000000; font-weight: 700; text-transform: capitalize; }
-
-        /* MODAL DE VÍDEO */
-        .video-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0,0,0,0.75);
-            backdrop-filter: blur(10px);
-            z-index: 9999;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .video-container {
-            background: #ffffff;
-            width: 100%;
-            max-width: 1000px;
-            height: 85vh;
-            border-radius: 16px;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-
-        .video-header {
-            background: #000000;
-            color: white;
-            padding: 12px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .video-header h3 { font-size: 0.95rem; font-weight: 800; }
-        
-        .btn-close-video {
-            background: #dc2626;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 800;
-            cursor: pointer;
-        }
-
-        #jitsiContainer {
-            width: 100%;
-            flex: 1;
-        }
-
-        .dashboard-layout {
-            display: grid;
-            grid-template-columns: 320px 1fr;
-            gap: 20px;
-        }
-
-        @media (max-width: 850px) {
-            .dashboard-layout {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .sidebar-col { display: flex; flex-direction: column; gap: 20px; }
-        .main-col { display: flex; flex-direction: column; gap: 20px; }
-
-        .card {
-            background: var(--surface);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-        }
-
-        .card-focus-square {
-            background: var(--surface);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 18px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .timer-theme-green { background: rgba(220, 252, 231, 0.7); border-color: rgba(22, 163, 74, 0.4); }
-        .timer-theme-blue { background: rgba(224, 242, 254, 0.7); border-color: rgba(2, 132, 199, 0.4); }
-        .timer-theme-purple { background: rgba(243, 232, 255, 0.7); border-color: rgba(147, 51, 234, 0.4); }
-        .timer-theme-orange { background: rgba(254, 215, 170, 0.7); border-color: rgba(234, 88, 12, 0.4); }
-
-        .card-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .card-title { font-size: 0.75rem; font-weight: 800; color: #000000; text-transform: uppercase; letter-spacing: 0.05em; margin: 0; }
-
-        .color-picker-dots { display: flex; gap: 5px; }
-        .dot {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 1px solid rgba(0,0,0,0.2);
-            transition: transform 0.2s;
-        }
-        .dot:hover { transform: scale(1.2); }
-        .dot-default { background: #ffffff; }
-        .dot-green { background: #4ade80; }
-        .dot-blue { background: #38bdf8; }
-        .dot-purple { background: #c084fc; }
-        .dot-orange { background: #fb923c; }
-
-        .schedule-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 14px;
-        }
-
-        .day-block {
-            background: var(--surface-card);
-            padding: 14px;
-            border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.4);
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
-        }
-
-        .day-title { font-size: 0.75rem; font-weight: 800; color: #000000; text-transform: uppercase; }
-        .subject-name { font-size: 0.88rem; font-weight: 800; color: #000000; line-height: 1.2; }
-        .subject-info { font-size: 0.78rem; color: #000000; font-weight: 600; }
-
-        .reminders-section { margin-top: 6px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); }
-        .reminders-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-        .reminders-title { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: #1e293b; }
-
-        .btn-add-reminder {
-            background: #000000;
-            color: white;
-            border: none;
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .reminder-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
-
-        .reminder-item {
-            padding: 6px 10px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: #000000;
-            border-left: 5px solid #000000;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-
-        .reminder-red { background: #fee2e2; border-left-color: #dc2626; }
-        .reminder-yellow { background: #fef9c3; border-left-color: #ca8a04; }
-        .reminder-green { background: #dcfce7; border-left-color: #16a34a; }
-        .reminder-default { background: rgba(255, 255, 255, 0.9); border-left-color: #475569; }
-
-        .reminder-item span { cursor: pointer; color: #dc2626; font-weight: bold; margin-left: 6px; }
-
-        .chat-box { display: flex; flex-direction: column; gap: 10px; }
-
-        .chat-messages {
-            background: var(--surface-card);
-            border-radius: 12px;
-            padding: 12px;
-            height: 380px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            border: 1px solid rgba(255,255,255,0.4);
-        }
-
-        .chat-msg {
-            background: rgba(255, 255, 255, 0.88);
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 0.82rem;
-            color: #000000;
-            border: 1px solid rgba(0,0,0,0.05);
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .chat-msg-header { display: flex; justify-content: space-between; align-items: center; }
-        .chat-author { font-weight: 800; color: #15803d; }
-        .chat-time { font-size: 0.68rem; color: #64748b; font-weight: 600; margin-left: 8px; }
-
-        .reply-quote-box {
-            background: rgba(21, 128, 61, 0.1);
-            border-left: 3px solid #15803d;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            color: #334155;
-            margin-bottom: 2px;
-        }
-
-        .reply-quote-author { font-weight: 700; color: #15803d; }
-
-        .chat-actions { display: flex; gap: 8px; align-items: center; }
-        .reply-btn { color: #15803d; cursor: pointer; font-weight: 700; font-size: 0.75rem; }
-        .delete-btn { color: #dc2626; cursor: pointer; font-weight: bold; font-size: 0.75rem; }
-
-        .reply-preview {
-            display: none;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 6px 12px;
-            border-radius: 8px;
-            border-left: 4px solid #15803d;
-            font-size: 0.78rem;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .reply-preview-cancel { cursor: pointer; color: #dc2626; font-weight: bold; }
-
-        .chat-inputs { display: flex; flex-direction: column; gap: 8px; }
-        .chat-inputs-row { display: flex; gap: 8px; }
-
-        .chat-inputs input {
-            padding: 10px 12px;
-            border-radius: 8px;
-            border: 1px solid rgba(0,0,0,0.15);
-            background: rgba(255,255,255,0.85);
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #000;
-            outline: none;
-        }
-
-        .chat-name { width: 100%; }
-        .chat-text { flex: 1; }
-
-        .admin-controls { display: flex; gap: 6px; }
-
-        .btn-admin {
-            background: rgba(0,0,0,0.1);
-            color: #000;
-            border: 1px solid rgba(0,0,0,0.2);
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .btn-clear {
-            background: #dc2626;
-            color: white;
-            border: none;
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            cursor: pointer;
-            display: none;
-        }
-
-        .timer-square-box { display: flex; flex-direction: column; gap: 8px; width: 100%; }
-        .time-display { font-size: 2.3rem; font-weight: 800; color: #000000; line-height: 1; }
-        .timer-btns { display: flex; gap: 6px; width: 100%; }
-
-        .preset-btns {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 4px;
-            margin-top: 2px;
-        }
-
-        .btn-preset {
-            background: rgba(255,255,255,0.7);
-            color: #000;
-            border: 1px solid rgba(0,0,0,0.15);
-            padding: 4px 2px;
-            border-radius: 6px;
-            font-size: 0.68rem;
-            font-weight: 800;
-            cursor: pointer;
-            text-align: center;
-        }
-
-        .btn-preset:hover { background: #000; color: #fff; }
-
-        button {
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: none;
-            background: #000000;
-            color: white;
-            font-size: 0.8rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        button:hover { opacity: 0.85; }
-        .btn-sec { background: transparent; color: #000000; border: 1px solid #000000; padding: 8px 10px; }
-    </style>
-
-    <!-- Firebase SDK -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy, getDocs, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyC09EhGx9GSo4IUxjgWXJxqksnKgOU4khQ",
-            authDomain: "painel-estudos-54958.firebaseapp.com",
-            projectId: "painel-estudos-54958",
-            storageBucket: "painel-estudos-54958.firebasestorage.app",
-            messagingSenderId: "491796500394",
-            appId: "1:491796500394:web:f6d85850484df33b8de5d3"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        enableIndexedDbPersistence(db).catch((err) => {
-            console.log("Persistência offline ativa ou não suportada:", err.code);
-        });
-
-        function updateOnlineStatus() {
-            const statusBanner = document.getElementById('offlineBanner');
-            if (navigator.onLine) {
-                statusBanner.style.display = 'none';
-            } else {
-                statusBanner.style.display = 'block';
-            }
-        }
-
-        window.addEventListener('online', updateOnlineStatus);
-        window.addEventListener('offline', updateOnlineStatus);
-
-        const SITE_PASSWORD = "ueg2026";
-        let isAdmin = false;
-        const ADMIN_PASSWORD = "404";
-        let activeReplyTarget = null;
-
-        window.checkPassword = function() {
-            const passInput = document.getElementById('passInput').value;
-            if (passInput === SITE_PASSWORD) {
-                localStorage.setItem('ueg_access_granted', 'true');
-                showApp();
-            } else {
-                alert("Senha incorreta!");
-            }
-        };
-
-        function showApp() {
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('appContainer').style.display = 'flex';
-            document.body.classList.add('app-active');
-            updateOnlineStatus();
-
-            const savedTheme = localStorage.getItem('timer_theme');
-            if (savedTheme) {
-                setTimerTheme(savedTheme);
-            }
-        }
-
-        if (localStorage.getItem('ueg_access_granted') === 'true') {
-            window.addEventListener('DOMContentLoaded', showApp);
-        }
-
-        window.toggleAdmin = function() {
-            if (!isAdmin) {
-                const pass = prompt("Digite a senha de administrador:");
-                if (pass === ADMIN_PASSWORD) {
-                    isAdmin = true;
-                    alert("Modo Administrador Ativado!");
-                    document.getElementById('btnClearChat').style.display = 'inline-block';
-                    document.getElementById('btnAdminToggle').textContent = "🔓 Admin Ativo";
-                    renderChat();
-                } else if (pass !== null) {
-                    alert("Senha incorreta!");
-                }
-            } else {
-                isAdmin = false;
-                document.getElementById('btnClearChat').style.display = 'none';
-                document.getElementById('btnAdminToggle').textContent = "🔑 Admin";
-                renderChat();
-            }
-        };
-
-        // Lembretes
-        window.addReminder = async function(subjectId) {
-            const text = prompt("Digite o lembrete para compartilhar com a turma:");
-            if (!text || !text.trim()) return;
-
-            const colorOption = prompt("Escolha a cor do lembrete:\n1 - 🔴 Vermelho (Provas/Testes)\n2 - 🟡 Amarelo (Trabalhos/Entregas)\n3 - 🟢 Verde (Leitura/Tarefas)\n4 - ⚪ Padrão (Avisos Gerais)\n\nDigite o número da opção (1 a 4):", "4");
-
-            let colorClass = 'reminder-default';
-            if (colorOption === '1') colorClass = 'reminder-red';
-            else if (colorOption === '2') colorClass = 'reminder-yellow';
-            else if (colorOption === '3') colorClass = 'reminder-green';
-
-            try {
-                await addDoc(collection(db, "reminders"), {
-                    subjectId: subjectId,
-                    text: text.trim(),
-                    colorClass: colorClass,
-                    createdAt: new Date()
-                });
-            } catch (e) { console.error("Erro:", e); }
-        };
-
-        window.deleteReminder = async function(docId) {
-            try {
-                await deleteDoc(doc(db, "reminders", docId));
-            } catch (e) { console.error("Erro:", e); }
-        };
-
-        onSnapshot(collection(db, "reminders"), (snapshot) => {
-            const subjects = ['seg', 'ter', 'qua1', 'qua2', 'qui', 'sex'];
-            subjects.forEach(sub => {
-                const el = document.getElementById(`list-${sub}`);
-                if (el) el.innerHTML = '';
-            });
-
-            snapshot.forEach((documento) => {
-                const data = documento.data();
-                const list = document.getElementById(`list-${data.subjectId}`);
-                if (list) {
-                    const div = document.createElement('div');
-                    const colorClass = data.colorClass || 'reminder-default';
-                    div.className = `reminder-item ${colorClass}`;
-                    div.innerHTML = `${data.text} <span onclick="window.deleteReminder('${documento.id}')">✕</span>`;
-                    list.appendChild(div);
-                }
-            });
-        });
-
-        // Bate-Papo
-        let currentChatSnapshot = [];
-
-        window.startReply = function(author, text) {
-            activeReplyTarget = { author, text };
-            document.getElementById('replyTargetText').textContent = `Respondendo a ${author}: "${text.length > 20 ? text.substring(0, 20) + '...' : text}"`;
-            document.getElementById('replyPreview').style.display = 'flex';
-            document.getElementById('chatText').focus();
-        };
-
-        window.cancelReply = function() {
-            activeReplyTarget = null;
-            document.getElementById('replyPreview').style.display = 'none';
-        };
-
-        window.sendMessage = async function() {
-            const nameInput = document.getElementById('chatName');
-            const textInput = document.getElementById('chatText');
-
-            if (!nameInput.value.trim() || !textInput.value.trim()) {
-                alert("Preencha seu nome e a mensagem!");
-                return;
-            }
-
-            const now = new Date();
-            const timeStr = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-
-            const payload = {
-                author: nameInput.value.trim(),
-                text: textInput.value.trim(),
-                time: timeStr,
-                createdAt: now
-            };
-
-            if (activeReplyTarget) {
-                payload.replyTo = activeReplyTarget;
-            }
-
-            try {
-                await addDoc(collection(db, "chat"), payload);
-                textInput.value = '';
-                cancelReply();
-            } catch (e) { console.error("Erro ao enviar:", e); }
-        };
-
-        window.deleteChatMessage = async function(msgId) {
-            if (!isAdmin) return;
-            try {
-                await deleteDoc(doc(db, "chat", msgId));
-            } catch (e) { console.error("Erro ao apagar mensagem:", e); }
-        };
-
-        window.clearEntireChat = async function() {
-            if (!isAdmin) return;
-            if (confirm("Tem certeza que deseja apagar TODO o histórico do chat?")) {
-                try {
-                    const querySnapshot = await getDocs(collection(db, "chat"));
-                    querySnapshot.forEach(async (documento) => {
-                        await deleteDoc(doc(db, "chat", documento.id));
-                    });
-                } catch (e) { console.error("Erro ao limpar chat:", e); }
-            }
-        };
-
-        function renderChat() {
-            const chatContainer = document.getElementById('chatMessages');
-            chatContainer.innerHTML = '';
-
-            currentChatSnapshot.forEach((documento) => {
-                const data = documento.data();
-                const div = document.createElement('div');
-                div.className = 'chat-msg';
-                
-                const displayTime = data.time || (data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '');
-
-                let replyHtml = '';
-                if (data.replyTo) {
-                    replyHtml = `
-                        <div class="reply-quote-box">
-                            <span class="reply-quote-author">${data.replyTo.author}</span>: ${data.replyTo.text}
-                        </div>
-                    `;
-                }
-
-                let deleteHtml = isAdmin ? `<span class="delete-btn" onclick="window.deleteChatMessage('${documento.id}')">✕</span>` : '';
-                
-                div.innerHTML = `
-                    <div class="chat-msg-header">
-                        <div>
-                            <span class="chat-author">${data.author}</span>
-                            <span class="chat-time">${displayTime}</span>
-                        </div>
-                        <div class="chat-actions">
-                            <span class="reply-btn" onclick="window.startReply('${data.author.replace(/'/g, "\\'")}', '${data.text.replace(/'/g, "\\'")}')">↩️</span>
-                            ${deleteHtml}
-                        </div>
-                    </div>
-                    ${replyHtml}
-                    <div>${data.text}</div>
-                `;
-                chatContainer.appendChild(div);
-            });
-
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        }
-
-        const q = query(collection(db, "chat"), orderBy("createdAt", "asc"));
-        onSnapshot(q, (snapshot) => {
-            currentChatSnapshot = snapshot;
-            renderChat();
-        });
-    </script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Central de Estudos | UEG</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://meet.element.io/external_api.js"></script>
+<style>
+:root{--surface:rgba(255,255,255,.45);--surface-card:rgba(255,255,255,.65);--text-main:#000;--border:rgba(255,255,255,.5);--accent:#15803d;--danger:#dc2626;--warning:#ca8a04;--blue:#0284c7;--muted:#64748b}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Plus Jakarta Sans',sans-serif}
+body{background:url('https://images8.alphacoders.com/135/thumb-1920-1354012.png') no-repeat center center fixed;background-size:cover;color:var(--text-main);min-height:100vh;padding:20px 15px;transition:.5s}
+body.app-active{background-image:url('https://images3.alphacoders.com/136/thumb-1920-1365092.jpeg')}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+.hidden{display:none!important}.muted{color:var(--muted);font-size:.8rem}
+.offline-status{display:none;background:#f59e0b;color:#000;text-align:center;padding:7px 12px;font-size:.75rem;font-weight:800;border-radius:8px;margin-bottom:10px}
+.login{background:rgba(255,255,255,.4);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:20px;padding:35px 25px;max-width:380px;width:100%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.15);display:flex;flex-direction:column;gap:16px;margin:10vh auto}
+.login h2{font-size:1.3rem;font-weight:800}.login p{font-size:.85rem;font-weight:700}.login input,.field input,.field select,.field textarea,.search-input{padding:11px 13px;border-radius:10px;border:1px solid rgba(0,0,0,.15);background:rgba(255,255,255,.9);font-size:.86rem;font-weight:600;outline:none;color:#000;width:100%}
+.btn{padding:9px 12px;border-radius:9px;border:none;background:#000;color:#fff;font-size:.78rem;font-weight:800;transition:.2s}.btn:hover{opacity:.85;transform:translateY(-1px)}.btn-sec{background:transparent;color:#000;border:1px solid rgba(0,0,0,.35)}.btn-danger{background:var(--danger)}.btn-green{background:var(--accent)}.btn-blue{background:var(--blue)}
+.app{max-width:1250px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:16px}.glass{background:var(--surface);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,.08)}
+header{padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:15px}.head-left,.head-right{display:flex;align-items:center;gap:12px}.head-left{flex-wrap:wrap}h1{font-size:1.15rem;font-weight:800}.clock{text-align:right}.clock .time{font-size:1rem;font-weight:800}.clock .date{font-size:.75rem;font-weight:700;text-transform:capitalize}
+.nav{padding:8px;display:flex;gap:6px;flex-wrap:wrap}.nav button{background:rgba(255,255,255,.58);color:#000;border:1px solid rgba(0,0,0,.12);padding:8px 11px;border-radius:9px;font-size:.75rem;font-weight:800}.nav button.active{background:#000;color:#fff}
+.view{display:none}.view.active{display:block}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.layout{display:grid;grid-template-columns:300px 1fr;gap:16px}.stack{display:flex;flex-direction:column;gap:16px}
+.card{padding:18px}.card-title{font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px}.card-header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.actions{display:flex;gap:6px;flex-wrap:wrap}
+.stat{padding:15px;border-radius:13px;background:var(--surface-card);border:1px solid rgba(255,255,255,.45)}.stat .label{font-size:.7rem;font-weight:800;text-transform:uppercase;color:#475569}.stat .value{font-size:1.35rem;font-weight:800;margin-top:5px}.stat small{font-size:.72rem;color:#475569}
+.hero{padding:18px}.hero h2{font-size:1.05rem;margin-bottom:5px}.hero p{font-size:.8rem;color:#334155}.next-event{margin-top:14px;padding:14px;border-radius:12px;background:rgba(255,255,255,.65);border-left:5px solid var(--accent)}
+.schedule-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}.day-block{background:var(--surface-card);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,.4);box-shadow:0 2px 5px rgba(0,0,0,.03)}.day-title{font-size:.73rem;font-weight:800;text-transform:uppercase}.class-item{margin-top:9px;padding:10px;border-radius:9px;background:rgba(255,255,255,.72);border-left:5px solid #475569}.class-item.today{border-left-color:var(--accent);background:rgba(220,252,231,.8)}.class-subject{font-size:.82rem;font-weight:800;line-height:1.25}.class-info{font-size:.72rem;font-weight:600;margin-top:3px;color:#334155}.item-actions{display:flex;gap:6px;margin-top:8px}.mini-btn{padding:5px 7px;border-radius:7px;border:1px solid rgba(0,0,0,.15);background:#fff;font-size:.68rem;font-weight:800}
+.list{display:flex;flex-direction:column;gap:8px}.list-item{padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.72);border:1px solid rgba(0,0,0,.06)}.list-item .top{display:flex;justify-content:space-between;gap:10px}.list-item .title{font-size:.8rem;font-weight:800}.list-item .meta{font-size:.7rem;color:#475569;margin-top:3px}.badge{display:inline-flex;padding:3px 7px;border-radius:999px;font-size:.62rem;font-weight:800}.badge.red{background:#fee2e2;color:#991b1b}.badge.yellow{background:#fef9c3;color:#854d0e}.badge.green{background:#dcfce7;color:#166534}.badge.blue{background:#e0f2fe;color:#075985}.badge.gray{background:#e2e8f0;color:#334155}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.field{display:flex;flex-direction:column;gap:4px}.field label{font-size:.68rem;font-weight:800;text-transform:uppercase}.field.full{grid-column:1/-1}.field textarea{min-height:90px;resize:vertical}
+.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;font-size:.72rem}.table th,.table td{padding:9px;border-bottom:1px solid rgba(0,0,0,.1);text-align:left;vertical-align:top}.table th{font-weight:800;text-transform:uppercase;font-size:.62rem}.empty{padding:18px;text-align:center;font-size:.78rem;color:#64748b}
+.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.cal-head,.cal-cell{padding:8px;border-radius:8px}.cal-head{font-size:.65rem;font-weight:800;text-align:center;background:rgba(0,0,0,.06)}.cal-cell{min-height:95px;background:rgba(255,255,255,.55);border:1px solid rgba(0,0,0,.06)}.cal-cell.today{outline:2px solid var(--accent)}.cal-day{font-size:.72rem;font-weight:800}.cal-event{margin-top:4px;padding:4px 5px;border-radius:5px;font-size:.58rem;font-weight:700;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;background:#fff}.cal-event.exam{background:#fee2e2}.cal-event.assignment{background:#fef9c3}.cal-event.task{background:#dcfce7}.cal-event.other{background:#e0f2fe}
+.progress{height:9px;border-radius:999px;background:rgba(0,0,0,.08);overflow:hidden}.progress>span{display:block;height:100%;background:var(--accent);width:0}
+.focus{padding:18px}.time-display{font-size:2.5rem;font-weight:800;line-height:1}.preset{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:8px}.preset button{padding:6px;border-radius:7px;border:1px solid rgba(0,0,0,.15);background:rgba(255,255,255,.75);font-size:.66rem;font-weight:800}.chat-messages{background:var(--surface-card);border-radius:12px;padding:12px;height:340px;overflow-y:auto;display:flex;flex-direction:column;gap:9px}.chat-msg{background:rgba(255,255,255,.88);padding:8px 11px;border-radius:8px;font-size:.78rem;border:1px solid rgba(0,0,0,.05)}.chat-head{display:flex;justify-content:space-between;gap:8px;font-size:.69rem}.chat-author{font-weight:800;color:var(--accent)}.chat-time{color:#64748b}.chat-actions{display:flex;gap:6px}.reply{font-size:.68rem;color:var(--accent);font-weight:800;cursor:pointer}.delete{font-size:.68rem;color:var(--danger);font-weight:800;cursor:pointer}.chat-form{display:flex;flex-direction:column;gap:8px;margin-top:8px}.chat-row{display:flex;gap:8px}.reply-preview{display:none;padding:7px 10px;background:rgba(255,255,255,.9);border-left:4px solid var(--accent);border-radius:8px;font-size:.72rem;justify-content:space-between}.admin-bar{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(7px);z-index:9999;padding:20px;align-items:center;justify-content:center}.modal{width:100%;max-width:820px;max-height:90vh;overflow:auto;background:#fff;border-radius:16px;padding:20px}.modal-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:15px}.modal h3{font-size:1rem}.modal-close{background:var(--danger);color:#fff;border:none;padding:7px 9px;border-radius:7px;font-weight:800}
+.video-modal{z-index:10000}.video-container{background:#fff;width:100%;max-width:1000px;height:85vh;border-radius:16px;display:flex;flex-direction:column;overflow:hidden}.video-header{background:#000;color:#fff;padding:12px 20px;display:flex;justify-content:space-between;align-items:center}.btn-close-video{background:#dc2626;color:#fff;border:none;padding:6px 12px;border-radius:6px;font-size:.75rem;font-weight:800}.video-container>div:last-child{flex:1}
+.toast{position:fixed;right:18px;bottom:18px;background:#000;color:#fff;padding:10px 13px;border-radius:9px;font-size:.75rem;font-weight:700;display:none;z-index:11000}
+@media(max-width:1000px){.layout{grid-template-columns:1fr}.grid-4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){body{padding:10px}.grid-2,.grid-3,.form-grid{grid-template-columns:1fr}.grid-4{grid-template-columns:1fr 1fr}.calendar{grid-template-columns:repeat(7,minmax(90px,1fr));overflow:auto}.head-right{display:none}.nav{overflow:auto;flex-wrap:nowrap}.nav button{white-space:nowrap}.schedule-grid{grid-template-columns:1fr}.chat-row{flex-direction:column}.video-container{height:92vh}}
+</style>
 </head>
 <body>
-
-<!-- Tela de Login -->
-<div id="loginScreen">
-    <h2>🔒 Central de Estudos</h2>
-    <p>Digite a senha de acesso para liberar o painel da turma:</p>
-    <input type="password" id="passInput" placeholder="Digite a senha..." onkeypress="if(event.key==='Enter') checkPassword()">
-    <button onclick="checkPassword()">Acessar Painel</button>
+<div id="loginScreen" class="login">
+  <h2>🔒 Central de Estudos</h2>
+  <p>Digite a senha de acesso para liberar o painel da turma.</p>
+  <input id="passInput" type="password" placeholder="Digite a senha..." />
+  <button class="btn" onclick="checkPassword()">Acessar Painel</button>
 </div>
 
-<!-- Aplicação Principal -->
-<div class="app-container" id="appContainer">
-
-    <div class="offline-status" id="offlineBanner">⚡ Modo Offline - Suas alterações serão sincronizadas assim que houver conexão.</div>
-
-    <header>
-        <div class="header-left">
-            <h1>Central de Estudos</h1>
-            <button class="btn-video-call" onclick="openVideoCall()">📹 Sala de Vídeo</button>
-        </div>
-        <div class="header-datetime">
-            <span class="digital-clock" id="digitalClock">00:00:00</span>
-            <span class="date" id="currentDate"></span>
-        </div>
-    </header>
-
-    <div class="dashboard-layout">
-        
-        <!-- Coluna Esquerda: Timer + Chat -->
-        <div class="sidebar-col">
-            
-            <div class="card-focus-square" id="focusCard">
-                <div class="card-header-flex">
-                    <span class="card-title">Sessão de Foco</span>
-                    <div class="color-picker-dots">
-                        <div class="dot dot-default" title="Padrão" onclick="setTimerTheme('')"></div>
-                        <div class="dot dot-green" title="Verde" onclick="setTimerTheme('green')"></div>
-                        <div class="dot dot-blue" title="Azul" onclick="setTimerTheme('blue')"></div>
-                        <div class="dot dot-purple" title="Roxo" onclick="setTimerTheme('purple')"></div>
-                        <div class="dot dot-orange" title="Laranja" onclick="setTimerTheme('orange')"></div>
-                    </div>
-                </div>
-                
-                <div class="timer-square-box">
-                    <div class="time-display" id="timer">25:00</div>
-                    <div class="timer-btns">
-                        <button id="startBtn" onclick="toggleTimer()">Iniciar</button>
-                        <button class="btn-sec" onclick="resetTimer()">Resetar</button>
-                    </div>
-                    
-                    <div class="preset-btns">
-                        <button class="btn-preset" onclick="setTimerMinutes(25)">25m</button>
-                        <button class="btn-preset" onclick="setTimerMinutes(50)">50m</button>
-                        <button class="btn-preset" onclick="setTimerMinutes(5)">5m</button>
-                        <button class="btn-preset" onclick="setCustomTimer()">⚙️ Custom</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header-flex">
-                    <span class="card-title">💬 Bate-Papo da Turma</span>
-                    <div class="admin-controls">
-                        <button class="btn-admin" id="btnAdminToggle" onclick="toggleAdmin()">🔑 Admin</button>
-                        <button class="btn-clear" id="btnClearChat" onclick="clearEntireChat()">🗑️ Limpar</button>
-                    </div>
-                </div>
-                <div class="chat-box">
-                    <div class="chat-messages" id="chatMessages"></div>
-                    
-                    <div class="reply-preview" id="replyPreview">
-                        <span id="replyTargetText"></span>
-                        <span class="reply-preview-cancel" onclick="cancelReply()">✕</span>
-                    </div>
-
-                    <div class="chat-inputs">
-                        <input type="text" id="chatName" class="chat-name" placeholder="Seu nome...">
-                        <div class="chat-inputs-row">
-                            <input type="text" id="chatText" class="chat-text" placeholder="Digite uma mensagem..." onkeypress="if(event.key==='Enter') sendMessage()">
-                            <button onclick="sendMessage()">Enviar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Coluna Direita: Aulas e Lembretes -->
-        <div class="main-col">
-            <div class="card">
-                <div class="card-title">Horário das Aulas & Lembretes Compartilhados (UEG)</div>
-                <div class="schedule-grid">
-                    
-                    <div class="day-block">
-                        <span class="day-title">Segunda-feira</span>
-                        <span class="subject-name">Controle de Qualidade Microbiológico</span>
-                        <span class="subject-info">⏰ 13:00 - 16:30</span>
-                        <span class="subject-info">👨‍🏫 Daniela Borges</span>
-                        <div class="reminders-section">
-                            <div class="reminders-header">
-                                <span class="reminders-title">📌 Lembretes</span>
-                                <button class="btn-add-reminder" onclick="addReminder('seg')">+ Lembrete</button>
-                            </div>
-                            <div class="reminder-list" id="list-seg"></div>
-                        </div>
-                    </div>
-
-                    <div class="day-block">
-                        <span class="day-title">Terça-feira</span>
-                        <span class="subject-name">Controle de Qualidade de Alimentos</span>
-                        <span class="subject-info">⏰ 13:00 - 16:30</span>
-                        <span class="subject-info">👩‍🏫 Pamela Cristina</span>
-                        <div class="reminders-section">
-                            <div class="reminders-header">
-                                <span class="reminders-title">📌 Lembretes</span>
-                                <button class="btn-add-reminder" onclick="addReminder('ter')">+ Lembrete</button>
-                            </div>
-                            <div class="reminder-list" id="list-ter"></div>
-                        </div>
-                    </div>
-
-                    <div class="day-block">
-                        <span class="day-title">Quarta-feira (1º Bloco)</span>
-                        <span class="subject-name">Pesquisa e Des. de Medicamentos</span>
-                        <span class="subject-info">⏰ 13:00 - 15:30</span>
-                        <span class="subject-info">👨‍🏫 Leonardo Borges</span>
-                        <div class="reminders-section">
-                            <div class="reminders-header">
-                                <span class="reminders-title">📌 Lembretes</span>
-                                <button class="btn-add-reminder" onclick="addReminder('qua1')">+ Lembrete</button>
-                            </div>
-                            <div class="reminder-list" id="list-qua1"></div>
-                        </div>
-                    </div>
-
-                    <div class="day-block">
-                        <span class="day-title">Quarta-feira (2º Bloco)</span>
-                        <span class="subject-name">Serviços Clínicos Farmacêuticos II</span>
-                        <span class="subject-info">⏰ 15:40 - 19:50</span>
-                        <span class="subject-info">👩‍🏫 Anna Paula</span>
-                        <div class="reminders-section">
-                            <div class="reminders-header">
-                                <span class="reminders-title">📌 Lembretes</span>
-                                <button class="btn-add-reminder" onclick="addReminder('qua2')">+ Lembrete</button>
-                            </div>
-                            <div class="reminder-list" id="list-qua2"></div>
-                        </div>
-                    </div>
-
-                    <div class="day-block">
-                        <span class="day-title">Quinta-feira</span>
-                        <span class="subject-name">Economia e Gestão Farmacêutica</span>
-                        <span class="subject-info">⏰ 13:00 - 16:30</span>
-                        <span class="subject-info">👨‍🏫 João Nilson</span>
-                        <div class="reminders-section">
-                            <div class="reminders-header">
-                                <span class="reminders-title">📌 Lembretes</span>
-                                <button class="btn-add-reminder" onclick="addReminder('qui')">+ Lembrete</button>
-                            </div>
-                            <div class="reminder-list" id="list-qui"></div>
-                        </div>
-                    </div>
-
-                    <div class="day-block">
-                        <span class="day-title">Sexta-feira</span>
-                        <span class="subject-name">Controle de Qualidade em Lab.</span>
-                        <span class="subject-info">⏰ 13:00 - 15:30</span>
-                        <span class="subject-info">👩‍🏫 Nathália Cristina</span>
-                        <div class="reminders-section">
-                            <div class="reminders-header">
-                                <span class="reminders-title">📌 Lembretes</span>
-                                <button class="btn-add-reminder" onclick="addReminder('sex')">+ Lembrete</button>
-                            </div>
-                            <div class="reminder-list" id="list-sex"></div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
+<div id="appContainer" class="app hidden">
+  <div id="offlineBanner" class="offline-status">⚡ Modo Offline — as alterações locais serão sincronizadas quando a conexão voltar.</div>
+  <header class="glass">
+    <div class="head-left">
+      <h1>Central de Estudos</h1>
+      <button class="btn" onclick="openVideoCall()">📹 Sala de Vídeo</button>
+      <button id="btnAdminToggle" class="btn btn-sec" onclick="toggleAdmin()">🔑 Admin</button>
     </div>
+    <div class="clock"><div id="digitalClock" class="time">00:00:00</div><div id="currentDate" class="date"></div></div>
+  </header>
+  <nav class="glass nav" id="mainNav">
+    <button class="active" data-view="dashboard">🏠 Início</button>
+    <button data-view="schedule">📚 Horários</button>
+    <button data-view="calendar">📅 Calendário</button>
+    <button data-view="tasks">✅ Tarefas</button>
+    <button data-view="assessments">📝 Provas</button>
+    <button data-view="subjects">🎓 Disciplinas</button>
+    <button data-view="study">⏱️ Estudos</button>
+    <button data-view="tcc">📖 TCC / Estágio</button>
+    <button data-view="chat">💬 Turma</button>
+  </nav>
 
-</div>
-
-<!-- MODAL COM VIDEOCHAMADA LIBERADA -->
-<div class="video-modal" id="videoModal">
-    <div class="video-container">
-        <div class="video-header">
-            <h3>📹 Sala de Estudos Virtual (Turma UEG)</h3>
-            <button class="btn-close-video" onclick="closeVideoCall()">✕ Fechar Chamada</button>
+  <section id="view-dashboard" class="view active">
+    <div class="stack">
+      <div class="glass hero">
+        <h2 id="welcomeTitle">Bom estudo.</h2>
+        <p id="todaySummary">Carregando sua agenda...</p>
+        <div id="nextEventBox" class="next-event">Carregando próximo compromisso...</div>
+      </div>
+      <div id="statsGrid" class="grid-4"></div>
+      <div class="grid-2">
+        <div class="glass card"><div class="card-header"><span class="card-title">Agenda de hoje</span><button class="mini-btn" onclick="switchView('calendar')">Ver calendário</button></div><div id="todayAgenda" class="list"></div></div>
+        <div class="glass card"><div class="card-header"><span class="card-title">Próximas avaliações</span><button class="mini-btn" onclick="switchView('assessments')">Ver todas</button></div><div id="upcomingAssessments" class="list"></div></div>
+      </div>
+      <div class="grid-2">
+        <div class="glass card focus">
+          <div class="card-header"><span class="card-title">Sessão de foco</span></div>
+          <div class="time-display" id="timer">25:00</div>
+          <div class="actions" style="margin-top:10px"><button id="startBtn" class="btn" onclick="toggleTimer()">Iniciar</button><button class="btn btn-sec" onclick="resetTimer()">Resetar</button></div>
+          <div class="preset"><button onclick="setTimerMinutes(25)">25m</button><button onclick="setTimerMinutes(50)">50m</button><button onclick="setTimerMinutes(5)">5m</button><button onclick="setCustomTimer()">⚙️ Custom</button></div>
         </div>
-        <div id="jitsiContainer"></div>
+        <div class="glass card"><div class="card-header"><span class="card-title">Lembretes recentes</span></div><div id="recentReminders" class="list"></div></div>
+      </div>
     </div>
+  </section>
+
+  <section id="view-schedule" class="view">
+    <div class="glass card"><div class="card-header"><span class="card-title">Horário das aulas</span><div class="actions"><button id="adminAddClass" class="btn btn-green hidden" onclick="openClassModal()">＋ Nova aula</button></div></div><div id="scheduleGrid" class="schedule-grid"></div></div>
+  </section>
+
+  <section id="view-calendar" class="view">
+    <div class="glass card"><div class="card-header"><span class="card-title">Calendário acadêmico</span><div class="actions"><button class="mini-btn" onclick="changeMonth(-1)">◀</button><strong id="calendarMonth"></strong><button class="mini-btn" onclick="changeMonth(1)">▶</button><button id="adminAddEvent" class="btn btn-green hidden" onclick="openEventModal()">＋ Novo evento</button></div></div><div id="calendarRoot" class="calendar"></div></div>
+  </section>
+
+  <section id="view-tasks" class="view">
+    <div class="glass card"><div class="card-header"><span class="card-title">Tarefas e trabalhos</span><div class="actions"><select id="taskFilterSubject" class="search-input" style="width:180px" onchange="renderTasks()"><option value="">Todas as disciplinas</option></select><button id="adminAddTask" class="btn btn-green hidden" onclick="openTaskModal()">＋ Nova tarefa</button></div></div><div id="taskList" class="list"></div></div>
+  </section>
+
+  <section id="view-assessments" class="view">
+    <div class="grid-2">
+      <div class="glass card"><div class="card-header"><span class="card-title">Provas e avaliações</span><button id="adminAddAssessment" class="btn btn-green hidden" onclick="openAssessmentModal()">＋ Nova prova</button></div><div id="assessmentList" class="list"></div></div>
+      <div class="glass card"><div class="card-header"><span class="card-title">Resumo</span></div><div id="assessmentSummary"></div></div>
+    </div>
+  </section>
+
+  <section id="view-subjects" class="view">
+    <div class="glass card"><div class="card-header"><span class="card-title">Disciplinas</span><button id="adminAddSubject" class="btn btn-green hidden" onclick="openSubjectModal()">＋ Nova disciplina</button></div><div id="subjectGrid" class="grid-3"></div></div>
+  </section>
+
+  <section id="view-study" class="view">
+    <div class="grid-2">
+      <div class="glass card"><div class="card-header"><span class="card-title">Estudo</span></div><div class="form-grid"><div class="field"><label>Disciplina</label><select id="studySubject"></select></div><div class="field"><label>Meta diária (min)</label><input id="dailyGoal" type="number" min="1" value="60"></div><div class="field full"><label>Observação</label><textarea id="studyNote" placeholder="O que pretende estudar hoje?"></textarea></div></div><div class="actions" style="margin-top:10px"><button class="btn btn-green" onclick="startStudySession()">▶ Iniciar estudo</button></div></div>
+      <div class="glass card"><div class="card-header"><span class="card-title">Progresso</span></div><div id="studyStats"></div></div>
+    </div>
+  </section>
+
+  <section id="view-tcc" class="view">
+    <div class="grid-2">
+      <div class="glass card"><div class="card-header"><span class="card-title">TCC</span><button id="adminAddTcc" class="btn btn-green hidden" onclick="openTccModal('tcc')">＋ Etapa</button></div><div id="tccList" class="list"></div></div>
+      <div class="glass card"><div class="card-header"><span class="card-title">Estágio</span><button id="adminAddInternship" class="btn btn-green hidden" onclick="openTccModal('internship')">＋ Etapa</button></div><div id="internshipList" class="list"></div></div>
+    </div>
+  </section>
+
+  <section id="view-chat" class="view">
+    <div class="glass card"><div class="card-header"><span class="card-title">💬 Bate-papo da turma</span><div class="admin-bar"><button id="btnClearChat" class="btn btn-danger hidden" onclick="clearEntireChat()">🗑️ Limpar</button></div></div><div id="chatMessages" class="chat-messages"></div><div id="replyPreview" class="reply-preview"><span id="replyTargetText"></span><span style="cursor:pointer;color:#dc2626;font-weight:800" onclick="cancelReply()">✕</span></div><div class="chat-form"><input id="chatName" class="search-input" placeholder="Seu nome..." /><div class="chat-row"><input id="chatText" class="search-input" placeholder="Digite uma mensagem..." /><button class="btn" onclick="sendMessage()">Enviar</button></div></div></div>
+  </section>
 </div>
 
-<script>
-    // Relógio Digital & Data
-    function updateClockAndDate() {
-        const now = new Date();
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        const seconds = String(now.getSeconds()).padStart(2, '0');
-        document.getElementById('digitalClock').textContent = `${hours}:${minutes}:${seconds}`;
+<div id="modalOverlay" class="overlay"><div class="modal"><div class="modal-head"><h3 id="modalTitle">Editar</h3><button class="modal-close" onclick="closeModal()">✕</button></div><div id="modalBody"></div></div></div>
+<div id="videoModal" class="overlay video-modal"><div class="video-container"><div class="video-header"><h3>📹 Sala de Estudos Virtual (Turma UEG)</h3><button class="btn-close-video" onclick="closeVideoCall()">✕ Fechar</button></div><div id="jitsiContainer"></div></div></div>
+<div id="toast" class="toast"></div>
 
-        const options = { weekday: 'long', day: 'numeric', month: 'long' };
-        document.getElementById('currentDate').textContent = now.toLocaleDateString('pt-BR', options);
-    }
-
-    setInterval(updateClockAndDate, 1000);
-    updateClockAndDate();
-
-    // Cronômetro
-    let defaultMinutes = 25;
-    let timeLeft = defaultMinutes * 60;
-    let timerId = null;
-
-    function updateDisplay() {
-        const min = String(Math.floor(timeLeft / 60)).padStart(2, '0');
-        const sec = String(timeLeft % 60).padStart(2, '0');
-        document.getElementById('timer').textContent = `${min}:${sec}`;
-    }
-
-    function toggleTimer() {
-        const btn = document.getElementById('startBtn');
-        if (timerId) {
-            clearInterval(timerId);
-            timerId = null;
-            btn.textContent = 'Continuar';
-        } else {
-            btn.textContent = 'Pausar';
-            timerId = setInterval(() => {
-                if (timeLeft > 0) {
-                    timeLeft--;
-                    updateDisplay();
-                } else {
-                    clearInterval(timerId);
-                    alert('🔔 Sessão concluída!');
-                    resetTimer();
-                }
-            }, 1000);
-        }
-    }
-
-    function resetTimer() {
-        clearInterval(timerId);
-        timerId = null;
-        timeLeft = defaultMinutes * 60;
-        document.getElementById('startBtn').textContent = 'Iniciar';
-        updateDisplay();
-    }
-
-    function setTimerMinutes(mins) {
-        defaultMinutes = mins;
-        resetTimer();
-    }
-
-    function setCustomTimer() {
-        const customMins = prompt("Digite o tempo da sessão em minutos:", "30");
-        if (customMins && !isNaN(customMins) && parseInt(customMins) > 0) {
-            setTimerMinutes(parseInt(customMins));
-        }
-    }
-
-    function setTimerTheme(themeName) {
-        const focusCard = document.getElementById('focusCard');
-        focusCard.className = 'card-focus-square';
-        if (themeName) {
-            focusCard.classList.add(`timer-theme-${themeName}`);
-            localStorage.setItem('timer_theme', themeName);
-        } else {
-            localStorage.removeItem('timer_theme');
-        }
-    }
-
-    // INTEGRAÇÃO DE VÍDEO TOTALMENTE LIVRE (ELEMENT / JITSI)
-    let jitsiApi = null;
-
-    function openVideoCall() {
-        document.getElementById('videoModal').style.display = 'flex';
-        
-        if (!jitsiApi) {
-            const domain = "meet.element.io";
-            const options = {
-                roomName: "CentralEstudosUEG_Farmacia_Itumbiara_2026",
-                width: "100%",
-                height: "100%",
-                parentNode: document.querySelector('#jitsiContainer'),
-                configOverwrite: {
-                    startWithAudioMuted: true,
-                    startWithVideoMuted: false,
-                    prejoinPageEnabled: false
-                },
-                interfaceConfigOverwrite: {
-                    SHOW_JITSI_WATERMARK: false,
-                    SHOW_WATERMARK_FOR_GUESTS: false,
-                    TOOLBAR_BUTTONS: [
-                        'microphone', 'camera', 'desktop', 'fullscreen',
-                        'fittings', 'raisehand', 'tileview', 'hangup'
-                    ]
-                }
-            };
-            jitsiApi = new JitsiMeetExternalAPI(domain, options);
-        }
-    }
-
-    function closeVideoCall() {
-        document.getElementById('videoModal').style.display = 'none';
-        if (jitsiApi) {
-            jitsiApi.dispose();
-            jitsiApi = null;
-        }
-    }
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, updateDoc, query, orderBy, getDocs, enableIndexedDbPersistence } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+const firebaseConfig={apiKey:'AIzaSyC09EhGx9GSo4IUxjgWXJxqksnKgOU4khQ',authDomain:'painel-estudos-54958.firebaseapp.com',projectId:'painel-estudos-54958',storageBucket:'painel-estudos-54958.firebasestorage.app',messagingSenderId:'491796500394',appId:'1:491796500394:web:f6d85850484df33b8de5d3'};
+const app=initializeApp(firebaseConfig);const db=getFirestore(app);enableIndexedDbPersistence(db).catch(()=>{});
+const SITE_PASSWORD='ueg2026',ADMIN_PASSWORD='404';let isAdmin=false,activeReplyTarget=null,currentChat=[];let monthCursor=new Date(new Date().getFullYear(),new Date().getMonth(),1);let timerMinutes=25,timeLeft=1500,timerId=null;let data={subjects:[],classes:[],tasks:[],assessments:[],events:[],progress:[],tcc:[],internship:[],reminders:[]};
+const $=id=>document.getElementById(id); const col=name=>collection(db,name); const showToast=msg=>{const t=$('toast');t.textContent=msg;t.style.display='block';clearTimeout(showToast.tm);showToast.tm=setTimeout(()=>t.style.display='none',2400)};
+const fmtDate=d=>new Date(d).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'});const isoToday=()=>new Date().toISOString().slice(0,10);const escapeHtml=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+function todayIndex(){return new Date().getDay()||7}
+function subjectName(id){const s=data.subjects.find(s=>s.id===id);if(s)return s.name;const legacy={'seg':'Controle de Qualidade Microbiológico','ter':'Controle de Qualidade de Alimentos','qua1':'Pesquisa e Des. de Medicamentos','qua2':'Serviços Clínicos Farmacêuticos II','qui':'Economia e Gestão Farmacêutica','sex':'Controle de Qualidade em Lab.'};return legacy[id]||'Sem disciplina'}
+function showApp(){ $('loginScreen').classList.add('hidden');$('appContainer').classList.remove('hidden');document.body.classList.add('app-active');updateOnlineStatus();renderAll();}
+window.checkPassword=()=>{if($('passInput').value===SITE_PASSWORD){localStorage.setItem('ueg_access_granted','true');showApp()}else alert('Senha incorreta!')};
+$('passInput').addEventListener('keypress',e=>{if(e.key==='Enter')window.checkPassword()});
+function updateOnlineStatus(){ $('offlineBanner').style.display=navigator.onLine?'none':'block'};window.addEventListener('online',updateOnlineStatus);window.addEventListener('offline',updateOnlineStatus);
+window.switchView=v=>{document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));$('view-'+v).classList.add('active');document.querySelectorAll('#mainNav button').forEach(b=>b.classList.toggle('active',b.dataset.view===v));if(v==='calendar')renderCalendar()};
+function renderAll(){renderDashboard();renderSchedule();renderSubjectSelects();renderTasks();renderAssessments();renderSubjects();renderStudy();renderTcc();renderCalendar();renderChat()}
+function renderDashboard(){const now=new Date(),future=[...data.assessments.map(x=>({...x,type:'Prova'})),...data.tasks.filter(x=>x.dueDate).map(x=>({...x,type:'Tarefa'})),...data.events.map(x=>({...x,type:'Evento'}))].filter(x=>x.date||x.dueDate).map(x=>({...x,when:x.date||x.dueDate})).filter(x=>x.when>=isoToday()).sort((a,b)=>a.when.localeCompare(b.when));$('todaySummary').textContent=`Hoje é ${now.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'})}. ${data.classes.filter(c=>c.day===todayIndex()).length} aula(s) programada(s).`;if(future[0])$('nextEventBox').innerHTML=`<strong>Próximo compromisso:</strong> ${escapeHtml(future[0].title||future[0].name)} — ${fmtDate(future[0].when)} ${future[0].time?'às '+future[0].time:''}`;else $('nextEventBox').textContent='Nenhum compromisso futuro cadastrado.';const pending=data.tasks.filter(t=>!t.done).length;const exams=data.assessments.filter(a=>a.date>=isoToday()).length;const study=data.progress.reduce((a,b)=>a+(Number(b.minutes)||0),0);$('statsGrid').innerHTML=[['Tarefas pendentes',pending,''],['Próximas provas',exams,''],['Horas estudadas',`${Math.floor(study/60)}h ${study%60}m`,''],['Disciplinas',data.subjects.length,'']].map(s=>`<div class="glass stat"><div class="label">${s[0]}</div><div class="value">${s[1]}</div></div>`).join('');$('todayAgenda').innerHTML=buildTodayAgenda();$('upcomingAssessments').innerHTML=future.slice(0,4).map(x=>`<div class="list-item"><div class="top"><span class="title">${escapeHtml(x.title||x.name)}</span><span class="badge ${x.type==='Prova'?'red':x.type==='Tarefa'?'yellow':'blue'}">${x.type}</span></div><div class="meta">${fmtDate(x.when)} ${x.time?'• '+x.time:''}</div></div>`).join('')||'<div class="empty">Nenhum item próximo.</div>';$('recentReminders').innerHTML=data.reminders.slice(-5).reverse().map(r=>`<div class="list-item"><div class="top"><span class="title">${escapeHtml(r.text)}</span>${isAdmin?`<span><button class="mini-btn" onclick="editReminder('${r.id}')">Editar</button> <button class="mini-btn" onclick="deleteReminder('${r.id}')">Excluir</button></span>`:''}</div><div class="meta">${escapeHtml(subjectName(r.subjectId))} • ${r.createdAt?.seconds?new Date(r.createdAt.seconds*1000).toLocaleString('pt-BR'):''}</div></div>`).join('')||'<div class="empty">Nenhum lembrete.</div>'}
+function buildTodayAgenda(){const cls=data.classes.filter(c=>c.day===todayIndex()).sort((a,b)=>(a.start||'').localeCompare(b.start));const tasks=data.tasks.filter(t=>t.dueDate===isoToday());const ev=data.events.filter(e=>e.date===isoToday());let html=[...cls.map(c=>`<div class="list-item"><div class="title">${escapeHtml(c.title)}</div><div class="meta">Aula • ${c.start}–${c.end} • ${escapeHtml(c.teacher||'')}</div></div>`),...tasks.map(t=>`<div class="list-item"><div class="title">${escapeHtml(t.title)}</div><div class="meta">Tarefa • ${escapeHtml(subjectName(t.subjectId))}</div></div>`),...ev.map(e=>`<div class="list-item"><div class="title">${escapeHtml(e.title)}</div><div class="meta">Evento${e.time?' • '+e.time:''}</div></div>`)];return html.join('')||'<div class="empty">Nada agendado para hoje.</div>'}
+function renderSchedule(){const days=[1,2,3,4,5,6,7],names=['Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado','Domingo'];$('scheduleGrid').innerHTML=days.map(d=>{const list=data.classes.filter(c=>c.day===d).sort((a,b)=>(a.start||'').localeCompare(b.start));return `<div class="day-block"><div class="day-title">${names[d-1]}</div>${list.length?list.map(c=>`<div class="class-item ${d===todayIndex()?'today':''}"><div class="class-subject">${escapeHtml(c.title)}</div><div class="class-info">⏰ ${c.start}–${c.end}</div><div class="class-info">👨‍🏫 ${escapeHtml(c.teacher||'Não informado')}</div><div class="class-info">📍 ${escapeHtml(c.room||'Não informado')}</div>${isAdmin?`<div class="item-actions"><button class="mini-btn" onclick="openClassModal('${c.id}')">Editar</button><button class="mini-btn" onclick="removeDoc('classes','${c.id}')">Excluir</button><button class="mini-btn" onclick="openReminderForSubject('${c.subjectId||''}')">+ Lembrete</button></div>`:''}</div>`).join(''):'<div class="empty">Sem aula.</div>'}</div>`}).join('')}
+function renderSubjectSelects(){const selects=[$('taskFilterSubject'),$('studySubject')];const current=selects.map(s=>s.value);selects[0].innerHTML='<option value="">Todas as disciplinas</option>'+data.subjects.map(s=>`<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('');selects[1].innerHTML=data.subjects.map(s=>`<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('');if(current[0])selects[0].value=current[0];if(current[1])selects[1].value=current[1]}
+function renderTasks(){const filter=$('taskFilterSubject').value;const list=data.tasks.filter(t=>!filter||t.subjectId===filter).sort((a,b)=>(a.dueDate||'').localeCompare(b.dueDate||''));$('taskList').innerHTML=list.map(t=>`<div class="list-item"><div class="top"><span class="title" style="${t.done?'text-decoration:line-through;opacity:.55':''}">${escapeHtml(t.title)}</span><span class="badge ${t.priority==='Alta'?'red':t.priority==='Média'?'yellow':'green'}">${escapeHtml(t.priority||'Normal')}</span></div><div class="meta">${escapeHtml(subjectName(t.subjectId))} • prazo ${t.dueDate?fmtDate(t.dueDate):'sem prazo'}${t.description?' • '+escapeHtml(t.description):''}</div><div class="item-actions"><button class="mini-btn" onclick="toggleTask('${t.id}',${!t.done})">${t.done?'Reabrir':'Concluir'}</button>${isAdmin?`<button class="mini-btn" onclick="openTaskModal('${t.id}')">Editar</button><button class="mini-btn" onclick="removeDoc('tasks','${t.id}')">Excluir</button>`:''}</div></div>`).join('')||'<div class="empty">Nenhuma tarefa cadastrada.</div>'}
+function renderAssessments(){const list=data.assessments.slice().sort((a,b)=>a.date.localeCompare(b.date));$('assessmentList').innerHTML=list.map(a=>{const days=Math.ceil((new Date(a.date+'T23:59:59')-new Date())/86400000);return `<div class="list-item"><div class="top"><span class="title">${escapeHtml(a.title)}</span><span class="badge red">${days>=0?days===0?'Hoje':days+' dias':'Realizada'}</span></div><div class="meta">${escapeHtml(subjectName(a.subjectId))} • ${fmtDate(a.date)} ${a.time?'• '+a.time:''}${a.location?' • '+escapeHtml(a.location):''}</div>${a.content?`<div class="meta">Conteúdo: ${escapeHtml(a.content)}</div>`:''}${isAdmin?`<div class="item-actions"><button class="mini-btn" onclick="openAssessmentModal('${a.id}')">Editar</button><button class="mini-btn" onclick="removeDoc('assessments','${a.id}')">Excluir</button></div>`:''}</div>`}).join('')||'<div class="empty">Nenhuma prova cadastrada.</div>';const upcoming=list.filter(a=>a.date>=isoToday());$('assessmentSummary').innerHTML=`<div class="stat" style="margin-bottom:10px"><div class="label">Próximas provas</div><div class="value">${upcoming.length}</div></div><div class="muted">Mantenha conteúdos e datas atualizados para alimentar a tela inicial e o calendário.</div>`}
+function renderSubjects(){$('subjectGrid').innerHTML=data.subjects.map(s=>{const classCount=data.classes.filter(c=>c.subjectId===s.id).length,taskCount=data.tasks.filter(t=>t.subjectId===s.id&&!t.done).length,examCount=data.assessments.filter(a=>a.subjectId===s.id&&a.date>=isoToday()).length;return `<div class="glass stat"><div class="top"><div><div class="label">Disciplina</div><div class="value" style="font-size:1rem">${escapeHtml(s.name)}</div></div>${s.color?`<div style="width:16px;height:16px;border-radius:50%;background:${s.color}"></div>`:''}</div><small>👨‍🏫 ${escapeHtml(s.teacher||'Não informado')}<br>🕐 ${classCount} horário(s) • ✅ ${taskCount} tarefa(s) • 📝 ${examCount} prova(s)</small>${isAdmin?`<div class="item-actions"><button class="mini-btn" onclick="openSubjectModal('${s.id}')">Editar</button><button class="mini-btn" onclick="removeDoc('subjects','${s.id}')">Excluir</button></div>`:''}</div>`}).join('')||'<div class="empty">Nenhuma disciplina cadastrada.</div>'}
+function renderStudy(){const total=data.progress.reduce((a,b)=>a+(Number(b.minutes)||0),0),bySub={};data.progress.forEach(x=>bySub[x.subjectId]=(bySub[x.subjectId]||0)+(Number(x.minutes)||0));$('studyStats').innerHTML=`<div class="stat"><div class="label">Tempo total</div><div class="value">${Math.floor(total/60)}h ${total%60}m</div><small>Registros de estudo salvos no Firebase.</small></div><div style="margin-top:12px" class="list">${Object.entries(bySub).map(([id,min])=>`<div class="list-item"><div class="title">${escapeHtml(subjectName(id))}</div><div class="meta">${Math.floor(min/60)}h ${min%60}m</div><div class="progress" style="margin-top:7px"><span style="width:${Math.min(100,(min/60/((Number($('dailyGoal')?.value)||60)/60))*10)}%"></span></div></div>`).join('')||'<div class="empty">Nenhum estudo registrado.</div>'}</div>`}
+function renderTcc(){const render=(arr,type)=>arr.slice().sort((a,b)=>(a.date||'').localeCompare(b.date||'')).map(x=>`<div class="list-item"><div class="top"><span class="title" style="${x.done?'text-decoration:line-through;opacity:.55':''}">${escapeHtml(x.title)}</span><span class="badge ${x.done?'green':'blue'}">${x.done?'Concluído':'Pendente'}</span></div><div class="meta">${x.date?fmtDate(x.date):'Sem data'}${x.description?' • '+escapeHtml(x.description):''}</div><div class="item-actions"><button class="mini-btn" onclick="toggleWorkflow('${type}','${x.id}',${!x.done})">${x.done?'Reabrir':'Concluir'}</button>${isAdmin?`<button class="mini-btn" onclick="openTccModal('${type}','${x.id}')">Editar</button><button class="mini-btn" onclick="removeDoc('${type}','${x.id}')">Excluir</button>`:''}</div></div>`).join('')||'<div class="empty">Nenhuma etapa.</div>'; $('tccList').innerHTML=render(data.tcc,'tcc');$('internshipList').innerHTML=render(data.internship,'internship')}
+function renderCalendar(){const root=$('calendarRoot'),d=monthCursor,y=d.getFullYear(),m=d.getMonth();$('calendarMonth').textContent=d.toLocaleDateString('pt-BR',{month:'long',year:'numeric'}).replace(/^./,c=>c.toUpperCase());const weekdays=['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];root.innerHTML=weekdays.map(x=>`<div class="cal-head">${x}</div>`).join('');const first=(new Date(y,m,1).getDay()||7)-1;for(let i=0;i<first;i++)root.innerHTML+='<div class="cal-cell"></div>';const days=new Date(y,m+1,0).getDate();for(let day=1;day<=days;day++){const date=`${y}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;const items=[...data.assessments.filter(x=>x.date===date).map(x=>({...x,title:x.title,type:'exam'})),...data.tasks.filter(x=>x.dueDate===date).map(x=>({...x,title:x.title,type:'assignment'})),...data.events.filter(x=>x.date===date).map(x=>({...x,title:x.title,type:'other'}))];root.innerHTML+=`<div class="cal-cell ${date===isoToday()?'today':''}"><div class="cal-day">${day}</div>${items.map(e=>`<div class="cal-event ${e.type}" title="${escapeHtml(e.title)}">${escapeHtml(e.title)}</div>`).join('')}</div>`}}
+window.changeMonth=delta=>{monthCursor=new Date(monthCursor.getFullYear(),monthCursor.getMonth()+delta,1);renderCalendar()};
+window.openModal=(title,html)=>{$('modalTitle').textContent=title;$('modalBody').innerHTML=html;$('modalOverlay').style.display='flex'};window.closeModal=()=>{$('modalOverlay').style.display='none'};
+const modalActions=(saveText='Salvar')=>`<div class="actions" style="justify-content:flex-end;margin-top:14px"><button class="btn btn-sec" onclick="closeModal()">Cancelar</button><button class="btn btn-green" onclick="this.closest('.modal').querySelector('form').requestSubmit()">${saveText}</button></div>`;
+window.openSubjectModal=async id=>{if(!isAdmin)return;const s=id?data.subjects.find(x=>x.id===id):{};openModal(id?'Editar disciplina':'Nova disciplina',`<form onsubmit="saveSubject(event,'${id||''}')"><div class="form-grid"><div class="field full"><label>Nome</label><input name="name" required value="${escapeHtml(s.name||'')}"></div><div class="field"><label>Professor</label><input name="teacher" value="${escapeHtml(s.teacher||'')}"></div><div class="field"><label>Cor</label><input name="color" type="color" value="${s.color||'#15803d'}"></div><div class="field full"><label>Observações</label><textarea name="notes">${escapeHtml(s.notes||'')}</textarea></div></div>${modalActions()}</form>`) };
+window.saveSubject=async(e,id)=>{e.preventDefault();const f=new FormData(e.target),payload={name:f.get('name').trim(),teacher:f.get('teacher').trim(),color:f.get('color'),notes:f.get('notes').trim()};await saveDoc('subjects',id,payload);closeModal()}
+window.openClassModal=async id=>{if(!isAdmin)return;const c=id?data.classes.find(x=>x.id===id):{};openModal(id?'Editar aula':'Nova aula',`<form onsubmit="saveClass(event,'${id||''}')"><div class="form-grid"><div class="field full"><label>Disciplina</label><select name="subjectId" required>${data.subjects.map(s=>`<option value="${s.id}" ${c.subjectId===s.id?'selected':''}>${escapeHtml(s.name)}</option>`).join('')}</select></div><div class="field"><label>Dia</label><select name="day"><option value="1" ${c.day==1?'selected':''}>Segunda</option><option value="2" ${c.day==2?'selected':''}>Terça</option><option value="3" ${c.day==3?'selected':''}>Quarta</option><option value="4" ${c.day==4?'selected':''}>Quinta</option><option value="5" ${c.day==5?'selected':''}>Sexta</option><option value="6" ${c.day==6?'selected':''}>Sábado</option><option value="7" ${c.day==7?'selected':''}>Domingo</option></select></div><div class="field"><label>Início</label><input name="start" type="time" required value="${c.start||''}"></div><div class="field"><label>Fim</label><input name="end" type="time" required value="${c.end||''}"></div><div class="field"><label>Professor</label><input name="teacher" value="${escapeHtml(c.teacher||'')}"></div><div class="field"><label>Sala</label><input name="room" value="${escapeHtml(c.room||'')}"></div></div>${modalActions()}</form>`) };
+window.saveClass=async(e,id)=>{e.preventDefault();const f=new FormData(e.target),sid=f.get('subjectId'),payload={subjectId:sid,title:subjectName(sid),day:Number(f.get('day')),start:f.get('start'),end:f.get('end'),teacher:f.get('teacher').trim(),room:f.get('room').trim()};await saveDoc('classes',id,payload);closeModal()}
+window.openTaskModal=async id=>{if(!isAdmin)return;const t=id?data.tasks.find(x=>x.id===id):{};openModal(id?'Editar tarefa':'Nova tarefa',`<form onsubmit="saveTask(event,'${id||''}')"><div class="form-grid"><div class="field full"><label>Título</label><input name="title" required value="${escapeHtml(t.title||'')}"></div><div class="field"><label>Disciplina</label><select name="subjectId">${data.subjects.map(s=>`<option value="${s.id}" ${t.subjectId===s.id?'selected':''}>${escapeHtml(s.name)}</option>`).join('')}</select></div><div class="field"><label>Prazo</label><input name="dueDate" type="date" value="${t.dueDate||''}"></div><div class="field"><label>Prioridade</label><select name="priority"><option ${t.priority==='Baixa'?'selected':''}>Baixa</option><option ${(!t.priority||t.priority==='Média')?'selected':''}>Média</option><option ${t.priority==='Alta'?'selected':''}>Alta</option></select></div><div class="field"><label>Status</label><select name="done"><option value="false" ${!t.done?'selected':''}>Pendente</option><option value="true" ${t.done?'selected':''}>Concluída</option></select></div><div class="field full"><label>Descrição</label><textarea name="description">${escapeHtml(t.description||'')}</textarea></div></div>${modalActions()}</form>`) };
+window.saveTask=async(e,id)=>{e.preventDefault();const f=new FormData(e.target);await saveDoc('tasks',id,{title:f.get('title').trim(),subjectId:f.get('subjectId'),dueDate:f.get('dueDate'),priority:f.get('priority'),done:f.get('done')==='true',description:f.get('description').trim()});closeModal()}
+window.openAssessmentModal=async id=>{if(!isAdmin)return;const a=id?data.assessments.find(x=>x.id===id):{};openModal(id?'Editar prova':'Nova prova',`<form onsubmit="saveAssessment(event,'${id||''}')"><div class="form-grid"><div class="field full"><label>Título</label><input name="title" required value="${escapeHtml(a.title||'')}"></div><div class="field"><label>Disciplina</label><select name="subjectId">${data.subjects.map(s=>`<option value="${s.id}" ${a.subjectId===s.id?'selected':''}>${escapeHtml(s.name)}</option>`).join('')}</select></div><div class="field"><label>Data</label><input name="date" type="date" required value="${a.date||''}"></div><div class="field"><label>Horário</label><input name="time" type="time" value="${a.time||''}"></div><div class="field"><label>Local</label><input name="location" value="${escapeHtml(a.location||'')}"></div><div class="field full"><label>Conteúdo</label><textarea name="content">${escapeHtml(a.content||'')}</textarea></div></div>${modalActions()}</form>`) };
+window.saveAssessment=async(e,id)=>{e.preventDefault();const f=new FormData(e.target);await saveDoc('assessments',id,{title:f.get('title').trim(),subjectId:f.get('subjectId'),date:f.get('date'),time:f.get('time'),location:f.get('location').trim(),content:f.get('content').trim()});closeModal()}
+window.openEventModal=async id=>{if(!isAdmin)return;const ev=id?data.events.find(x=>x.id===id):{};openModal(id?'Editar evento':'Novo evento',`<form onsubmit="saveEvent(event,'${id||''}')"><div class="form-grid"><div class="field full"><label>Título</label><input name="title" required value="${escapeHtml(ev.title||'')}"></div><div class="field"><label>Data</label><input name="date" type="date" required value="${ev.date||''}"></div><div class="field"><label>Horário</label><input name="time" type="time" value="${ev.time||''}"></div><div class="field full"><label>Descrição</label><textarea name="description">${escapeHtml(ev.description||'')}</textarea></div></div>${modalActions()}</form>`) };
+window.saveEvent=async(e,id)=>{e.preventDefault();const f=new FormData(e.target);await saveDoc('events',id,{title:f.get('title').trim(),date:f.get('date'),time:f.get('time'),description:f.get('description').trim()});closeModal()}
+window.openTccModal=async(type,id)=>{if(!isAdmin)return;const arr=type==='tcc'?data.tcc:data.internship,x=id?arr.find(v=>v.id===id):{};const label=type==='tcc'?'TCC':'Estágio';openModal(id?`Editar etapa — ${label}`:`Nova etapa — ${label}`,`<form onsubmit="saveWorkflow(event,'${type}','${id||''}')"><div class="form-grid"><div class="field full"><label>Etapa</label><input name="title" required value="${escapeHtml(x.title||'')}"></div><div class="field"><label>Data</label><input name="date" type="date" value="${x.date||''}"></div><div class="field full"><label>Descrição</label><textarea name="description">${escapeHtml(x.description||'')}</textarea></div></div>${modalActions()}</form>`) };
+window.saveWorkflow=async(e,type,id)=>{e.preventDefault();const f=new FormData(e.target);await saveDoc(type,id,{title:f.get('title').trim(),date:f.get('date'),description:f.get('description').trim(),done:false});closeModal()};
+window.toggleTask=async(id,val)=>{await updateDoc(doc(db,'tasks',id),{done:val});showToast(val?'Tarefa concluída':'Tarefa reaberta')};window.toggleWorkflow=async(type,id,val)=>{await updateDoc(doc(db,type,id),{done:val})};
+window.removeDoc=async(collectionName,id)=>{if(!isAdmin)return;if(confirm('Excluir este item?'))await deleteDoc(doc(db,collectionName,id))};
+async function saveDoc(collectionName,id,payload){if(id)await updateDoc(doc(db,collectionName,id),payload);else await addDoc(col(collectionName),payload);showToast('Salvo com sucesso')}
+window.openReminderForSubject=subjectId=>{if(!isAdmin)return;const text=prompt('Digite o lembrete para compartilhar com a turma:');if(!text?.trim())return;const color=prompt('Escolha a cor: 1 vermelho 2 amarelo 3 verde 4 padrão','4')||'4';const colorClass=['','reminder-red','reminder-yellow','reminder-green'][Number(color)]||'reminder-default';addDoc(col('reminders'),{subjectId,text:text.trim(),colorClass,createdAt:new Date()})};
+window.editReminder=async id=>{if(!isAdmin)return;const r=data.reminders.find(x=>x.id===id);if(!r)return;const text=prompt('Edite o lembrete:',r.text||'');if(!text?.trim())return;await updateDoc(doc(db,'reminders',id),{text:text.trim()})};window.deleteReminder=async id=>{if(!isAdmin)return;await removeDoc('reminders',id)};
+async function loadCollection(name,target,sortField){const q=sortField?query(col(name),orderBy(sortField,'asc')):col(name);onSnapshot(q,snap=>{data[target]=snap.docs.map(d=>({id:d.id,...d.data()}));renderAll();applyAdminVisibility()})}
+async function seedInitialAcademicData(){const subjectSnap=await getDocs(col('subjects'));if(subjectSnap.empty){const seeds=[['Controle de Qualidade Microbiológico','Daniela Borges','#15803d'],['Controle de Qualidade de Alimentos','Pamela Cristina','#0284c7'],['Pesquisa e Des. de Medicamentos','Leonardo Borges','#7c3aed'],['Serviços Clínicos Farmacêuticos II','Anna Paula','#c2410c'],['Economia e Gestão Farmacêutica','João Nilson','#b45309'],['Controle de Qualidade em Lab.','Nathália Cristina','#0f766e']];for(const [name,teacher,color] of seeds)await addDoc(col('subjects'),{name,teacher,color,notes:''})}}
+async function seedInitialClasses(){const classSnap=await getDocs(col('classes'));if(!classSnap.empty)return;const subjectsSnap=await getDocs(col('subjects'));const map={};subjectsSnap.docs.forEach(d=>map[d.data().name]=d.id);const seeds=[['Controle de Qualidade Microbiológico',1,'13:00','16:30','Daniela Borges',''],['Controle de Qualidade de Alimentos',2,'13:00','16:30','Pamela Cristina',''],['Pesquisa e Des. de Medicamentos',3,'13:00','15:30','Leonardo Borges',''],['Serviços Clínicos Farmacêuticos II',3,'15:40','19:50','Anna Paula',''],['Economia e Gestão Farmacêutica',4,'13:00','16:30','João Nilson',''],['Controle de Qualidade em Lab.',5,'13:00','15:30','Nathália Cristina','']];for(const [title,day,start,end,teacher,room] of seeds)await addDoc(col('classes'),{subjectId:map[title],title,day,start,end,teacher,room})}
+async function loadAll(){await seedInitialAcademicData();await seedInitialClasses();loadCollection('subjects','subjects','name');loadCollection('classes','classes','day');loadCollection('tasks','tasks','dueDate');loadCollection('assessments','assessments','date');loadCollection('events','events','date');loadCollection('progress','progress','createdAt');loadCollection('tcc','tcc','date');loadCollection('internship','internship','date');loadCollection('reminders','reminders','createdAt');const q=query(col('chat'),orderBy('createdAt','asc'));onSnapshot(q,s=>{currentChat=s.docs;renderChat()})}
+window.addEventListener('load',()=>{if(localStorage.getItem('ueg_access_granted')==='true')showApp();loadAll()});
+function applyAdminVisibility(){const ids=['adminAddClass','adminAddEvent','adminAddTask','adminAddAssessment','adminAddSubject','adminAddTcc','adminAddInternship','btnClearChat'];ids.forEach(id=>$(id)?.classList.toggle('hidden',!isAdmin));$('btnAdminToggle').textContent=isAdmin?'🔓 Admin Ativo':'🔑 Admin'}
+window.toggleAdmin=()=>{if(!isAdmin){const pass=prompt('Digite a senha de administrador:');if(pass===ADMIN_PASSWORD){isAdmin=true;showToast('Modo Administrador ativado');applyAdminVisibility();renderAll()}else if(pass!==null)alert('Senha incorreta!')}else{isAdmin=false;applyAdminVisibility();renderAll()}}
+window.sendMessage=async()=>{const name=$('chatName').value.trim(),text=$('chatText').value.trim();if(!name||!text){alert('Preencha seu nome e a mensagem!');return}const payload={author:name,text,time:new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}),createdAt:new Date()};if(activeReplyTarget)payload.replyTo=activeReplyTarget;await addDoc(col('chat'),payload);$('chatText').value='';cancelReply()};
+window.startReply=(author,text)=>{activeReplyTarget={author,text};$('replyTargetText').textContent=`Respondendo a ${author}: "${text.slice(0,60)}${text.length>60?'...':''}"`;$('replyPreview').style.display='flex';$('chatText').focus()};window.cancelReply=()=>{activeReplyTarget=null;$('replyPreview').style.display='none'};
+window.deleteChatMessage=async id=>{if(!isAdmin)return;await deleteDoc(doc(db,'chat',id))};window.clearEntireChat=async()=>{if(!isAdmin||!confirm('Tem certeza que deseja apagar TODO o histórico do chat?'))return;const s=await getDocs(col('chat'));for(const d of s.docs)await deleteDoc(doc(db,'chat',d.id));showToast('Chat limpo')};
+function renderChat(){if(!$('chatMessages'))return;$('chatMessages').innerHTML=currentChat.map(d=>{const x=d.data();const when=x.time||'';const reply=x.replyTo?`<div style="margin-top:5px;background:rgba(21,128,61,.08);border-left:3px solid #15803d;padding:4px 7px;border-radius:4px;font-size:.68rem"><b>${escapeHtml(x.replyTo.author)}</b>: ${escapeHtml(x.replyTo.text)}</div>`:'';return `<div class="chat-msg"><div class="chat-head"><span class="chat-author">${escapeHtml(x.author)}</span><span class="chat-time">${when}<span class="chat-actions"><span class="reply" onclick="startReply('${escapeHtml(x.author)}','${escapeHtml(x.text)}')">↩</span>${isAdmin?`<span class="delete" onclick="deleteChatMessage('${d.id}')">✕</span>`:''}</span></span></div>${reply}<div style="margin-top:4px">${escapeHtml(x.text)}</div></div>`}).join('')||'<div class="empty">Nenhuma mensagem ainda.</div>';$('chatMessages').scrollTop=$('chatMessages').scrollHeight}
+window.startStudySession=async()=>{const subjectId=$('studySubject').value;if(!subjectId){alert('Cadastre uma disciplina primeiro.');return}setTimerMinutes(Number($('dailyGoal').value)||25);showToast('Sessão iniciada');};
+function updateStudyRecord(min){if(!$('studySubject')?.value)return;addDoc(col('progress'),{subjectId:$('studySubject').value,minutes:min,note:$('studyNote').value.trim(),createdAt:new Date()})}
+function updateClock(){const n=new Date();$('digitalClock').textContent=n.toLocaleTimeString('pt-BR');$('currentDate').textContent=n.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'})};setInterval(updateClock,1000);updateClock();
+function updateDisplay(){$('timer').textContent=`${String(Math.floor(timeLeft/60)).padStart(2,'0')}:${String(timeLeft%60).padStart(2,'0')}`}
+window.toggleTimer=()=>{const btn=$('startBtn');if(timerId){clearInterval(timerId);timerId=null;btn.textContent='Continuar'}else{btn.textContent='Pausar';timerId=setInterval(()=>{if(timeLeft>0){timeLeft--;updateDisplay()}else{clearInterval(timerId);timerId=null;btn.textContent='Iniciar';updateStudyRecord(timerMinutes);alert('🔔 Sessão concluída!')}},1000)}};window.resetTimer=()=>{clearInterval(timerId);timerId=null;timeLeft=timerMinutes*60;$('startBtn').textContent='Iniciar';updateDisplay()};window.setTimerMinutes=m=>{timerMinutes=m;resetTimer()};window.setCustomTimer=()=>{const m=prompt('Digite o tempo da sessão em minutos:','30');if(m&&Number(m)>0)setTimerMinutes(Number(m))};
+let jitsiApi=null;window.openVideoCall=()=>{ $('videoModal').style.display='flex';if(!jitsiApi){jitsiApi=new JitsiMeetExternalAPI('meet.element.io',{roomName:'CentralEstudosUEG_Farmacia_Itumbiara_2026',width:'100%',height:'100%',parentNode:$('jitsiContainer'),configOverwrite:{startWithAudioMuted:true,startWithVideoMuted:false,prejoinPageEnabled:false},interfaceConfigOverwrite:{SHOW_JITSI_WATERMARK:false,SHOW_WATERMARK_FOR_GUESTS:false,TOOLBAR_BUTTONS:['microphone','camera','desktop','fullscreen','raisehand','tileview','hangup']}})}};window.closeVideoCall=()=>{$('videoModal').style.display='none';if(jitsiApi){jitsiApi.dispose();jitsiApi=null}};
+$('mainNav').addEventListener('click',e=>{const b=e.target.closest('button[data-view]');if(b)window.switchView(b.dataset.view)});
 </script>
-
 </body>
 </html>
