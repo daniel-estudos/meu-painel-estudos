@@ -6,8 +6,8 @@
     <title>Central de Estudos | UEG</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- API do Jitsi Meet Atualizada -->
-    <script src="https://8x8.vc/external_api.js"></script>
+    <!-- API do Jitsi Comunitário Sem Autenticação -->
+    <script src="https://meet.element.io/external_api.js"></script>
 
     <style>
         :root {
@@ -156,7 +156,7 @@
 
         .date { font-size: 0.8rem; color: #000000; font-weight: 700; text-transform: capitalize; }
 
-        /* MODAL DE VÍDEO (JITSI 8X8) */
+        /* MODAL DE VÍDEO */
         .video-modal {
             display: none;
             position: fixed;
@@ -904,7 +904,7 @@
 
 </div>
 
-<!-- MODAL COM VIDEOCHAMADA JITSI 8X8 -->
+<!-- MODAL COM VIDEOCHAMADA LIBERADA -->
 <div class="video-modal" id="videoModal">
     <div class="video-container">
         <div class="video-header">
@@ -994,23 +994,23 @@
         }
     }
 
-    // INTEGRAÇÃO JITSI 8x8 (SEM NECESSIDADE DE MODERADOR/LOGIN)
+    // INTEGRAÇÃO DE VÍDEO TOTALMENTE LIVRE (ELEMENT / JITSI)
     let jitsiApi = null;
 
     function openVideoCall() {
         document.getElementById('videoModal').style.display = 'flex';
         
         if (!jitsiApi) {
-            const domain = "8x8.vc";
+            const domain = "meet.element.io";
             const options = {
-                roomName: "vpaas-magic-cookie-88710776b9df4b48911ec5b4a559d871/CentralEstudosUEG_Farmacia_2026",
+                roomName: "CentralEstudosUEG_Farmacia_Itumbiara_2026",
                 width: "100%",
                 height: "100%",
                 parentNode: document.querySelector('#jitsiContainer'),
                 configOverwrite: {
                     startWithAudioMuted: true,
                     startWithVideoMuted: false,
-                    prejoinPageEnabled: false // Entra direto na sala sem telas intermediárias
+                    prejoinPageEnabled: false
                 },
                 interfaceConfigOverwrite: {
                     SHOW_JITSI_WATERMARK: false,
