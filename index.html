@@ -7,10 +7,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Transparência mais forte (45% de opacidade) */
             --surface: rgba(255, 255, 255, 0.45);
-            --surface-card: rgba(255, 255, 255, 0.60);
-            --text-main: #000000; /* Preto total */
+            --surface-card: rgba(255, 255, 255, 0.65);
+            --text-main: #000000;
             --border: rgba(255, 255, 255, 0.5);
             --accent: #15803d; 
             --accent-hover: #166534;
@@ -29,7 +28,7 @@
         }
 
         .app-container {
-            max-width: 800px;
+            max-width: 850px;
             width: 100%;
             display: flex;
             flex-direction: column;
@@ -71,22 +70,28 @@
             margin-bottom: 12px;
         }
 
-        /* Grade de Aulas em Blocos / Grid Compacto */
+        /* Grade de Aulas e Lembretes */
         .schedule-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 14px;
         }
 
         .day-block {
             background: var(--surface-card);
-            padding: 12px 14px;
+            padding: 14px;
             border-radius: 12px;
             border: 1px solid rgba(255,255,255,0.4);
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+        }
+
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .day-title {
@@ -97,8 +102,8 @@
         }
 
         .subject-name {
-            font-size: 0.85rem;
-            font-weight: 700;
+            font-size: 0.88rem;
+            font-weight: 800;
             color: #000000;
             line-height: 1.2;
         }
@@ -107,6 +112,65 @@
             font-size: 0.78rem;
             color: #000000;
             font-weight: 600;
+        }
+
+        /* Seção de Lembretes da Matéria */
+        .reminders-section {
+            margin-top: 6px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .reminders-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .reminders-title {
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: #1e293b;
+        }
+
+        .btn-add-reminder {
+            background: #000000;
+            color: white;
+            border: none;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .reminder-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .reminder-item {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 6px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #000000;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .reminder-item span {
+            cursor: pointer;
+            color: #dc2626;
+            font-weight: bold;
+            margin-left: 6px;
         }
 
         /* Timer Minimalista */
@@ -118,23 +182,6 @@
 
         .time-display { font-size: 2rem; font-weight: 800; color: #000000; }
         .timer-btns { display: flex; gap: 8px; }
-
-        /* Inputs & Listas */
-        .input-group { display: flex; gap: 8px; margin-bottom: 12px; }
-        
-        input[type="text"] {
-            flex: 1;
-            padding: 10px 14px;
-            border-radius: 8px;
-            border: 1px solid rgba(0,0,0,0.15);
-            background: rgba(255,255,255,0.7);
-            font-size: 0.875rem;
-            color: #000000;
-            font-weight: 600;
-            outline: none;
-        }
-
-        input[type="text"]::placeholder { color: #4b5563; font-weight: 500; }
 
         button {
             padding: 8px 16px;
@@ -152,24 +199,6 @@
 
         .btn-sec { background: transparent; color: #000000; border: 1px solid #000000; }
         .btn-sec:hover { background: rgba(0,0,0,0.05); }
-
-        ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
-
-        li {
-            padding: 10px 12px;
-            background: var(--surface-card);
-            border-radius: 8px;
-            font-size: 0.85rem;
-            color: #000000;
-            font-weight: 600;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-        }
-
-        li:hover { opacity: 0.75; }
-        li::after { content: '✕'; font-size: 0.7rem; color: #000000; font-weight: bold; }
 
         /* Links Rápidos */
         .links { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; }
@@ -210,64 +239,102 @@
         </div>
     </div>
 
-    <!-- Horários em Blocos Compactos -->
+    <!-- Horários e Lembretes por Matéria -->
     <div class="card">
-        <div class="card-title">Horário das Aulas (UEG)</div>
+        <div class="card-title">Horário das Aulas & Lembretes (UEG)</div>
         <div class="schedule-grid">
             
+            <!-- Segunda -->
             <div class="day-block">
-                <span class="day-title">Segunda-feira</span>
+                <div class="day-header"><span class="day-title">Segunda-feira</span></div>
                 <span class="subject-name">Controle de Qualidade Microbiológico</span>
                 <span class="subject-info">⏰ 13:00 - 16:30</span>
                 <span class="subject-info">👨‍🏫 Daniela Borges</span>
+                <div class="reminders-section">
+                    <div class="reminders-header">
+                        <span class="reminders-title">📌 Lembretes</span>
+                        <button class="btn-add-reminder" onclick="addReminder('seg')">+ Lembrete</button>
+                    </div>
+                    <div class="reminder-list" id="list-seg"></div>
+                </div>
             </div>
 
+            <!-- Terça -->
             <div class="day-block">
-                <span class="day-title">Terça-feira</span>
+                <div class="day-header"><span class="day-title">Terça-feira</span></div>
                 <span class="subject-name">Controle de Qualidade de Alimentos</span>
                 <span class="subject-info">⏰ 13:00 - 16:30</span>
                 <span class="subject-info">👩‍🏫 Pamela Cristina</span>
+                <div class="reminders-section">
+                    <div class="reminders-header">
+                        <span class="reminders-title">📌 Lembretes</span>
+                        <button class="btn-add-reminder" onclick="addReminder('ter')">+ Lembrete</button>
+                    </div>
+                    <div class="reminder-list" id="list-ter"></div>
+                </div>
             </div>
 
+            <!-- Quarta 1 -->
             <div class="day-block">
-                <span class="day-title">Quarta-feira (1º Bloco)</span>
+                <div class="day-header"><span class="day-title">Quarta-feira (1º Bloco)</span></div>
                 <span class="subject-name">Pesquisa e Des. de Medicamentos</span>
                 <span class="subject-info">⏰ 13:00 - 15:30</span>
                 <span class="subject-info">👨‍🏫 Leonardo Borges</span>
+                <div class="reminders-section">
+                    <div class="reminders-header">
+                        <span class="reminders-title">📌 Lembretes</span>
+                        <button class="btn-add-reminder" onclick="addReminder('qua1')">+ Lembrete</button>
+                    </div>
+                    <div class="reminder-list" id="list-qua1"></div>
+                </div>
             </div>
 
+            <!-- Quarta 2 -->
             <div class="day-block">
-                <span class="day-title">Quarta-feira (2º Bloco)</span>
+                <div class="day-header"><span class="day-title">Quarta-feira (2º Bloco)</span></div>
                 <span class="subject-name">Serviços Clínicos Farmacêuticos II</span>
                 <span class="subject-info">⏰ 15:40 - 19:50</span>
                 <span class="subject-info">👩‍🏫 Anna Paula</span>
+                <div class="reminders-section">
+                    <div class="reminders-header">
+                        <span class="reminders-title">📌 Lembretes</span>
+                        <button class="btn-add-reminder" onclick="addReminder('qua2')">+ Lembrete</button>
+                    </div>
+                    <div class="reminder-list" id="list-qua2"></div>
+                </div>
             </div>
 
+            <!-- Quinta -->
             <div class="day-block">
-                <span class="day-title">Quinta-feira</span>
+                <div class="day-header"><span class="day-title">Quinta-feira</span></div>
                 <span class="subject-name">Economia e Gestão Farmacêutica</span>
                 <span class="subject-info">⏰ 13:00 - 16:30</span>
                 <span class="subject-info">👨‍🏫 João Nilson</span>
+                <div class="reminders-section">
+                    <div class="reminders-header">
+                        <span class="reminders-title">📌 Lembretes</span>
+                        <button class="btn-add-reminder" onclick="addReminder('qui')">+ Lembrete</button>
+                    </div>
+                    <div class="reminder-list" id="list-qui"></div>
+                </div>
             </div>
 
+            <!-- Sexta -->
             <div class="day-block">
-                <span class="day-title">Sexta-feira</span>
+                <div class="day-header"><span class="day-title">Sexta-feira</span></div>
                 <span class="subject-name">Controle de Qualidade em Lab.</span>
                 <span class="subject-info">⏰ 13:00 - 15:30</span>
                 <span class="subject-info">👩‍🏫 Nathália Cristina</span>
+                <div class="reminders-section">
+                    <div class="reminders-header">
+                        <span class="reminders-title">📌 Lembretes</span>
+                        <button class="btn-add-reminder" onclick="addReminder('sex')">+ Lembrete</button>
+                    </div>
+                    <div class="reminder-list" id="list-sex"></div>
+                </div>
             </div>
 
         </div>
-    </div>
-
-    <!-- Tarefas -->
-    <div class="card">
-        <div class="card-title">Tarefas & Prazos</div>
-        <div class="input-group">
-            <input type="text" id="taskInput" placeholder="Adicionar nova tarefa..." onkeypress="handleKey(event)">
-            <button onclick="addTask()">+ Criar</button>
-        </div>
-        <ul id="taskList"></ul>
     </div>
 
     <!-- Links -->
@@ -288,21 +355,16 @@
     const options = { weekday: 'long', day: 'numeric', month: 'long' };
     document.getElementById('currentDate').textContent = new Date().toLocaleDateString('pt-BR', options);
 
-    // Tarefas
-    function addTask() {
-        const input = document.getElementById('taskInput');
-        if (!input.value.trim()) return;
-        
-        const li = document.createElement('li');
-        li.textContent = input.value;
-        li.onclick = function() { this.remove(); };
-        
-        document.getElementById('taskList').appendChild(li);
-        input.value = '';
-    }
+    // Função para adicionar lembrete em uma matéria específica
+    function addReminder(subjectId) {
+        const text = prompt("Digite o lembrete para esta matéria:");
+        if (!text || !text.trim()) return;
 
-    function handleKey(e) {
-        if (e.key === 'Enter') addTask();
+        const list = document.getElementById(`list-${subjectId}`);
+        const div = document.createElement('div');
+        div.className = 'reminder-item';
+        div.innerHTML = `${text.trim()} <span onclick="this.parentElement.remove()">✕</span>`;
+        list.appendChild(div);
     }
 
     // Timer
