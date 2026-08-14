@@ -225,20 +225,6 @@
 
         button:hover { opacity: 0.85; }
         .btn-sec { background: transparent; color: #000000; border: 1px solid #000000; }
-
-        .links { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; }
-        .link-card {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px;
-            background: var(--surface-card);
-            border-radius: 8px;
-            text-decoration: none;
-            color: #000000;
-            font-size: 0.85rem;
-            font-weight: 700;
-        }
     </style>
 
     <!-- Firebase SDK -->
@@ -260,7 +246,7 @@
 
         // VARIÁVEIS DE ADMIN
         let isAdmin = false;
-        const ADMIN_PASSWORD = "1234"; // ⬅️ SUA SENHA AQUI
+        const ADMIN_PASSWORD = "404"; // ⬅️ SENHA DEFINIDA PARA 404
 
         window.toggleAdmin = function() {
             if (!isAdmin) {
@@ -415,9 +401,9 @@
             
             <div class="day-block">
                 <span class="day-title">Segunda-feira</span>
-                <span class="subject-name">Controle de Qualidade Microbiológico</span>[cite: 1]
-                <span class="subject-info">⏰ 13:00 - 16:30</span>[cite: 1]
-                <span class="subject-info">👨‍🏫 Daniela Borges</span>[cite: 1]
+                <span class="subject-name">Controle de Qualidade Microbiológico</span>
+                <span class="subject-info">⏰ 13:00 - 16:30</span>
+                <span class="subject-info">👨‍🏫 Daniela Borges</span>
                 <div class="reminders-section">
                     <div class="reminders-header">
                         <span class="reminders-title">📌 Lembretes</span>
@@ -429,9 +415,9 @@
 
             <div class="day-block">
                 <span class="day-title">Terça-feira</span>
-                <span class="subject-name">Controle de Qualidade de Alimentos</span>[cite: 1]
-                <span class="subject-info">⏰ 13:00 - 16:30</span>[cite: 1]
-                <span class="subject-info">👩‍🏫 Pamela Cristina</span>[cite: 1]
+                <span class="subject-name">Controle de Qualidade de Alimentos</span>
+                <span class="subject-info">⏰ 13:00 - 16:30</span>
+                <span class="subject-info">👩‍🏫 Pamela Cristina</span>
                 <div class="reminders-section">
                     <div class="reminders-header">
                         <span class="reminders-title">📌 Lembretes</span>
@@ -443,9 +429,9 @@
 
             <div class="day-block">
                 <span class="day-title">Quarta-feira (1º Bloco)</span>
-                <span class="subject-name">Pesquisa e Des. de Medicamentos</span>[cite: 1]
-                <span class="subject-info">⏰ 13:00 - 15:30</span>[cite: 1]
-                <span class="subject-info">👨‍🏫 Leonardo Borges</span>[cite: 1]
+                <span class="subject-name">Pesquisa e Des. de Medicamentos</span>
+                <span class="subject-info">⏰ 13:00 - 15:30</span>
+                <span class="subject-info">👨‍🏫 Leonardo Borges</span>
                 <div class="reminders-section">
                     <div class="reminders-header">
                         <span class="reminders-title">📌 Lembretes</span>
@@ -457,9 +443,9 @@
 
             <div class="day-block">
                 <span class="day-title">Quarta-feira (2º Bloco)</span>
-                <span class="subject-name">Serviços Clínicos Farmacêuticos II</span>[cite: 1]
-                <span class="subject-info">⏰ 15:40 - 19:50</span>[cite: 1]
-                <span class="subject-info">👩‍🏫 Anna Paula</span>[cite: 1]
+                <span class="subject-name">Serviços Clínicos Farmacêuticos II</span>
+                <span class="subject-info">⏰ 15:40 - 19:50</span>
+                <span class="subject-info">👩‍🏫 Anna Paula</span>
                 <div class="reminders-section">
                     <div class="reminders-header">
                         <span class="reminders-title">📌 Lembretes</span>
@@ -471,9 +457,9 @@
 
             <div class="day-block">
                 <span class="day-title">Quinta-feira</span>
-                <span class="subject-name">Economia e Gestão Farmacêutica</span>[cite: 1]
-                <span class="subject-info">⏰ 13:00 - 16:30</span>[cite: 1]
-                <span class="subject-info">👨‍🏫 João Nilson</span>[cite: 1]
+                <span class="subject-name">Economia e Gestão Farmacêutica</span>
+                <span class="subject-info">⏰ 13:00 - 16:30</span>
+                <span class="subject-info">👨‍🏫 João Nilson</span>
                 <div class="reminders-section">
                     <div class="reminders-header">
                         <span class="reminders-title">📌 Lembretes</span>
@@ -485,9 +471,9 @@
 
             <div class="day-block">
                 <span class="day-title">Sexta-feira</span>
-                <span class="subject-name">Controle de Qualidade em Lab.</span>[cite: 1]
-                <span class="subject-info">⏰ 13:00 - 15:30</span>[cite: 1]
-                <span class="subject-info">👩‍🏫 Nathália Cristina</span>[cite: 1]
+                <span class="subject-name">Controle de Qualidade em Lab.</span>
+                <span class="subject-info">⏰ 13:00 - 15:30</span>
+                <span class="subject-info">👩‍🏫 Nathália Cristina</span>
                 <div class="reminders-section">
                     <div class="reminders-header">
                         <span class="reminders-title">📌 Lembretes</span>
@@ -516,17 +502,6 @@
                 <input type="text" id="chatText" class="chat-text" placeholder="Digite uma mensagem..." onkeypress="if(event.key==='Enter') sendMessage()">
                 <button onclick="sendMessage()">Enviar</button>
             </div>
-        </div>
-    </div>
-
-    <!-- Atalhos Rápidos -->
-    <div class="card">
-        <div class="card-title">Acesso Rápido</div>
-        <div class="links">
-            <a href="https://notion.so" target="_blank" class="link-card">Notion</a>
-            <a href="https://drive.google.com" target="_blank" class="link-card">Drive</a>
-            <a href="https://gemini.google.com" target="_blank" class="link-card">Gemini</a>
-            <a href="https://chatgpt.com" target="_blank" class="link-card">ChatGPT</a>
         </div>
     </div>
 
