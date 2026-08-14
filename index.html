@@ -33,7 +33,6 @@
             background-size: cover;
         }
 
-        /* Banner de Status Offline */
         .offline-status {
             display: none;
             background: #f59e0b;
@@ -93,7 +92,7 @@
         #loginScreen button:hover { opacity: 0.85; }
 
         .app-container {
-            max-width: 850px;
+            max-width: 1150px;
             width: 100%;
             display: none;
             flex-direction: column;
@@ -116,6 +115,31 @@
         h1 { font-size: 1.25rem; font-weight: 800; color: #000000; }
         .date { font-size: 0.85rem; color: #000000; font-weight: 700; }
 
+        /* Módulos do Dashboard com 2 Colunas */
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 850px) {
+            .dashboard-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .sidebar-col {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .main-col {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
         .card {
             background: var(--surface);
             backdrop-filter: blur(16px);
@@ -134,10 +158,8 @@
             border-radius: 16px;
             padding: 18px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-            width: 190px;
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
             gap: 8px;
         }
 
@@ -146,7 +168,7 @@
 
         .schedule-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 14px;
         }
 
@@ -202,14 +224,14 @@
 
         .reminder-item span { cursor: pointer; color: #dc2626; font-weight: bold; margin-left: 6px; }
 
-        /* Bate-Papo */
+        /* Bate-Papo Ajustado para Lateral */
         .chat-box { display: flex; flex-direction: column; gap: 10px; }
 
         .chat-messages {
             background: var(--surface-card);
             border-radius: 12px;
             padding: 12px;
-            height: 250px;
+            height: 380px; /* Maior para preencher melhor a lateral */
             overflow-y: auto;
             display: flex;
             flex-direction: column;
@@ -262,7 +284,9 @@
 
         .reply-preview-cancel { cursor: pointer; color: #dc2626; font-weight: bold; }
 
-        .chat-inputs { display: flex; gap: 8px; }
+        .chat-inputs { display: flex; flex-direction: column; gap: 8px; }
+
+        .chat-inputs-row { display: flex; gap: 8px; }
 
         .chat-inputs input {
             padding: 10px 12px;
@@ -275,7 +299,7 @@
             outline: none;
         }
 
-        .chat-name { width: 120px; }
+        .chat-name { width: 100%; }
         .chat-text { flex: 1; }
 
         .admin-controls { display: flex; gap: 6px; }
@@ -323,7 +347,7 @@
         .btn-sec { background: transparent; color: #000000; border: 1px solid #000000; padding: 8px 10px; }
     </style>
 
-    <!-- Firebase SDK com Suporte Offline Firestore PERSISTENCE -->
+    <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy, getDocs, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -340,12 +364,10 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Ativar Persistência Offline do Firestore
         enableIndexedDbPersistence(db).catch((err) => {
-            console.log("Persistência offline já está ativa em outra aba ou não é suportada:", err.code);
+            console.log("Persistência offline já ativa ou não suportada:", err.code);
         });
 
-        // Monitorar conexão com a internet
         function updateOnlineStatus() {
             const statusBanner = document.getElementById('offlineBanner');
             if (navigator.onLine) {
@@ -358,7 +380,6 @@
         window.addEventListener('online', updateOnlineStatus);
         window.addEventListener('offline', updateOnlineStatus);
 
-        // CONFIGURAÇÕES DE SENHA
         const SITE_PASSWORD = "ueg2026";
         let isAdmin = false;
         const ADMIN_PASSWORD = "404";
@@ -458,7 +479,7 @@
 
         window.startReply = function(author, text) {
             activeReplyTarget = { author, text };
-            document.getElementById('replyTargetText').textContent = `Respondendo a ${author}: "${text.length > 25 ? text.substring(0, 25) + '...' : text}"`;
+            document.getElementById('replyTargetText').textContent = `Respondendo a ${author}: "${text.length > 20 ? text.substring(0, 20) + '...' : text}"`;
             document.getElementById('replyPreview').style.display = 'flex';
             document.getElementById('chatText').focus();
         };
@@ -576,10 +597,9 @@
     <button onclick="checkPassword()">Acessar Painel</button>
 </div>
 
-<!-- Aplicação Principal -->
+<!-- Aplicação Principal com Layout Lateral -->
 <div class="app-container" id="appContainer">
 
-    <!-- Banner Avisando Modo Offline -->
     <div class="offline-status" id="offlineBanner">⚡ Modo Offline - Suas alterações serão sincronizadas assim que houver conexão.</div>
 
     <header>
@@ -587,133 +607,144 @@
         <span class="date" id="currentDate"></span>
     </header>
 
-    <!-- Sessão de Foco -->
-    <div class="card-focus-square">
-        <span class="card-title">Sessão de Foco</span>
-        <div class="timer-square-box">
-            <div class="time-display" id="timer">25:00</div>
-            <div class="timer-btns">
-                <button id="startBtn" onclick="toggleTimer()">Iniciar</button>
-                <button class="btn-sec" onclick="resetTimer()">Resetar</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Horários & Lembretes -->
-    <div class="card">
-        <div class="card-title">Horário das Aulas & Lembretes Compartilhados (UEG)</div>
-        <div class="schedule-grid">
+    <div class="dashboard-layout">
+        
+        <!-- Coluna Esquerda: Timer + Chat -->
+        <div class="sidebar-col">
             
-            <div class="day-block">
-                <span class="day-title">Segunda-feira</span>
-                <span class="subject-name">Controle de Qualidade Microbiológico</span>
-                <span class="subject-info">⏰ 13:00 - 16:30</span>
-                <span class="subject-info">👨‍🏫 Daniela Borges</span>
-                <div class="reminders-section">
-                    <div class="reminders-header">
-                        <span class="reminders-title">📌 Lembretes</span>
-                        <button class="btn-add-reminder" onclick="addReminder('seg')">+ Lembrete</button>
+            <div class="card-focus-square">
+                <span class="card-title">Sessão de Foco</span>
+                <div class="timer-square-box">
+                    <div class="time-display" id="timer">25:00</div>
+                    <div class="timer-btns">
+                        <button id="startBtn" onclick="toggleTimer()">Iniciar</button>
+                        <button class="btn-sec" onclick="resetTimer()">Resetar</button>
                     </div>
-                    <div class="reminder-list" id="list-seg"></div>
                 </div>
             </div>
 
-            <div class="day-block">
-                <span class="day-title">Terça-feira</span>
-                <span class="subject-name">Controle de Qualidade de Alimentos</span>
-                <span class="subject-info">⏰ 13:00 - 16:30</span>
-                <span class="subject-info">👩‍🏫 Pamela Cristina</span>
-                <div class="reminders-section">
-                    <div class="reminders-header">
-                        <span class="reminders-title">📌 Lembretes</span>
-                        <button class="btn-add-reminder" onclick="addReminder('ter')">+ Lembrete</button>
+            <div class="card">
+                <div class="card-header-flex">
+                    <span class="card-title">💬 Bate-Papo da Turma</span>
+                    <div class="admin-controls">
+                        <button class="btn-admin" id="btnAdminToggle" onclick="toggleAdmin()">🔑 Admin</button>
+                        <button class="btn-clear" id="btnClearChat" onclick="clearEntireChat()">🗑️ Limpar</button>
                     </div>
-                    <div class="reminder-list" id="list-ter"></div>
                 </div>
-            </div>
-
-            <div class="day-block">
-                <span class="day-title">Quarta-feira (1º Bloco)</span>
-                <span class="subject-name">Pesquisa e Des. de Medicamentos</span>
-                <span class="subject-info">⏰ 13:00 - 15:30</span>
-                <span class="subject-info">👨‍🏫 Leonardo Borges</span>
-                <div class="reminders-section">
-                    <div class="reminders-header">
-                        <span class="reminders-title">📌 Lembretes</span>
-                        <button class="btn-add-reminder" onclick="addReminder('qua1')">+ Lembrete</button>
+                <div class="chat-box">
+                    <div class="chat-messages" id="chatMessages"></div>
+                    
+                    <div class="reply-preview" id="replyPreview">
+                        <span id="replyTargetText"></span>
+                        <span class="reply-preview-cancel" onclick="cancelReply()">✕</span>
                     </div>
-                    <div class="reminder-list" id="list-qua1"></div>
-                </div>
-            </div>
 
-            <div class="day-block">
-                <span class="day-title">Quarta-feira (2º Bloco)</span>
-                <span class="subject-name">Serviços Clínicos Farmacêuticos II</span>
-                <span class="subject-info">⏰ 15:40 - 19:50</span>
-                <span class="subject-info">👩‍🏫 Anna Paula</span>
-                <div class="reminders-section">
-                    <div class="reminders-header">
-                        <span class="reminders-title">📌 Lembretes</span>
-                        <button class="btn-add-reminder" onclick="addReminder('qua2')">+ Lembrete</button>
+                    <div class="chat-inputs">
+                        <input type="text" id="chatName" class="chat-name" placeholder="Seu nome...">
+                        <div class="chat-inputs-row">
+                            <input type="text" id="chatText" class="chat-text" placeholder="Digite uma mensagem..." onkeypress="if(event.key==='Enter') sendMessage()">
+                            <button onclick="sendMessage()">Enviar</button>
+                        </div>
                     </div>
-                    <div class="reminder-list" id="list-qua2"></div>
-                </div>
-            </div>
-
-            <div class="day-block">
-                <span class="day-title">Quinta-feira</span>
-                <span class="subject-name">Economia e Gestão Farmacêutica</span>
-                <span class="subject-info">⏰ 13:00 - 16:30</span>
-                <span class="subject-info">👨‍🏫 João Nilson</span>
-                <div class="reminders-section">
-                    <div class="reminders-header">
-                        <span class="reminders-title">📌 Lembretes</span>
-                        <button class="btn-add-reminder" onclick="addReminder('qui')">+ Lembrete</button>
-                    </div>
-                    <div class="reminder-list" id="list-qui"></div>
-                </div>
-            </div>
-
-            <div class="day-block">
-                <span class="day-title">Sexta-feira</span>
-                <span class="subject-name">Controle de Qualidade em Lab.</span>
-                <span class="subject-info">⏰ 13:00 - 15:30</span>
-                <span class="subject-info">👩‍🏫 Nathália Cristina</span>
-                <div class="reminders-section">
-                    <div class="reminders-header">
-                        <span class="reminders-title">📌 Lembretes</span>
-                        <button class="btn-add-reminder" onclick="addReminder('sex')">+ Lembrete</button>
-                    </div>
-                    <div class="reminder-list" id="list-sex"></div>
                 </div>
             </div>
 
         </div>
-    </div>
 
-    <!-- Bate-Papo -->
-    <div class="card">
-        <div class="card-header-flex">
-            <span class="card-title">💬 Bate-Papo da Turma</span>
-            <div class="admin-controls">
-                <button class="btn-admin" id="btnAdminToggle" onclick="toggleAdmin()">🔑 Admin</button>
-                <button class="btn-clear" id="btnClearChat" onclick="clearEntireChat()">🗑️ Limpar Chat</button>
+        <!-- Coluna Direita: Aulas e Lembretes -->
+        <div class="main-col">
+            <div class="card">
+                <div class="card-title">Horário das Aulas & Lembretes Compartilhados (UEG)</div>
+                <div class="schedule-grid">
+                    
+                    <div class="day-block">
+                        <span class="day-title">Segunda-feira</span>
+                        <span class="subject-name">Controle de Qualidade Microbiológico</span>
+                        <span class="subject-info">⏰ 13:00 - 16:30</span>
+                        <span class="subject-info">👨‍🏫 Daniela Borges</span>
+                        <div class="reminders-section">
+                            <div class="reminders-header">
+                                <span class="reminders-title">📌 Lembretes</span>
+                                <button class="btn-add-reminder" onclick="addReminder('seg')">+ Lembrete</button>
+                            </div>
+                            <div class="reminder-list" id="list-seg"></div>
+                        </div>
+                    </div>
+
+                    <div class="day-block">
+                        <span class="day-title">Terça-feira</span>
+                        <span class="subject-name">Controle de Qualidade de Alimentos</span>
+                        <span class="subject-info">⏰ 13:00 - 16:30</span>
+                        <span class="subject-info">👩‍🏫 Pamela Cristina</span>
+                        <div class="reminders-section">
+                            <div class="reminders-header">
+                                <span class="reminders-title">📌 Lembretes</span>
+                                <button class="btn-add-reminder" onclick="addReminder('ter')">+ Lembrete</button>
+                            </div>
+                            <div class="reminder-list" id="list-ter"></div>
+                        </div>
+                    </div>
+
+                    <div class="day-block">
+                        <span class="day-title">Quarta-feira (1º Bloco)</span>
+                        <span class="subject-name">Pesquisa e Des. de Medicamentos</span>
+                        <span class="subject-info">⏰ 13:00 - 15:30</span>
+                        <span class="subject-info">👨‍🏫 Leonardo Borges</span>
+                        <div class="reminders-section">
+                            <div class="reminders-header">
+                                <span class="reminders-title">📌 Lembretes</span>
+                                <button class="btn-add-reminder" onclick="addReminder('qua1')">+ Lembrete</button>
+                            </div>
+                            <div class="reminder-list" id="list-qua1"></div>
+                        </div>
+                    </div>
+
+                    <div class="day-block">
+                        <span class="day-title">Quarta-feira (2º Bloco)</span>
+                        <span class="subject-name">Serviços Clínicos Farmacêuticos II</span>
+                        <span class="subject-info">⏰ 15:40 - 19:50</span>
+                        <span class="subject-info">👩‍🏫 Anna Paula</span>
+                        <div class="reminders-section">
+                            <div class="reminders-header">
+                                <span class="reminders-title">📌 Lembretes</span>
+                                <button class="btn-add-reminder" onclick="addReminder('qua2')">+ Lembrete</button>
+                            </div>
+                            <div class="reminder-list" id="list-qua2"></div>
+                        </div>
+                    </div>
+
+                    <div class="day-block">
+                        <span class="day-title">Quinta-feira</span>
+                        <span class="subject-name">Economia e Gestão Farmacêutica</span>
+                        <span class="subject-info">⏰ 13:00 - 16:30</span>
+                        <span class="subject-info">👨‍🏫 João Nilson</span>
+                        <div class="reminders-section">
+                            <div class="reminders-header">
+                                <span class="reminders-title">📌 Lembretes</span>
+                                <button class="btn-add-reminder" onclick="addReminder('qui')">+ Lembrete</button>
+                            </div>
+                            <div class="reminder-list" id="list-qui"></div>
+                        </div>
+                    </div>
+
+                    <div class="day-block">
+                        <span class="day-title">Sexta-feira</span>
+                        <span class="subject-name">Controle de Qualidade em Lab.</span>
+                        <span class="subject-info">⏰ 13:00 - 15:30</span>
+                        <span class="subject-info">👩‍🏫 Nathália Cristina</span>
+                        <div class="reminders-section">
+                            <div class="reminders-header">
+                                <span class="reminders-title">📌 Lembretes</span>
+                                <button class="btn-add-reminder" onclick="addReminder('sex')">+ Lembrete</button>
+                            </div>
+                            <div class="reminder-list" id="list-sex"></div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
-        <div class="chat-box">
-            <div class="chat-messages" id="chatMessages"></div>
-            
-            <div class="reply-preview" id="replyPreview">
-                <span id="replyTargetText"></span>
-                <span class="reply-preview-cancel" onclick="cancelReply()">✕</span>
-            </div>
 
-            <div class="chat-inputs">
-                <input type="text" id="chatName" class="chat-name" placeholder="Seu nome...">
-                <input type="text" id="chatText" class="chat-text" placeholder="Digite uma mensagem..." onkeypress="if(event.key==='Enter') sendMessage()">
-                <button onclick="sendMessage()">Enviar</button>
-            </div>
-        </div>
     </div>
 
 </div>
