@@ -122,7 +122,7 @@
 
         .reminder-item span { cursor: pointer; color: #dc2626; font-weight: bold; margin-left: 6px; }
 
-        /* Bate-Papo / Chat Estilo */
+        /* Bate-Papo */
         .chat-box {
             display: flex;
             flex-direction: column;
@@ -212,7 +212,7 @@
     <!-- Firebase SDK Sincronizado -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyC09EhGx9GSo4IUxjgWXJxqksnKgOU4khQ",
@@ -269,7 +269,7 @@
             });
         });
 
-        // Bate-Papo em Tempo Real
+        // Bate-Papo
         window.sendMessage = async function() {
             const nameInput = document.getElementById('chatName');
             const textInput = document.getElementById('chatText');
@@ -291,7 +291,6 @@
             }
         };
 
-        // Escutar mensagens do Chat em Tempo Real (últimas 30)
         const q = query(collection(db, "chat"), orderBy("createdAt", "asc"));
         onSnapshot(q, (snapshot) => {
             const chatContainer = document.getElementById('chatMessages');
@@ -305,7 +304,6 @@
                 chatContainer.appendChild(div);
             });
 
-            // Rolar automaticamente para a última mensagem
             chatContainer.scrollTop = chatContainer.scrollHeight;
         });
     </script>
@@ -338,9 +336,9 @@
             
             <div class="day-block">
                 <span class="day-title">Segunda-feira</span>
-                <span class="subject-name">Controle de Qualidade Microbiológico</span>[cite: 1]
-                <span class="subject-info">⏰ 13:00 - 16:30</span>[cite: 1]
-                <span class="subject-info">👨‍🏫 Daniela Borges</span>[cite: 1]
+                <span class="subject-name">Controle de Qualidade Microbiológico</span>
+                <span class="subject-info">⏰ 13:00 - 16:30</span>
+                <span class="subject-info">👨‍🏫 Daniela Borges</span>
                 <div class="reminders-section">
                     <div class="reminders-header">
                         <span class="reminders-title">📌 Lembretes</span>
@@ -352,9 +350,9 @@
 
             <div class="day-block">
                 <span class="day-title">Terça-feira</span>
-                <span class="subject-name">Controle de Qualidade de Alimentos</span>[cite: 1]
-                <span class="subject-info">⏰ 13:00 - 16:30</span>[cite: 1]
-                <span class="subject-info">👩‍🏫 Pamela Cristina</span>[cite: 1]
+                <span class="subject-name">Controle de Qualidade de Alimentos</span>
+                <span class="subject-info">⏰ 13:00 - 16:30</span>
+                <span class="subject-info">👩‍🏫 Pamela Cristina</span>
                 <div class="reminders-section">
                     <div class="reminders-header">
                         <span class="reminders-title">📌 Lembretes</span>
@@ -366,9 +364,9 @@
 
             <div class="day-block">
                 <span class="day-title">Quarta-feira (1º Bloco)</span>
-                <span class="subject-name">Pesquisa e Des. de Medicamentos</span>[cite: 1]
-                <span class="subject-info">⏰ 13:00 - 15:30</span>[cite: 1]
-                <span class="subject-info">👨‍🏫 Leonardo Borges</span>[cite: 1]
+                <span class="subject-name">Pesquisa e Des. de Medicamentos</span>
+                <span class="subject-info">⏰ 13:00 - 15:30</span>
+                <span class="subject-info">👨‍🏫 Leonardo Borges</span>
                 <div class="reminders-section">
                     <div class="reminders-header">
                         <span class="reminders-title">📌 Lembretes</span>
@@ -380,9 +378,9 @@
 
             <div class="day-block">
                 <span class="day-title">Quarta-feira (2º Bloco)</span>
-                <span class="subject-name">Serviços Clínicos Farmacêuticos II</span>[cite: 1]
-                <span class="subject-info">⏰ 15:40 - 19:50</span>[cite: 1]
-                <span class="subject-info">👩‍🏫 Anna Paula</span>[cite: 1]
+                <span class="subject-name">Serviços Clínicos Farmacêuticos II</span>
+                <span class="subject-info">⏰ 15:40 - 19:50</span>
+                <span class="subject-info">👩‍🏫 Anna Paula</span>
                 <div class="reminders-section">
                     <div class="reminders-header">
                         <span class="reminders-title">📌 Lembretes</span>
@@ -394,9 +392,9 @@
 
             <div class="day-block">
                 <span class="day-title">Quinta-feira</span>
-                <span class="subject-name">Economia e Gestão Farmacêutica</span>[cite: 1]
-                <span class="subject-info">⏰ 13:00 - 16:30</span>[cite: 1]
-                <span class="subject-info">👨‍🏫 João Nilson</span>[cite: 1]
+                <span class="subject-name">Economia e Gestão Farmacêutica</span>
+                <span class="subject-info">⏰ 13:00 - 16:30</span>
+                <span class="subject-info">👨‍🏫 João Nilson</span>
                 <div class="reminders-section">
                     <div class="reminders-header">
                         <span class="reminders-title">📌 Lembretes</span>
@@ -408,9 +406,9 @@
 
             <div class="day-block">
                 <span class="day-title">Sexta-feira</span>
-                <span class="subject-name">Controle de Qualidade em Lab.</span>[cite: 1]
-                <span class="subject-info">⏰ 13:00 - 15:30</span>[cite: 1]
-                <span class="subject-info">👩‍🏫 Nathália Cristina</span>[cite: 1]
+                <span class="subject-name">Controle de Qualidade em Lab.</span>
+                <span class="subject-info">⏰ 13:00 - 15:30</span>
+                <span class="subject-info">👩‍🏫 Nathália Cristina</span>
                 <div class="reminders-section">
                     <div class="reminders-header">
                         <span class="reminders-title">📌 Lembretes</span>
