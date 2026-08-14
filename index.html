@@ -17,19 +17,83 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
 
         body {
-            background: url('https://images3.alphacoders.com/136/thumb-1920-1365092.jpeg') no-repeat center center fixed;
+            /* Imagem da tela de login por padrão */
+            background: url('https://images8.alphacoders.com/135/thumb-1920-1354012.png') no-repeat center center fixed;
             background-size: cover;
             color: var(--text-main);
             display: flex;
             justify-content: center;
+            align-items: center;
             padding: 30px 15px;
             min-height: 100vh;
+            transition: background 0.5s ease-in-out;
         }
+
+        /* Classe aplicada no fundo assim que digita a senha */
+        body.app-active {
+            background: url('https://images3.alphacoders.com/136/thumb-1920-1365092.jpeg') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        /* Tela de Bloqueio por Senha */
+        #loginScreen {
+            background: rgba(255, 255, 255, 0.40);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 35px 25px;
+            max-width: 380px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        #loginScreen h2 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #000000;
+        }
+
+        #loginScreen p {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #000000;
+        }
+
+        #loginScreen input {
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: 1px solid rgba(0,0,0,0.15);
+            background: rgba(255,255,255,0.85);
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-align: center;
+            outline: none;
+            color: #000;
+        }
+
+        #loginScreen button {
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            background: #000000;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        #loginScreen button:hover { opacity: 0.85; }
 
         .app-container {
             max-width: 850px;
             width: 100%;
-            display: flex;
+            display: none; /* Escondido por padrão até autenticar */
             flex-direction: column;
             gap: 20px;
         }
@@ -129,7 +193,6 @@
 
         .reminder-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
 
-        /* Lembretes com Cores */
         .reminder-item {
             padding: 6px 10px;
             border-radius: 6px;
@@ -177,12 +240,7 @@
             gap: 4px;
         }
 
-        .chat-msg-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
+        .chat-msg-header { display: flex; justify-content: space-between; align-items: center; }
         .chat-author { font-weight: 800; color: #15803d; }
         .chat-time { font-size: 0.68rem; color: #64748b; font-weight: 600; margin-left: 8px; }
 
@@ -200,19 +258,8 @@
 
         .chat-actions { display: flex; gap: 8px; align-items: center; }
 
-        .reply-btn {
-            color: #15803d;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 0.75rem;
-        }
-
-        .delete-btn {
-            color: #dc2626;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.75rem;
-        }
+        .reply-btn { color: #15803d; cursor: pointer; font-weight: 700; font-size: 0.75rem; }
+        .delete-btn { color: #dc2626; cursor: pointer; font-weight: bold; font-size: 0.75rem; }
 
         .reply-preview {
             display: none;
@@ -308,9 +355,33 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // CONFIGURAÇÕES DE SENHA
+        const SITE_PASSWORD = "ueg2026";
         let isAdmin = false;
         const ADMIN_PASSWORD = "404";
         let activeReplyTarget = null;
+
+        // Verificar Login na Entrada
+        window.checkPassword = function() {
+            const passInput = document.getElementById('passInput').value;
+            if (passInput === SITE_PASSWORD) {
+                localStorage.setItem('ueg_access_granted', 'true');
+                showApp();
+            } else {
+                alert("Senha incorreta! Peça a senha de acesso no grupo da turma.");
+            }
+        };
+
+        function showApp() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('appContainer').style.display = 'flex';
+            document.body.classList.add('app-active'); // Muda a imagem de fundo para o painel principal
+        }
+
+        // Auto-login se já autenticou antes
+        if (localStorage.getItem('ueg_access_granted') === 'true') {
+            window.addEventListener('DOMContentLoaded', showApp);
+        }
 
         window.toggleAdmin = function() {
             if (!isAdmin) {
@@ -495,7 +566,16 @@
 </head>
 <body>
 
-<div class="app-container">
+<!-- Tela de Login / Senha de Acesso -->
+<div id="loginScreen">
+    <h2>🔒 Central de Estudos</h2>
+    <p>Digite a senha de acesso para liberar a grade de horários, lembretes e o bate-papo da turma:</p>
+    <input type="password" id="passInput" placeholder="Digite a senha..." onkeypress="if(event.key==='Enter') checkPassword()">
+    <button onclick="checkPassword()">Acessar Painel</button>
+</div>
+
+<!-- Aplicação Principal (Inicia Oculta) -->
+<div class="app-container" id="appContainer">
 
     <header>
         <h1>Central de Estudos</h1>
