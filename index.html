@@ -122,6 +122,59 @@
 
         .reminder-item span { cursor: pointer; color: #dc2626; font-weight: bold; margin-left: 6px; }
 
+        /* Bate-Papo / Chat Estilo */
+        .chat-box {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chat-messages {
+            background: var(--surface-card);
+            border-radius: 12px;
+            padding: 12px;
+            height: 200px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+
+        .chat-msg {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            color: #000000;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .chat-author {
+            font-weight: 800;
+            color: #15803d;
+            margin-right: 6px;
+        }
+
+        .chat-inputs {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chat-inputs input {
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(0,0,0,0.15);
+            background: rgba(255,255,255,0.85);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #000;
+            outline: none;
+        }
+
+        .chat-name { width: 120px; }
+        .chat-text { flex: 1; }
+
         .timer-box { display: flex; align-items: center; justify-content: space-between; }
         .time-display { font-size: 2rem; font-weight: 800; color: #000000; }
         .timer-btns { display: flex; gap: 8px; }
@@ -159,7 +212,7 @@
     <!-- Firebase SDK Sincronizado -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyC09EhGx9GSo4IUxjgWXJxqksnKgOU4khQ",
@@ -173,6 +226,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // Lembretes
         window.addReminder = async function(subjectId) {
             const text = prompt("Digite o lembrete para compartilhar com a turma:");
             if (!text || !text.trim()) return;
@@ -185,7 +239,6 @@
                 });
             } catch (e) {
                 console.error("Erro ao salvar:", e);
-                alert("Verifique se ativou o Firestore Database no painel do Firebase!");
             }
         };
 
@@ -215,6 +268,46 @@
                 }
             });
         });
+
+        // Bate-Papo em Tempo Real
+        window.sendMessage = async function() {
+            const nameInput = document.getElementById('chatName');
+            const textInput = document.getElementById('chatText');
+
+            if (!nameInput.value.trim() || !textInput.value.trim()) {
+                alert("Preencha seu nome e a mensagem!");
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, "chat"), {
+                    author: nameInput.value.trim(),
+                    text: textInput.value.trim(),
+                    createdAt: new Date()
+                });
+                textInput.value = '';
+            } catch (e) {
+                console.error("Erro ao enviar mensagem:", e);
+            }
+        };
+
+        // Escutar mensagens do Chat em Tempo Real (últimas 30)
+        const q = query(collection(db, "chat"), orderBy("createdAt", "asc"));
+        onSnapshot(q, (snapshot) => {
+            const chatContainer = document.getElementById('chatMessages');
+            chatContainer.innerHTML = '';
+
+            snapshot.forEach((documento) => {
+                const data = documento.data();
+                const div = document.createElement('div');
+                div.className = 'chat-msg';
+                div.innerHTML = `<span class="chat-author">${data.author}:</span> ${data.text}`;
+                chatContainer.appendChild(div);
+            });
+
+            // Rolar automaticamente para a última mensagem
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        });
     </script>
 </head>
 <body>
@@ -226,6 +319,7 @@
         <span class="date" id="currentDate"></span>
     </header>
 
+    <!-- Sessão de Foco -->
     <div class="card">
         <div class="card-title">Sessão de Foco</div>
         <div class="timer-box">
@@ -237,15 +331,16 @@
         </div>
     </div>
 
+    <!-- Horários & Lembretes -->
     <div class="card">
         <div class="card-title">Horário das Aulas & Lembretes Compartilhados (UEG)</div>
         <div class="schedule-grid">
             
             <div class="day-block">
                 <span class="day-title">Segunda-feira</span>
-                <span class="subject-name">Controle de Qualidade Microbiológico</span>
-                <span class="subject-info">⏰ 13:00 - 16:30</span>
-                <span class="subject-info">👨‍🏫 Daniela Borges</span>
+                <span class="subject-name">Controle de Qualidade Microbiológico</span>[cite: 1]
+                <span class="subject-info">⏰ 13:00 - 16:30</span>[cite: 1]
+                <span class="subject-info">👨‍🏫 Daniela Borges</span>[cite: 1]
                 <div class="reminders-section">
                     <div class="reminders-header">
                         <span class="reminders-title">📌 Lembretes</span>
@@ -257,9 +352,9 @@
 
             <div class="day-block">
                 <span class="day-title">Terça-feira</span>
-                <span class="subject-name">Controle de Qualidade de Alimentos</span>
-                <span class="subject-info">⏰ 13:00 - 16:30</span>
-                <span class="subject-info">👩‍🏫 Pamela Cristina</span>
+                <span class="subject-name">Controle de Qualidade de Alimentos</span>[cite: 1]
+                <span class="subject-info">⏰ 13:00 - 16:30</span>[cite: 1]
+                <span class="subject-info">👩‍🏫 Pamela Cristina</span>[cite: 1]
                 <div class="reminders-section">
                     <div class="reminders-header">
                         <span class="reminders-title">📌 Lembretes</span>
@@ -271,9 +366,9 @@
 
             <div class="day-block">
                 <span class="day-title">Quarta-feira (1º Bloco)</span>
-                <span class="subject-name">Pesquisa e Des. de Medicamentos</span>
-                <span class="subject-info">⏰ 13:00 - 15:30</span>
-                <span class="subject-info">👨‍🏫 Leonardo Borges</span>
+                <span class="subject-name">Pesquisa e Des. de Medicamentos</span>[cite: 1]
+                <span class="subject-info">⏰ 13:00 - 15:30</span>[cite: 1]
+                <span class="subject-info">👨‍🏫 Leonardo Borges</span>[cite: 1]
                 <div class="reminders-section">
                     <div class="reminders-header">
                         <span class="reminders-title">📌 Lembretes</span>
@@ -285,9 +380,9 @@
 
             <div class="day-block">
                 <span class="day-title">Quarta-feira (2º Bloco)</span>
-                <span class="subject-name">Serviços Clínicos Farmacêuticos II</span>
-                <span class="subject-info">⏰ 15:40 - 19:50</span>
-                <span class="subject-info">👩‍🏫 Anna Paula</span>
+                <span class="subject-name">Serviços Clínicos Farmacêuticos II</span>[cite: 1]
+                <span class="subject-info">⏰ 15:40 - 19:50</span>[cite: 1]
+                <span class="subject-info">👩‍🏫 Anna Paula</span>[cite: 1]
                 <div class="reminders-section">
                     <div class="reminders-header">
                         <span class="reminders-title">📌 Lembretes</span>
@@ -299,9 +394,9 @@
 
             <div class="day-block">
                 <span class="day-title">Quinta-feira</span>
-                <span class="subject-name">Economia e Gestão Farmacêutica</span>
-                <span class="subject-info">⏰ 13:00 - 16:30</span>
-                <span class="subject-info">👨‍🏫 João Nilson</span>
+                <span class="subject-name">Economia e Gestão Farmacêutica</span>[cite: 1]
+                <span class="subject-info">⏰ 13:00 - 16:30</span>[cite: 1]
+                <span class="subject-info">👨‍🏫 João Nilson</span>[cite: 1]
                 <div class="reminders-section">
                     <div class="reminders-header">
                         <span class="reminders-title">📌 Lembretes</span>
@@ -313,9 +408,9 @@
 
             <div class="day-block">
                 <span class="day-title">Sexta-feira</span>
-                <span class="subject-name">Controle de Qualidade em Lab.</span>
-                <span class="subject-info">⏰ 13:00 - 15:30</span>
-                <span class="subject-info">👩‍🏫 Nathália Cristina</span>
+                <span class="subject-name">Controle de Qualidade em Lab.</span>[cite: 1]
+                <span class="subject-info">⏰ 13:00 - 15:30</span>[cite: 1]
+                <span class="subject-info">👩‍🏫 Nathália Cristina</span>[cite: 1]
                 <div class="reminders-section">
                     <div class="reminders-header">
                         <span class="reminders-title">📌 Lembretes</span>
@@ -328,6 +423,20 @@
         </div>
     </div>
 
+    <!-- Bate-Papo com Amigos -->
+    <div class="card">
+        <div class="card-title">💬 Bate-Papo da Turma</div>
+        <div class="chat-box">
+            <div class="chat-messages" id="chatMessages"></div>
+            <div class="chat-inputs">
+                <input type="text" id="chatName" class="chat-name" placeholder="Seu nome...">
+                <input type="text" id="chatText" class="chat-text" placeholder="Digite uma mensagem..." onkeypress="if(event.key==='Enter') sendMessage()">
+                <button onclick="sendMessage()">Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Atalhos Rápidos -->
     <div class="card">
         <div class="card-title">Acesso Rápido</div>
         <div class="links">
