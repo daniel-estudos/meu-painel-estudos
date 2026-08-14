@@ -3,210 +3,325 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Central de Estudos | Assistente Universitária</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Painel de Estudos | UEG</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0f172a;
-            --card-bg: #1e293b;
-            --accent: #38bdf8;
-            --text: #f8fafc;
-            --text-muted: #94a3b8;
+            --bg: #fafafa;
+            --surface: #ffffff;
+            --text-main: #18181b;
+            --text-sub: #71717a;
+            --border: #e4e4e7;
+            --accent: #18181b;
+            --accent-hover: #3f3f46;
+            --tag-bg: #f4f4f5;
         }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
 
         body {
-            font-family: 'Inter', sans-serif;
             background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
-            padding: 20px;
+            color: var(--text-main);
             display: flex;
             justify-content: center;
+            padding: 40px 20px;
+            min-height: 100vh;
         }
 
-        .container {
-            max-width: 900px;
+        .app-container {
+            max-width: 720px;
             width: 100%;
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
         }
 
-        @media(min-width: 768px) {
-            .container { grid-template-columns: 2fr 1fr; }
-            .full-width { grid-column: span 2; }
-        }
-
-        .header {
-            background: linear-gradient(135deg, #1e293b, #334155);
-            padding: 30px;
-            border-radius: 16px;
-            border: 1px solid #334155;
-            text-align: center;
-        }
-
-        .header h1 { margin: 0 0 10px 0; color: var(--accent); }
-        .header p { margin: 0; color: var(--text-muted); }
-
-        .card {
-            background-color: var(--card-bg);
-            padding: 24px;
-            border-radius: 16px;
-            border: 1px solid #334155;
-        }
-
-        .card h2 { margin-top: 0; font-size: 1.25rem; color: var(--accent); display: flex; align-items: center; gap: 8px; }
-
-        /* Links Rápidos */
-        .links-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-top: 15px; }
-        .link-btn {
-            background: #334155;
-            color: white;
-            text-decoration: none;
-            padding: 12px;
-            border-radius: 8px;
-            text-align: center;
-            font-weight: 600;
-            transition: 0.2s;
-        }
-        .link-btn:hover { background: var(--accent); color: #0f172a; }
-
-        /* Lista de Tarefas */
-        .todo-input { display: flex; gap: 10px; margin-bottom: 15px; }
-        input[type="text"] {
-            flex: 1;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #334155;
-            background: #0f172a;
-            color: white;
-        }
-        button {
-            padding: 10px 16px;
-            border-radius: 8px;
-            border: none;
-            background: var(--accent);
-            color: #0f172a;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        button:hover { opacity: 0.9; }
-
-        ul { list-style: none; padding: 0; margin: 0; }
-        li {
-            background: #0f172a;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 8px;
+        header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
         }
 
-        /* Pomodoro Timer */
-        .timer-display { font-size: 3rem; font-weight: bold; text-align: center; margin: 20px 0; color: var(--accent); }
-        .timer-controls { display: flex; justify-content: center; gap: 10px; }
+        h1 { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.02em; }
+        .date { font-size: 0.875rem; color: var(--text-sub); }
 
-        /* Prompt Box */
-        .prompt-box { background: #0f172a; padding: 15px; border-radius: 8px; font-size: 0.9rem; color: var(--text-muted); border-left: 4px solid var(--accent); }
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+        }
+
+        .card-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 16px;
+        }
+
+        /* Grade de Aulas */
+        .schedule-list { display: flex; flex-direction: column; gap: 12px; }
+        
+        .schedule-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding: 12px 16px;
+            background: var(--bg);
+            border-radius: 8px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .schedule-header { display: flex; justify-content: space-between; font-weight: 600; font-size: 0.9rem; }
+        .schedule-day { font-size: 0.75rem; background: var(--tag-bg); padding: 2px 6px; border-radius: 4px; color: var(--text-sub); }
+        .schedule-time { font-size: 0.8rem; color: var(--text-sub); }
+        .schedule-prof { font-size: 0.8rem; color: var(--text-sub); font-style: italic; }
+
+        /* Input & Lista de Tarefas */
+        .input-group { display: flex; gap: 8px; margin-bottom: 16px; }
+        
+        input[type="text"] {
+            flex: 1;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            font-size: 0.9rem;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        input[type="text"]:focus { border-color: var(--accent); }
+
+        button {
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: none;
+            background: var(--accent);
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover { background: var(--accent-hover); }
+
+        ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+
+        li {
+            padding: 12px 14px;
+            background: var(--bg);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        li:hover { opacity: 0.7; }
+        li::after { content: '✕'; font-size: 0.75rem; color: var(--text-sub); }
+
+        /* Timer Minimalista */
+        .timer-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .time-display { font-size: 2.2rem; font-weight: 700; letter-spacing: -0.03em; }
+        .timer-btns { display: flex; gap: 8px; }
+        .btn-sec { background: transparent; color: var(--text-main); border: 1px solid var(--border); }
+        .btn-sec:hover { background: var(--bg); }
+
+        /* Links Rápidos */
+        .links { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
+        .link-card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        .link-card:hover { background: var(--bg); }
     </style>
 </head>
 <body>
 
-<div class="container">
-    
-    <!-- Cabeçalho -->
-    <div class="header full-width">
-        <h1>🎓 Central de Estudos</h1>
-        <p>Painel Pessoal de Organização Universitária</p>
+<div class="app-container">
+
+    <header>
+        <h1>Central de Estudos</h1>
+        <span class="date" id="currentDate"></span>
+    </header>
+
+    <!-- Foco / Timer -->
+    <div class="card">
+        <div class="card-title">Sessão de Foco</div>
+        <div class="timer-box">
+            <div class="time-display" id="timer">25:00</div>
+            <div class="timer-btns">
+                <button id="startBtn" onclick="toggleTimer()">Iniciar</button>
+                <button class="btn-sec" onclick="resetTimer()">Resetar</button>
+            </div>
+        </div>
     </div>
 
-    <!-- Seção Principal: Tarefas e Trabalhos -->
+    <!-- Grade Horária Semanal -->
     <div class="card">
-        <h2>📌 Próximas Entregas & Provas</h2>
-        <div class="todo-input">
-            <input type="text" id="taskInput" placeholder="Ex: Entrega do Artigo de Programação...">
-            <button onclick="addTask()">Adicionar</button>
+        <div class="card-title">Horário das Aulas</div>
+        <div class="schedule-list">
+            
+            <div class="schedule-item">
+                <div class="schedule-header">
+                    <span>Controle de Qualidade Microbiológico</span>
+                    <span class="schedule-day">Segunda</span>
+                </div>
+                <div class="schedule-time">13:00 - 15:30 / 15:40 - 16:30</div>
+                <div class="schedule-prof">Prof(a). Daniela Borges Marquez Barbosa</div>
+            </div>
+
+            <div class="schedule-item">
+                <div class="schedule-header">
+                    <span>Controle de Qualidade de Alimentos</span>
+                    <span class="schedule-day">Terça</span>
+                </div>
+                <div class="schedule-time">13:00 - 15:30 / 15:40 - 16:30</div>
+                <div class="schedule-prof">Prof(a). Pamela Cristina de Sousa Guardiano Reis Oliveira</div>
+            </div>
+
+            <div class="schedule-item">
+                <div class="schedule-header">
+                    <span>Pesquisa e Desenvolvimento de Medicamentos</span>
+                    <span class="schedule-day">Quarta</span>
+                </div>
+                <div class="schedule-time">13:00 - 15:30</div>
+                <div class="schedule-prof">Prof(a). Leonardo Borges de Oliveira</div>
+            </div>
+
+            <div class="schedule-item">
+                <div class="schedule-header">
+                    <span>Serviços Clínicos Farmacêuticos II</span>
+                    <span class="schedule-day">Quarta</span>
+                </div>
+                <div class="schedule-time">15:40 - 18:10 / 19:00 - 19:50</div>
+                <div class="schedule-prof">Prof(a). Anna Paula de Sa Borges</div>
+            </div>
+
+            <div class="schedule-item">
+                <div class="schedule-header">
+                    <span>Economia e Gestão Farmacêutica</span>
+                    <span class="schedule-day">Quinta</span>
+                </div>
+                <div class="schedule-time">13:00 - 15:30 / 15:40 - 16:30</div>
+                <div class="schedule-prof">Prof(a). João Nilson da Rosa</div>
+            </div>
+
+            <div class="schedule-item">
+                <div class="schedule-header">
+                    <span>Controle de Qualidade em Laboratório</span>
+                    <span class="schedule-day">Sexta</span>
+                </div>
+                <div class="schedule-time">13:00 - 15:30</div>
+                <div class="schedule-prof">Prof(a). Nathália Cristina Morais Ferreira Pacifico</div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Tarefas & Provas -->
+    <div class="card">
+        <div class="card-title">Tarefas & Prazos</div>
+        <div class="input-group">
+            <input type="text" id="taskInput" placeholder="Adicionar nova tarefa..." onkeypress="handleKey(event)">
+            <button onclick="addTask()">+ Criar</button>
         </div>
         <ul id="taskList"></ul>
     </div>
 
-    <!-- Timer Pomodoro -->
+    <!-- Links de Acesso -->
     <div class="card">
-        <h2>⏱️ Foco Pomodoro</h2>
-        <div class="timer-display" id="timer">25:00</div>
-        <div class="timer-controls">
-            <button onclick="startTimer()">Iniciar</button>
-            <button onclick="pauseTimer()">Pausar</button>
-            <button onclick="resetTimer()">Resetar</button>
-        </div>
-    </div>
-
-    <!-- Atalhos Rápidos -->
-    <div class="card full-width">
-        <h2>🔗 Atalhos de Acesso</h2>
-        <div class="links-grid">
-            <a href="https://notion.so" target="_blank" class="link-btn">Notion</a>
-            <a href="https://drive.google.com" target="_blank" class="link-btn">Google Drive</a>
-            <a href="https://gemini.google.com" target="_blank" class="link-btn">Gemini AI</a>
-            <a href="https://chatgpt.com" target="_blank" class="link-btn">ChatGPT</a>
-        </div>
-    </div>
-
-    <!-- Prompt para Assistente IA -->
-    <div class="card full-width">
-        <h2>🤖 Prompt para usar com sua Assistente de IA</h2>
-        <div class="prompt-box">
-            "Você é minha assistente acadêmica dedicada. Ajude-me a resumir o conteúdo a seguir, criar 3 perguntas de múltipla escolha para eu testar meu conhecimento e apontar os pontos mais importantes para a prova."
+        <div class="card-title">Acesso Rápido</div>
+        <div class="links">
+            <a href="https://notion.so" target="_blank" class="link-card">Notion</a>
+            <a href="https://drive.google.com" target="_blank" class="link-card">Drive</a>
+            <a href="https://gemini.google.com" target="_blank" class="link-card">Gemini</a>
+            <a href="https://chatgpt.com" target="_blank" class="link-card">ChatGPT</a>
         </div>
     </div>
 
 </div>
 
 <script>
-    // Gerenciador de Tarefas
+    // Data atual
+    const options = { weekday: 'long', day: 'numeric', month: 'long' };
+    document.getElementById('currentDate').textContent = new Date().toLocaleDateString('pt-BR', options);
+
+    // Adicionar Tarefas
     function addTask() {
         const input = document.getElementById('taskInput');
-        if (input.value.trim() === '') return;
+        if (!input.value.trim()) return;
         
         const li = document.createElement('li');
-        li.innerHTML = `${input.value} <button style="background:#ef4444; color:white;" onclick="this.parentElement.remove()">✓ Feito</button>`;
+        li.textContent = input.value;
+        li.onclick = function() { this.remove(); };
+        
         document.getElementById('taskList').appendChild(li);
         input.value = '';
     }
 
-    // Timer Pomodoro
+    function handleKey(e) {
+        if (e.key === 'Enter') addTask();
+    }
+
+    // Timer
     let timeLeft = 25 * 60;
     let timerId = null;
 
-    function updateTimer() {
-        const minutes = Math.floor(timeLeft / 60);
-        const seconds = timeLeft % 60;
-        document.getElementById('timer').textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    function updateDisplay() {
+        const min = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+        const sec = String(timeLeft % 60).padStart(2, '0');
+        document.getElementById('timer').textContent = `${min}:${sec}`;
     }
 
-    function startTimer() {
-        if (timerId !== null) return;
-        timerId = setInterval(() => {
-            if (timeLeft > 0) {
-                timeLeft--;
-                updateTimer();
-            } else {
-                clearInterval(timerId);
-                alert('Tempo de estudo encerrado! Faça uma pausa.');
-            }
-        }, 1000);
-    }
-
-    function pauseTimer() {
-        clearInterval(timerId);
-        timerId = null;
+    function toggleTimer() {
+        const btn = document.getElementById('startBtn');
+        if (timerId) {
+            clearInterval(timerId);
+            timerId = null;
+            btn.textContent = 'Continuar';
+        } else {
+            btn.textContent = 'Pausar';
+            timerId = setInterval(() => {
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    updateDisplay();
+                } else {
+                    clearInterval(timerId);
+                    alert('Sessão concluída!');
+                }
+            }, 1000);
+        }
     }
 
     function resetTimer() {
-        pauseTimer();
+        clearInterval(timerId);
+        timerId = null;
         timeLeft = 25 * 60;
-        updateTimer();
+        document.getElementById('startBtn').textContent = 'Iniciar';
+        updateDisplay();
     }
 </script>
 
