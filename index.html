@@ -17,7 +17,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
 
         body {
-            /* Imagem da tela de login por padrão */
             background: url('https://images8.alphacoders.com/135/thumb-1920-1354012.png') no-repeat center center fixed;
             background-size: cover;
             color: var(--text-main);
@@ -29,13 +28,25 @@
             transition: background 0.5s ease-in-out;
         }
 
-        /* Classe aplicada no fundo assim que digita a senha */
         body.app-active {
             background: url('https://images3.alphacoders.com/136/thumb-1920-1365092.jpeg') no-repeat center center fixed;
             background-size: cover;
         }
 
-        /* Tela de Bloqueio por Senha */
+        /* Banner de Status Offline */
+        .offline-status {
+            display: none;
+            background: #f59e0b;
+            color: #000;
+            text-align: center;
+            padding: 6px 12px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        /* Tela de Bloqueio */
         #loginScreen {
             background: rgba(255, 255, 255, 0.40);
             backdrop-filter: blur(20px);
@@ -52,17 +63,8 @@
             gap: 16px;
         }
 
-        #loginScreen h2 {
-            font-size: 1.3rem;
-            font-weight: 800;
-            color: #000000;
-        }
-
-        #loginScreen p {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: #000000;
-        }
+        #loginScreen h2 { font-size: 1.3rem; font-weight: 800; color: #000000; }
+        #loginScreen p { font-size: 0.85rem; font-weight: 700; color: #000000; }
 
         #loginScreen input {
             padding: 12px 16px;
@@ -93,7 +95,7 @@
         .app-container {
             max-width: 850px;
             width: 100%;
-            display: none; /* Escondido por padrão até autenticar */
+            display: none;
             flex-direction: column;
             gap: 20px;
         }
@@ -139,21 +141,8 @@
             gap: 8px;
         }
 
-        .card-header-flex {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .card-title {
-            font-size: 0.75rem;
-            font-weight: 800;
-            color: #000000;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin: 0;
-        }
+        .card-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .card-title { font-size: 0.75rem; font-weight: 800; color: #000000; text-transform: uppercase; letter-spacing: 0.05em; margin: 0; }
 
         .schedule-grid {
             display: grid;
@@ -257,7 +246,6 @@
         .reply-quote-author { font-weight: 700; color: #15803d; }
 
         .chat-actions { display: flex; gap: 8px; align-items: center; }
-
         .reply-btn { color: #15803d; cursor: pointer; font-weight: 700; font-size: 0.75rem; }
         .delete-btn { color: #dc2626; cursor: pointer; font-weight: bold; font-size: 0.75rem; }
 
@@ -270,9 +258,6 @@
             font-size: 0.78rem;
             justify-content: space-between;
             align-items: center;
-            border-top: 1px solid rgba(0,0,0,0.05);
-            border-right: 1px solid rgba(0,0,0,0.05);
-            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
 
         .reply-preview-cancel { cursor: pointer; color: #dc2626; font-weight: bold; }
@@ -338,10 +323,10 @@
         .btn-sec { background: transparent; color: #000000; border: 1px solid #000000; padding: 8px 10px; }
     </style>
 
-    <!-- Firebase SDK -->
+    <!-- Firebase SDK com Suporte Offline Firestore PERSISTENCE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy, getDocs, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyC09EhGx9GSo4IUxjgWXJxqksnKgOU4khQ",
@@ -355,30 +340,47 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // Ativar Persistência Offline do Firestore
+        enableIndexedDbPersistence(db).catch((err) => {
+            console.log("Persistência offline já está ativa em outra aba ou não é suportada:", err.code);
+        });
+
+        // Monitorar conexão com a internet
+        function updateOnlineStatus() {
+            const statusBanner = document.getElementById('offlineBanner');
+            if (navigator.onLine) {
+                statusBanner.style.display = 'none';
+            } else {
+                statusBanner.style.display = 'block';
+            }
+        }
+
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+
         // CONFIGURAÇÕES DE SENHA
         const SITE_PASSWORD = "ueg2026";
         let isAdmin = false;
         const ADMIN_PASSWORD = "404";
         let activeReplyTarget = null;
 
-        // Verificar Login na Entrada
         window.checkPassword = function() {
             const passInput = document.getElementById('passInput').value;
             if (passInput === SITE_PASSWORD) {
                 localStorage.setItem('ueg_access_granted', 'true');
                 showApp();
             } else {
-                alert("Senha incorreta! Peça a senha de acesso no grupo da turma.");
+                alert("Senha incorreta!");
             }
         };
 
         function showApp() {
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('appContainer').style.display = 'flex';
-            document.body.classList.add('app-active'); // Muda a imagem de fundo para o painel principal
+            document.body.classList.add('app-active');
+            updateOnlineStatus();
         }
 
-        // Auto-login se já autenticou antes
         if (localStorage.getItem('ueg_access_granted') === 'true') {
             window.addEventListener('DOMContentLoaded', showApp);
         }
@@ -403,7 +405,7 @@
             }
         };
 
-        // Lembretes com Cores
+        // Lembretes
         window.addReminder = async function(subjectId) {
             const text = prompt("Digite o lembrete para compartilhar com a turma:");
             if (!text || !text.trim()) return;
@@ -566,23 +568,26 @@
 </head>
 <body>
 
-<!-- Tela de Login / Senha de Acesso -->
+<!-- Tela de Login -->
 <div id="loginScreen">
     <h2>🔒 Central de Estudos</h2>
-    <p>Digite a senha de acesso para liberar a grade de horários, lembretes e o bate-papo da turma:</p>
+    <p>Digite a senha de acesso para liberar o painel da turma:</p>
     <input type="password" id="passInput" placeholder="Digite a senha..." onkeypress="if(event.key==='Enter') checkPassword()">
     <button onclick="checkPassword()">Acessar Painel</button>
 </div>
 
-<!-- Aplicação Principal (Inicia Oculta) -->
+<!-- Aplicação Principal -->
 <div class="app-container" id="appContainer">
+
+    <!-- Banner Avisando Modo Offline -->
+    <div class="offline-status" id="offlineBanner">⚡ Modo Offline - Suas alterações serão sincronizadas assim que houver conexão.</div>
 
     <header>
         <h1>Central de Estudos</h1>
         <span class="date" id="currentDate"></span>
     </header>
 
-    <!-- Sessão de Foco em Bloco Quadrado -->
+    <!-- Sessão de Foco -->
     <div class="card-focus-square">
         <span class="card-title">Sessão de Foco</span>
         <div class="timer-square-box">
@@ -686,7 +691,7 @@
         </div>
     </div>
 
-    <!-- Bate-Papo Com Resposta & Horário -->
+    <!-- Bate-Papo -->
     <div class="card">
         <div class="card-header-flex">
             <span class="card-title">💬 Bate-Papo da Turma</span>
