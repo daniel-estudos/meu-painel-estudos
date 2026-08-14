@@ -60,7 +60,6 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.06);
         }
 
-        /* Card Quadrado de Foco no Canto Esquerdo */
         .card-focus-square {
             background: var(--surface);
             backdrop-filter: blur(16px);
@@ -69,7 +68,7 @@
             border-radius: 16px;
             padding: 18px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-            width: 190px; /* Formato quadrado compacto */
+            width: 190px;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
@@ -145,42 +144,86 @@
 
         .reminder-item span { cursor: pointer; color: #dc2626; font-weight: bold; margin-left: 6px; }
 
-        /* Bate-Papo */
+        /* Bate-Papo Avançado */
         .chat-box { display: flex; flex-direction: column; gap: 10px; }
 
         .chat-messages {
             background: var(--surface-card);
             border-radius: 12px;
             padding: 12px;
-            height: 220px;
+            height: 250px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
             border: 1px solid rgba(255,255,255,0.4);
         }
 
         .chat-msg {
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.88);
             padding: 8px 12px;
             border-radius: 8px;
             font-size: 0.82rem;
             color: #000000;
             border: 1px solid rgba(0,0,0,0.05);
             display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .chat-msg-header {
+            display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .chat-author { font-weight: 800; color: #15803d; margin-right: 6px; }
-        
+        .chat-author { font-weight: 800; color: #15803d; }
+        .chat-time { font-size: 0.68rem; color: #64748b; font-weight: 600; margin-left: 8px; }
+
+        .reply-quote-box {
+            background: rgba(21, 128, 61, 0.1);
+            border-left: 3px solid #15803d;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: #334155;
+            margin-bottom: 2px;
+        }
+
+        .reply-quote-author { font-weight: 700; color: #15803d; }
+
+        .chat-actions { display: flex; gap: 8px; align-items: center; }
+
+        .reply-btn {
+            color: #15803d;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.75rem;
+        }
+
         .delete-btn {
             color: #dc2626;
             cursor: pointer;
             font-weight: bold;
-            margin-left: 10px;
             font-size: 0.75rem;
         }
+
+        /* Banner de Resposta Ativa */
+        .reply-preview {
+            display: none;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 6px 12px;
+            border-radius: 8px;
+            border-left: 4px solid #15803d;
+            font-size: 0.78rem;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            border-right: 1px solid rgba(0,0,0,0.05);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .reply-preview-cancel { cursor: pointer; color: #dc2626; font-weight: bold; }
 
         .chat-inputs { display: flex; gap: 8px; }
 
@@ -223,14 +266,7 @@
             display: none;
         }
 
-        /* Timer Quadrado */
-        .timer-square-box {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            width: 100%;
-        }
-
+        .timer-square-box { display: flex; flex-direction: column; gap: 10px; width: 100%; }
         .time-display { font-size: 2.2rem; font-weight: 800; color: #000000; line-height: 1; }
         .timer-btns { display: flex; gap: 6px; width: 100%; }
 
@@ -267,9 +303,10 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // VARIÁVEIS DE ADMIN
+        // VARIÁVEIS DE ADMIN E RESPOSTA
         let isAdmin = false;
         const ADMIN_PASSWORD = "404";
+        let activeReplyTarget = null; // Guarda a mensagem que está sendo respondida
 
         window.toggleAdmin = function() {
             if (!isAdmin) {
@@ -333,6 +370,18 @@
         // Bate-Papo
         let currentChatSnapshot = [];
 
+        window.startReply = function(author, text) {
+            activeReplyTarget = { author, text };
+            document.getElementById('replyTargetText').textContent = `Respondendo a ${author}: "${text.length > 25 ? text.substring(0, 25) + '...' : text}"`;
+            document.getElementById('replyPreview').style.display = 'flex';
+            document.getElementById('chatText').focus();
+        };
+
+        window.cancelReply = function() {
+            activeReplyTarget = null;
+            document.getElementById('replyPreview').style.display = 'none';
+        };
+
         window.sendMessage = async function() {
             const nameInput = document.getElementById('chatName');
             const textInput = document.getElementById('chatText');
@@ -342,13 +391,24 @@
                 return;
             }
 
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+            const payload = {
+                author: nameInput.value.trim(),
+                text: textInput.value.trim(),
+                time: timeStr,
+                createdAt: now
+            };
+
+            if (activeReplyTarget) {
+                payload.replyTo = activeReplyTarget;
+            }
+
             try {
-                await addDoc(collection(db, "chat"), {
-                    author: nameInput.value.trim(),
-                    text: textInput.value.trim(),
-                    createdAt: new Date()
-                });
+                await addDoc(collection(db, "chat"), payload);
                 textInput.value = '';
+                cancelReply();
             } catch (e) { console.error("Erro ao enviar:", e); }
         };
 
@@ -380,9 +440,35 @@
                 const div = document.createElement('div');
                 div.className = 'chat-msg';
                 
+                // Formatação da hora
+                const displayTime = data.time || (data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '');
+
+                // Bloco de Citação / Resposta
+                let replyHtml = '';
+                if (data.replyTo) {
+                    replyHtml = `
+                        <div class="reply-quote-box">
+                            <span class="reply-quote-author">${data.replyTo.author}</span>: ${data.replyTo.text}
+                        </div>
+                    `;
+                }
+
                 let deleteHtml = isAdmin ? `<span class="delete-btn" onclick="window.deleteChatMessage('${documento.id}')">✕</span>` : '';
                 
-                div.innerHTML = `<div><span class="chat-author">${data.author}:</span> ${data.text}</div>${deleteHtml}`;
+                div.innerHTML = `
+                    <div class="chat-msg-header">
+                        <div>
+                            <span class="chat-author">${data.author}</span>
+                            <span class="chat-time">${displayTime}</span>
+                        </div>
+                        <div class="chat-actions">
+                            <span class="reply-btn" onclick="window.startReply('${data.author.replace(/'/g, "\\'")}', '${data.text.replace(/'/g, "\\'")}')">↩️</span>
+                            ${deleteHtml}
+                        </div>
+                    </div>
+                    ${replyHtml}
+                    <div>${data.text}</div>
+                `;
                 chatContainer.appendChild(div);
             });
 
@@ -405,7 +491,7 @@
         <span class="date" id="currentDate"></span>
     </header>
 
-    <!-- Sessão de Foco em Bloco Quadrado (Alinhado à Esquerda) -->
+    <!-- Sessão de Foco em Bloco Quadrado -->
     <div class="card-focus-square">
         <span class="card-title">Sessão de Foco</span>
         <div class="timer-square-box">
@@ -509,7 +595,7 @@
         </div>
     </div>
 
-    <!-- Bate-Papo Com Painel de Moderação -->
+    <!-- Bate-Papo Com Resposta & Horário -->
     <div class="card">
         <div class="card-header-flex">
             <span class="card-title">💬 Bate-Papo da Turma</span>
@@ -520,6 +606,13 @@
         </div>
         <div class="chat-box">
             <div class="chat-messages" id="chatMessages"></div>
+            
+            <!-- Banner de Citação ao Responder -->
+            <div class="reply-preview" id="replyPreview">
+                <span id="replyTargetText"></span>
+                <span class="reply-preview-cancel" onclick="cancelReply()">✕</span>
+            </div>
+
             <div class="chat-inputs">
                 <input type="text" id="chatName" class="chat-name" placeholder="Seu nome...">
                 <input type="text" id="chatText" class="chat-text" placeholder="Digite uma mensagem..." onkeypress="if(event.key==='Enter') sendMessage()">
