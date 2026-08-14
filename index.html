@@ -3,18 +3,212 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meu Painel de Estudos</title>
+    <title>Central de Estudos | Assistente Universitária</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f6f9; color: #333; margin: 0; padding: 40px; text-align: center; }
-        .card { background: white; padding: 20px; border-radius: 12px; max-width: 500px; margin: 0 auto; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        h1 { color: #2c3e50; }
-        p { font-size: 1.1rem; }
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --accent: #38bdf8;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media(min-width: 768px) {
+            .container { grid-template-columns: 2fr 1fr; }
+            .full-width { grid-column: span 2; }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e293b, #334155);
+            padding: 30px;
+            border-radius: 16px;
+            border: 1px solid #334155;
+            text-align: center;
+        }
+
+        .header h1 { margin: 0 0 10px 0; color: var(--accent); }
+        .header p { margin: 0; color: var(--text-muted); }
+
+        .card {
+            background-color: var(--card-bg);
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid #334155;
+        }
+
+        .card h2 { margin-top: 0; font-size: 1.25rem; color: var(--accent); display: flex; align-items: center; gap: 8px; }
+
+        /* Links Rápidos */
+        .links-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-top: 15px; }
+        .link-btn {
+            background: #334155;
+            color: white;
+            text-decoration: none;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+        .link-btn:hover { background: var(--accent); color: #0f172a; }
+
+        /* Lista de Tarefas */
+        .todo-input { display: flex; gap: 10px; margin-bottom: 15px; }
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            background: #0f172a;
+            color: white;
+        }
+        button {
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: none;
+            background: var(--accent);
+            color: #0f172a;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:hover { opacity: 0.9; }
+
+        ul { list-style: none; padding: 0; margin: 0; }
+        li {
+            background: #0f172a;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Pomodoro Timer */
+        .timer-display { font-size: 3rem; font-weight: bold; text-align: center; margin: 20px 0; color: var(--accent); }
+        .timer-controls { display: flex; justify-content: center; gap: 10px; }
+
+        /* Prompt Box */
+        .prompt-box { background: #0f172a; padding: 15px; border-radius: 8px; font-size: 0.9rem; color: var(--text-muted); border-left: 4px solid var(--accent); }
     </style>
 </head>
 <body>
-    <div class="card">
+
+<div class="container">
+    
+    <!-- Cabeçalho -->
+    <div class="header full-width">
         <h1>🎓 Central de Estudos</h1>
-        <p>Minha assistente universitária está quase pronta!</p>
+        <p>Painel Pessoal de Organização Universitária</p>
     </div>
+
+    <!-- Seção Principal: Tarefas e Trabalhos -->
+    <div class="card">
+        <h2>📌 Próximas Entregas & Provas</h2>
+        <div class="todo-input">
+            <input type="text" id="taskInput" placeholder="Ex: Entrega do Artigo de Programação...">
+            <button onclick="addTask()">Adicionar</button>
+        </div>
+        <ul id="taskList"></ul>
+    </div>
+
+    <!-- Timer Pomodoro -->
+    <div class="card">
+        <h2>⏱️ Foco Pomodoro</h2>
+        <div class="timer-display" id="timer">25:00</div>
+        <div class="timer-controls">
+            <button onclick="startTimer()">Iniciar</button>
+            <button onclick="pauseTimer()">Pausar</button>
+            <button onclick="resetTimer()">Resetar</button>
+        </div>
+    </div>
+
+    <!-- Atalhos Rápidos -->
+    <div class="card full-width">
+        <h2>🔗 Atalhos de Acesso</h2>
+        <div class="links-grid">
+            <a href="https://notion.so" target="_blank" class="link-btn">Notion</a>
+            <a href="https://drive.google.com" target="_blank" class="link-btn">Google Drive</a>
+            <a href="https://gemini.google.com" target="_blank" class="link-btn">Gemini AI</a>
+            <a href="https://chatgpt.com" target="_blank" class="link-btn">ChatGPT</a>
+        </div>
+    </div>
+
+    <!-- Prompt para Assistente IA -->
+    <div class="card full-width">
+        <h2>🤖 Prompt para usar com sua Assistente de IA</h2>
+        <div class="prompt-box">
+            "Você é minha assistente acadêmica dedicada. Ajude-me a resumir o conteúdo a seguir, criar 3 perguntas de múltipla escolha para eu testar meu conhecimento e apontar os pontos mais importantes para a prova."
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Gerenciador de Tarefas
+    function addTask() {
+        const input = document.getElementById('taskInput');
+        if (input.value.trim() === '') return;
+        
+        const li = document.createElement('li');
+        li.innerHTML = `${input.value} <button style="background:#ef4444; color:white;" onclick="this.parentElement.remove()">✓ Feito</button>`;
+        document.getElementById('taskList').appendChild(li);
+        input.value = '';
+    }
+
+    // Timer Pomodoro
+    let timeLeft = 25 * 60;
+    let timerId = null;
+
+    function updateTimer() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        document.getElementById('timer').textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    function startTimer() {
+        if (timerId !== null) return;
+        timerId = setInterval(() => {
+            if (timeLeft > 0) {
+                timeLeft--;
+                updateTimer();
+            } else {
+                clearInterval(timerId);
+                alert('Tempo de estudo encerrado! Faça uma pausa.');
+            }
+        }, 1000);
+    }
+
+    function pauseTimer() {
+        clearInterval(timerId);
+        timerId = null;
+    }
+
+    function resetTimer() {
+        pauseTimer();
+        timeLeft = 25 * 60;
+        updateTimer();
+    }
+</script>
+
 </body>
 </html>
