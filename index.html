@@ -60,6 +60,22 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.06);
         }
 
+        /* Card Quadrado de Foco no Canto Esquerdo */
+        .card-focus-square {
+            background: var(--surface);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 18px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            width: 190px; /* Formato quadrado compacto */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
         .card-header-flex {
             display: flex;
             justify-content: space-between;
@@ -207,24 +223,31 @@
             display: none;
         }
 
-        .timer-box { display: flex; align-items: center; justify-content: space-between; }
-        .time-display { font-size: 2rem; font-weight: 800; color: #000000; }
-        .timer-btns { display: flex; gap: 8px; }
+        /* Timer Quadrado */
+        .timer-square-box {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .time-display { font-size: 2.2rem; font-weight: 800; color: #000000; line-height: 1; }
+        .timer-btns { display: flex; gap: 6px; width: 100%; }
 
         button {
-            padding: 8px 16px;
+            padding: 8px 12px;
             border-radius: 8px;
             border: none;
             background: #000000;
             color: white;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 700;
             cursor: pointer;
             transition: 0.2s;
         }
 
         button:hover { opacity: 0.85; }
-        .btn-sec { background: transparent; color: #000000; border: 1px solid #000000; }
+        .btn-sec { background: transparent; color: #000000; border: 1px solid #000000; padding: 8px 10px; }
     </style>
 
     <!-- Firebase SDK -->
@@ -246,7 +269,7 @@
 
         // VARIÁVEIS DE ADMIN
         let isAdmin = false;
-        const ADMIN_PASSWORD = "404"; // ⬅️ SENHA DEFINIDA PARA 404
+        const ADMIN_PASSWORD = "404";
 
         window.toggleAdmin = function() {
             if (!isAdmin) {
@@ -382,10 +405,10 @@
         <span class="date" id="currentDate"></span>
     </header>
 
-    <!-- Sessão de Foco -->
-    <div class="card">
-        <div class="card-title">Sessão de Foco</div>
-        <div class="timer-box">
+    <!-- Sessão de Foco em Bloco Quadrado (Alinhado à Esquerda) -->
+    <div class="card-focus-square">
+        <span class="card-title">Sessão de Foco</span>
+        <div class="timer-square-box">
             <div class="time-display" id="timer">25:00</div>
             <div class="timer-btns">
                 <button id="startBtn" onclick="toggleTimer()">Iniciar</button>
