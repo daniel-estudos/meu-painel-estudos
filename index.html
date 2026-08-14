@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Central de Estudos | UEG</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- API do Jitsi Meet -->
+    <script src="https://meet.jit.si/external_api.js"></script>
+
     <style>
         :root {
             --surface: rgba(255, 255, 255, 0.45);
@@ -111,8 +115,31 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
         }
 
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
         h1 { font-size: 1.25rem; font-weight: 800; color: #000000; }
         
+        .btn-video-call {
+            background: #000000;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s;
+        }
+
+        .btn-video-call:hover { opacity: 0.85; transform: translateY(-1px); }
+
         .header-datetime {
             display: flex;
             flex-direction: column;
@@ -128,6 +155,61 @@
         }
 
         .date { font-size: 0.8rem; color: #000000; font-weight: 700; text-transform: capitalize; }
+
+        /* MODAL DE VÍDEO (JITSI) */
+        .video-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.75);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .video-container {
+            background: #ffffff;
+            width: 100%;
+            max-width: 1000px;
+            height: 85vh;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .video-header {
+            background: #000000;
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .video-header h3 { font-size: 0.95rem; font-weight: 800; }
+        
+        .btn-close-video {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        #jitsiContainer {
+            width: 100%;
+            flex: 1;
+        }
 
         .dashboard-layout {
             display: grid;
@@ -653,7 +735,10 @@
     <div class="offline-status" id="offlineBanner">⚡ Modo Offline - Suas alterações serão sincronizadas assim que houver conexão.</div>
 
     <header>
-        <h1>Central de Estudos</h1>
+        <div class="header-left">
+            <h1>Central de Estudos</h1>
+            <button class="btn-video-call" onclick="openVideoCall()">📹 Sala de Vídeo</button>
+        </div>
         <div class="header-datetime">
             <span class="digital-clock" id="digitalClock">00:00:00</span>
             <span class="date" id="currentDate"></span>
@@ -721,7 +806,7 @@
 
         </div>
 
-        <!-- Coluna Direita: Aulas e Lembretes da UEG -->
+        <!-- Coluna Direita: Aulas e Lembretes -->
         <div class="main-col">
             <div class="card">
                 <div class="card-title">Horário das Aulas & Lembretes Compartilhados (UEG)</div>
@@ -819,18 +904,26 @@
 
 </div>
 
+<!-- MODAL COM VIDEOCHAMADA JITSI -->
+<div class="video-modal" id="videoModal">
+    <div class="video-container">
+        <div class="video-header">
+            <h3>📹 Sala de Estudos Virtual (Turma UEG)</h3>
+            <button class="btn-close-video" onclick="closeVideoCall()">✕ Fechar Chamada</button>
+        </div>
+        <div id="jitsiContainer"></div>
+    </div>
+</div>
+
 <script>
-    // Atualização da Data e do Relógio Digital em Tempo Real
+    // Relógio Digital & Data
     function updateClockAndDate() {
         const now = new Date();
-        
-        // Relógio Digital (HH:MM:SS)
         const hours = String(now.getHours()).padStart(2, '0');
         const minutes = String(now.getMinutes()).padStart(2, '0');
         const seconds = String(now.getSeconds()).padStart(2, '0');
         document.getElementById('digitalClock').textContent = `${hours}:${minutes}:${seconds}`;
 
-        // Data Completa
         const options = { weekday: 'long', day: 'numeric', month: 'long' };
         document.getElementById('currentDate').textContent = now.toLocaleDateString('pt-BR', options);
     }
@@ -838,7 +931,7 @@
     setInterval(updateClockAndDate, 1000);
     updateClockAndDate();
 
-    // Cronômetro / Foco
+    // Cronômetro de Foco
     let defaultMinutes = 25;
     let timeLeft = defaultMinutes * 60;
     let timerId = null;
@@ -898,6 +991,44 @@
             localStorage.setItem('timer_theme', themeName);
         } else {
             localStorage.removeItem('timer_theme');
+        }
+    }
+
+    // INTEGRAÇÃO JITSI MEET
+    let jitsiApi = null;
+
+    function openVideoCall() {
+        document.getElementById('videoModal').style.display = 'flex';
+        
+        if (!jitsiApi) {
+            const domain = "meet.jit.si";
+            const options = {
+                roomName: "CentralEstudosUEG_Turma_2026_Farmacia",
+                width: "100%",
+                height: "100%",
+                parentNode: document.querySelector('#jitsiContainer'),
+                configOverwrite: {
+                    startWithAudioMuted: true,
+                    startWithVideoMuted: false
+                },
+                interfaceConfigOverwrite: {
+                    SHOW_JITSI_WATERMARK: false,
+                    SHOW_WATERMARK_FOR_GUESTS: false,
+                    TOOLBAR_BUTTONS: [
+                        'microphone', 'camera', 'desktop', 'fullscreen',
+                        'fittings', 'raisehand', 'tileview', 'hangup'
+                    ]
+                }
+            };
+            jitsiApi = new JitsiMeetExternalAPI(domain, options);
+        }
+    }
+
+    function closeVideoCall() {
+        document.getElementById('videoModal').style.display = 'none';
+        if (jitsiApi) {
+            jitsiApi.dispose();
+            jitsiApi = null;
         }
     }
 </script>
