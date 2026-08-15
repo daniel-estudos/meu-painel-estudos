@@ -49,7 +49,7 @@ header{padding:13px 16px;display:flex;justify-content:space-between;align-items:
   <div class="glass toolbar">
     <div class="toolbar-left" style="width:100%">
       <div class="ai-bar">
-        <input id="aiInput" type="text" placeholder="✨ Comande o Assistente (Ex: Adicionar disciplina Bioestatistica / Adicionar prova N1 de Bioestatistica no dia 10/10/2026)..." onkeydown="if(event.key==='Enter')runAICommand()">
+        <input id="aiInput" type="text" placeholder="✨ Comande o Assistente (Ex: Iniciar pomodoro / Apagar todas as provas / Criar tarefa ler capítulo 2)..." onkeydown="if(event.key==='Enter')runAICommand()">
         <button class="btn btn-green" onclick="runAICommand()" id="aiBtn">Executar Comando</button>
       </div>
     </div>
@@ -499,7 +499,7 @@ function checkAssessmentsCollapseState(){
 
 function renderTasks(){const arr=data.tasks.filter(x=>!x.done).sort((a,b)=>(a.dueDate||'9999').localeCompare(b.dueDate||'9999')).slice(0,6);$('tasksList').innerHTML=arr.length?arr.map(x=>{const s=data.subjects.find(v=>v.id===x.subjectId);const bc=x.priority==='high'?'red':x.priority==='medium'?'yellow':'green';return `<div class="item"><div class="item-head"><label style="display:flex;gap:6px;align-items:flex-start"><input type="checkbox" onchange="toggleTask('${x.id}',this.checked)"><span class="item-title">${escapeHtml(x.title)}</span></label><span class="badge ${bc}">${x.priority==='high'?'Alta':x.priority==='medium'?'Média':'Baixa'}</span></div><div class="meta">${escapeHtml(s?.name||'Geral')}${x.dueDate?' • '+formatDate(x.dueDate):''}</div><div class="subject-actions"><button class="mini-btn" onclick="openTaskModal('${x.id}')">Editar</button><button class="mini-btn" onclick="removeDoc('tasks','${x.id}')">Excluir</button></div></div>`}).join(''):'<div class="empty">Nenhuma tarefa pendente.</div>'}
 function renderEvents(){const arr=data.events.filter(x=>daysUntil(x.date)>=0).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,5);$('upcomingEvents').innerHTML=arr.length?arr.map(x=>`<div class="item"><div class="item-head"><div class="item-title">${escapeHtml(x.title)}</div><span class="badge blue">${formatDate(x.date)}</span></div><div class="meta">${x.time||''}${x.description?' • '+escapeHtml(x.description):''}</div><div class="subject-actions"><button class="mini-btn" onclick="openEventModal('${x.id}')">Editar</button><button class="mini-btn" onclick="removeDoc('events','${x.id}')">Excluir</button></div></div>`).join(''):'<div class="empty">Nenhum compromisso próximo.</div>'}
-function renderToday(){const now=new Date(),day=now.getDay()||7;const hours=now.toTimeString().slice(0,5);$('todayLabel').textContent=now.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});$('greeting').textContent=`${now.getHours()<12?'Bom dia':now.getHours()<18?'Boa tarde':'Boa noite'}.`;const todayClasses=data.classes.filter(c=>Number(c.day)===day).sort((a,b)=>a.start.localeCompare(b.start));const next=todayClasses.find(c=>c.start>=hours)||null;if(next){const s=data.subjects.find(x=>x.id===next.subjectId);$('heroText').textContent=`Você ten ${todayClasses.length} aula${todayClasses.length>1?'s':''} hoje.`;$('nextClassBox').innerHTML=`<div class="k">Próxima aula</div><div class="v">${escapeHtml(s?.name||next.title)}</div><div class="subtle">${next.start}–${next.end}${next.room?' • Sala '+escapeHtml(next.room):''}</div>`}else{$('heroText').textContent=todayClasses.length?'As aulas de hoje já terminaram.':'Você não tem aulas cadastradas hoje.';$('nextClassBox').innerHTML=`<div class="k">Próxima atividade</div><div class="v">Veja provas, tarefas e compromissos ao lado.</div>`}}
+function renderToday(){const now=new Date(),day=now.getDay()||7;const hours=now.toTimeString().slice(0,5);$('todayLabel').textContent=now.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});$('greeting').textContent=`${now.getHours()<12?'Bom dia':now.getHours()<18?'Boa tarde':'Boa noite'}.`;const todayClasses=data.classes.filter(c=>Number(c.day)===day).sort((a,b)=>a.start.localeCompare(b.start));const next=todayClasses.find(c=>c.start>=hours)||null;if(next){const s=data.subjects.find(x=>x.id===next.subjectId);$('heroText').textContent=`Você tem ${todayClasses.length} aula${todayClasses.length>1?'s':''} hoje.`;$('nextClassBox').innerHTML=`<div class="k">Próxima aula</div><div class="v">${escapeHtml(s?.name||next.title)}</div><div class="subtle">${next.start}–${next.end}${next.room?' • Sala '+escapeHtml(next.room):''}</div>`}else{$('heroText').textContent=todayClasses.length?'As aulas de hoje já terminaram.':'Você não tem aulas cadastradas hoje.';$('nextClassBox').innerHTML=`<div class="k">Próxima atividade</div><div class="v">Veja provas, tarefas e compromissos ao lado.</div>`}}
 function renderStats(){const pending=data.tasks.filter(x=>!x.done).length;const upcoming=data.assessments.filter(x=>daysUntil(x.date)>=0).length;const minutes=data.progress.reduce((a,x)=>a+(Number(x.minutes)||0),0);$('statSubjects').textContent=data.subjects.length;$('statPending').textContent=pending;$('statAssessments').textContent=upcoming;$('statStudy').textContent=minutes<60?`${minutes}m`:`${(minutes/60).toFixed(1)}h`}
 function renderStudySubjects(){$('studySubject').innerHTML='<option value="">Escolha a disciplina</option>'+data.subjects.map(s=>`<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('')}
 
@@ -597,7 +597,7 @@ async function loadAll(){
 }
 window.refreshAll=()=>{renderAll();showToast('Painel atualizado')};
 
-// INTERPRETADOR DE COMANDOS LOCAL (Sem necessidade de Chaves / APIs de terceiros)
+// INTERPRETADOR COMPLETO DE COMANDOS (Cobringo todas as funcionalidades do site)
 window.runAICommand = async () => {
   const input = $('aiInput');
   const text = input.value.trim();
@@ -605,7 +605,83 @@ window.runAICommand = async () => {
 
   const textClean = text.toLowerCase();
 
-  // 1. Comando: Adicionar Prova
+  // 1. CRONÔMETRO / POMODORO (Iniciar, Pausar, Reiniciar)
+  if (textClean.includes('iniciar') && (textClean.includes('cronometro') || textClean.includes('pomodoro') || textClean.includes('timer') || textClean.includes('foco'))) {
+    window.toggleTimer();
+    showToast("✨ Cronômetro iniciado!");
+    input.value = "";
+    return;
+  }
+  if (textClean.includes('pausar') && (textClean.includes('cronometro') || textClean.includes('pomodoro') || textClean.includes('timer'))) {
+    window.pauseTimer();
+    showToast("✨ Cronômetro pausado!");
+    input.value = "";
+    return;
+  }
+  if (textClean.includes('reiniciar') && (textClean.includes('cronometro') || textClean.includes('pomodoro') || textClean.includes('timer'))) {
+    window.resetTimer();
+    showToast("✨ Cronômetro reiniciado!");
+    input.value = "";
+    return;
+  }
+
+  // 2. EXCLUSÃO EM MASSA (Apagar todas as provas ou todas as matérias)
+  if ((textClean.includes('apagar') || textClean.includes('excluir') || textClean.includes('limpar')) && textClean.includes('prova')) {
+    if (confirm("Tem certeza que deseja APAGAR TODAS as provas cadastradas?")) {
+      for (const item of data.assessments) {
+        await deleteDoc(doc(db, 'assessments', item.id));
+      }
+      showToast("✨ Todas as provas foram excluídas!");
+    }
+    input.value = "";
+    return;
+  }
+
+  if ((textClean.includes('apagar') || textClean.includes('excluir') || textClean.includes('limpar')) && (textClean.includes('materia') || textClean.includes('disciplina'))) {
+    if (confirm("Tem certeza que deseja APAGAR TODAS as disciplinas?")) {
+      for (const item of data.subjects) {
+        await deleteDoc(doc(db, 'subjects', item.id));
+      }
+      showToast("✨ Todas as disciplinas foram excluídas!");
+    }
+    input.value = "";
+    return;
+  }
+
+  if ((textClean.includes('apagar') || textClean.includes('excluir') || textClean.includes('limpar')) && textClean.includes('tarefa')) {
+    if (confirm("Tem certeza que deseja APAGAR TODAS as tarefas?")) {
+      for (const item of data.tasks) {
+        await deleteDoc(doc(db, 'tasks', item.id));
+      }
+      showToast("✨ Todas as tarefas foram excluídas!");
+    }
+    input.value = "";
+    return;
+  }
+
+  // 3. ADICIONAR TAREFA
+  if (textClean.includes('tarefa')) {
+    let title = text.replace(/adicion(ar|e)?/gi, '').replace(/criar/gi, '').replace(/tarefa/gi, '').replace(/por favor/gi, '').trim();
+    let foundSubjectId = "";
+    data.subjects.forEach(s => {
+      if (textClean.includes(s.name.toLowerCase())) foundSubjectId = s.id;
+    });
+    await writeDoc('tasks', null, { title: title || text, subjectId: foundSubjectId, dueDate: new Date().toISOString().split('T')[0], priority: 'medium', notes: '', done: false });
+    showToast("✨ Tarefa adicionada!");
+    input.value = "";
+    return;
+  }
+
+  // 4. ADICIONAR COMPROMISSO
+  if (textClean.includes('compromisso') || textClean.includes('evento')) {
+    let title = text.replace(/adicion(ar|e)?/gi, '').replace(/criar/gi, '').replace(/compromisso/gi, '').replace(/evento/gi, '').trim();
+    await writeDoc('events', null, { title: title || text, date: new Date().toISOString().split('T')[0], time: "", description: "" });
+    showToast("✨ Compromisso agendado!");
+    input.value = "";
+    return;
+  }
+
+  // 5. ADICIONAR PROVA (Individual)
   if (textClean.includes('prova') || textClean.includes('avaliação')) {
     const dateMatch = text.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/);
     let isoDate = "";
@@ -630,7 +706,7 @@ window.runAICommand = async () => {
     return;
   }
 
-  // 2. Comando: Registrar Estudo
+  // 6. REGISTRAR TEMPO DE ESTUDO
   if (textClean.includes('estud') || textClean.includes('minuto')) {
     const minMatch = text.match(/(\d+)\s*m/);
     const minutes = minMatch ? Number(minMatch[1]) : 30;
@@ -646,7 +722,7 @@ window.runAICommand = async () => {
     return;
   }
 
-  // 3. Comando padrão: Adicionar Disciplina
+  // 7. ADICIONAR DISCIPLINA (Comando Padrão)
   let disciplineName = text.replace(/adicion(ar|e)?/gi, '').replace(/disciplina/gi, '').replace(/matéria/gi, '').replace(/por favor/gi, '').replace(/no quadro de disciplinas/gi, '').trim();
   if (!disciplineName) disciplineName = text;
 
