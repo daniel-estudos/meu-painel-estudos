@@ -198,7 +198,7 @@ header{padding:13px 16px;display:flex;justify-content:space-between;align-items:
 <script type="module">
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
 import {getFirestore,collection,addDoc,onSnapshot,deleteDoc,doc,updateDoc,enableIndexedDbPersistence,getDocs,query,orderBy,limit,serverTimestamp} from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
-import { GoogleGenerativeAI } from "https://esm.run/@google/genai";
+import { GoogleGenAI } from "https://esm.run/@google/genai";
 
 const firebaseConfig={apiKey:'AIzaSyC09EhGx9GSo4IUjxWXJxqksnKgOU4khQ',authDomain:'painel-estudos-54958.firebaseapp.com',projectId:'painel-estudos-54958',storageBucket:'painel-estudos-54958.firebasestorage.app',messagingSenderId:'491796500394',appId:'1:491796500394:web:f6d85850484df33b8de5d3'};
 const app=initializeApp(firebaseConfig);const db=getFirestore(app);
@@ -212,10 +212,30 @@ const POMODORO_LABELS={focus:'Tempo de foco',short:'Pausa curta',long:'Pausa lon
 const POMODORO_DONE={focus:'Sessão de foco concluída! Hora de descansar.',short:'Pausa curta terminada. Volte ao foco!',long:'Pausa longa terminada. Pronto para estudar?'};
 let timerId=null,timerMinutes=25,timeLeft=1500,pomodoroMode='focus',timerRunning=false,timerPaused=false,originalTitle=document.title;
 const $=id=>document.getElementById(id),col=name=>collection(db,name),today=new Date();
+
 window.escapeHtml=s=>String(s??'').replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]));
 window.showToast=msg=>{const t=$('toast');t.textContent=msg;t.style.display='block';clearTimeout(window.toastId);window.toastId=setTimeout(()=>t.style.display='none',2200)};
-window.checkPassword=()=>{if($('passInput').value===SITE_PASSWORD){localStorage.setItem('ueg_access_granted','true');showApp()}else alert('Senha incorreta!')};
-function showApp(){$('loginScreen').classList.add('hidden');$('app').style.display='flex';document.body.classList.add('app-active');updateOnlineStatus();initChatAuthor()}
+
+window.showApp = function() {
+  const login = document.getElementById('loginScreen');
+  const app = document.getElementById('app');
+  if (login) login.classList.add('hidden');
+  if (app) app.style.display = 'flex';
+  document.body.classList.add('app-active');
+  updateOnlineStatus();
+  initChatAuthor();
+};
+
+window.checkPassword = function() {
+  const input = document.getElementById('passInput');
+  if (input && input.value === SITE_PASSWORD) {
+    localStorage.setItem('ueg_access_granted', 'true');
+    window.showApp();
+  } else {
+    alert('Senha incorreta!');
+  }
+};
+
 function initChatAuthor(){const saved=localStorage.getItem(CHAT_AUTHOR_KEY);if(saved&&$('chatAuthor'))$('chatAuthor').value=saved}
 function updateOnlineStatus(){
   $('offline').style.display=navigator.onLine&&!syncMeta.hasPendingWrites?'none':'block';
@@ -578,9 +598,7 @@ async function loadAll(){
 }
 window.refreshAll=()=>{renderAll();showToast('Painel atualizado')};
 
-// ==========================================
-// INTEGRAÇÃO SEGURA COM A IA (GOOGLE GEMINI)
-// ==========================================
+// INTEGRAÇÃO COM A IA (GOOGLE GEMINI - SDK NOVO)
 let GEMINI_API_KEY = localStorage.getItem('gemini_key') || "";
 
 window.runAICommand = async () => {
@@ -602,55 +620,57 @@ window.runAICommand = async () => {
   btn.textContent = "Processando...";
 
   try {
-    const ai = new GoogleGenerativeAI(GEMINI_API_KEY);
-    const model = ai.getGenerativeModel({
+    const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+    const response = await ai.models.generateContent({
       model: "gemini-1.5-flash",
-      tools: [{
-        functionDeclarations: [
-          {
-            name: "adicionarProva",
-            description: "Cadastra uma nova prova ou avaliação no sistema",
-            parameters: {
-              type: "OBJECT",
-              properties: {
-                titulo: { type: "STRING", description: "Ex: Prova N1, Avaliação final" },
-                nomeDisciplina: { type: "STRING", description: "Nome aproximado da matéria" },
-                data: { type: "STRING", description: "Data em formato AAAA-MM-DD" },
-                horario: { type: "STRING", description: "Horário opcional em formato HH:MM" }
-              },
-              required: ["titulo", "data"]
+      contents: `Data atual: ${new Date().toISOString().split('T')[0]}. Interprete o comando: "${text}"`,
+      config: {
+        tools: [{
+          functionDeclarations: [
+            {
+              name: "adicionarProva",
+              description: "Cadastra uma nova prova ou avaliação no sistema",
+              parameters: {
+                type: "OBJECT",
+                properties: {
+                  titulo: { type: "STRING", description: "Ex: Prova N1, Avaliação final" },
+                  nomeDisciplina: { type: "STRING", description: "Nome aproximado da matéria" },
+                  data: { type: "STRING", description: "Data em formato AAAA-MM-DD" },
+                  horario: { type: "STRING", description: "Horário opcional em formato HH:MM" }
+                },
+                required: ["titulo", "data"]
+              }
+            },
+            {
+              name: "adicionarDisciplina",
+              description: "Cadastra uma nova disciplina",
+              parameters: {
+                type: "OBJECT",
+                properties: {
+                  nome: { type: "STRING" },
+                  professor: { type: "STRING" }
+                },
+                required: ["nome"]
+              }
+            },
+            {
+              name: "registrarEstudo",
+              description: "Registra tempo de estudo concluído",
+              parameters: {
+                type: "OBJECT",
+                properties: {
+                  nomeDisciplina: { type: "STRING" },
+                  minutos: { type: "NUMBER" }
+                },
+                required: ["minutos"]
+              }
             }
-          },
-          {
-            name: "adicionarDisciplina",
-            description: "Cadastra uma nova disciplina",
-            parameters: {
-              type: "OBJECT",
-              properties: {
-                nome: { type: "STRING" },
-                professor: { type: "STRING" }
-              },
-              required: ["nome"]
-            }
-          },
-          {
-            name: "registrarEstudo",
-            description: "Registra tempo de estudo concluído",
-            parameters: {
-              type: "OBJECT",
-              properties: {
-                nomeDisciplina: { type: "STRING" },
-                minutos: { type: "NUMBER" }
-              },
-              required: ["minutos"]
-            }
-          }
-        ]
-      }]
+          ]
+        }]
+      }
     });
 
-    const result = await model.generateContent(`Data atual: ${new Date().toISOString().split('T')[0]}. Interprete o comando: "${text}"`);
-    const call = result.response.functionCalls()?.[0];
+    const call = response.functionCalls?.[0];
 
     if (call) {
       if (call.name === "adicionarProva") {
@@ -717,7 +737,7 @@ function initDragAndDrop(){
 window.addEventListener('load',()=>{
   const chatBox=$('chatMessages');
   if(chatBox)chatBox.addEventListener('scroll',()=>{chatStickBottom=chatBox.scrollHeight-chatBox.scrollTop-chatBox.clientHeight<48});
-  if(localStorage.getItem('ueg_access_granted')==='true')showApp();
+  if(localStorage.getItem('ueg_access_granted')==='true')window.showApp();
   loadAll();
 });
 </script>
