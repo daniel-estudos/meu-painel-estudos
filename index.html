@@ -8,7 +8,67 @@
 <!-- GridStack CSS -->
 <link href="https://cdn.jsdelivr.net/npm/gridstack@9.2.0/dist/gridstack.min.css" rel="stylesheet"/>
 <style>
-:root{--surface:rgba(255,255,255,.35);--text:#0f172a;--muted:#334155;--border:rgba(255,255,255,.55);--accent:#15803d;--danger:#dc2626;--shadow:0 8px 32px rgba(0,0,0,.12);--text-shadow:0 1px 2px rgba(255,255,255,.8)}
+:root{
+  --surface:rgba(255,255,255,.35);
+  --text:#0f172a;
+  --muted:#334155;
+  --border:rgba(255,255,255,.55);
+  --accent:#15803d;
+  --danger:#dc2626;
+  --shadow:0 8px 32px rgba(0,0,0,.12);
+  --text-shadow:0 1px 2px rgba(255,255,255,.8)
+}
+
+/* TEMAS DOS QUADROS */
+body.theme-all-dark .glass {
+  background: rgba(20,24,35,0.75)!important;
+  backdrop-filter: blur(20px)!important;
+  -webkit-backdrop-filter: blur(20px)!important;
+  border: 1px solid rgba(255,255,255,0.12)!important;
+  color: #f8fafc!important;
+}
+body.theme-all-dark .title, 
+body.theme-all-dark .clock strong, 
+body.theme-all-dark .brand h1,
+body.theme-all-dark .timer,
+body.theme-all-dark .subject-name,
+body.theme-all-dark .class-mini strong {
+  color: #ffffff!important;
+  text-shadow: none!important;
+}
+body.theme-all-dark .subtle,
+body.theme-all-dark .clock span,
+body.theme-all-dark .brand p,
+body.theme-all-dark .teacher,
+body.theme-all-dark .timer-label {
+  color: #94a3b8!important;
+}
+body.theme-all-dark .subject-card,
+body.theme-all-dark .day,
+body.theme-all-dark .class-mini,
+body.theme-all-dark .item {
+  background: rgba(255,255,255,0.06)!important;
+  border-color: rgba(255,255,255,0.12)!important;
+  color: #f8fafc!important;
+}
+
+body.theme-all-light .dark-glass-card {
+  background: rgba(255,255,255,.35)!important;
+  backdrop-filter: blur(16px)!important;
+  -webkit-backdrop-filter: blur(16px)!important;
+  border: 1px solid var(--border)!important;
+  color: var(--text)!important;
+}
+body.theme-all-light #calendarMonth,
+body.theme-all-light .cal-head-dark,
+body.theme-all-light .cal-cell-dark {
+  color: var(--text)!important;
+}
+body.theme-all-light .cal-nav-btn {
+  background: rgba(0,0,0,0.15)!important;
+  color: #000!important;
+}
+
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Plus Jakarta Sans',sans-serif}
 html{scroll-behavior:smooth}
 body{min-height:100vh;padding:20px;color:var(--text);background:url('https://images8.alphacoders.com/896/thumb-1920-896653.jpg') center/cover fixed no-repeat}
@@ -68,7 +128,6 @@ body.edit-mode .grid-stack-item-content{border:2px dashed var(--accent)!importan
 .badge{padding:3px 8px;border-radius:999px;font-size:.6rem;font-weight:800}.badge.red{background:#fee2e2;color:#991b1b}
 .empty{padding:12px;text-align:center;color:#475569;font-size:.72rem;font-weight:700}
 
-/* ESTILO DARK GLASS DO CALENDÁRIO */
 .dark-glass-card{background:rgba(20,24,35,0.75)!important;backdrop-filter:blur(20px)!important;-webkit-backdrop-filter:blur(20px)!important;border:1px solid rgba(255,255,255,0.12)!important;color:#f8fafc!important}
 .cal-nav-btn{background:rgba(255,255,255,0.15);border:none;color:#fff;width:28px;height:28px;border-radius:8px;cursor:pointer;font-weight:bold;font-size:0.9rem;transition:background 0.2s}
 .cal-nav-btn:hover{background:rgba(255,255,255,0.3)}
@@ -79,7 +138,6 @@ body.edit-mode .grid-stack-item-content{border:2px dashed var(--accent)!importan
 .cal-cell-dark.today-dark{background:rgba(59,130,246,0.35);border:1px solid #3b82f6;color:#fff;font-weight:800}
 .cal-cell-dark .exam-dot{width:4px;height:4px;border-radius:99px;background:#ef4444;position:absolute;bottom:4px}
 
-/* CRONÔMETRO COM OPÇÃO PERSONALIZADA */
 .custom-timer-input{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:10px}
 .custom-timer-input input{width:65px;padding:4px 8px;border-radius:8px;border:1px solid rgba(0,0,0,0.2);background:rgba(255,255,255,0.6);text-align:center;font-size:0.75rem;font-weight:700}
 
@@ -127,6 +185,7 @@ body.edit-mode .grid-stack-item-content{border:2px dashed var(--accent)!importan
       <button class="btn btn-green" onclick="runAICommand()" id="aiBtn">Executar Comando</button>
     </div>
     <div class="toolbar-right">
+      <button class="btn btn-sec" onclick="cycleTheme()" id="themeBtn">🌙 Tema: Híbrido</button>
       <button class="btn btn-orange" id="editLayoutBtn" onclick="toggleEditMode()">🔓 Mover & Redimensionar</button>
       <button class="btn btn-green" onclick="openClassModal()">＋ Aula</button>
       <button class="btn btn-red" onclick="openAssessmentModal()">＋ Prova</button>
@@ -137,7 +196,7 @@ body.edit-mode .grid-stack-item-content{border:2px dashed var(--accent)!importan
 
   <div class="grid-stack">
     
-    <!-- CRONÔMETRO COM TEMPO PERSONALIZADO -->
+    <!-- CRONÔMETRO -->
     <div class="grid-stack-item" gs-w="4" gs-h="4" gs-id="box-pomodoro">
       <div class="grid-stack-item-content glass">
         <div class="section-head">
@@ -171,7 +230,7 @@ body.edit-mode .grid-stack-item-content{border:2px dashed var(--accent)!importan
       </div>
     </div>
 
-    <!-- CALENDÁRIO DARK COM NAVEGAÇÃO -->
+    <!-- CALENDÁRIO -->
     <div class="grid-stack-item" gs-w="4" gs-h="4" gs-id="box-calendario">
       <div class="grid-stack-item-content glass dark-glass-card">
         <div class="section-head" style="margin-bottom:16px;">
@@ -242,17 +301,68 @@ const POMODORO_LABELS={focus:'Tempo de foco',short:'Pausa curta',long:'Pausa lon
 
 let timerId=null, timerEndTime=null, timerMinutes=25, timeLeft=1500, pomodoroMode='focus', timerRunning=false, timerPaused=false;
 let calViewDate = new Date();
+let currentTheme = localStorage.getItem('user_theme') || 'hybrid';
 
 const $=id=>document.getElementById(id),col=name=>collection(db,name);
 
 window.escapeHtml=s=>String(s??'').replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]));
 window.showToast=msg=>{const t=$('toast');t.textContent=msg;t.style.display='block';clearTimeout(window.toastId);window.toastId=setTimeout(()=>t.style.display='none',2200)};
 
+// GERENCIADOR DE TEMAS
+window.cycleTheme = function() {
+  if (currentTheme === 'hybrid') currentTheme = 'dark';
+  else if (currentTheme === 'dark') currentTheme = 'light';
+  else currentTheme = 'hybrid';
+
+  applyTheme(currentTheme);
+};
+
+function applyTheme(theme) {
+  document.body.classList.remove('theme-all-dark', 'theme-all-light');
+  const btn = $('themeBtn');
+
+  if (theme === 'dark') {
+    document.body.classList.add('theme-all-dark');
+    if (btn) btn.textContent = '🌙 Tema: Todos Escuros';
+  } else if (theme === 'light') {
+    document.body.classList.add('theme-all-light');
+    if (btn) btn.textContent = '☀️ Tema: Todos Claros';
+  } else {
+    if (btn) btn.textContent = '🌙 Tema: Híbrido';
+  }
+
+  localStorage.setItem('user_theme', theme);
+}
+
+// ALERTA SONORO AO FINAL DO TIMING
+function playFinishSound() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const playBeep = (freq, time, duration) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, ctx.currentTime + time);
+      gain.gain.setValueAtTime(0.3, ctx.currentTime + time);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + time + duration);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(ctx.currentTime + time);
+      osc.stop(ctx.currentTime + time + duration);
+    };
+    
+    playBeep(523.25, 0, 0.2);     // Dó
+    playBeep(659.25, 0.25, 0.2);  // Mi
+    playBeep(783.99, 0.5, 0.4);   // Sol
+  } catch(e) {}
+}
+
 window.showApp = function() {
   const login = $('loginScreen'), appEl = $('app');
   if (login) login.classList.add('hidden');
   if (appEl) appEl.style.display = 'flex';
   document.body.classList.add('app-active');
+  applyTheme(currentTheme);
   initGridStack();
 };
 
@@ -450,7 +560,6 @@ function renderStudySubjects(){
   $('studySubject').innerHTML='<option value="">Disciplina</option>'+data.subjects.map(s=>`<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('');
 }
 
-/* RENDERIZAÇÃO DO CALENDÁRIO DARK ESTILO IMAGEM EM PT-BR */
 function renderCalendar(){
   const y = calViewDate.getFullYear(), m = calViewDate.getMonth();
   const today = new Date();
@@ -460,7 +569,7 @@ function renderCalendar(){
   
   const firstDay = new Date(y, m, 1);
   let startDay = firstDay.getDay() - 1; 
-  if (startDay === -1) startDay = 6; // Ajuste para iniciar na Segunda-feira
+  if (startDay === -1) startDay = 6;
   
   const totalDays = new Date(y, m + 1, 0).getDate();
   const headers = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
@@ -495,7 +604,6 @@ window.nextMonth = () => {
   renderCalendar();
 };
 
-// CRONÔMETRO COM OPÇÃO PERSONALIZADA DE MINUTOS
 window.applyCustomMinutes = (val) => {
   const min = parseInt(val);
   if (isNaN(min) || min <= 0) return;
@@ -523,7 +631,16 @@ function updatePomodoroUI(){
 
 function updateDisplay(){ $('timer').textContent=`${String(Math.floor(timeLeft/60)).padStart(2,'0')}:${String(timeLeft%60).padStart(2,'0')}`; }
 function stopTimerInterval(){if(timerId){clearInterval(timerId);timerId=null}timerRunning=false;updatePomodoroUI()}
-function finishPomodoro(){ stopTimerInterval();timerPaused=false;showToast("Sessão finalizada!");timeLeft=timerMinutes*60;updateDisplay();updatePomodoroUI(); }
+
+function finishPomodoro(){ 
+  stopTimerInterval();
+  timerPaused=false;
+  playFinishSound();
+  showToast("⏰ Tempo finalizado!");
+  timeLeft=timerMinutes*60;
+  updateDisplay();
+  updatePomodoroUI(); 
+}
 
 window.toggleTimer=()=>{
   if(timerRunning)return;
