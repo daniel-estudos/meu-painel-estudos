@@ -9,8 +9,8 @@
 :root{--surface:rgba(255,255,255,.35);--text:#0f172a;--muted:#334155;--border:rgba(255,255,255,.55);--accent:#15803d;--danger:#dc2626;--blue:#0284c7;--shadow:0 8px 32px rgba(0,0,0,.12);--text-shadow:0 1px 2px rgba(255,255,255,.8)}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Plus Jakarta Sans',sans-serif}
 html{scroll-behavior:smooth}
-body{min-height:100vh;padding:20px;color:var(--text);background:url('https://images8.alphacoders.com/135/thumb-1920-1354012.png') center/cover fixed no-repeat}
-body.app-active{background-image:url('https://images3.alphacoders.com/136/thumb-1920-1365092.jpeg')}
+body{min-height:100vh;padding:20px;color:var(--text);background:url('https://chatgpt.com/backend-api/estuary/content?id=file_000000000528820ea01d98c7ffef07b7&ts=496360&p=fs&cid=1&sig=e103a79f53d8f763c2300a62a6a52c3e19307969e972ec376f8c6e13647a967a&v=0') center/cover fixed no-repeat}
+body.app-active{background-image:url('https://chatgpt.com/backend-api/estuary/content?id=file_000000000528820ea01d98c7ffef07b7&ts=496360&p=fs&cid=1&sig=e103a79f53d8f763c2300a62a6a52c3e19307969e972ec376f8c6e13647a967a&v=0')}
 button,input,select,textarea{font:inherit}.hidden{display:none!important}
 .app{width:100%;max-width:1400px;margin:0 auto;display:none;flex-direction:column;gap:20px}
 .glass{background:rgba(255,255,255,.35)!important;backdrop-filter:blur(16px)!important;-webkit-backdrop-filter:blur(16px)!important;border:1px solid var(--border)!important;border-radius:16px;box-shadow:var(--shadow)}
@@ -29,7 +29,6 @@ header{padding:14px 20px;display:flex;justify-content:space-between;align-items:
 .ai-bar{display:flex;gap:8px;flex:1;min-width:300px}.ai-bar input{flex:1;padding:9px 16px;border-radius:99px;border:1px solid rgba(15,23,42,.22);background:rgba(255,255,255,.65);font-size:.8rem;outline:none}
 .toolbar-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 
-/* ESTRUTURA BASEADA NO DESENHO */
 .row-three{display:grid;grid-template-columns:repeat(3, 1fr);gap:20px}
 .row-full{display:flex;flex-direction:column;gap:20px}
 .row-two{display:grid;grid-template-columns:1fr 1fr;gap:20px}
@@ -39,7 +38,6 @@ header{padding:14px 20px;display:flex;justify-content:space-between;align-items:
 .title{font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;font-weight:800;text-shadow:var(--text-shadow)}
 .subtle{font-size:.72rem;color:var(--muted);font-weight:700}
 
-/* BOTÃO DE REORGANIZAÇÃO */
 .drag-handle{display:none;cursor:grab;font-size:1rem;opacity:.8;margin-right:6px;padding:2px 6px;background:rgba(0,0,0,.08);border-radius:6px}
 body.edit-mode .drag-handle{display:inline-block}
 body.edit-mode .section{border:2px dashed var(--accent)!important;animation:editPulse 2s infinite}
@@ -92,7 +90,6 @@ body.edit-mode .section{border:2px dashed var(--accent)!important;animation:edit
 .timer-label{font-size:.7rem;font-weight:800;text-transform:uppercase;color:var(--muted)}
 .pomodoro-actions{display:flex;gap:6px;justify-content:center;margin-top:10px}
 
-/* BOTÃO VOLTAR AO TOPO FLUTUANTE */
 .back-to-top{position:fixed;bottom:24px;right:24px;width:48px;height:48px;border-radius:99px;background:#000;color:#fff;border:1px solid var(--border);font-size:1.4rem;font-weight:800;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.3);opacity:0;visibility:hidden;transition:all .3s;z-index:9999}
 .back-to-top.show{opacity:1;visibility:visible}
 .back-to-top:hover{transform:translateY(-3px);background:var(--accent)}
@@ -120,13 +117,11 @@ body.edit-mode .section{border:2px dashed var(--accent)!important;animation:edit
 </div>
 
 <div id="app" class="app">
-  <!-- TOPO: CENTRAL -->
   <header class="glass">
     <div class="brand"><div>📚</div><div><h1>Central de Estudos</h1><p>Todas as matérias da faculdade em uma única tela</p></div></div>
     <div class="clock"><strong id="digitalClock">00:00:00</strong><span id="currentDate"></span></div>
   </header>
 
-  <!-- TOPO: OPÇÕES -->
   <div class="glass toolbar">
     <div class="ai-bar">
       <input id="aiInput" type="text" placeholder="⚡ Comando rápido (Ex: iniciar timer, apagar provas, apagar horarios)..." onkeydown="if(event.key==='Enter')runAICommand()">
@@ -141,10 +136,8 @@ body.edit-mode .section{border:2px dashed var(--accent)!important;animation:edit
     </div>
   </div>
 
-  <!-- PRIMEIRA FILEIRA: CRONÔMETRO | CALENDÁRIO | DISCIPLINAS -->
   <div class="row-three" id="topRow">
     
-    <!-- QUADRO 1: CRONÔMETRO -->
     <div class="glass section" data-id="sec-pomodoro">
       <div class="section-head">
         <div><span class="drag-handle">⠿</span><span class="title">🍅 Cronômetro</span></div>
@@ -169,7 +162,6 @@ body.edit-mode .section{border:2px dashed var(--accent)!important;animation:edit
       </div>
     </div>
 
-    <!-- QUADRO 2: CALENDÁRIO -->
     <div class="glass section" data-id="sec-calendario">
       <div class="section-head">
         <div><span class="drag-handle">⠿</span><span class="title">🗓️ Calendário</span></div>
@@ -178,7 +170,6 @@ body.edit-mode .section{border:2px dashed var(--accent)!important;animation:edit
       <div id="calendar" class="calendar"></div>
     </div>
 
-    <!-- QUADRO 3: DISCIPLINAS -->
     <div class="glass section" data-id="sec-disciplinas">
       <div class="section-head">
         <div><span class="drag-handle">⠿</span><span class="title">📚 Disciplinas</span></div>
@@ -189,7 +180,6 @@ body.edit-mode .section{border:2px dashed var(--accent)!important;animation:edit
 
   </div>
 
-  <!-- SEGUNDA FILEIRA: HORÁRIOS DA SEMANA -->
   <div class="row-full" id="middleRow">
     <div class="glass section" data-id="sec-horarios">
       <div class="section-head">
@@ -200,7 +190,6 @@ body.edit-mode .section{border:2px dashed var(--accent)!important;animation:edit
     </div>
   </div>
 
-  <!-- TERCEIRA FILEIRA: PRÓXIMAS PROVAS | BATE-PAPO -->
   <div class="row-two" id="bottomRow">
     
     <div class="glass section" data-id="sec-provas-proximas">
@@ -229,7 +218,6 @@ body.edit-mode .section{border:2px dashed var(--accent)!important;animation:edit
   </div>
 </div>
 
-<!-- BOTÃO DE SUBIR AO TOPO -->
 <button class="back-to-top" id="backToTopBtn" onclick="scrollToTop()" title="Voltar ao topo">↑</button>
 
 <div id="modalWrap" class="modal-wrap" onclick="if(event.target===this)closeModal()"><div class="modal"><div class="modal-head"><h3 id="modalTitle">Detalhes</h3><button class="close" onclick="closeModal()">✕</button></div><div id="modalBody"></div></div></div>
@@ -415,7 +403,6 @@ function renderCalendar(){
   $('calendar').innerHTML=h;
 }
 
-// POMODORO
 function updatePomodoroUI(){
   const wrap=$('timerWrap'),label=$('timerLabel'),status=$('pomodoroStatus');
   wrap.className='timer-wrap mode-'+pomodoroMode+(timerRunning?' running':'');
@@ -455,7 +442,6 @@ window.setPomodoroMode=mode=>{
 updateDisplay();updatePomodoroUI();
 function updateClock(){const n=new Date();$('digitalClock').textContent=n.toLocaleTimeString('pt-BR');$('currentDate').textContent=n.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'})};setInterval(updateClock,1000);updateClock();
 
-// MOVER CAIXAS (SORTABLE)
 let sortables = [];
 function initDragAndDrop(){
   sortables.forEach(s => s.destroy());
@@ -498,7 +484,6 @@ window.toggleEditMode = function() {
   }
 };
 
-// BOTÃO VOLTAR AO TOPO
 window.scrollToTop = function() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
@@ -518,7 +503,6 @@ async function loadAll(){
 }
 window.refreshAll=()=>{renderAll();showToast('Painel atualizado')};
 
-// INTERPRETADOR DIRETO DE COMANDOS
 window.runAICommand = async () => {
   const input = $('aiInput');
   const rawText = input.value.trim();
