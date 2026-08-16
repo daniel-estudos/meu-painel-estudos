@@ -49,7 +49,7 @@ header{padding:13px 16px;display:flex;justify-content:space-between;align-items:
   <div class="glass toolbar">
     <div class="toolbar-left" style="width:100%">
       <div class="ai-bar">
-        <input id="aiInput" type="text" placeholder="✨ Comande o Assistente (Ex: Iniciar pomodoro / Apagar todas as provas / Criar tarefa ler capítulo 2)..." onkeydown="if(event.key==='Enter')runAICommand()">
+        <input id="aiInput" type="text" placeholder="✨ Fale com a IA (Ex: Fiquei estudando 2h de microbiologia / Apaga todas as provas aí / Dá um start no timer)..." onkeydown="if(event.key==='Enter')runAICommand()">
         <button class="btn btn-green" onclick="runAICommand()" id="aiBtn">Executar Comando</button>
       </div>
     </div>
@@ -597,138 +597,109 @@ async function loadAll(){
 }
 window.refreshAll=()=>{renderAll();showToast('Painel atualizado')};
 
-// INTERPRETADOR COMPLETO DE COMANDOS (Cobringo todas as funcionalidades do site)
+// INTEGRAÇÃO COM PROXY IA NA VERCEL
 window.runAICommand = async () => {
-  const input = $('aiInput');
+  const input = $('aiInput'), btn = $('aiBtn');
   const text = input.value.trim();
   if (!text) return;
 
-  const textClean = text.toLowerCase();
+  btn.disabled = true;
+  btn.textContent = "Pensando...";
 
-  // 1. CRONÔMETRO / POMODORO (Iniciar, Pausar, Reiniciar)
-  if (textClean.includes('iniciar') && (textClean.includes('cronometro') || textClean.includes('pomodoro') || textClean.includes('timer') || textClean.includes('foco'))) {
-    window.toggleTimer();
-    showToast("✨ Cronômetro iniciado!");
-    input.value = "";
-    return;
-  }
-  if (textClean.includes('pausar') && (textClean.includes('cronometro') || textClean.includes('pomodoro') || textClean.includes('timer'))) {
-    window.pauseTimer();
-    showToast("✨ Cronômetro pausado!");
-    input.value = "";
-    return;
-  }
-  if (textClean.includes('reiniciar') && (textClean.includes('cronometro') || textClean.includes('pomodoro') || textClean.includes('timer'))) {
-    window.resetTimer();
-    showToast("✨ Cronômetro reiniciado!");
-    input.value = "";
-    return;
-  }
-
-  // 2. EXCLUSÃO EM MASSA (Apagar todas as provas ou todas as matérias)
-  if ((textClean.includes('apagar') || textClean.includes('excluir') || textClean.includes('limpar')) && textClean.includes('prova')) {
-    if (confirm("Tem certeza que deseja APAGAR TODAS as provas cadastradas?")) {
-      for (const item of data.assessments) {
-        await deleteDoc(doc(db, 'assessments', item.id));
-      }
-      showToast("✨ Todas as provas foram excluídas!");
-    }
-    input.value = "";
-    return;
-  }
-
-  if ((textClean.includes('apagar') || textClean.includes('excluir') || textClean.includes('limpar')) && (textClean.includes('materia') || textClean.includes('disciplina'))) {
-    if (confirm("Tem certeza que deseja APAGAR TODAS as disciplinas?")) {
-      for (const item of data.subjects) {
-        await deleteDoc(doc(db, 'subjects', item.id));
-      }
-      showToast("✨ Todas as disciplinas foram excluídas!");
-    }
-    input.value = "";
-    return;
-  }
-
-  if ((textClean.includes('apagar') || textClean.includes('excluir') || textClean.includes('limpar')) && textClean.includes('tarefa')) {
-    if (confirm("Tem certeza que deseja APAGAR TODAS as tarefas?")) {
-      for (const item of data.tasks) {
-        await deleteDoc(doc(db, 'tasks', item.id));
-      }
-      showToast("✨ Todas as tarefas foram excluídas!");
-    }
-    input.value = "";
-    return;
-  }
-
-  // 3. ADICIONAR TAREFA
-  if (textClean.includes('tarefa')) {
-    let title = text.replace(/adicion(ar|e)?/gi, '').replace(/criar/gi, '').replace(/tarefa/gi, '').replace(/por favor/gi, '').trim();
-    let foundSubjectId = "";
-    data.subjects.forEach(s => {
-      if (textClean.includes(s.name.toLowerCase())) foundSubjectId = s.id;
+  try {
+    const res = await fetch("https://meu-painel-estudos-dfr2.vercel.app/api/comando", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ texto: text })
     });
-    await writeDoc('tasks', null, { title: title || text, subjectId: foundSubjectId, dueDate: new Date().toISOString().split('T')[0], priority: 'medium', notes: '', done: false });
-    showToast("✨ Tarefa adicionada!");
-    input.value = "";
-    return;
-  }
 
-  // 4. ADICIONAR COMPROMISSO
-  if (textClean.includes('compromisso') || textClean.includes('evento')) {
-    let title = text.replace(/adicion(ar|e)?/gi, '').replace(/criar/gi, '').replace(/compromisso/gi, '').replace(/evento/gi, '').trim();
-    await writeDoc('events', null, { title: title || text, date: new Date().toISOString().split('T')[0], time: "", description: "" });
-    showToast("✨ Compromisso agendado!");
-    input.value = "";
-    return;
-  }
+    const result = await res.json();
+    const { acao, parametros } = result;
 
-  // 5. ADICIONAR PROVA (Individual)
-  if (textClean.includes('prova') || textClean.includes('avaliação')) {
-    const dateMatch = text.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/);
-    let isoDate = "";
-    if (dateMatch) {
-      const d = dateMatch[1].padStart(2, '0');
-      const m = dateMatch[2].padStart(2, '0');
-      let y = dateMatch[3];
-      if (y.length === 2) y = "20" + y;
-      isoDate = `${y}-${m}-${d}`;
+    if (acao === "INICIAR_TIMER") {
+      window.toggleTimer();
+      showToast("✨ Cronômetro iniciado!");
+    } else if (acao === "PAUSAR_TIMER") {
+      window.pauseTimer();
+      showToast("✨ Cronômetro pausado!");
+    } else if (acao === "REINICIAR_TIMER") {
+      window.resetTimer();
+      showToast("✨ Cronômetro reiniciado!");
+    } else if (acao === "DELETAR_PROVAS") {
+      if (confirm("Apagar TODAS as provas?")) {
+        for (const item of data.assessments) await deleteDoc(doc(db, 'assessments', item.id));
+        showToast("✨ Provas limpas!");
+      }
+    } else if (acao === "DELETAR_DISCIPLINAS") {
+      if (confirm("Apagar TODAS as disciplinas?")) {
+        for (const item of data.subjects) await deleteDoc(doc(db, 'subjects', item.id));
+        showToast("✨ Disciplinas removidas!");
+      }
+    } else if (acao === "DELETAR_TAREFAS") {
+      if (confirm("Apagar TODAS as tarefas?")) {
+        for (const item of data.tasks) await deleteDoc(doc(db, 'tasks', item.id));
+        showToast("✨ Tarefas limpas!");
+      }
+    } else if (acao === "CRIAR_PROVA") {
+      let foundSubjectId = "";
+      if (parametros?.disciplina) {
+        const s = data.subjects.find(x => x.name.toLowerCase().includes(parametros.disciplina.toLowerCase()));
+        if (s) foundSubjectId = s.id;
+      }
+      await writeDoc('assessments', null, {
+        title: parametros?.titulo || text,
+        subjectId: foundSubjectId,
+        date: parametros?.data || new Date().toISOString().split('T')[0],
+        time: ""
+      });
+      showToast("✨ Prova cadastrada!");
+    } else if (acao === "CRIAR_TAREFA") {
+      let foundSubjectId = "";
+      if (parametros?.disciplina) {
+        const s = data.subjects.find(x => x.name.toLowerCase().includes(parametros.disciplina.toLowerCase()));
+        if (s) foundSubjectId = s.id;
+      }
+      await writeDoc('tasks', null, {
+        title: parametros?.titulo || text,
+        subjectId: foundSubjectId,
+        dueDate: parametros?.data || new Date().toISOString().split('T')[0],
+        priority: 'medium',
+        notes: '',
+        done: false
+      });
+      showToast("✨ Tarefa adicionada!");
+    } else if (acao === "CRIAR_DISCIPLINA") {
+      await writeDoc('subjects', null, {
+        name: parametros?.nome || text,
+        teacher: parametros?.professor || "",
+        color: "#15803d"
+      });
+      showToast(`✨ Disciplina criada!`);
+    } else if (acao === "REGISTRAR_ESTUDO") {
+      let foundSubjectId = "";
+      if (parametros?.disciplina) {
+        const s = data.subjects.find(x => x.name.toLowerCase().includes(parametros.disciplina.toLowerCase()));
+        if (s) foundSubjectId = s.id;
+      }
+      await addDoc(col('progress'), {
+        subjectId: foundSubjectId,
+        minutes: Number(parametros?.minutos) || 30,
+        createdAt: new Date(),
+        type: 'ia'
+      });
+      showToast(`✨ Estudo registrado!`);
     } else {
-      isoDate = new Date().toISOString().split('T')[0];
+      showToast("Não entendi o comando. Tente reformular!");
     }
 
-    let foundSubjectId = "";
-    data.subjects.forEach(s => {
-      if (textClean.includes(s.name.toLowerCase())) foundSubjectId = s.id;
-    });
-
-    await writeDoc('assessments', null, { title: text, subjectId: foundSubjectId, date: isoDate, time: "" });
-    showToast("✨ Prova cadastrada!");
     input.value = "";
-    return;
+  } catch (err) {
+    console.error(err);
+    showToast("Erro ao conectar com a IA.");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Executar Comando";
   }
-
-  // 6. REGISTRAR TEMPO DE ESTUDO
-  if (textClean.includes('estud') || textClean.includes('minuto')) {
-    const minMatch = text.match(/(\d+)\s*m/);
-    const minutes = minMatch ? Number(minMatch[1]) : 30;
-
-    let foundSubjectId = "";
-    data.subjects.forEach(s => {
-      if (textClean.includes(s.name.toLowerCase())) foundSubjectId = s.id;
-    });
-
-    await addDoc(col('progress'), { subjectId: foundSubjectId, minutes, createdAt: new Date(), type: 'ia' });
-    showToast(`✨ Registrado ${minutes}m de estudo!`);
-    input.value = "";
-    return;
-  }
-
-  // 7. ADICIONAR DISCIPLINA (Comando Padrão)
-  let disciplineName = text.replace(/adicion(ar|e)?/gi, '').replace(/disciplina/gi, '').replace(/matéria/gi, '').replace(/por favor/gi, '').replace(/no quadro de disciplinas/gi, '').trim();
-  if (!disciplineName) disciplineName = text;
-
-  await writeDoc('subjects', null, { name: disciplineName, teacher: "", color: "#15803d" });
-  showToast(`✨ Disciplina "${disciplineName}" adicionada!`);
-  input.value = "";
 };
 
 function initSortableContainer(elementId, storageKey){
