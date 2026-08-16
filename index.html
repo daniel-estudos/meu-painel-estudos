@@ -68,19 +68,28 @@ body.edit-mode .grid-stack-item-content{border:2px dashed var(--accent)!importan
 .badge{padding:3px 8px;border-radius:999px;font-size:.6rem;font-weight:800}.badge.red{background:#fee2e2;color:#991b1b}
 .empty{padding:12px;text-align:center;color:#475569;font-size:.72rem;font-weight:700}
 
-.pomodoro-modes{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px}
+/* ESTILO DARK GLASS DO CALENDÁRIO */
+.dark-glass-card{background:rgba(20,24,35,0.75)!important;backdrop-filter:blur(20px)!important;-webkit-backdrop-filter:blur(20px)!important;border:1px solid rgba(255,255,255,0.12)!important;color:#f8fafc!important}
+.cal-nav-btn{background:rgba(255,255,255,0.15);border:none;color:#fff;width:28px;height:28px;border-radius:8px;cursor:pointer;font-weight:bold;font-size:0.9rem;transition:background 0.2s}
+.cal-nav-btn:hover{background:rgba(255,255,255,0.3)}
+.calendar-dark{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.cal-head-dark{font-size:.65rem;font-weight:700;color:#94a3b8;padding:6px 0;text-transform:capitalize}
+.cal-cell-dark{min-height:34px;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:.75rem;font-weight:600;color:#e2e8f0;background:rgba(255,255,255,0.03);position:relative}
+.cal-cell-dark.empty-cell{background:transparent}
+.cal-cell-dark.today-dark{background:rgba(59,130,246,0.35);border:1px solid #3b82f6;color:#fff;font-weight:800}
+.cal-cell-dark .exam-dot{width:4px;height:4px;border-radius:99px;background:#ef4444;position:absolute;bottom:4px}
+
+/* CRONÔMETRO COM OPÇÃO PERSONALIZADA */
+.custom-timer-input{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:10px}
+.custom-timer-input input{width:65px;padding:4px 8px;border-radius:8px;border:1px solid rgba(0,0,0,0.2);background:rgba(255,255,255,0.6);text-align:center;font-size:0.75rem;font-weight:700}
+
+.pomodoro-modes{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px}
 .pomodoro-mode{padding:8px;border-radius:10px;border:2px solid rgba(0,0,0,.14);background:rgba(255,255,255,.4);font-size:.65rem;font-weight:800;cursor:pointer;text-align:center}
 .pomodoro-mode.active{border-color:var(--accent);background:rgba(255,255,255,.7)}
 .timer-wrap{position:relative;padding:14px;border-radius:14px;background:rgba(255,255,255,.4);border:2px solid transparent;text-align:center}
 .timer-wrap.mode-focus{border-color:rgba(21,128,61,.35)}.timer{font-size:2.5rem;font-weight:800;line-height:1}
 .timer-label{font-size:.68rem;font-weight:800;text-transform:uppercase;color:var(--muted)}
 .pomodoro-actions{display:flex;gap:6px;justify-content:center;margin-top:10px}
-
-.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
-.cal-head{padding:4px;text-align:center;font-size:.6rem;font-weight:800;background:rgba(255,255,255,.3);border-radius:4px}
-.cal-cell{min-height:30px;padding:3px;border-radius:6px;background:rgba(255,255,255,.2);border:1px solid rgba(0,0,0,.05);display:flex;flex-direction:column;align-items:center;justify-content:center}
-.cal-cell.today{outline:2px solid var(--accent);background:rgba(255,255,255,.6)}
-.cal-day{font-size:.68rem;font-weight:800}.cal-event.exam{width:5px;height:5px;border-radius:999px;margin-top:2px;background:var(--danger)}
 
 .back-to-top{position:fixed;bottom:24px;right:24px;width:48px;height:48px;border-radius:99px;background:rgba(255,255,255,.35)!important;backdrop-filter:blur(16px)!important;-webkit-backdrop-filter:blur(16px)!important;color:var(--text);border:1px solid var(--border)!important;font-size:1.3rem;font-weight:800;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shadow);opacity:0;visibility:hidden;z-index:9999}
 .back-to-top.show{opacity:1;visibility:visible}
@@ -128,19 +137,26 @@ body.edit-mode .grid-stack-item-content{border:2px dashed var(--accent)!importan
 
   <div class="grid-stack">
     
-    <!-- CRONÔMETRO -->
+    <!-- CRONÔMETRO COM TEMPO PERSONALIZADO -->
     <div class="grid-stack-item" gs-w="4" gs-h="4" gs-id="box-pomodoro">
       <div class="grid-stack-item-content glass">
         <div class="section-head">
-          <div><span class="drag-handle">⠿</span><span class="title">🍅 Cronômetro</span></div>
+          <div><span class="drag-handle">⠿</span><span class="title">⏱️ Cronômetro</span></div>
           <select id="studySubject" style="max-width:110px;padding:4px;border-radius:6px;border:1px solid rgba(0,0,0,.22);background:rgba(255,255,255,.55);font-size:.65rem;font-weight:700"><option value="">Disciplina</option></select>
         </div>
         <div class="pomodoro-wrap">
           <div class="pomodoro-modes" id="pomodoroModes">
-            <button type="button" class="pomodoro-mode active" data-mode="focus" onclick="setPomodoroMode('focus')">🎯 Foco<span style="display:block;font-size:.55rem">25m</span></button>
-            <button type="button" class="pomodoro-mode" data-mode="short" onclick="setPomodoroMode('short')">☕ Pausa<span style="display:block;font-size:.55rem">5m</span></button>
-            <button type="button" class="pomodoro-mode" data-mode="long" onclick="setPomodoroMode('long')">🌿 Longa<span style="display:block;font-size:.55rem">15m</span></button>
+            <button type="button" class="pomodoro-mode active" data-mode="focus" onclick="setPomodoroMode('focus')">🎯 25m</button>
+            <button type="button" class="pomodoro-mode" data-mode="short" onclick="setPomodoroMode('short')">☕ 5m</button>
+            <button type="button" class="pomodoro-mode" data-mode="long" onclick="setPomodoroMode('long')">🌿 15m</button>
           </div>
+          
+          <div class="custom-timer-input">
+            <span style="font-size:0.7rem;font-weight:700;">Definir tempo:</span>
+            <input type="number" id="customMinutesInput" min="1" max="180" placeholder="Min" onchange="applyCustomMinutes(this.value)">
+            <span style="font-size:0.7rem;font-weight:700;">min</span>
+          </div>
+
           <div class="timer-wrap mode-focus" id="timerWrap">
             <div class="timer-label focus" id="timerLabel">Tempo de foco</div>
             <div class="timer" id="timer">25:00</div>
@@ -155,14 +171,17 @@ body.edit-mode .grid-stack-item-content{border:2px dashed var(--accent)!importan
       </div>
     </div>
 
-    <!-- CALENDÁRIO -->
+    <!-- CALENDÁRIO DARK COM NAVEGAÇÃO -->
     <div class="grid-stack-item" gs-w="4" gs-h="4" gs-id="box-calendario">
-      <div class="grid-stack-item-content glass">
-        <div class="section-head">
-          <div><span class="drag-handle">⠿</span><span class="title">🗓️ Calendário</span></div>
-          <span id="calendarMonth" class="subtle"></span>
+      <div class="grid-stack-item-content glass dark-glass-card">
+        <div class="section-head" style="margin-bottom:16px;">
+          <span id="calendarMonth" style="font-size:0.9rem;font-weight:800;color:#fff;"></span>
+          <div style="display:flex;gap:6px;">
+            <button class="cal-nav-btn" onclick="prevMonth()">‹</button>
+            <button class="cal-nav-btn" onclick="nextMonth()">›</button>
+          </div>
         </div>
-        <div id="calendar" class="calendar"></div>
+        <div id="calendar" class="calendar-dark"></div>
       </div>
     </div>
 
@@ -222,6 +241,8 @@ const POMODORO={focus:25,short:5,long:15};
 const POMODORO_LABELS={focus:'Tempo de foco',short:'Pausa curta',long:'Pausa longa'};
 
 let timerId=null, timerEndTime=null, timerMinutes=25, timeLeft=1500, pomodoroMode='focus', timerRunning=false, timerPaused=false;
+let calViewDate = new Date();
+
 const $=id=>document.getElementById(id),col=name=>collection(db,name);
 
 window.escapeHtml=s=>String(s??'').replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]));
@@ -282,7 +303,6 @@ const modalActions=()=>`<div class="modal-actions"><button type="button" class="
 async function saveDoc(name,id,payload){await writeDoc(name,id,payload);showToast('Salvo com sucesso');closeModal()}
 window.removeDoc=async(name,id)=>{if(confirm('Excluir este item?')){try{await deleteDoc(doc(db,name,id));showToast('Item excluído')}catch(e){showToast('Erro ao excluir')}}};
 
-/* MODAL DE DISCIPLINAS */
 window.openSubjectModal=async id=>{
   const x=id?data.subjects.find(v=>v.id===id):{};
   openModal(id?'Editar disciplina':'Nova disciplina',`<form onsubmit="saveSubject(event,'${id||''}')"><div class="form-grid"><div class="field full"><label>Nome da disciplina</label><input name="name" required value="${escapeHtml(x.name||'')}"></div><div class="field"><label>Professor</label><input name="teacher" value="${escapeHtml(x.teacher||'')}"></div><div class="field"><label>Cor</label><input name="color" type="color" value="${x.color||'#15803d'}"></div><div class="field full"><label>Observações</label><textarea name="notes">${escapeHtml(x.notes||'')}</textarea></div></div>${modalActions()}</form>`);
@@ -293,14 +313,12 @@ window.saveSubject=async(e,id)=>{
   await saveDoc('subjects',id,{name:f.get('name').trim(),teacher:f.get('teacher').trim(),color:f.get('color'),notes:f.get('notes').trim()});
 };
 
-/* MODAL DE HORÁRIOS / AULAS COM SINCRONIZAÇÃO TOTAL */
 window.openClassModal=async id=>{
   const x=id?data.classes.find(v=>v.id===id):{};
   if (!data.subjects.length) {
     alert("Cadastre pelo menos uma disciplina antes de adicionar um horário.");
     return openSubjectModal();
   }
-  
   openModal(id?'Editar horário de aula':'Novo horário de aula',`
     <form onsubmit="saveClass(event,'${id||''}')">
       <div class="form-grid">
@@ -352,7 +370,6 @@ window.saveClass=async(e,id)=>{
   });
 };
 
-/* MODAL DE PROVAS */
 window.openAssessmentModal=async id=>{
   const x=id?data.assessments.find(v=>v.id===id):{};
   openModal(id?'Editar prova':'Nova prova',`<form onsubmit="saveAssessment(event,'${id||''}')"><div class="form-grid"><div class="field full"><label>Prova / avaliação</label><input name="title" required value="${escapeHtml(x.title||'')}"></div><div class="field"><label>Disciplina</label><select name="subjectId" required>${data.subjects.map(s=>`<option value="${s.id}" ${x.subjectId===s.id?'selected':''}>${escapeHtml(s.name)}</option>`).join('')}</select></div><div class="field"><label>Data</label><input name="date" type="date" required value="${x.date||''}"></div><div class="field"><label>Data final (opcional)</label><input name="endDate" type="date" value="${x.endDate||''}"></div><div class="field"><label>Horário</label><input name="time" type="time" value="${x.time||''}"></div><div class="field"><label>Local</label><input name="location" value="${escapeHtml(x.location||'')}"></div><div class="field full"><label>Conteúdo</label><textarea name="content">${escapeHtml(x.content||'')}</textarea></div></div>${modalActions()}</form>`);
@@ -388,7 +405,6 @@ function renderSubjects(){
 
 window.openClassModalFor=id=>{openClassModal();setTimeout(()=>{const q=document.querySelector('[name="subjectId"]');if(q)q.value=id},0)}
 
-/* RENDERIZAÇÃO DOS HORÁRIOS COM BOTÕES DE EDIÇÃO E EXCLUSÃO INTEGARDOS */
 function renderSchedule(){
   const todayNum = new Date().getDay();
   const daysHtml = [1, 2, 3, 4, 5].map(n => {
@@ -434,29 +450,71 @@ function renderStudySubjects(){
   $('studySubject').innerHTML='<option value="">Disciplina</option>'+data.subjects.map(s=>`<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('');
 }
 
+/* RENDERIZAÇÃO DO CALENDÁRIO DARK ESTILO IMAGEM EM PT-BR */
 function renderCalendar(){
-  const n=new Date(),y=n.getFullYear(),m=n.getMonth();
-  const first=new Date(y,m,1),start=(first.getDay()+6)%7,last=new Date(y,m+1,0).getDate();
-  $('calendarMonth').textContent=n.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
-  const heads=['S','T','Q','Q','S','S','D'];
-  let h=heads.map(x=>`<div class="cal-head">${x}</div>`).join('');
-  for(let i=0;i<start;i++)h+='<div class="cal-cell"></div>';
-  for(let d=1;d<=last;d++){
-    const iso=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const isToday=d===n.getDate();
-    const ev=data.assessments.filter(x=>x.date===iso);
-    h+=`<div class="cal-cell ${isToday?'today':''}"><div class="cal-day">${d}</div>${ev.length?`<div class="cal-event exam"></div>`:''}</div>`;
+  const y = calViewDate.getFullYear(), m = calViewDate.getMonth();
+  const today = new Date();
+  
+  const monthName = calViewDate.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+  $('calendarMonth').textContent = monthName.charAt(0).toUpperCase() + monthName.slice(1);
+  
+  const firstDay = new Date(y, m, 1);
+  let startDay = firstDay.getDay() - 1; 
+  if (startDay === -1) startDay = 6; // Ajuste para iniciar na Segunda-feira
+  
+  const totalDays = new Date(y, m + 1, 0).getDate();
+  const headers = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+  
+  let html = headers.map(h => `<div class="cal-head-dark">${h}</div>`).join('');
+  
+  for (let i = 0; i < startDay; i++) {
+    html += `<div class="cal-cell-dark empty-cell"></div>`;
   }
-  $('calendar').innerHTML=h;
+  
+  for (let d = 1; d <= totalDays; d++) {
+    const isoDate = `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+    const isToday = d === today.getDate() && m === today.getMonth() && y === today.getFullYear();
+    const hasExam = data.assessments.some(a => a.date === isoDate);
+    
+    html += `<div class="cal-cell-dark ${isToday ? 'today-dark' : ''}">
+      ${d}
+      ${hasExam ? '<div class="exam-dot"></div>' : ''}
+    </div>`;
+  }
+  
+  $('calendar').innerHTML = html;
 }
 
-// POMODORO
+window.prevMonth = () => {
+  calViewDate.setMonth(calViewDate.getMonth() - 1);
+  renderCalendar();
+};
+
+window.nextMonth = () => {
+  calViewDate.setMonth(calViewDate.getMonth() + 1);
+  renderCalendar();
+};
+
+// CRONÔMETRO COM OPÇÃO PERSONALIZADA DE MINUTOS
+window.applyCustomMinutes = (val) => {
+  const min = parseInt(val);
+  if (isNaN(min) || min <= 0) return;
+  if (timerRunning || timerPaused) {
+    if (!confirm('Alterar o tempo vai reiniciar o cronômetro. Deseja continuar?')) return;
+    resetTimer();
+  }
+  timerMinutes = min;
+  timeLeft = timerMinutes * 60;
+  document.querySelectorAll('.pomodoro-mode').forEach(btn => btn.classList.remove('active'));
+  updateDisplay();
+  updatePomodoroUI();
+};
+
 function updatePomodoroUI(){
   const wrap=$('timerWrap'),label=$('timerLabel'),status=$('pomodoroStatus');
   wrap.className='timer-wrap mode-'+pomodoroMode+(timerRunning?' running':'');
   label.className='timer-label '+pomodoroMode;
-  label.textContent=POMODORO_LABELS[pomodoroMode];
-  document.querySelectorAll('.pomodoro-mode').forEach(btn=>btn.classList.toggle('active',btn.dataset.mode===pomodoroMode));
+  label.textContent=POMODORO_LABELS[pomodoroMode] || `${timerMinutes} Minutos`;
   status.textContent=timerRunning?'Em andamento...':timerPaused?'Pausado':'Pronto para iniciar';
   $('startBtn').textContent=timerRunning?'Em curso':timerPaused?'Continuar':'Iniciar';
   $('startBtn').disabled=timerRunning;
@@ -484,7 +542,9 @@ window.resetTimer=()=>{stopTimerInterval();timerPaused=false;timeLeft=timerMinut
 window.setPomodoroMode=mode=>{
   if(!POMODORO[mode])return;
   if(timerRunning||timerPaused){if(!confirm('Trocar o modo vai reiniciar o cronômetro. Continuar?'))return;resetTimer()}
-  pomodoroMode=mode;timerMinutes=POMODORO[mode];timeLeft=timerMinutes*60;updateDisplay();updatePomodoroUI();
+  pomodoroMode=mode;timerMinutes=POMODORO[mode];timeLeft=timerMinutes*60;
+  $('customMinutesInput').value = '';
+  updateDisplay();updatePomodoroUI();
 };
 
 updateDisplay();updatePomodoroUI();
