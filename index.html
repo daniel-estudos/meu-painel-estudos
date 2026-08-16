@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Central de Estudos | UEG</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<!-- GridStack CSS para Redimensionamento e Arraste -->
+<!-- GridStack CSS -->
 <link href="https://cdn.jsdelivr.net/npm/gridstack@9.2.0/dist/gridstack.min.css" rel="stylesheet"/>
 <style>
-:root{--surface:rgba(255,255,255,.35);--text:#0f172a;--muted:#334155;--border:rgba(255,255,255,.55);--accent:#15803d;--danger:#dc2626;--blue:#0284c7;--shadow:0 8px 32px rgba(0,0,0,.12);--text-shadow:0 1px 2px rgba(255,255,255,.8)}
+:root{--surface:rgba(255,255,255,.35);--text:#0f172a;--muted:#334155;--border:rgba(255,255,255,.55);--accent:#15803d;--danger:#dc2626;--shadow:0 8px 32px rgba(0,0,0,.12);--text-shadow:0 1px 2px rgba(255,255,255,.8)}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Plus Jakarta Sans',sans-serif}
 html{scroll-behavior:smooth}
 body{min-height:100vh;padding:20px;color:var(--text);background:url('https://images8.alphacoders.com/896/thumb-1920-896653.jpg') center/cover fixed no-repeat}
@@ -16,7 +16,6 @@ body.app-active{background-image:url('https://images8.alphacoders.com/896/thumb-
 button,input,select,textarea{font:inherit}.hidden{display:none!important}
 .app{width:100%;max-width:1400px;margin:0 auto;display:none;flex-direction:column;gap:20px}
 
-/* ESTILO GLASSMOPHISM ESTÁVEL SEMA PISCADAS */
 .glass{background:rgba(255,255,255,.35)!important;backdrop-filter:blur(16px)!important;-webkit-backdrop-filter:blur(16px)!important;border:1px solid var(--border)!important;border-radius:16px;box-shadow:var(--shadow);will-change:transform}
 
 .login{max-width:390px;margin:12vh auto;padding:34px 26px;background:rgba(255,255,255,.55)!important;backdrop-filter:blur(14px)!important;border:1px solid var(--border);border-radius:20px;display:flex;flex-direction:column;gap:14px;text-align:center;box-shadow:var(--shadow)}
@@ -33,7 +32,6 @@ header{padding:14px 20px;display:flex;justify-content:space-between;align-items:
 .ai-bar{display:flex;gap:8px;flex:1;min-width:300px}.ai-bar input{flex:1;padding:9px 16px;border-radius:99px;border:1px solid rgba(15,23,42,.22);background:rgba(255,255,255,.65);font-size:.8rem;outline:none}
 .toolbar-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 
-/* ESTILOS GRIDSTACK */
 .grid-stack-item-content{padding:18px;overflow:auto!important}
 .section-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
 .title{font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;font-weight:800;text-shadow:var(--text-shadow)}
@@ -43,7 +41,7 @@ header{padding:14px 20px;display:flex;justify-content:space-between;align-items:
 body.edit-mode .drag-handle{display:inline-block}
 body.edit-mode .grid-stack-item-content{border:2px dashed var(--accent)!important}
 
-.subjects{display:grid;grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));gap:10px}
+.subjects{display:grid;grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));gap:10px}
 .subject-card{padding:12px;border-radius:12px;background:rgba(255,255,255,.35);border:1px solid var(--border);border-left:5px solid var(--accent);box-shadow:var(--shadow);cursor:pointer}
 .subject-top{display:flex;justify-content:space-between;gap:8px}.subject-name{font-size:.82rem;font-weight:800;line-height:1.22}.teacher{font-size:.68rem;color:#334155;font-weight:700;margin-top:2px}
 .subject-time{font-size:.7rem;font-weight:800;margin-top:6px}
@@ -51,14 +49,18 @@ body.edit-mode .grid-stack-item-content{border:2px dashed var(--accent)!importan
 .subject-actions{display:flex;gap:6px;margin-top:8px}
 .mini-btn{border:1px solid rgba(0,0,0,.2);background:rgba(255,255,255,.6);color:#334155;border-radius:6px;padding:4px 7px;font-size:.6rem;font-weight:800;cursor:pointer}
 .mini-btn:hover{background:#000;color:#fff}
+.mini-btn.red:hover{background:var(--danger);color:#fff}
 
 .schedule{display:grid;grid-template-columns:repeat(5, 1fr);gap:10px}
 .day{padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.25);border:1px solid var(--border);min-height:95px}
 .day.is-today{background:rgba(255,255,255,.55);border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
 .day h4{font-size:.68rem;text-transform:uppercase;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
 .day h4 .today-tag{font-size:.55rem;padding:2px 6px;border-radius:99px;background:var(--accent);color:#fff;font-weight:800}
-.class-mini{padding:7px 9px;border-radius:8px;background:rgba(255,255,255,.5);border:1px solid rgba(0,0,0,.08);margin-top:5px;border-left:4px solid var(--accent);cursor:pointer}
-.class-mini strong{font-size:.7rem;display:block;line-height:1.2}.class-mini span{font-size:.62rem;color:#334155;font-weight:700}
+
+.class-mini{padding:8px 10px;border-radius:8px;background:rgba(255,255,255,.5);border:1px solid rgba(0,0,0,.08);margin-top:6px;border-left:4px solid var(--accent);display:flex;flex-direction:column;gap:4px}
+.class-mini-top{display:flex;justify-content:space-between;align-items:flex-start}
+.class-mini strong{font-size:.7rem;line-height:1.2}.class-mini span{font-size:.62rem;color:#334155;font-weight:700}
+.class-mini-actions{display:flex;gap:4px;margin-top:2px}
 
 .item{padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.35);border:1px solid rgba(0,0,0,.12);margin-top:8px}
 .item-head{display:flex;justify-content:space-between;gap:7px}.item-title{font-size:.75rem;font-weight:800}.meta{font-size:.65rem;color:#475569;font-weight:700;margin-top:2px}
@@ -80,7 +82,6 @@ body.edit-mode .grid-stack-item-content{border:2px dashed var(--accent)!importan
 .cal-cell.today{outline:2px solid var(--accent);background:rgba(255,255,255,.6)}
 .cal-day{font-size:.68rem;font-weight:800}.cal-event.exam{width:5px;height:5px;border-radius:999px;margin-top:2px;background:var(--danger)}
 
-/* BOTÃO VOLTAR AO TOPO TRANSPARENTE (GLASS) */
 .back-to-top{position:fixed;bottom:24px;right:24px;width:48px;height:48px;border-radius:99px;background:rgba(255,255,255,.35)!important;backdrop-filter:blur(16px)!important;-webkit-backdrop-filter:blur(16px)!important;color:var(--text);border:1px solid var(--border)!important;font-size:1.3rem;font-weight:800;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shadow);opacity:0;visibility:hidden;z-index:9999}
 .back-to-top.show{opacity:1;visibility:visible}
 .back-to-top:hover{background:rgba(255,255,255,.6)!important}
@@ -125,10 +126,9 @@ body.edit-mode .grid-stack-item-content{border:2px dashed var(--accent)!importan
     </div>
   </div>
 
-  <!-- CONTAINER GRIDSTACK COM REDIMENSIONAMENTO LIVRE -->
   <div class="grid-stack">
     
-    <!-- QUADRO: CRONÔMETRO -->
+    <!-- CRONÔMETRO -->
     <div class="grid-stack-item" gs-w="4" gs-h="4" gs-id="box-pomodoro">
       <div class="grid-stack-item-content glass">
         <div class="section-head">
@@ -155,7 +155,7 @@ body.edit-mode .grid-stack-item-content{border:2px dashed var(--accent)!importan
       </div>
     </div>
 
-    <!-- QUADRO: CALENDÁRIO -->
+    <!-- CALENDÁRIO -->
     <div class="grid-stack-item" gs-w="4" gs-h="4" gs-id="box-calendario">
       <div class="grid-stack-item-content glass">
         <div class="section-head">
@@ -166,7 +166,7 @@ body.edit-mode .grid-stack-item-content{border:2px dashed var(--accent)!importan
       </div>
     </div>
 
-    <!-- QUADRO: DISCIPLINAS -->
+    <!-- DISCIPLINAS -->
     <div class="grid-stack-item" gs-w="4" gs-h="4" gs-id="box-disciplinas">
       <div class="grid-stack-item-content glass">
         <div class="section-head">
@@ -177,7 +177,7 @@ body.edit-mode .grid-stack-item-content{border:2px dashed var(--accent)!importan
       </div>
     </div>
 
-    <!-- QUADRO: HORÁRIOS DA SEMANA -->
+    <!-- HORÁRIOS DA SEMANA -->
     <div class="grid-stack-item" gs-w="12" gs-h="3" gs-id="box-horarios">
       <div class="grid-stack-item-content glass">
         <div class="section-head">
@@ -188,7 +188,7 @@ body.edit-mode .grid-stack-item-content{border:2px dashed var(--accent)!importan
       </div>
     </div>
 
-    <!-- QUADRO: PRÓXIMAS PROVAS -->
+    <!-- PRÓXIMAS PROVAS -->
     <div class="grid-stack-item" gs-w="12" gs-h="3" gs-id="box-provas">
       <div class="grid-stack-item-content glass">
         <div class="section-head">
@@ -207,7 +207,6 @@ body.edit-mode .grid-stack-item-content{border:2px dashed var(--accent)!importan
 <div id="modalWrap" class="modal-wrap" onclick="if(event.target===this)closeModal()"><div class="modal"><div class="modal-head"><h3 id="modalTitle">Detalhes</h3><button class="close" onclick="closeModal()">✕</button></div><div id="modalBody"></div></div></div>
 <div id="toast" class="toast"></div>
 
-<!-- GRIDSTACK JS -->
 <script src="https://cdn.jsdelivr.net/npm/gridstack@9.2.0/dist/gridstack-all.js"></script>
 
 <script type="module">
@@ -265,7 +264,7 @@ function subscribeRealtime(name,key,{sort=null,sortDir='asc',limitTo=null,revers
 }
 
 function bindRealtimeListeners(){
-  subscribeRealtime('subjects','subjects',{sort:'name',onData:()=>{renderSubjects();renderStudySubjects()}});
+  subscribeRealtime('subjects','subjects',{sort:'name',onData:()=>{renderSubjects();renderSchedule();renderStudySubjects()}});
   subscribeRealtime('classes','classes',{sort:'day',onData:()=>{renderSubjects();renderSchedule()}});
   subscribeRealtime('assessments','assessments',{sort:'date',onData:()=>{renderAssessments();renderCalendar()}});
 }
@@ -283,16 +282,93 @@ const modalActions=()=>`<div class="modal-actions"><button type="button" class="
 async function saveDoc(name,id,payload){await writeDoc(name,id,payload);showToast('Salvo com sucesso');closeModal()}
 window.removeDoc=async(name,id)=>{if(confirm('Excluir este item?')){try{await deleteDoc(doc(db,name,id));showToast('Item excluído')}catch(e){showToast('Erro ao excluir')}}};
 
-window.openSubjectModal=async id=>{const x=id?data.subjects.find(v=>v.id===id):{};openModal(id?'Editar disciplina':'Nova disciplina',`<form onsubmit="saveSubject(event,'${id||''}')"><div class="form-grid"><div class="field full"><label>Nome da disciplina</label><input name="name" required value="${escapeHtml(x.name||'')}"></div><div class="field"><label>Professor</label><input name="teacher" value="${escapeHtml(x.teacher||'')}"></div><div class="field"><label>Cor</label><input name="color" type="color" value="${x.color||'#15803d'}"></div><div class="field full"><label>Observações</label><textarea name="notes">${escapeHtml(x.notes||'')}</textarea></div></div>${modalActions()}</form>`) };
-window.saveSubject=async(e,id)=>{e.preventDefault();const f=new FormData(e.target);await saveDoc('subjects',id,{name:f.get('name').trim(),teacher:f.get('teacher').trim(),color:f.get('color'),notes:f.get('notes').trim()})};
+/* MODAL DE DISCIPLINAS */
+window.openSubjectModal=async id=>{
+  const x=id?data.subjects.find(v=>v.id===id):{};
+  openModal(id?'Editar disciplina':'Nova disciplina',`<form onsubmit="saveSubject(event,'${id||''}')"><div class="form-grid"><div class="field full"><label>Nome da disciplina</label><input name="name" required value="${escapeHtml(x.name||'')}"></div><div class="field"><label>Professor</label><input name="teacher" value="${escapeHtml(x.teacher||'')}"></div><div class="field"><label>Cor</label><input name="color" type="color" value="${x.color||'#15803d'}"></div><div class="field full"><label>Observações</label><textarea name="notes">${escapeHtml(x.notes||'')}</textarea></div></div>${modalActions()}</form>`);
+};
+window.saveSubject=async(e,id)=>{
+  e.preventDefault();
+  const f=new FormData(e.target);
+  await saveDoc('subjects',id,{name:f.get('name').trim(),teacher:f.get('teacher').trim(),color:f.get('color'),notes:f.get('notes').trim()});
+};
 
-window.openClassModal=async id=>{const x=id?data.classes.find(v=>v.id===id):{};openModal(id?'Editar horário':'Novo horário',`<form onsubmit="saveClass(event,'${id||''}')"><div class="form-grid"><div class="field full"><label>Disciplina</label><select name="subjectId" required>${data.subjects.map(s=>`<option value="${s.id}" ${(x.subjectId===s.id)?'selected':''}>${escapeHtml(s.name)}</option>`).join('')}</select></div><div class="field"><label>Dia</label><select name="day"><option value="1">Segunda</option><option value="2">Terça</option><option value="3">Quarta</option><option value="4">Quinta</option><option value="5">Sexta</option></select></div><div class="field"><label>Início</label><input name="start" type="time" required value="${x.start||''}"></div><div class="field"><label>Fim</label><input name="end" type="time" required value="${x.end||''}"></div><div class="field"><label>Sala</label><input name="room" value="${escapeHtml(x.room||'')}"></div></div>${modalActions()}</form>`);if(x.day)document.querySelector('[name="day"]').value=x.day};
-window.saveClass=async(e,id)=>{e.preventDefault();const f=new FormData(e.target),s=data.subjects.find(v=>v.id===f.get('subjectId'));await saveDoc('classes',id,{subjectId:f.get('subjectId'),title:s?.name||'',day:Number(f.get('day')),start:f.get('start'),end:f.get('end'),teacher:s?.teacher||'',room:f.get('room').trim()})};
+/* MODAL DE HORÁRIOS / AULAS COM SINCRONIZAÇÃO TOTAL */
+window.openClassModal=async id=>{
+  const x=id?data.classes.find(v=>v.id===id):{};
+  if (!data.subjects.length) {
+    alert("Cadastre pelo menos uma disciplina antes de adicionar um horário.");
+    return openSubjectModal();
+  }
+  
+  openModal(id?'Editar horário de aula':'Novo horário de aula',`
+    <form onsubmit="saveClass(event,'${id||''}')">
+      <div class="form-grid">
+        <div class="field full">
+          <label>Disciplina</label>
+          <select name="subjectId" required>
+            ${data.subjects.map(s=>`<option value="${s.id}" ${(x.subjectId===s.id)?'selected':''}>${escapeHtml(s.name)}</option>`).join('')}
+          </select>
+        </div>
+        <div class="field">
+          <label>Dia da Semana (Posição)</label>
+          <select name="day">
+            <option value="1" ${x.day===1?'selected':''}>Segunda-feira</option>
+            <option value="2" ${x.day===2?'selected':''}>Terça-feira</option>
+            <option value="3" ${x.day===3?'selected':''}>Quarta-feira</option>
+            <option value="4" ${x.day===4?'selected':''}>Quinta-feira</option>
+            <option value="5" ${x.day===5?'selected':''}>Sexta-feira</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Sala / Bloco</label>
+          <input name="room" placeholder="Ex: Sala 204" value="${escapeHtml(x.room||'')}">
+        </div>
+        <div class="field">
+          <label>Horário Início</label>
+          <input name="start" type="time" required value="${x.start||''}">
+        </div>
+        <div class="field">
+          <label>Horário Fim</label>
+          <input name="end" type="time" required value="${x.end||''}">
+        </div>
+      </div>
+      ${modalActions()}
+    </form>
+  `);
+};
 
-window.openAssessmentModal=async id=>{const x=id?data.assessments.find(v=>v.id===id):{};openModal(id?'Editar prova':'Nova prova',`<form onsubmit="saveAssessment(event,'${id||''}')"><div class="form-grid"><div class="field full"><label>Prova / avaliação</label><input name="title" required value="${escapeHtml(x.title||'')}"></div><div class="field"><label>Disciplina</label><select name="subjectId" required>${data.subjects.map(s=>`<option value="${s.id}" ${x.subjectId===s.id?'selected':''}>${escapeHtml(s.name)}</option>`).join('')}</select></div><div class="field"><label>Data</label><input name="date" type="date" required value="${x.date||''}"></div><div class="field"><label>Data final (opcional)</label><input name="endDate" type="date" value="${x.endDate||''}"></div><div class="field"><label>Horário</label><input name="time" type="time" value="${x.time||''}"></div><div class="field"><label>Local</label><input name="location" value="${escapeHtml(x.location||'')}"></div><div class="field full"><label>Conteúdo</label><textarea name="content">${escapeHtml(x.content||'')}</textarea></div></div>${modalActions()}</form>`) };
-window.saveAssessment=async(e,id)=>{e.preventDefault();const f=new FormData(e.target);await saveDoc('assessments',id,{title:f.get('title').trim(),subjectId:f.get('subjectId'),date:f.get('date'),endDate:f.get('endDate'),time:f.get('time'),location:f.get('location').trim(),content:f.get('content').trim()})};
+window.saveClass=async(e,id)=>{
+  e.preventDefault();
+  const f=new FormData(e.target), s=data.subjects.find(v=>v.id===f.get('subjectId'));
+  await saveDoc('classes',id,{
+    subjectId:f.get('subjectId'),
+    title:s?.name||'',
+    day:Number(f.get('day')),
+    start:f.get('start'),
+    end:f.get('end'),
+    teacher:s?.teacher||'',
+    room:f.get('room').trim()
+  });
+};
 
-window.openSubjectDetails=id=>{const s=data.subjects.find(x=>x.id===id);if(!s)return;const cls=data.classes.filter(x=>x.subjectId===id),tests=data.assessments.filter(x=>x.subjectId===id);openModal(s.name,`<div class="detail-list"><div class="detail"><b>👩‍🏫 Professor</b><p>${escapeHtml(s.teacher||'Não informado')}</p></div><div class="detail"><b>🕐 Horários</b><p>${cls.length?cls.map(x=>`${dayName(x.day)} • ${x.start}–${x.end}${x.room?' • Sala '+escapeHtml(x.room):''}`).join('<br>'):'Nenhum horário cadastrado'}</p></div><div class="detail"><b>🔴 Provas</b><p>${tests.length?tests.map(x=>`${formatDate(x.date)}${x.time?' • '+x.time:''} — ${escapeHtml(x.title)}`).join('<br>'):'Nenhuma prova cadastrada'}</p></div>${s.notes?`<div class="detail"><b>📝 Observações</b><p>${escapeHtml(s.notes)}</p></div>`:''}<div class="modal-actions"><button class="btn btn-sec" onclick="openSubjectModal('${id}')">Editar disciplina</button><button class="btn btn-red" onclick="removeDoc('subjects','${id}');closeModal()">Excluir disciplina</button></div></div>`) };
+/* MODAL DE PROVAS */
+window.openAssessmentModal=async id=>{
+  const x=id?data.assessments.find(v=>v.id===id):{};
+  openModal(id?'Editar prova':'Nova prova',`<form onsubmit="saveAssessment(event,'${id||''}')"><div class="form-grid"><div class="field full"><label>Prova / avaliação</label><input name="title" required value="${escapeHtml(x.title||'')}"></div><div class="field"><label>Disciplina</label><select name="subjectId" required>${data.subjects.map(s=>`<option value="${s.id}" ${x.subjectId===s.id?'selected':''}>${escapeHtml(s.name)}</option>`).join('')}</select></div><div class="field"><label>Data</label><input name="date" type="date" required value="${x.date||''}"></div><div class="field"><label>Data final (opcional)</label><input name="endDate" type="date" value="${x.endDate||''}"></div><div class="field"><label>Horário</label><input name="time" type="time" value="${x.time||''}"></div><div class="field"><label>Local</label><input name="location" value="${escapeHtml(x.location||'')}"></div><div class="field full"><label>Conteúdo</label><textarea name="content">${escapeHtml(x.content||'')}</textarea></div></div>${modalActions()}</form>`);
+};
+window.saveAssessment=async(e,id)=>{
+  e.preventDefault();
+  const f=new FormData(e.target);
+  await saveDoc('assessments',id,{title:f.get('title').trim(),subjectId:f.get('subjectId'),date:f.get('date'),endDate:f.get('endDate'),time:f.get('time'),location:f.get('location').trim(),content:f.get('content').trim()});
+};
+
+window.openSubjectDetails=id=>{
+  const s=data.subjects.find(x=>x.id===id);
+  if(!s)return;
+  const cls=data.classes.filter(x=>x.subjectId===id),tests=data.assessments.filter(x=>x.subjectId===id);
+  openModal(s.name,`<div class="detail-list"><div class="detail"><b>👩‍🏫 Professor</b><p>${escapeHtml(s.teacher||'Não informado')}</p></div><div class="detail"><b>🕐 Horários</b><p>${cls.length?cls.map(x=>`${dayName(x.day)} • ${x.start}–${x.end}${x.room?' • Sala '+escapeHtml(x.room):''}`).join('<br>'):'Nenhum horário cadastrado'}</p></div><div class="detail"><b>🔴 Provas</b><p>${tests.length?tests.map(x=>`${formatDate(x.date)}${x.time?' • '+x.time:''} — ${escapeHtml(x.title)}`).join('<br>'):'Nenhuma prova cadastrada'}</p></div>${s.notes?`<div class="detail"><b>📝 Observações</b><p>${escapeHtml(s.notes)}</p></div>`:''}<div class="modal-actions"><button class="btn btn-sec" onclick="openSubjectModal('${id}')">Editar disciplina</button><button class="btn btn-red" onclick="removeDoc('subjects','${id}');closeModal()">Excluir disciplina</button></div></div>`);
+};
 
 function dayName(n){return ['','Segunda','Terça','Quarta','Quinta','Sexta'][n]||''}
 function formatDate(s){if(!s)return 'Sem data';const [y,m,d]=s.split('-');return `${d}/${m}/${y}`}
@@ -312,14 +388,31 @@ function renderSubjects(){
 
 window.openClassModalFor=id=>{openClassModal();setTimeout(()=>{const q=document.querySelector('[name="subjectId"]');if(q)q.value=id},0)}
 
+/* RENDERIZAÇÃO DOS HORÁRIOS COM BOTÕES DE EDIÇÃO E EXCLUSÃO INTEGARDOS */
 function renderSchedule(){
   const todayNum = new Date().getDay();
   const daysHtml = [1, 2, 3, 4, 5].map(n => {
     const isToday = todayNum === n;
     const classes = data.classes.filter(c => Number(c.day) === n).sort((a,b) => a.start.localeCompare(b.start));
+    
     return `<div class="day ${isToday ? 'is-today' : ''}">
       <h4>${dayName(n)} ${isToday ? '<span class="today-tag">Hoje</span>' : ''}</h4>
-      ${classes.map(c => `<div class="class-mini" onclick="openClassModal('${c.id}')"><strong>${escapeHtml(c.title)}</strong><span>${c.start}–${c.end}${c.room ? ' • '+escapeHtml(c.room) : ''}</span></div>`).join('') || '<div class="empty" style="padding:6px 0">Sem aula</div>'}
+      ${classes.map(c => {
+        const sub = data.subjects.find(s => s.id === c.subjectId);
+        const name = sub ? sub.name : (c.title || 'Disciplina');
+        const color = sub ? sub.color : 'var(--accent)';
+        
+        return `<div class="class-mini" style="border-left-color:${color}">
+          <div class="class-mini-top">
+            <strong>${escapeHtml(name)}</strong>
+          </div>
+          <span>${c.start}–${c.end}${c.room ? ' • '+escapeHtml(c.room) : ''}</span>
+          <div class="class-mini-actions">
+            <button class="mini-btn" onclick="openClassModal('${c.id}')" title="Mover dia ou editar">✏️ Editar</button>
+            <button class="mini-btn red" onclick="removeDoc('classes','${c.id}')" title="Apagar horário">🗑️</button>
+          </div>
+        </div>`;
+      }).join('') || '<div class="empty" style="padding:8px 0">Sem aula</div>'}
     </div>`;
   });
   $('schedule').innerHTML = daysHtml.join('');
@@ -337,7 +430,9 @@ function renderAssessments(){
   $('assessmentsList').innerHTML=arr.length?arr.map(x=>assessmentBlock(x)).join(''):'<div class="empty">Nenhuma prova cadastrada.</div>';
 }
 
-function renderStudySubjects(){$('studySubject').innerHTML='<option value="">Disciplina</option>'+data.subjects.map(s=>`<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('')}
+function renderStudySubjects(){
+  $('studySubject').innerHTML='<option value="">Disciplina</option>'+data.subjects.map(s=>`<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('');
+}
 
 function renderCalendar(){
   const n=new Date(),y=n.getFullYear(),m=n.getMonth();
@@ -395,7 +490,6 @@ window.setPomodoroMode=mode=>{
 updateDisplay();updatePomodoroUI();
 function updateClock(){const n=new Date();$('digitalClock').textContent=n.toLocaleTimeString('pt-BR');$('currentDate').textContent=n.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'})};setInterval(updateClock,1000);updateClock();
 
-// INICIALIZAÇÃO GRIDSTACK (LARGURA, ALTURA E POSIÇÃO LIVRES)
 function initGridStack() {
   grid = GridStack.init({
     cellHeight: 85,
