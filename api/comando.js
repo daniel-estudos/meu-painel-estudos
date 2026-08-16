@@ -39,7 +39,10 @@ export default async function handler(req, res) {
     - "DELETAR_PROVAS"
     - "DELETAR_DISCIPLINAS"
     - "DELETAR_TAREFAS"
+    - "DELETAR_HORARIOS"
     - "DESCONHECIDO"
+
+    Atenção: Se o usuário pedir para criar ou adicionar uma matéria/disciplina explicitamente (ex: "adiciona a matéria x"), use CRIAR_DISCIPLINA. Se o comando não for claro para criar matérias nem se encaixar nas outras ações, retorne DESCONHECIDO.
 
     Data de hoje para referência: ${new Date().toISOString().split('T')[0]}
 
