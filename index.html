@@ -5,21 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Central de Estudos | UEG</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- GridStack CSS para Redimensionamento e Arraste -->
+<link href="https://cdn.jsdelivr.net/npm/gridstack@9.2.0/dist/gridstack.min.css" rel="stylesheet"/>
 <style>
 :root{--surface:rgba(255,255,255,.35);--text:#0f172a;--muted:#334155;--border:rgba(255,255,255,.55);--accent:#15803d;--danger:#dc2626;--blue:#0284c7;--shadow:0 8px 32px rgba(0,0,0,.12);--text-shadow:0 1px 2px rgba(255,255,255,.8)}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Plus Jakarta Sans',sans-serif}
 html{scroll-behavior:smooth}
-body{min-height:100vh;padding:20px;color:var(--text);background:url('https://chatgpt.com/backend-api/estuary/content?id=file_000000000528820ea01d98c7ffef07b7&ts=496360&p=fs&cid=1&sig=e103a79f53d8f763c2300a62a6a52c3e19307969e972ec376f8c6e13647a967a&v=0') center/cover fixed no-repeat}
-body.app-active{background-image:url('https://chatgpt.com/backend-api/estuary/content?id=file_000000000528820ea01d98c7ffef07b7&ts=496360&p=fs&cid=1&sig=e103a79f53d8f763c2300a62a6a52c3e19307969e972ec376f8c6e13647a967a&v=0')}
+body{min-height:100vh;padding:20px;color:var(--text);background:url('https://images8.alphacoders.com/896/thumb-1920-896653.jpg') center/cover fixed no-repeat}
+body.app-active{background-image:url('https://images8.alphacoders.com/896/thumb-1920-896653.jpg')}
 button,input,select,textarea{font:inherit}.hidden{display:none!important}
 .app{width:100%;max-width:1400px;margin:0 auto;display:none;flex-direction:column;gap:20px}
-.glass{background:rgba(255,255,255,.35)!important;backdrop-filter:blur(16px)!important;-webkit-backdrop-filter:blur(16px)!important;border:1px solid var(--border)!important;border-radius:16px;box-shadow:var(--shadow)}
+
+/* ESTILO GLASSMOPHISM ESTÁVEL SEMA PISCADAS */
+.glass{background:rgba(255,255,255,.35)!important;backdrop-filter:blur(16px)!important;-webkit-backdrop-filter:blur(16px)!important;border:1px solid var(--border)!important;border-radius:16px;box-shadow:var(--shadow);will-change:transform}
 
 .login{max-width:390px;margin:12vh auto;padding:34px 26px;background:rgba(255,255,255,.55)!important;backdrop-filter:blur(14px)!important;border:1px solid var(--border);border-radius:20px;display:flex;flex-direction:column;gap:14px;text-align:center;box-shadow:var(--shadow)}
 .login h2{font-size:1.3rem;text-shadow:var(--text-shadow)}
 .login input,.field input,.field select,.field textarea{width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(15,23,42,.22);background:rgba(255,255,255,.55);outline:none;box-shadow:0 1px 4px rgba(0,0,0,.06)}
-.btn{border:0;border-radius:99px;padding:9px 14px;background:#000;color:#fff;font-size:.75rem;font-weight:800;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.18);transition:all .2s}
-.btn:hover{opacity:.88;transform:translateY(-1px)}.btn-sec{background:rgba(255,255,255,.4);color:#000;border:1px solid rgba(15,23,42,.28)}.btn-green{background:var(--accent)}.btn-red{background:var(--danger)}.btn-orange{background:#d97706}
+.btn{border:0;border-radius:99px;padding:9px 14px;background:#000;color:#fff;font-size:.75rem;font-weight:800;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.btn:hover{opacity:.88}.btn-sec{background:rgba(255,255,255,.4);color:#000;border:1px solid rgba(15,23,42,.28)}.btn-green{background:var(--accent)}.btn-red{background:var(--danger)}.btn-orange{background:#d97706}
 
 header{padding:14px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px}
 .brand{display:flex;align-items:center;gap:10px}.brand h1{font-size:1.2rem;text-shadow:var(--text-shadow)}.brand p{font-size:.75rem;color:var(--muted);font-weight:700}
@@ -29,21 +33,17 @@ header{padding:14px 20px;display:flex;justify-content:space-between;align-items:
 .ai-bar{display:flex;gap:8px;flex:1;min-width:300px}.ai-bar input{flex:1;padding:9px 16px;border-radius:99px;border:1px solid rgba(15,23,42,.22);background:rgba(255,255,255,.65);font-size:.8rem;outline:none}
 .toolbar-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 
-.row-three{display:grid;grid-template-columns:repeat(3, 1fr);gap:20px}
-.row-full{display:flex;flex-direction:column;gap:20px}
-.row-two{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-
-.section{padding:20px;display:flex;flex-direction:column;justify-content:space-between}
-.section-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:14px}
+/* ESTILOS GRIDSTACK */
+.grid-stack-item-content{padding:18px;overflow:auto!important}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
 .title{font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;font-weight:800;text-shadow:var(--text-shadow)}
 .subtle{font-size:.72rem;color:var(--muted);font-weight:700}
 
 .drag-handle{display:none;cursor:grab;font-size:1rem;opacity:.8;margin-right:6px;padding:2px 6px;background:rgba(0,0,0,.08);border-radius:6px}
 body.edit-mode .drag-handle{display:inline-block}
-body.edit-mode .section{border:2px dashed var(--accent)!important;animation:editPulse 2s infinite}
-@keyframes editPulse{0%,100%{box-shadow:0 0 0 0 rgba(21,128,61,0.2)}50%{box-shadow:0 0 0 4px rgba(21,128,61,0.1)}}
+body.edit-mode .grid-stack-item-content{border:2px dashed var(--accent)!important}
 
-.subjects{display:grid;grid-template-columns:1fr;gap:10px;max-height:280px;overflow-y:auto;padding-right:4px}
+.subjects{display:grid;grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));gap:10px}
 .subject-card{padding:12px;border-radius:12px;background:rgba(255,255,255,.35);border:1px solid var(--border);border-left:5px solid var(--accent);box-shadow:var(--shadow);cursor:pointer}
 .subject-top{display:flex;justify-content:space-between;gap:8px}.subject-name{font-size:.82rem;font-weight:800;line-height:1.22}.teacher{font-size:.68rem;color:#334155;font-weight:700;margin-top:2px}
 .subject-time{font-size:.7rem;font-weight:800;margin-top:6px}
@@ -52,13 +52,13 @@ body.edit-mode .section{border:2px dashed var(--accent)!important;animation:edit
 .mini-btn{border:1px solid rgba(0,0,0,.2);background:rgba(255,255,255,.6);color:#334155;border-radius:6px;padding:4px 7px;font-size:.6rem;font-weight:800;cursor:pointer}
 .mini-btn:hover{background:#000;color:#fff}
 
-.schedule{display:grid;grid-template-columns:repeat(5, 1fr);gap:12px}
-.day{padding:12px;border-radius:12px;background:rgba(255,255,255,.25);border:1px solid var(--border);min-height:110px}
+.schedule{display:grid;grid-template-columns:repeat(5, 1fr);gap:10px}
+.day{padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.25);border:1px solid var(--border);min-height:95px}
 .day.is-today{background:rgba(255,255,255,.55);border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
-.day h4{font-size:.7rem;text-transform:uppercase;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.day h4{font-size:.68rem;text-transform:uppercase;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
 .day h4 .today-tag{font-size:.55rem;padding:2px 6px;border-radius:99px;background:var(--accent);color:#fff;font-weight:800}
-.class-mini{padding:8px 10px;border-radius:8px;background:rgba(255,255,255,.5);border:1px solid rgba(0,0,0,.08);margin-top:6px;border-left:4px solid var(--accent);cursor:pointer}
-.class-mini strong{font-size:.72rem;display:block;line-height:1.2}.class-mini span{font-size:.64rem;color:#334155;font-weight:700}
+.class-mini{padding:7px 9px;border-radius:8px;background:rgba(255,255,255,.5);border:1px solid rgba(0,0,0,.08);margin-top:5px;border-left:4px solid var(--accent);cursor:pointer}
+.class-mini strong{font-size:.7rem;display:block;line-height:1.2}.class-mini span{font-size:.62rem;color:#334155;font-weight:700}
 
 .item{padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.35);border:1px solid rgba(0,0,0,.12);margin-top:8px}
 .item-head{display:flex;justify-content:space-between;gap:7px}.item-title{font-size:.75rem;font-weight:800}.meta{font-size:.65rem;color:#475569;font-weight:700;margin-top:2px}
@@ -66,33 +66,24 @@ body.edit-mode .section{border:2px dashed var(--accent)!important;animation:edit
 .badge{padding:3px 8px;border-radius:999px;font-size:.6rem;font-weight:800}.badge.red{background:#fee2e2;color:#991b1b}
 .empty{padding:12px;text-align:center;color:#475569;font-size:.72rem;font-weight:700}
 
-.chat-messages{display:flex;flex-direction:column;gap:8px;max-height:220px;overflow:auto;padding-right:2px;margin-bottom:10px}
-.chat-msg{padding:9px 12px;border-radius:10px;background:rgba(255,255,255,.35);border:1px solid rgba(0,0,0,.12)}
-.chat-msg.own{border-color:rgba(21,128,61,.35);background:rgba(220,252,231,.5)}
-.chat-msg-head{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:3px}
-.chat-author{font-size:.68rem;font-weight:800;color:#0f172a}.chat-time{font-size:.6rem;color:#64748b;font-weight:700}
-.chat-text{font-size:.75rem;font-weight:700;word-break:break-word}
-.chat-form{display:grid;grid-template-columns:1fr;gap:6px}
-.chat-form input{padding:8px 12px;border-radius:999px;border:1px solid rgba(15,23,42,.22);background:rgba(255,255,255,.55)}
-.chat-form-row{display:flex;gap:6px}.chat-form-row input{flex:1}
-
-.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.cal-head{padding:4px;text-align:center;font-size:.62rem;font-weight:800;background:rgba(255,255,255,.3);border-radius:4px}
-.cal-cell{min-height:34px;padding:3px;border-radius:6px;background:rgba(255,255,255,.2);border:1px solid rgba(0,0,0,.05);display:flex;flex-direction:column;align-items:center;justify-content:center}
-.cal-cell.today{outline:2px solid var(--accent);background:rgba(255,255,255,.6)}
-.cal-day{font-size:.7rem;font-weight:800}.cal-event.exam{width:5px;height:5px;border-radius:999px;margin-top:2px;background:var(--danger)}
-
 .pomodoro-modes{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px}
 .pomodoro-mode{padding:8px;border-radius:10px;border:2px solid rgba(0,0,0,.14);background:rgba(255,255,255,.4);font-size:.65rem;font-weight:800;cursor:pointer;text-align:center}
 .pomodoro-mode.active{border-color:var(--accent);background:rgba(255,255,255,.7)}
-.timer-wrap{position:relative;padding:16px;border-radius:14px;background:rgba(255,255,255,.4);border:2px solid transparent;text-align:center}
-.timer-wrap.mode-focus{border-color:rgba(21,128,61,.35)}.timer{font-size:2.8rem;font-weight:800;line-height:1}
-.timer-label{font-size:.7rem;font-weight:800;text-transform:uppercase;color:var(--muted)}
+.timer-wrap{position:relative;padding:14px;border-radius:14px;background:rgba(255,255,255,.4);border:2px solid transparent;text-align:center}
+.timer-wrap.mode-focus{border-color:rgba(21,128,61,.35)}.timer{font-size:2.5rem;font-weight:800;line-height:1}
+.timer-label{font-size:.68rem;font-weight:800;text-transform:uppercase;color:var(--muted)}
 .pomodoro-actions{display:flex;gap:6px;justify-content:center;margin-top:10px}
 
-.back-to-top{position:fixed;bottom:24px;right:24px;width:48px;height:48px;border-radius:99px;background:#000;color:#fff;border:1px solid var(--border);font-size:1.4rem;font-weight:800;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.3);opacity:0;visibility:hidden;transition:all .3s;z-index:9999}
+.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-head{padding:4px;text-align:center;font-size:.6rem;font-weight:800;background:rgba(255,255,255,.3);border-radius:4px}
+.cal-cell{min-height:30px;padding:3px;border-radius:6px;background:rgba(255,255,255,.2);border:1px solid rgba(0,0,0,.05);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.cal-cell.today{outline:2px solid var(--accent);background:rgba(255,255,255,.6)}
+.cal-day{font-size:.68rem;font-weight:800}.cal-event.exam{width:5px;height:5px;border-radius:999px;margin-top:2px;background:var(--danger)}
+
+/* BOTÃO VOLTAR AO TOPO TRANSPARENTE (GLASS) */
+.back-to-top{position:fixed;bottom:24px;right:24px;width:48px;height:48px;border-radius:99px;background:rgba(255,255,255,.35)!important;backdrop-filter:blur(16px)!important;-webkit-backdrop-filter:blur(16px)!important;color:var(--text);border:1px solid var(--border)!important;font-size:1.3rem;font-weight:800;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shadow);opacity:0;visibility:hidden;z-index:9999}
 .back-to-top.show{opacity:1;visibility:visible}
-.back-to-top:hover{transform:translateY(-3px);background:var(--accent)}
+.back-to-top:hover{background:rgba(255,255,255,.6)!important}
 
 .modal-wrap{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:10000;padding:18px;align-items:center;justify-content:center}
 .modal{max-width:820px;width:100%;max-height:92vh;overflow:auto;background:#fff;border-radius:16px;padding:20px;box-shadow:0 12px 40px rgba(0,0,0,.25)}
@@ -102,10 +93,8 @@ body.edit-mode .section{border:2px dashed var(--accent)!important;animation:edit
 .field{display:flex;flex-direction:column;gap:4px}.field label{font-size:.65rem;font-weight:800;text-transform:uppercase}.field.full{grid-column:1/-1}
 .modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
 .toast{position:fixed;right:20px;bottom:20px;display:none;background:#000;color:#fff;padding:10px 16px;border-radius:10px;font-size:.75rem;font-weight:800;z-index:11001}
-.sortable-ghost{opacity:0.35;border:2px dashed #15803d!important}
 
-@media(max-width:1100px){.row-three{grid-template-columns:1fr}.schedule{grid-template-columns:repeat(2,1fr)}.row-two{grid-template-columns:1fr}}
-@media(max-width:700px){.schedule{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}}
+@media(max-width:900px){.schedule{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
@@ -128,7 +117,7 @@ body.edit-mode .section{border:2px dashed var(--accent)!important;animation:edit
       <button class="btn btn-green" onclick="runAICommand()" id="aiBtn">Executar Comando</button>
     </div>
     <div class="toolbar-right">
-      <button class="btn btn-orange" id="editLayoutBtn" onclick="toggleEditMode()">🔓 Mover Caixas</button>
+      <button class="btn btn-orange" id="editLayoutBtn" onclick="toggleEditMode()">🔓 Mover & Redimensionar</button>
       <button class="btn btn-green" onclick="openClassModal()">＋ Aula</button>
       <button class="btn btn-red" onclick="openAssessmentModal()">＋ Prova</button>
       <button class="btn btn-sec" onclick="openSubjectModal()">＋ Disciplina</button>
@@ -136,83 +125,78 @@ body.edit-mode .section{border:2px dashed var(--accent)!important;animation:edit
     </div>
   </div>
 
-  <div class="row-three" id="topRow">
+  <!-- CONTAINER GRIDSTACK COM REDIMENSIONAMENTO LIVRE -->
+  <div class="grid-stack">
     
-    <div class="glass section" data-id="sec-pomodoro">
-      <div class="section-head">
-        <div><span class="drag-handle">⠿</span><span class="title">🍅 Cronômetro</span></div>
-        <select id="studySubject" style="max-width:130px;padding:4px;border-radius:6px;border:1px solid rgba(0,0,0,.22);background:rgba(255,255,255,.55);font-size:.65rem;font-weight:700"><option value="">Disciplina</option></select>
-      </div>
-      <div class="pomodoro-wrap">
-        <div class="pomodoro-modes" id="pomodoroModes">
-          <button type="button" class="pomodoro-mode active" data-mode="focus" onclick="setPomodoroMode('focus')">🎯 Foco<span style="display:block;font-size:.55rem">25m</span></button>
-          <button type="button" class="pomodoro-mode" data-mode="short" onclick="setPomodoroMode('short')">☕ Pausa<span style="display:block;font-size:.55rem">5m</span></button>
-          <button type="button" class="pomodoro-mode" data-mode="long" onclick="setPomodoroMode('long')">🌿 Longa<span style="display:block;font-size:.55rem">15m</span></button>
+    <!-- QUADRO: CRONÔMETRO -->
+    <div class="grid-stack-item" gs-w="4" gs-h="4" gs-id="box-pomodoro">
+      <div class="grid-stack-item-content glass">
+        <div class="section-head">
+          <div><span class="drag-handle">⠿</span><span class="title">🍅 Cronômetro</span></div>
+          <select id="studySubject" style="max-width:110px;padding:4px;border-radius:6px;border:1px solid rgba(0,0,0,.22);background:rgba(255,255,255,.55);font-size:.65rem;font-weight:700"><option value="">Disciplina</option></select>
         </div>
-        <div class="timer-wrap mode-focus" id="timerWrap">
-          <div class="timer-label focus" id="timerLabel">Tempo de foco</div>
-          <div class="timer" id="timer">25:00</div>
-          <div id="pomodoroStatus" style="font-size:.68rem;font-weight:700;margin-top:2px">Pronto para iniciar</div>
+        <div class="pomodoro-wrap">
+          <div class="pomodoro-modes" id="pomodoroModes">
+            <button type="button" class="pomodoro-mode active" data-mode="focus" onclick="setPomodoroMode('focus')">🎯 Foco<span style="display:block;font-size:.55rem">25m</span></button>
+            <button type="button" class="pomodoro-mode" data-mode="short" onclick="setPomodoroMode('short')">☕ Pausa<span style="display:block;font-size:.55rem">5m</span></button>
+            <button type="button" class="pomodoro-mode" data-mode="long" onclick="setPomodoroMode('long')">🌿 Longa<span style="display:block;font-size:.55rem">15m</span></button>
+          </div>
+          <div class="timer-wrap mode-focus" id="timerWrap">
+            <div class="timer-label focus" id="timerLabel">Tempo de foco</div>
+            <div class="timer" id="timer">25:00</div>
+            <div id="pomodoroStatus" style="font-size:.65rem;font-weight:700;margin-top:2px">Pronto para iniciar</div>
+          </div>
+          <div class="pomodoro-actions">
+            <button class="btn btn-green" id="startBtn" onclick="toggleTimer()">Iniciar</button>
+            <button class="btn btn-sec" id="pauseBtn" onclick="pauseTimer()" disabled>Pausar</button>
+            <button class="btn btn-sec" onclick="resetTimer()">Reiniciar</button>
+          </div>
         </div>
-        <div class="pomodoro-actions">
-          <button class="btn btn-green" id="startBtn" onclick="toggleTimer()">Iniciar</button>
-          <button class="btn btn-sec" id="pauseBtn" onclick="pauseTimer()" disabled>Pausar</button>
-          <button class="btn btn-sec" onclick="resetTimer()">Reiniciar</button>
+      </div>
+    </div>
+
+    <!-- QUADRO: CALENDÁRIO -->
+    <div class="grid-stack-item" gs-w="4" gs-h="4" gs-id="box-calendario">
+      <div class="grid-stack-item-content glass">
+        <div class="section-head">
+          <div><span class="drag-handle">⠿</span><span class="title">🗓️ Calendário</span></div>
+          <span id="calendarMonth" class="subtle"></span>
         </div>
+        <div id="calendar" class="calendar"></div>
       </div>
     </div>
 
-    <div class="glass section" data-id="sec-calendario">
-      <div class="section-head">
-        <div><span class="drag-handle">⠿</span><span class="title">🗓️ Calendário</span></div>
-        <span id="calendarMonth" class="subtle"></span>
-      </div>
-      <div id="calendar" class="calendar"></div>
-    </div>
-
-    <div class="glass section" data-id="sec-disciplinas">
-      <div class="section-head">
-        <div><span class="drag-handle">⠿</span><span class="title">📚 Disciplinas</span></div>
-        <button class="btn btn-sec" onclick="openSubjectModal()">＋ Nova</button>
-      </div>
-      <div id="subjectsGrid" class="subjects"></div>
-    </div>
-
-  </div>
-
-  <div class="row-full" id="middleRow">
-    <div class="glass section" data-id="sec-horarios">
-      <div class="section-head">
-        <div><span class="drag-handle">⠿</span><span class="title">🕐 Horários da semana</span></div>
-        <button class="btn btn-sec" onclick="openClassModal()">＋ Horário</button>
-      </div>
-      <div id="schedule" class="schedule"></div>
-    </div>
-  </div>
-
-  <div class="row-two" id="bottomRow">
-    
-    <div class="glass section" data-id="sec-provas-proximas">
-      <div class="section-head">
-        <div><span class="drag-handle">⠿</span><span class="title">🔴 Próximas provas</span></div>
-        <button class="btn btn-red" onclick="openAssessmentModal()">＋ Prova</button>
-      </div>
-      <div id="assessmentsList"></div>
-    </div>
-
-    <div class="glass section" id="chatSection" data-id="sec-bate-papo">
-      <div class="section-head">
-        <div><span class="drag-handle">⠿</span><span class="title">💬 Bate-papo</span></div>
-        <span id="chatSyncStatus" class="subtle">Tempo real</span>
-      </div>
-      <div id="chatMessages" class="chat-messages"></div>
-      <form class="chat-form" onsubmit="sendChatMessage(event)">
-        <input id="chatAuthor" type="text" placeholder="Seu nome" maxlength="40">
-        <div class="chat-form-row">
-          <input id="chatInput" type="text" placeholder="Digite uma mensagem..." maxlength="500" required autocomplete="off">
-          <button class="btn btn-green" type="submit">Enviar</button>
+    <!-- QUADRO: DISCIPLINAS -->
+    <div class="grid-stack-item" gs-w="4" gs-h="4" gs-id="box-disciplinas">
+      <div class="grid-stack-item-content glass">
+        <div class="section-head">
+          <div><span class="drag-handle">⠿</span><span class="title">📚 Disciplinas</span></div>
+          <button class="btn btn-sec" onclick="openSubjectModal()">＋ Nova</button>
         </div>
-      </form>
+        <div id="subjectsGrid" class="subjects"></div>
+      </div>
+    </div>
+
+    <!-- QUADRO: HORÁRIOS DA SEMANA -->
+    <div class="grid-stack-item" gs-w="12" gs-h="3" gs-id="box-horarios">
+      <div class="grid-stack-item-content glass">
+        <div class="section-head">
+          <div><span class="drag-handle">⠿</span><span class="title">🕐 Horários da semana</span></div>
+          <button class="btn btn-sec" onclick="openClassModal()">＋ Horário</button>
+        </div>
+        <div id="schedule" class="schedule"></div>
+      </div>
+    </div>
+
+    <!-- QUADRO: PRÓXIMAS PROVAS -->
+    <div class="grid-stack-item" gs-w="12" gs-h="3" gs-id="box-provas">
+      <div class="grid-stack-item-content glass">
+        <div class="section-head">
+          <div><span class="drag-handle">⠿</span><span class="title">🔴 Próximas provas</span></div>
+          <button class="btn btn-red" onclick="openAssessmentModal()">＋ Prova</button>
+        </div>
+        <div id="assessmentsList"></div>
+      </div>
     </div>
 
   </div>
@@ -223,17 +207,17 @@ body.edit-mode .section{border:2px dashed var(--accent)!important;animation:edit
 <div id="modalWrap" class="modal-wrap" onclick="if(event.target===this)closeModal()"><div class="modal"><div class="modal-head"><h3 id="modalTitle">Detalhes</h3><button class="close" onclick="closeModal()">✕</button></div><div id="modalBody"></div></div></div>
 <div id="toast" class="toast"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+<!-- GRIDSTACK JS -->
+<script src="https://cdn.jsdelivr.net/npm/gridstack@9.2.0/dist/gridstack-all.js"></script>
 
 <script type="module">
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-import {getFirestore,collection,addDoc,onSnapshot,deleteDoc,doc,updateDoc,enableIndexedDbPersistence,getDocs,query,orderBy,limit,serverTimestamp} from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+import {getFirestore,collection,addDoc,onSnapshot,deleteDoc,doc,updateDoc,enableIndexedDbPersistence,query,orderBy,limit,serverTimestamp} from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 
 const firebaseConfig={apiKey:'AIzaSyC09EhGx9GSo4IUjxWXJxqksnKgOU4khQ',authDomain:'painel-estudos-54958.firebaseapp.com',projectId:'painel-estudos-54958',storageBucket:'painel-estudos-54958.firebasestorage.app',messagingSenderId:'491796500394',appId:'1:491796500394:web:f6d85850484df33b8de5d3'};
 const app=initializeApp(firebaseConfig);const db=getFirestore(app);
-const CHAT_AUTHOR_KEY='ueg_chat_author';
-let realtimeUnsubs=[],chatStickBottom=true, isEditMode=false;
-const data={subjects:[],classes:[],assessments:[],messages:[]};
+let realtimeUnsubs=[], isEditMode=false, grid=null;
+const data={subjects:[],classes:[],assessments:[]};
 const SITE_PASSWORD='ueg2026';
 const POMODORO={focus:25,short:5,long:15};
 const POMODORO_LABELS={focus:'Tempo de foco',short:'Pausa curta',long:'Pausa longa'};
@@ -249,7 +233,7 @@ window.showApp = function() {
   if (login) login.classList.add('hidden');
   if (appEl) appEl.style.display = 'flex';
   document.body.classList.add('app-active');
-  initChatAuthor();
+  initGridStack();
 };
 
 window.checkPassword = function() {
@@ -262,18 +246,8 @@ window.checkPassword = function() {
   }
 };
 
-function initChatAuthor(){const saved=localStorage.getItem(CHAT_AUTHOR_KEY);if(saved&&$('chatAuthor'))$('chatAuthor').value=saved}
-
 async function initPersistence(){
   try{ await enableIndexedDbPersistence(db); }catch(err){}
-}
-
-function docTs(v){
-  if(typeof v==='number')return v;
-  if(v?.toMillis)return v.toMillis();
-  if(v instanceof Date)return v.getTime();
-  if(typeof v==='string')return Date.parse(v)||0;
-  return 0;
 }
 
 function subscribeRealtime(name,key,{sort=null,sortDir='asc',limitTo=null,reverse=false,onData}){
@@ -294,7 +268,6 @@ function bindRealtimeListeners(){
   subscribeRealtime('subjects','subjects',{sort:'name',onData:()=>{renderSubjects();renderStudySubjects()}});
   subscribeRealtime('classes','classes',{sort:'day',onData:()=>{renderSubjects();renderSchedule()}});
   subscribeRealtime('assessments','assessments',{sort:'date',onData:()=>{renderAssessments();renderCalendar()}});
-  subscribeRealtime('messages','messages',{sort:'clientTs',sortDir:'desc',limitTo:100,reverse:true,onData:()=>renderChat()});
 }
 
 async function writeDoc(name,id,payload){
@@ -321,32 +294,11 @@ window.saveAssessment=async(e,id)=>{e.preventDefault();const f=new FormData(e.ta
 
 window.openSubjectDetails=id=>{const s=data.subjects.find(x=>x.id===id);if(!s)return;const cls=data.classes.filter(x=>x.subjectId===id),tests=data.assessments.filter(x=>x.subjectId===id);openModal(s.name,`<div class="detail-list"><div class="detail"><b>👩‍🏫 Professor</b><p>${escapeHtml(s.teacher||'Não informado')}</p></div><div class="detail"><b>🕐 Horários</b><p>${cls.length?cls.map(x=>`${dayName(x.day)} • ${x.start}–${x.end}${x.room?' • Sala '+escapeHtml(x.room):''}`).join('<br>'):'Nenhum horário cadastrado'}</p></div><div class="detail"><b>🔴 Provas</b><p>${tests.length?tests.map(x=>`${formatDate(x.date)}${x.time?' • '+x.time:''} — ${escapeHtml(x.title)}`).join('<br>'):'Nenhuma prova cadastrada'}</p></div>${s.notes?`<div class="detail"><b>📝 Observações</b><p>${escapeHtml(s.notes)}</p></div>`:''}<div class="modal-actions"><button class="btn btn-sec" onclick="openSubjectModal('${id}')">Editar disciplina</button><button class="btn btn-red" onclick="removeDoc('subjects','${id}');closeModal()">Excluir disciplina</button></div></div>`) };
 
-window.sendChatMessage=async e=>{
-  e.preventDefault();
-  const input=$('chatInput'),authorInput=$('chatAuthor');
-  const text=input.value.trim(),author=(authorInput.value||'Estudante').trim();
-  if(!text)return;
-  localStorage.setItem(CHAT_AUTHOR_KEY,author);
-  input.value='';
-  chatStickBottom=true;
-  try{ await addDoc(col('messages'),{text,author,clientTs:Date.now(),createdAt:serverTimestamp()}); }catch(err){ showToast("Erro ao enviar mensagem"); }
-};
-
 function dayName(n){return ['','Segunda','Terça','Quarta','Quinta','Sexta'][n]||''}
 function formatDate(s){if(!s)return 'Sem data';const [y,m,d]=s.split('-');return `${d}/${m}/${y}`}
 function daysUntil(date){const a=new Date();a.setHours(0,0,0,0);const b=new Date(date+'T00:00:00');return Math.ceil((b-a)/86400000)}
 
-function renderAll(){renderSubjects();renderSchedule();renderAssessments();renderCalendar();renderStudySubjects();renderChat()}
-
-function renderChat(){
-  const box=$('chatMessages'),author=($('chatAuthor')?.value||localStorage.getItem(CHAT_AUTHOR_KEY)||'').trim();
-  box.innerHTML=data.messages.length?data.messages.map(m=>{
-    const own=m.author===author&&author;
-    const when=new Date(m.clientTs||docTs(m.createdAt)||Date.now()).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
-    return `<div class="chat-msg ${own?'own':''}"><div class="chat-msg-head"><span class="chat-author">${escapeHtml(m.author||'Estudante')}</span><span class="chat-time">${when}</span></div><div class="chat-text">${escapeHtml(m.text)}</div></div>`;
-  }).join(''):'<div class="empty">Nenhuma mensagem ainda.</div>';
-  if(chatStickBottom)box.scrollTop=box.scrollHeight;
-}
+function renderAll(){renderSubjects();renderSchedule();renderAssessments();renderCalendar();renderStudySubjects()}
 
 function renderSubjects(){
   $('subjectsGrid').innerHTML=data.subjects.length?data.subjects.map(s=>{
@@ -403,6 +355,7 @@ function renderCalendar(){
   $('calendar').innerHTML=h;
 }
 
+// POMODORO
 function updatePomodoroUI(){
   const wrap=$('timerWrap'),label=$('timerLabel'),status=$('pomodoroStatus');
   wrap.className='timer-wrap mode-'+pomodoroMode+(timerRunning?' running':'');
@@ -442,29 +395,27 @@ window.setPomodoroMode=mode=>{
 updateDisplay();updatePomodoroUI();
 function updateClock(){const n=new Date();$('digitalClock').textContent=n.toLocaleTimeString('pt-BR');$('currentDate').textContent=n.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'})};setInterval(updateClock,1000);updateClock();
 
-let sortables = [];
-function initDragAndDrop(){
-  sortables.forEach(s => s.destroy());
-  sortables = [];
+// INICIALIZAÇÃO GRIDSTACK (LARGURA, ALTURA E POSIÇÃO LIVRES)
+function initGridStack() {
+  grid = GridStack.init({
+    cellHeight: 85,
+    margin: 10,
+    disableResize: true,
+    disableDrag: true,
+    handle: '.drag-handle'
+  });
 
-  const options = {
-    handle: '.drag-handle',
-    animation: 200,
-    ghostClass: 'sortable-ghost',
-    store: {
-      set: (sortable) => {
-        const order = sortable.toArray();
-        localStorage.setItem('layout-' + sortable.el.id, JSON.stringify(order));
-      },
-      get: (sortable) => {
-        const order = localStorage.getItem('layout-' + sortable.el.id);
-        return order ? JSON.parse(order) : [];
-      }
-    }
-  };
+  const savedLayout = localStorage.getItem('user_grid_layout_v2');
+  if (savedLayout) {
+    try {
+      const layout = JSON.parse(savedLayout);
+      grid.load(layout);
+    } catch(e){}
+  }
 
-  ['topRow', 'middleRow', 'bottomRow'].forEach(id => {
-    if ($(id)) sortables.push(new Sortable($(id), options));
+  grid.on('change', function() {
+    const layout = grid.save(false);
+    localStorage.setItem('user_grid_layout_v2', JSON.stringify(layout));
   });
 }
 
@@ -475,11 +426,13 @@ window.toggleEditMode = function() {
     document.body.classList.add('edit-mode');
     btn.textContent = '🔒 Travar Layout';
     btn.classList.replace('btn-orange', 'btn-green');
-    showToast('Modo de reorganização ativo! Arraste pelas alças ⠿');
+    grid.enable();
+    showToast('Modo de edição ativo! Arraste pelas bordas ou alças.');
   } else {
     document.body.classList.remove('edit-mode');
-    btn.textContent = '🔓 Mover Caixas';
+    btn.textContent = '🔓 Mover & Redimensionar';
     btn.classList.replace('btn-green', 'btn-orange');
+    grid.disable();
     showToast('Layout salvo!');
   }
 };
@@ -499,7 +452,6 @@ window.addEventListener('scroll', () => {
 async function loadAll(){
   await initPersistence();
   bindRealtimeListeners();
-  initDragAndDrop();
 }
 window.refreshAll=()=>{renderAll();showToast('Painel atualizado')};
 
@@ -573,8 +525,6 @@ window.runAICommand = async () => {
 };
 
 window.addEventListener('load',()=>{
-  const chatBox=$('chatMessages');
-  if(chatBox)chatBox.addEventListener('scroll',()=>{chatStickBottom=chatBox.scrollHeight-chatBox.scrollTop-chatBox.clientHeight<48});
   if(localStorage.getItem('ueg_access_granted')==='true')window.showApp();
   loadAll();
 });
