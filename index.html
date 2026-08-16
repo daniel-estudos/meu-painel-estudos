@@ -28,7 +28,6 @@ header{padding:14px 20px;display:flex;justify-content:space-between;align-items:
 .ai-bar{display:flex;gap:8px;flex:1;min-width:300px}.ai-bar input{flex:1;padding:9px 16px;border-radius:99px;border:1px solid rgba(15,23,42,.22);background:rgba(255,255,255,.65);font-size:.8rem;outline:none}
 .toolbar-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 
-/* LAYOUT EXPANDIDO E SIMÉTRICO */
 .grid-container{display:grid;grid-template-columns:repeat(12, 1fr);gap:20px;width:100%}
 .col-12{grid-column:span 12}.col-7{grid-column:span 7}.col-5{grid-column:span 5}
 
@@ -37,7 +36,6 @@ header{padding:14px 20px;display:flex;justify-content:space-between;align-items:
 .title{font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;font-weight:800;text-shadow:var(--text-shadow)}
 .subtle{font-size:.72rem;color:var(--muted);font-weight:700}
 
-/* BOTÃO E ALÇAS DE MOVER */
 .drag-handle{display:none;cursor:grab;font-size:1rem;opacity:.8;margin-right:6px;padding:2px 6px;background:rgba(0,0,0,.08);border-radius:6px}
 body.edit-mode .drag-handle{display:inline-block}
 body.edit-mode .section{border:2px dashed var(--accent)!important;animation:editPulse 2s infinite}
@@ -52,18 +50,21 @@ body.edit-mode .section{border:2px dashed var(--accent)!important;animation:edit
 .mini-btn{border:1px solid rgba(0,0,0,.2);background:rgba(255,255,255,.6);color:#334155;border-radius:6px;padding:5px 8px;font-size:.62rem;font-weight:800;cursor:pointer}
 .mini-btn:hover{background:#000;color:#fff}
 
-.schedule{display:grid;grid-template-columns:repeat(6, 1fr);gap:10px}
-.day{padding:12px;border-radius:12px;background:rgba(255,255,255,.25);border:1px solid var(--border);min-height:130px}
-.day h4{font-size:.68rem;text-transform:uppercase;margin-bottom:8px}
-.class-mini{padding:8px;border-radius:8px;background:rgba(255,255,255,.4);border:1px solid rgba(0,0,0,.1);margin-top:6px;border-left:4px solid #475569;cursor:pointer}
-.class-mini.today{border-left-color:var(--accent)}
-.class-mini strong{font-size:.7rem;display:block}.class-mini span{font-size:.62rem;color:#475569;font-weight:700}
+/* HORÁRIOS OTIMIZADOS (SEGUNDA A SEXTA) */
+.schedule{display:grid;grid-template-columns:repeat(5, 1fr);gap:10px}
+.day{padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.25);border:1px solid var(--border);min-height:95px;transition:all .2s}
+.day.is-today{background:rgba(255,255,255,.55);border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.day h4{font-size:.68rem;text-transform:uppercase;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
+.day h4 .today-tag{font-size:.55rem;padding:2px 6px;border-radius:99px;background:var(--accent);color:#fff;font-weight:800}
+.class-mini{padding:7px 9px;border-radius:8px;background:rgba(255,255,255,.5);border:1px solid rgba(0,0,0,.08);margin-top:5px;border-left:4px solid var(--accent);cursor:pointer;transition:transform .15s}
+.class-mini:hover{transform:translateX(2px);background:rgba(255,255,255,.8)}
+.class-mini strong{font-size:.7rem;display:block;line-height:1.2}.class-mini span{font-size:.62rem;color:#334155;font-weight:700}
 
 .item{padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.35);border:1px solid rgba(0,0,0,.12);margin-top:8px}
 .item-head{display:flex;justify-content:space-between;gap:7px}.item-title{font-size:.75rem;font-weight:800}.meta{font-size:.65rem;color:#475569;font-weight:700;margin-top:2px}
 .exam-countdown{margin-top:8px;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,.4);border:1px solid rgba(220,38,38,.25);display:flex;justify-content:space-between;align-items:center}
 .badge{padding:3px 8px;border-radius:999px;font-size:.6rem;font-weight:800}.badge.red{background:#fee2e2;color:#991b1b}
-.empty{padding:14px;text-align:center;color:#475569;font-size:.75rem;font-weight:700}
+.empty{padding:12px;text-align:center;color:#475569;font-size:.72rem;font-weight:700}
 
 .chat-messages{display:flex;flex-direction:column;gap:8px;max-height:280px;overflow:auto;padding-right:2px;margin-bottom:10px}
 .chat-msg{padding:9px 12px;border-radius:10px;background:rgba(255,255,255,.35);border:1px solid rgba(0,0,0,.12)}
@@ -102,7 +103,7 @@ body.edit-mode .section{border:2px dashed var(--accent)!important;animation:edit
 .sortable-ghost{opacity:0.35;border:2px dashed #15803d!important}
 
 @media(max-width:1100px){.col-7,.col-5{grid-column:span 12}.schedule{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:700px){.schedule{grid-template-columns:repeat(2,1fr)}.form-grid{grid-template-columns:1fr}}
+@media(max-width:700px){.schedule{grid-template-columns:repeat(1,1fr)}.form-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -135,7 +136,6 @@ body.edit-mode .section{border:2px dashed var(--accent)!important;animation:edit
 
   <div id="mainGrid" class="grid-container">
     
-    <!-- BOX 1: TODAS AS DISCIPLINAS -->
     <div class="glass section col-12" data-id="sec-disciplinas">
       <div class="section-head">
         <div><span class="drag-handle">⠿</span><span class="title">📚 Todas as disciplinas</span></div>
@@ -144,7 +144,6 @@ body.edit-mode .section{border:2px dashed var(--accent)!important;animation:edit
       <div id="subjectsGrid" class="subjects"></div>
     </div>
 
-    <!-- COLUNA ESQUERDA: HORÁRIOS DA SEMANA -->
     <div class="col-7" id="leftColumn">
       <div class="glass section" data-id="sec-horarios">
         <div class="section-head">
@@ -155,7 +154,6 @@ body.edit-mode .section{border:2px dashed var(--accent)!important;animation:edit
       </div>
     </div>
 
-    <!-- COLUNA DIREITA: PROVAS, CALENDÁRIO, CHAT, POMODORO -->
     <div class="col-5" id="rightColumn" style="display:flex;flex-direction:column;gap:20px">
       
       <div class="glass section" data-id="sec-provas-proximas">
@@ -312,7 +310,7 @@ window.removeDoc=async(name,id)=>{if(confirm('Excluir este item?')){try{await de
 window.openSubjectModal=async id=>{const x=id?data.subjects.find(v=>v.id===id):{};openModal(id?'Editar disciplina':'Nova disciplina',`<form onsubmit="saveSubject(event,'${id||''}')"><div class="form-grid"><div class="field full"><label>Nome da disciplina</label><input name="name" required value="${escapeHtml(x.name||'')}"></div><div class="field"><label>Professor</label><input name="teacher" value="${escapeHtml(x.teacher||'')}"></div><div class="field"><label>Cor</label><input name="color" type="color" value="${x.color||'#15803d'}"></div><div class="field full"><label>Observações</label><textarea name="notes">${escapeHtml(x.notes||'')}</textarea></div></div>${modalActions()}</form>`) };
 window.saveSubject=async(e,id)=>{e.preventDefault();const f=new FormData(e.target);await saveDoc('subjects',id,{name:f.get('name').trim(),teacher:f.get('teacher').trim(),color:f.get('color'),notes:f.get('notes').trim()})};
 
-window.openClassModal=async id=>{const x=id?data.classes.find(v=>v.id===id):{};openModal(id?'Editar horário':'Novo horário',`<form onsubmit="saveClass(event,'${id||''}')"><div class="form-grid"><div class="field full"><label>Disciplina</label><select name="subjectId" required>${data.subjects.map(s=>`<option value="${s.id}" ${(x.subjectId===s.id)?'selected':''}>${escapeHtml(s.name)}</option>`).join('')}</select></div><div class="field"><label>Dia</label><select name="day"><option value="1">Segunda</option><option value="2">Terça</option><option value="3">Quarta</option><option value="4">Quinta</option><option value="5">Sexta</option><option value="6">Sábado</option></select></div><div class="field"><label>Início</label><input name="start" type="time" required value="${x.start||''}"></div><div class="field"><label>Fim</label><input name="end" type="time" required value="${x.end||''}"></div><div class="field"><label>Sala</label><input name="room" value="${escapeHtml(x.room||'')}"></div></div>${modalActions()}</form>`);if(x.day)document.querySelector('[name="day"]').value=x.day};
+window.openClassModal=async id=>{const x=id?data.classes.find(v=>v.id===id):{};openModal(id?'Editar horário':'Novo horário',`<form onsubmit="saveClass(event,'${id||''}')"><div class="form-grid"><div class="field full"><label>Disciplina</label><select name="subjectId" required>${data.subjects.map(s=>`<option value="${s.id}" ${(x.subjectId===s.id)?'selected':''}>${escapeHtml(s.name)}</option>`).join('')}</select></div><div class="field"><label>Dia</label><select name="day"><option value="1">Segunda</option><option value="2">Terça</option><option value="3">Quarta</option><option value="4">Quinta</option><option value="5">Sexta</option></select></div><div class="field"><label>Início</label><input name="start" type="time" required value="${x.start||''}"></div><div class="field"><label>Fim</label><input name="end" type="time" required value="${x.end||''}"></div><div class="field"><label>Sala</label><input name="room" value="${escapeHtml(x.room||'')}"></div></div>${modalActions()}</form>`);if(x.day)document.querySelector('[name="day"]').value=x.day};
 window.saveClass=async(e,id)=>{e.preventDefault();const f=new FormData(e.target),s=data.subjects.find(v=>v.id===f.get('subjectId'));await saveDoc('classes',id,{subjectId:f.get('subjectId'),title:s?.name||'',day:Number(f.get('day')),start:f.get('start'),end:f.get('end'),teacher:s?.teacher||'',room:f.get('room').trim()})};
 
 window.openAssessmentModal=async id=>{const x=id?data.assessments.find(v=>v.id===id):{};openModal(id?'Editar prova':'Nova prova',`<form onsubmit="saveAssessment(event,'${id||''}')"><div class="form-grid"><div class="field full"><label>Prova / avaliação</label><input name="title" required value="${escapeHtml(x.title||'')}"></div><div class="field"><label>Disciplina</label><select name="subjectId" required>${data.subjects.map(s=>`<option value="${s.id}" ${x.subjectId===s.id?'selected':''}>${escapeHtml(s.name)}</option>`).join('')}</select></div><div class="field"><label>Data</label><input name="date" type="date" required value="${x.date||''}"></div><div class="field"><label>Data final (opcional)</label><input name="endDate" type="date" value="${x.endDate||''}"></div><div class="field"><label>Horário</label><input name="time" type="time" value="${x.time||''}"></div><div class="field"><label>Local</label><input name="location" value="${escapeHtml(x.location||'')}"></div><div class="field full"><label>Conteúdo</label><textarea name="content">${escapeHtml(x.content||'')}</textarea></div></div>${modalActions()}</form>`) };
@@ -331,7 +329,7 @@ window.sendChatMessage=async e=>{
   try{ await addDoc(col('messages'),{text,author,clientTs:Date.now(),createdAt:serverTimestamp()}); }catch(err){ showToast("Erro ao enviar mensagem"); }
 };
 
-function dayName(n){return ['','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'][n]||''}
+function dayName(n){return ['','Segunda','Terça','Quarta','Quinta','Sexta'][n]||''}
 function formatDate(s){if(!s)return 'Sem data';const [y,m,d]=s.split('-');return `${d}/${m}/${y}`}
 function daysUntil(date){const a=new Date();a.setHours(0,0,0,0);const b=new Date(date+'T00:00:00');return Math.ceil((b-a)/86400000)}
 
@@ -358,7 +356,20 @@ function renderSubjects(){
 }
 
 window.openClassModalFor=id=>{openClassModal();setTimeout(()=>{const q=document.querySelector('[name="subjectId"]');if(q)q.value=id},0)}
-function renderSchedule(){const names=[1,2,3,4,5,6].map(n=>`<div class="day"><h4>${dayName(n)}</h4>${data.classes.filter(c=>Number(c.day)===n).sort((a,b)=>a.start.localeCompare(b.start)).map(c=>`<div class="class-mini ${new Date().getDay()===n?'today':''}" onclick="openClassModal('${c.id}')"><strong>${escapeHtml(c.title)}</strong><span>${c.start}–${c.end}${c.room?' • '+escapeHtml(c.room):''}</span></div>`).join('')||'<div class="subtle">Sem aula</div>'}</div>`);$('schedule').innerHTML=names.join('')}
+
+/* RENDERIZAÇÃO DE HORÁRIOS: APENAS SEGUNDA A SEXTA (1 A 5) */
+function renderSchedule(){
+  const todayNum = new Date().getDay();
+  const daysHtml = [1, 2, 3, 4, 5].map(n => {
+    const isToday = todayNum === n;
+    const classes = data.classes.filter(c => Number(c.day) === n).sort((a,b) => a.start.localeCompare(b.start));
+    return `<div class="day ${isToday ? 'is-today' : ''}">
+      <h4>${dayName(n)} ${isToday ? '<span class="today-tag">Hoje</span>' : ''}</h4>
+      ${classes.map(c => `<div class="class-mini" onclick="openClassModal('${c.id}')"><strong>${escapeHtml(c.title)}</strong><span>${c.start}–${c.end}${c.room ? ' • '+escapeHtml(c.room) : ''}</span></div>`).join('') || '<div class="empty" style="padding:6px 0">Sem aula</div>'}
+    </div>`;
+  });
+  $('schedule').innerHTML = daysHtml.join('');
+}
 
 function assessmentBlock(x){
   const s=data.subjects.find(v=>v.id===x.subjectId);
@@ -430,7 +441,7 @@ window.setPomodoroMode=mode=>{
 updateDisplay();updatePomodoroUI();
 function updateClock(){const n=new Date();$('digitalClock').textContent=n.toLocaleTimeString('pt-BR');$('currentDate').textContent=n.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'})};setInterval(updateClock,1000);updateClock();
 
-// MODO DE EDIÇÃO E REORGANIZAÇÃO DE CAIXAS
+// MODO DE EDIÇÃO E REORGANIZAÇÃO
 window.toggleEditMode = function() {
   isEditMode = !isEditMode;
   const btn = $('editLayoutBtn');
