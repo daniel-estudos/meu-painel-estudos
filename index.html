@@ -733,6 +733,13 @@ window.addEventListener('load',()=>{
   if(localStorage.getItem('ueg_access_granted')==='true')window.showApp();
   loadAll();
 });
+  
+} else if (acao === "DELETAR_HORARIOS") {
+  if (confirm("Apagar TODOS os horários da semana?")) {
+    for (const item of data.classes) await deleteDoc(doc(db, 'classes', item.id));
+    showToast("✨ Horários removidos!");
+  }
+}
 </script>
 </body>
 </html>
