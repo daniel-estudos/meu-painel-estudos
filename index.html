@@ -7,6 +7,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <!-- GridStack CSS -->
 <link href="https://cdn.jsdelivr.net/npm/gridstack@9.2.0/dist/gridstack.min.css" rel="stylesheet"/>
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#15803d">
 <style>
 :root{
   --surface:rgba(255,255,255,.35);
@@ -162,6 +164,9 @@ body.edit-mode .grid-stack-item-content{border:2px dashed var(--accent)!importan
 .modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
 .toast{position:fixed;right:20px;bottom:20px;display:none;background:#000;color:#fff;padding:10px 16px;border-radius:10px;font-size:.75rem;font-weight:800;z-index:11001}
 
+
+.task-list{display:flex;flex-direction:column;gap:7px}.task-row{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:10px;background:rgba(255,255,255,.35);border:1px solid rgba(0,0,0,.1)}.task-row input[type=checkbox]{width:17px;height:17px;accent-color:var(--accent);cursor:pointer}.task-main{min-width:0;flex:1}.task-title{font-size:.72rem;font-weight:800;line-height:1.25}.task-row.done .task-title{text-decoration:line-through;opacity:.55}.task-meta{font-size:.6rem;color:#475569;font-weight:700;margin-top:2px}.task-priority{padding:2px 6px;border-radius:99px;font-size:.55rem;font-weight:800}.priority-high{background:#fee2e2;color:#991b1b}.priority-medium{background:#fef3c7;color:#92400e}.priority-low{background:#dcfce7;color:#166534}.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat-card{padding:10px;border-radius:10px;background:rgba(255,255,255,.35);border:1px solid rgba(0,0,0,.1);text-align:center}.stat-value{font-size:1.05rem;font-weight:800}.stat-label{font-size:.58rem;text-transform:uppercase;font-weight:800;color:var(--muted);margin-top:2px}.stats-subjects{margin-top:10px;display:flex;flex-direction:column;gap:6px}.stats-subject-row{display:flex;justify-content:space-between;gap:8px;font-size:.64rem;font-weight:800}.stats-bar{height:6px;border-radius:99px;background:rgba(0,0,0,.08);overflow:hidden;margin-top:3px}.stats-bar>span{display:block;height:100%;background:var(--accent);border-radius:99px}.pwa-status{font-size:.6rem;font-weight:800;color:var(--muted);margin-top:6px}.pwa-status.online{color:#15803d}.pwa-status.offline{color:#b45309}
+@media(max-width:600px){.stats-grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}}
 @media(max-width:900px){.schedule{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
@@ -190,6 +195,7 @@ body.edit-mode .grid-stack-item-content{border:2px dashed var(--accent)!importan
       <button class="btn btn-green" onclick="openClassModal()">＋ Aula</button>
       <button class="btn btn-red" onclick="openAssessmentModal()">＋ Prova</button>
       <button class="btn btn-sec" onclick="openSubjectModal()">＋ Disciplina</button>
+      <button class="btn btn-sec" onclick="openTaskModal()">＋ Tarefa</button>
       <button class="btn btn-sec" onclick="refreshAll()">↻ Atualizar</button>
     </div>
   </div>
@@ -277,6 +283,28 @@ body.edit-mode .grid-stack-item-content{border:2px dashed var(--accent)!importan
       </div>
     </div>
 
+    <!-- TAREFAS -->
+    <div class="grid-stack-item" gs-w="6" gs-h="4" gs-id="box-tarefas">
+      <div class="grid-stack-item-content glass">
+        <div class="section-head">
+          <div><span class="drag-handle">⠿</span><span class="title">✅ Tarefas</span></div>
+          <button class="btn btn-sec" onclick="openTaskModal()">＋ Tarefa</button>
+        </div>
+        <div id="tasksList" class="task-list"></div>
+      </div>
+    </div>
+
+    <!-- ESTATÍSTICAS -->
+    <div class="grid-stack-item" gs-w="6" gs-h="4" gs-id="box-estatisticas">
+      <div class="grid-stack-item-content glass">
+        <div class="section-head">
+          <div><span class="drag-handle">⠿</span><span class="title">📊 Meu estudo</span></div>
+          <span id="studyStatsPeriod" class="subtle">Hoje</span>
+        </div>
+        <div id="studyStats"></div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -294,7 +322,7 @@ import {getFirestore,collection,addDoc,onSnapshot,deleteDoc,doc,updateDoc,enable
 const firebaseConfig={apiKey:'AIzaSyC09EhGx9GSo4IUjxWXJxqksnKgOU4khQ',authDomain:'painel-estudos-54958.firebaseapp.com',projectId:'painel-estudos-54958',storageBucket:'painel-estudos-54958.firebasestorage.app',messagingSenderId:'491796500394',appId:'1:491796500394:web:f6d85850484df33b8de5d3'};
 const app=initializeApp(firebaseConfig);const db=getFirestore(app);
 let realtimeUnsubs=[], isEditMode=false, grid=null;
-const data={subjects:[],classes:[],assessments:[]};
+const data={subjects:[],classes:[],assessments:[],tasks:[],studySessions:[]};
 const SITE_PASSWORD='ueg2026';
 const POMODORO={focus:25,short:5,long:15};
 const POMODORO_LABELS={focus:'Tempo de foco',short:'Pausa curta',long:'Pausa longa'};
@@ -302,6 +330,7 @@ const POMODORO_LABELS={focus:'Tempo de foco',short:'Pausa curta',long:'Pausa lon
 let timerId=null, timerEndTime=null, timerMinutes=25, timeLeft=1500, pomodoroMode='focus', timerRunning=false, timerPaused=false;
 let calViewDate = new Date();
 let currentTheme = localStorage.getItem('user_theme') || 'hybrid';
+const TIMER_STORAGE_KEY='study_timer_state_v2';
 
 const $=id=>document.getElementById(id),col=name=>collection(db,name);
 
@@ -398,6 +427,8 @@ function bindRealtimeListeners(){
   subscribeRealtime('subjects','subjects',{sort:'name',onData:()=>{renderSubjects();renderSchedule();renderStudySubjects()}});
   subscribeRealtime('classes','classes',{sort:'day',onData:()=>{renderSubjects();renderSchedule()}});
   subscribeRealtime('assessments','assessments',{sort:'date',onData:()=>{renderAssessments();renderCalendar()}});
+  subscribeRealtime('tasks','tasks',{sort:'dueDate',onData:()=>renderTasks()});
+  subscribeRealtime('studySessions','studySessions',{sort:'createdAt',sortDir:'desc',limitTo:200,onData:()=>renderStudyStats()});
 }
 
 async function writeDoc(name,id,payload){
@@ -501,7 +532,7 @@ function dayName(n){return ['','Segunda','Terça','Quarta','Quinta','Sexta'][n]|
 function formatDate(s){if(!s)return 'Sem data';const [y,m,d]=s.split('-');return `${d}/${m}/${y}`}
 function daysUntil(date){const a=new Date();a.setHours(0,0,0,0);const b=new Date(date+'T00:00:00');return Math.ceil((b-a)/86400000)}
 
-function renderAll(){renderSubjects();renderSchedule();renderAssessments();renderCalendar();renderStudySubjects()}
+function renderAll(){renderSubjects();renderSchedule();renderAssessments();renderCalendar();renderStudySubjects();renderTasks();renderStudyStats()}
 
 function renderSubjects(){
   $('subjectsGrid').innerHTML=data.subjects.length?data.subjects.map(s=>{
@@ -554,6 +585,30 @@ function assessmentBlock(x){
 function renderAssessments(){
   const arr=data.assessments.filter(x=>daysUntil(x.date)>=-1).sort((a,b)=>a.date.localeCompare(b.date));
   $('assessmentsList').innerHTML=arr.length?arr.map(x=>assessmentBlock(x)).join(''):'<div class="empty">Nenhuma prova cadastrada.</div>';
+}
+
+window.openTaskModal=async id=>{
+  const x=id?data.tasks.find(v=>v.id===id):{};
+  openModal(id?'Editar tarefa':'Nova tarefa',`<form onsubmit="saveTask(event,'${id||''}')"><div class="form-grid"><div class="field full"><label>Tarefa</label><input name="title" required value="${escapeHtml(x.title||'')}"></div><div class="field"><label>Disciplina</label><select name="subjectId"><option value="">Geral</option>${data.subjects.map(s=>`<option value="${s.id}" ${x.subjectId===s.id?'selected':''}>${escapeHtml(s.name)}</option>`).join('')}</select></div><div class="field"><label>Prazo</label><input name="dueDate" type="date" value="${x.dueDate||''}"></div><div class="field"><label>Prioridade</label><select name="priority"><option value="low" ${x.priority==='low'?'selected':''}>Baixa</option><option value="medium" ${!x.priority||x.priority==='medium'?'selected':''}>Média</option><option value="high" ${x.priority==='high'?'selected':''}>Alta</option></select></div><div class="field full"><label>Observações</label><textarea name="notes">${escapeHtml(x.notes||'')}</textarea></div></div>${modalActions()}</form>`);
+};
+window.saveTask=async(e,id)=>{
+  e.preventDefault();const f=new FormData(e.target);
+  await saveDoc('tasks',id,{title:f.get('title').trim(),subjectId:f.get('subjectId'),dueDate:f.get('dueDate'),priority:f.get('priority'),notes:f.get('notes').trim(),completed:id?!!data.tasks.find(v=>v.id===id)?.completed:false});
+};
+window.toggleTask=async id=>{const x=data.tasks.find(v=>v.id===id);if(x)await writeDoc('tasks',id,{completed:!x.completed});};
+function renderTasks(){
+  const el=$('tasksList');if(!el)return;
+  const arr=[...data.tasks].sort((a,b)=>Number(!!a.completed)-Number(!!b.completed)||String(a.dueDate||'9999-12-31').localeCompare(String(b.dueDate||'9999-12-31')));
+  el.innerHTML=arr.length?arr.map(x=>{const s=data.subjects.find(v=>v.id===x.subjectId);const priority=x.priority||'medium';const pLabel={high:'Alta',medium:'Média',low:'Baixa'}[priority];const due=x.dueDate?formatDate(x.dueDate):'Sem prazo';return `<div class="task-row ${x.completed?'done':''}"><input type="checkbox" ${x.completed?'checked':''} onchange="toggleTask('${x.id}')"><div class="task-main"><div class="task-title">${escapeHtml(x.title)}</div><div class="task-meta">${escapeHtml(s?.name||'Geral')} • ${due}</div></div><span class="task-priority priority-${priority}">${pLabel}</span><button class="mini-btn" onclick="openTaskModal('${x.id}')">Editar</button><button class="mini-btn red" onclick="removeDoc('tasks','${x.id}')">🗑️</button></div>`}).join(''):'<div class="empty">Nenhuma tarefa cadastrada.</div>';
+}
+function minutesLabel(min){const h=Math.floor(min/60),m=min%60;return h?`${h}h ${String(m).padStart(2,'0')}min`:`${m}min`;}
+function renderStudyStats(){
+  const el=$('studyStats');if(!el)return;
+  const now=new Date();now.setHours(0,0,0,0);const weekStart=new Date(now);weekStart.setDate(now.getDate()-((now.getDay()+6)%7));
+  let today=0,week=0;const bySubject={};
+  data.studySessions.forEach(x=>{const d=x.createdAt?.toDate?x.createdAt.toDate():new Date(x.clientTs||0);if(!d.getTime())return;const mins=Number(x.minutes)||0;if(d>=now)today+=mins;if(d>=weekStart)week+=mins;const s=data.subjects.find(v=>v.id===x.subjectId);const key=s?.name||'Geral';bySubject[key]=(bySubject[key]||0)+mins;});
+  const rows=Object.entries(bySubject).sort((a,b)=>b[1]-a[1]).slice(0,5);const max=rows[0]?.[1]||1;
+  el.innerHTML=`<div class="stats-grid"><div class="stat-card"><div class="stat-value">${minutesLabel(today)}</div><div class="stat-label">Hoje</div></div><div class="stat-card"><div class="stat-value">${minutesLabel(week)}</div><div class="stat-label">Semana</div></div><div class="stat-card"><div class="stat-value">${data.studySessions.length}</div><div class="stat-label">Sessões</div></div></div><div class="stats-subjects">${rows.length?rows.map(([name,min])=>`<div><div class="stats-subject-row"><span>${escapeHtml(name)}</span><span>${minutesLabel(min)}</span></div><div class="stats-bar"><span style="width:${Math.max(4,Math.round(min/max*100))}%"></span></div></div>`).join(''):'<div class="empty">Finalize uma sessão de foco para começar a registrar seus estudos.</div>'}</div>`;
 }
 
 function renderStudySubjects(){
@@ -632,30 +687,45 @@ function updatePomodoroUI(){
 function updateDisplay(){ $('timer').textContent=`${String(Math.floor(timeLeft/60)).padStart(2,'0')}:${String(timeLeft%60).padStart(2,'0')}`; }
 function stopTimerInterval(){if(timerId){clearInterval(timerId);timerId=null}timerRunning=false;updatePomodoroUI()}
 
-function finishPomodoro(){ 
+async function finishPomodoro(){
   stopTimerInterval();
   timerPaused=false;
+  if(pomodoroMode==='focus'){
+    const subjectId=$('studySubject')?.value||'';
+    await writeDoc('studySessions',null,{subjectId,minutes:timerMinutes,mode:'focus',clientTs:Date.now()});
+  }
+  clearTimerState();
   playFinishSound();
-  showToast("⏰ Tempo finalizado!");
+  showToast(pomodoroMode==='focus'?'⏰ Sessão concluída e registrada!':'⏰ Tempo finalizado!');
   timeLeft=timerMinutes*60;
   updateDisplay();
-  updatePomodoroUI(); 
+  updatePomodoroUI();
 }
 
+function saveTimerState(){
+  localStorage.setItem(TIMER_STORAGE_KEY,JSON.stringify({timerRunning,timerPaused,timerEndTime,timeLeft,timerMinutes,pomodoroMode,savedAt:Date.now()}));
+}
+function clearTimerState(){localStorage.removeItem(TIMER_STORAGE_KEY);}
+function restoreTimerState(){
+  try{
+    const x=JSON.parse(localStorage.getItem(TIMER_STORAGE_KEY)||'null');if(!x)return;
+    timerMinutes=Number(x.timerMinutes)||25;pomodoroMode=x.pomodoroMode||'focus';timerPaused=!!x.timerPaused;
+    if(x.timerRunning && Number(x.timerEndTime)>Date.now()){
+      timerRunning=true;timerEndTime=Number(x.timerEndTime);timeLeft=Math.max(0,Math.round((timerEndTime-Date.now())/1000));
+      timerId=setInterval(()=>{timeLeft=Math.max(0,Math.round((timerEndTime-Date.now())/1000));updateDisplay();if(timeLeft<=0)finishPomodoro();},200);
+    }else if(x.timerPaused){timeLeft=Math.max(0,Number(x.timeLeft)||timerMinutes*60);timerRunning=false;}
+    else {clearTimerState();return;}
+    updateDisplay();updatePomodoroUI();
+  }catch(e){clearTimerState();}
+}
 window.toggleTimer=()=>{
   if(timerRunning)return;
   timerRunning=true;timerPaused=false;$('startBtn').disabled=true;updatePomodoroUI();
-  timerEndTime = Date.now() + (timeLeft * 1000);
-  timerId=setInterval(()=>{
-    const now = Date.now();
-    timeLeft = Math.max(0, Math.round((timerEndTime - now) / 1000));
-    updateDisplay();
-    if(timeLeft <= 0) finishPomodoro();
-  },200);
+  timerEndTime=Date.now()+(timeLeft*1000);saveTimerState();
+  timerId=setInterval(()=>{timeLeft=Math.max(0,Math.round((timerEndTime-Date.now())/1000));updateDisplay();if(timeLeft<=0)finishPomodoro();},200);
 };
-
-window.pauseTimer=()=>{if(!timerRunning)return;stopTimerInterval();timerPaused=true;updatePomodoroUI();$('startBtn').disabled=false};
-window.resetTimer=()=>{stopTimerInterval();timerPaused=false;timeLeft=timerMinutes*60;updateDisplay();$('startBtn').disabled=false;};
+window.pauseTimer=()=>{if(!timerRunning)return;const remaining=Math.max(0,Math.round((timerEndTime-Date.now())/1000));timeLeft=remaining;stopTimerInterval();timerPaused=true;saveTimerState();updatePomodoroUI();$('startBtn').disabled=false};
+window.resetTimer=()=>{stopTimerInterval();timerPaused=false;timeLeft=timerMinutes*60;clearTimerState();updateDisplay();$('startBtn').disabled=false;updatePomodoroUI();};
 window.setPomodoroMode=mode=>{
   if(!POMODORO[mode])return;
   if(timerRunning||timerPaused){if(!confirm('Trocar o modo vai reiniciar o cronômetro. Continuar?'))return;resetTimer()}
@@ -665,6 +735,7 @@ window.setPomodoroMode=mode=>{
 };
 
 updateDisplay();updatePomodoroUI();
+restoreTimerState();
 function updateClock(){const n=new Date();$('digitalClock').textContent=n.toLocaleTimeString('pt-BR');$('currentDate').textContent=n.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'})};setInterval(updateClock,1000);updateClock();
 
 function initGridStack() {
@@ -795,9 +866,13 @@ window.runAICommand = async () => {
   input.value = "";
 };
 
+window.addEventListener('online',()=>{showToast('🌐 Conexão restaurada; sincronização ativa.');document.body.classList.remove('offline');});
+window.addEventListener('offline',()=>{showToast('📴 Você está offline; os dados locais continuam disponíveis.');document.body.classList.add('offline');});
 window.addEventListener('load',()=>{
   if(localStorage.getItem('ueg_access_granted')==='true')window.showApp();
   loadAll();
+  if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  if(!navigator.onLine)document.body.classList.add('offline');
 });
 </script>
 </body>
