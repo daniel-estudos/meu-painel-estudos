@@ -330,7 +330,7 @@ header{min-height:88px;padding:17px 22px}.brand{gap:13px}.brand>div:first-child{
 
 <script type="module">
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-import {getFirestore,collection,addDoc,onSnapshot,deleteDoc,doc,updateDoc,enableIndexedDbPersistence,query,orderBy,limit,serverTimestamp} from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+import {getFirestore,collection,addDoc,onSnapshot,deleteDoc,doc,updateDoc,enableIndexedDbPersistence,query,orderBy,limit,serverTimestamp,getDocs} from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 
 const firebaseConfig={apiKey:'AIzaSyC09EhGx9GSo4IUjxWXJxqksnKgOU4khQ',authDomain:'painel-estudos-54958.firebaseapp.com',projectId:'painel-estudos-54958',storageBucket:'painel-estudos-54958.firebasestorage.app',messagingSenderId:'491796500394',appId:'1:491796500394:web:f6d85850484df33b8de5d3'};
 const app=initializeApp(firebaseConfig);const db=getFirestore(app);
@@ -433,6 +433,128 @@ function subscribeRealtime(name,key,{sort=null,sortDir='asc',limitTo=null,revers
     onData?.(data[key]);
   }, err => showToast(`Erro ao carregar ${name}`));
   realtimeUnsubs.push(unsub);
+}
+
+
+// =========================================================
+// DADOS INICIAIS — FARMÁCIA UEG ITUMBIARA 2026/2
+// Os dados abaixo são inseridos automaticamente apenas quando
+// ainda não existirem no Firebase. Itens já cadastrados não são duplicados.
+// =========================================================
+const ACADEMIC_DATA_2026_2 = {
+  subjects: [
+    {name:'Bioestatística', teacher:'Yuri Flores Albuquerque', color:'#2563eb'},
+    {name:'Controle de Qualidade de Alimentos', teacher:'Pamela Cristina de Sousa Guardiano Reis Oliveira', color:'#f59e0b'},
+    {name:'Economia e Gestão Farmacêutica', teacher:'João Nilson da Rosa', color:'#8b5cf6'},
+    {name:'Serviços Clínicos Farmacêuticos II', teacher:'Anna Paula de Sá Borges', color:'#ec4899'},
+    {name:'Controle de Qualidade Microbiológico', teacher:'Daniela Borges Marquez Barbosa', color:'#16a34a'},
+    {name:'Pesquisa e Desenvolvimento de Medicamentos', teacher:'Leonardo Gomes Souza', color:'#0891b2'},
+    {name:'Controle de Qualidade em Laboratório', teacher:'Nathália Cristina Morais Ferreira Pacífico', color:'#dc2626'}
+  ],
+  classes: [
+    {subject:'Controle de Qualidade Microbiológico', day:1, start:'13:00', end:'16:30'},
+    {subject:'Controle de Qualidade de Alimentos', day:2, start:'13:00', end:'16:30'},
+    {subject:'Pesquisa e Desenvolvimento de Medicamentos', day:3, start:'13:00', end:'15:30'},
+    {subject:'Serviços Clínicos Farmacêuticos II', day:3, start:'15:40', end:'19:50'},
+    {subject:'Bioestatística', day:4, start:'07:00', end:'08:40'},
+    {subject:'Economia e Gestão Farmacêutica', day:4, start:'13:00', end:'16:30'},
+    {subject:'Bioestatística', day:5, start:'07:00', end:'08:40'},
+    {subject:'Controle de Qualidade em Laboratório', day:5, start:'13:00', end:'15:30'}
+  ],
+  assessments: [
+    {subject:'Bioestatística', title:'Prova 1', date:'2026-10-08'},
+    {subject:'Bioestatística', title:'Prova 2', date:'2026-12-10', endDate:'2026-12-11'},
+    {subject:'Controle de Qualidade de Alimentos', title:'Prova 1', date:'2026-09-28'},
+    {subject:'Controle de Qualidade de Alimentos', title:'Prova 2', date:'2026-12-07'},
+    {subject:'Economia e Gestão Farmacêutica', title:'Prova 1', date:'2026-10-08'},
+    {subject:'Economia e Gestão Farmacêutica', title:'Prova 2', date:'2026-12-10'},
+    {subject:'Serviços Clínicos Farmacêuticos II', title:'Prova 1', date:'2026-09-30'},
+    {subject:'Serviços Clínicos Farmacêuticos II', title:'Prova 2', date:'2026-12-08'}
+  ]
+};
+
+async function ensureAcademicData2026_2(){
+  try{
+    const subjectSnap = await getDocs(col('subjects'));
+    const subjectMap = new Map();
+    subjectSnap.forEach(d=>subjectMap.set(d.data().name,d.id));
+
+    for(const s of ACADEMIC_DATA_2026_2.subjects){
+      if(!subjectMap.has(s.name)){
+        const ref = await addDoc(col('subjects'), {
+          name:s.name,
+          teacher:s.teacher,
+          color:s.color,
+          notes:'Semestre 2026/2 — Farmácia | UEG Itumbiara',
+          source:'academic_data_2026_2',
+          createdAt:serverTimestamp(),
+          updatedAt:serverTimestamp(),
+          clientTs:Date.now()
+        });
+        subjectMap.set(s.name,ref.id);
+      }
+    }
+
+    const classSnap = await getDocs(col('classes'));
+    const existingClasses = new Set();
+    classSnap.forEach(d=>{
+      const x=d.data();
+      existingClasses.add(`${x.subjectId}|${x.day}|${x.start}|${x.end}`);
+    });
+
+    for(const c of ACADEMIC_DATA_2026_2.classes){
+      const subjectId=subjectMap.get(c.subject);
+      if(!subjectId) continue;
+      const key=`${subjectId}|${c.day}|${c.start}|${c.end}`;
+      if(existingClasses.has(key)) continue;
+      const subject=ACADEMIC_DATA_2026_2.subjects.find(x=>x.name===c.subject);
+      await addDoc(col('classes'),{
+        subjectId,
+        title:c.subject,
+        day:c.day,
+        start:c.start,
+        end:c.end,
+        teacher:subject?.teacher||'',
+        room:'',
+        source:'academic_data_2026_2',
+        createdAt:serverTimestamp(),
+        updatedAt:serverTimestamp(),
+        clientTs:Date.now()
+      });
+      existingClasses.add(key);
+    }
+
+    const assessmentSnap = await getDocs(col('assessments'));
+    const existingAssessments = new Set();
+    assessmentSnap.forEach(d=>{
+      const x=d.data();
+      existingAssessments.add(`${x.subjectId}|${x.title}|${x.date}|${x.endDate||''}`);
+    });
+
+    for(const a of ACADEMIC_DATA_2026_2.assessments){
+      const subjectId=subjectMap.get(a.subject);
+      if(!subjectId) continue;
+      const key=`${subjectId}|${a.title}|${a.date}|${a.endDate||''}`;
+      if(existingAssessments.has(key)) continue;
+      await addDoc(col('assessments'),{
+        title:a.title,
+        subjectId,
+        date:a.date,
+        endDate:a.endDate||'',
+        time:'',
+        location:'',
+        content:'Calendário acadêmico 2026/2',
+        source:'academic_data_2026_2',
+        createdAt:serverTimestamp(),
+        updatedAt:serverTimestamp(),
+        clientTs:Date.now()
+      });
+      existingAssessments.add(key);
+    }
+  }catch(e){
+    console.error('Falha ao carregar dados acadêmicos iniciais:',e);
+    showToast('Não foi possível carregar os dados iniciais');
+  }
 }
 
 function bindRealtimeListeners(){
@@ -589,7 +711,7 @@ function assessmentBlock(x){
   const s=data.subjects.find(v=>v.id===x.subjectId);
   const d=daysUntil(x.date);
   const state=d<0?'Realizada':d===0?'É hoje!':d===1?'Amanhã':`Faltam ${d} dias`;
-  return `<div class="item"><div class="item-head"><div class="item-title">${escapeHtml(x.title)}</div><span class="badge red">${d<0?'Realizada':d===0?'Hoje':d===1?'Amanhã':d+' dias'}</span></div><div class="meta">${escapeHtml(s?.name||'Geral')} • ${formatDate(x.date)}${x.time?' • '+x.time:''}</div><div class="exam-countdown"><strong>${state}</strong></div><div class="subject-actions"><button class="mini-btn" onclick="openAssessmentModal('${x.id}')">Editar</button><button class="mini-btn" onclick="removeDoc('assessments','${x.id}')">Excluir</button></div></div>`;
+  const dateLabel=x.endDate?`${formatDate(x.date)} – ${formatDate(x.endDate)}`:formatDate(x.date); return `<div class="item"><div class="item-head"><div class="item-title">${escapeHtml(x.title)}</div><span class="badge red">${d<0?'Realizada':d===0?'Hoje':d===1?'Amanhã':d+' dias'}</span></div><div class="meta">${escapeHtml(s?.name||'Geral')} • ${dateLabel}${x.time?' • '+x.time:''}</div><div class="exam-countdown"><strong>${state}</strong></div><div class="subject-actions"><button class="mini-btn" onclick="openAssessmentModal('${x.id}')">Editar</button><button class="mini-btn" onclick="removeDoc('assessments','${x.id}')">Excluir</button></div></div>`;
 }
 
 function renderAssessments(){
@@ -763,6 +885,7 @@ window.addEventListener('scroll', () => {
 
 async function loadAll(){
   await initPersistence();
+  await ensureAcademicData2026_2();
   bindRealtimeListeners();
 }
 window.refreshAll=()=>{renderAll();showToast('Painel atualizado')};
