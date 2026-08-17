@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Central de Estudos | Farmácia</title>
+<title>Central de Estudos | Farmácia — V9.0</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
 <!-- GridStack CSS -->
 <link href="https://cdn.jsdelivr.net/npm/gridstack@9.2.0/dist/gridstack.min.css" rel="stylesheet"/>
@@ -1010,22 +1010,44 @@ body.theme-all-dark .class-mini{background:#151d27!important;border-color:#27324
   .v7-topbar{min-height:64px!important}.v7-top-actions{gap:4px!important}.v7-avatar{display:none}.v7-metrics{grid-template-columns:1fr!important}.v6-intel-grid{grid-template-columns:1fr!important}.v6-recommend{grid-column:auto}.schedule{grid-template-columns:1fr!important}.v7-view{padding-top:20px!important}.v7-hero h2{font-size:23px!important}.v5-focus-strip{display:grid!important;grid-template-columns:1fr 1fr!important;gap:10px!important}.v5-focus-title{grid-column:1/-1}.v5-focus-strip>.btn{grid-column:1/-1}.grid-stack-item-content{padding:15px!important}
 }
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+</style>
 
-/* =========================================================
-   FINAL PRODUCT POLISH
-   ========================================================= */
-.v10-product-mark{display:inline-flex;align-items:center;gap:7px;padding:5px 9px;border:1px solid var(--v7-line);border-radius:999px;background:var(--v7-surface-strong);color:var(--v7-muted);font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
-.v10-product-mark::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px rgba(21,128,61,.10)}
-.v10-section-caption{margin-top:3px;color:var(--v7-muted);font-size:11px;font-weight:600}
-.v10-resource-list{display:grid;gap:8px}
-.v10-resource-row{display:flex;align-items:center;gap:12px;padding:13px 14px;border:1px solid var(--v7-line);border-radius:14px;background:var(--v7-surface);transition:transform .18s ease,background .18s ease,border-color .18s ease}
-.v10-resource-row:hover{transform:translateY(-1px);background:var(--v7-surface-strong);border-color:rgba(21,128,61,.24)}
-.v10-resource-icon{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:rgba(21,128,61,.10);color:var(--accent);font-weight:900}
-.v10-resource-row strong{font-size:13px;font-weight:800}
-.v10-resource-row small{display:block;margin-top:3px;color:var(--v7-muted);font-size:10px;font-weight:600}
-.v10-resource-row .mini-btn{margin-left:auto}
-body.theme-all-dark .v10-resource-row{background:rgba(255,255,255,.035)}
-@media(max-width:760px){.v10-product-mark{display:none}.v10-resource-row{padding:11px}}
+
+<style id="final-harmony-design">
+:root{
+  --v7-font:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --v7-display:Manrope,Inter,system-ui,sans-serif;
+  --v7-green:#16884b;
+  --v7-ink:#18212b;
+  --v7-muted:#6b7480;
+  --v7-line:#e6e9ed;
+  --v7-panel:#ffffff;
+  --v7-soft:#f7f9f8;
+}
+html,body{font-family:var(--v7-font)!important;background:#fff!important;color:var(--v7-ink)!important}
+body{padding:0!important;background:linear-gradient(180deg,#fbfcfb 0,#fff 30%,#fff 100%)!important}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(700px 320px at 74% 12%,rgba(22,136,75,.06),transparent 70%);z-index:-1}
+.v7-sidebar{background:#fbfcfb!important;border-right:1px solid #edf0f2!important;box-shadow:none!important}
+.v7-brand strong,.v7-brand small,.v7-nav-item,.v7-nav-label,.v7-user-card{font-family:var(--v7-font)!important}
+.v7-brand strong{font-size:1.02rem!important;letter-spacing:-.03em!important}
+.v7-brand small{font-size:.68rem!important;color:#8b949e!important}
+.v7-nav-label{font-size:.61rem!important;letter-spacing:.09em!important;color:#9aa3ac!important;font-weight:800!important}
+.v7-nav-item{font-size:.83rem!important;min-height:40px!important;border-radius:10px!important;color:#39434d!important}
+.v7-nav-item.active{background:#edf7f0!important;color:#0f6e3b!important;font-weight:700!important}
+.v7-nav-icon{font-size:.95rem!important;width:19px!important}
+.v7-main{background:transparent!important;padding:28px 36px 30px!important}
+.premium-topbar{border:0!important;background:transparent!important;padding:0 0 26px!important;min-height:0!important}
+.v7-page-title{font-family:var(--v7-display)!important;font-size:1.05rem!important;font-weight:700!important;letter-spacing:-.025em!important;color:#1b2430!important}
+.v7-page-subtitle{font-size:.76rem!important;color:#7f8791!important;margin-top:4px!important}
+.v7-command{height:38px!important;border:1px solid #e5e9ec!important;background:#fff!important;box-shadow:0 3px 12px rgba(15,23,42,.04)!important;border-radius:10px!important}
+.v7-command input{font-family:var(--v7-font)!important;font-size:.74rem!important;color:#374151!important}
+.v7-command button{background:transparent!important;color:#6b7280!important}
+.premium-avatar{width:34px!important;height:34px!important;background:#153b28!important;font-size:.64rem!important}
+.glass,.premium-panel{background:var(--v7-panel)!important;border:1px solid var(--v7-line)!important;box-shadow:0 2px 14px rgba(15,23,42,.035)!important;border-radius:16px!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+.glass::before{display:none!important}
+.dashboard-layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:18px}
+.dashboard-main{min-width:0}.dashboard-rail{display:flex;flex-direction:column;gap:14px;min-width:0}.greeting-row{margin:2px 0 20px}.greeting-overline{font-size:.64rem;letter-spacing:.12em;font-weight:800;color:#8d96a0}.greeting-row h1{font-family:var(--v7-display);font-size:1.72rem;line-height:1.15;letter-spacing:-.045em;margin:5px 0 3px;color:#1b2430}.greeting-row p{font-size:.82rem;color:#7b8490}.next-commitment{position:relative;min-height:250px;padding:28px 30px;overflow:hidden;background:linear-gradient(120deg,#f4fbf6 0,#fff 56%,#edf7f0 100%)!important}.next-content{position:relative;z-index:2;max-width:58%}.eyebrow-row{display:flex;align-items:center;gap:8px;font-size:.62rem;font-weight:800;color:#62706a;letter-spacing:.08em}.eyebrow-dot{width:7px;height:7px;border-radius:50%;background:var(--v7-green);box-shadow:0 0 0 4px rgba(22,136,75,.08)}.status-pill{padding:5px 8px;border-radius:999px;background:#e5f6ea;color:#1c7a45;font-size:.58rem;letter-spacing:0;text-transform:none}.next-commitment h2{font-family:var(--v7-display);font-size:1.64rem;line-height:1.12;letter-spacing:-.04em;margin:16px 0 8px;max-width:580px;color:#17221b}.next-meta{font-size:.82rem;color:#617067;margin-bottom:20px}.primary-action{display:inline-flex;align-items:center;justify-content:space-between;gap:18px;min-width:210px;height:42px;padding:0 16px;border:0;border-radius:10px;background:#16884b;color:#fff;font-size:.74rem;font-weight:800;box-shadow:0 10px 20px rgba(22,136,75,.15);cursor:pointer}.primary-action.full{width:100%;min-width:0}.next-art{position:absolute;inset:0;pointer-events:none}.next-art::after{content:"";position:absolute;right:-90px;top:-50px;width:420px;height:330px;background:radial-gradient(circle at 40% 50%,rgba(255,255,255,.95),rgba(224,240,230,.72) 55%,transparent 70%)}.art-book{position:absolute;height:28px;border-radius:5px;right:35px;bottom:38px;transform:rotate(-5deg);box-shadow:0 8px 18px rgba(22,72,43,.10)}.book-a{width:160px;background:#1d6c43}.book-b{width:180px;background:#f0f5f1;right:24px;bottom:67px;transform:rotate(3deg);border:1px solid #dfe8e2}.art-mug{position:absolute;right:130px;bottom:93px;width:58px;height:54px;border-radius:12px 12px 18px 18px;background:#255f42;box-shadow:0 8px 16px rgba(20,50,31,.16)}.art-mug::after{content:"";position:absolute;right:-13px;top:12px;width:18px;height:22px;border:5px solid #255f42;border-left:0;border-radius:0 12px 12px 0}.art-leaf{position:absolute;width:44px;height:78px;background:linear-gradient(180deg,#3a8c5f,#8fc3a1);border-radius:100% 0 100% 0;right:224px;bottom:113px;transform:rotate(21deg);opacity:.86}.leaf-b{right:192px;bottom:124px;transform:rotate(58deg) scale(.76)}.leaf-a::after,.leaf-b::after{content:"";position:absolute;width:2px;height:62px;background:rgba(255,255,255,.45);left:18px;top:9px;transform:rotate(-20deg)}.metric-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:14px 0}.metric-card{min-height:102px;padding:17px;display:flex;align-items:flex-start;gap:12px}.metric-icon{width:34px;height:34px;flex:none;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800}.metric-icon.green{background:#eaf7ef;color:#16884b}.metric-icon.blue{background:#edf4ff;color:#3576cf}.metric-icon.red{background:#fff0ef;color:#e05555}.metric-icon.orange{background:#fff6e8;color:#d99022}.metric-label{font-size:.58rem;font-weight:800;color:#8a939d;letter-spacing:.06em}.metric-value{font-family:var(--v7-display);font-size:1.28rem;font-weight:800;letter-spacing:-.045em;margin-top:6px;color:#202a33}.metric-detail{font-size:.66rem;color:#77818c;margin-top:4px}.metric-progress{height:4px;width:80px;border-radius:99px;background:#edf0f1;margin-top:7px;overflow:hidden}.metric-progress span{display:block;height:100%;background:#16884b;border-radius:inherit}.content-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.panel-block{padding:20px}.panel-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:12px}.panel-kicker{display:block;font-size:.58rem;letter-spacing:.11em;color:#969fa8;font-weight:800}.panel-kicker.purple{color:#8064bf}.panel-heading h3{font-family:var(--v7-display);font-size:1rem;letter-spacing:-.025em;margin-top:4px}.panel-select{border:0;background:transparent;font-size:.66rem;color:#6b7480;padding:4px;outline:0}.big-stat{font-family:var(--v7-display);font-size:1.45rem;font-weight:800;letter-spacing:-.04em;margin-top:7px}.small-caption{font-size:.64rem;color:#8b949e;margin-top:3px}.premium-chart{margin-top:12px;min-height:150px}.positive-note{margin-top:10px;padding:9px 10px;background:#f3f9f5;border-radius:8px;font-size:.62rem;color:#2b7650}.priority-modern{display:flex;flex-direction:column;gap:2px}.priority-modern>div{padding:11px 0;border-bottom:1px solid #eef0f2}.priority-modern>div:last-child{border-bottom:0}.text-action,.text-link{border:0;background:transparent;color:#16884b;font-size:.65rem;font-weight:800;cursor:pointer;padding:0}.recommendation-panel{margin-top:14px;padding:18px 20px;display:flex;align-items:center;gap:14px;background:linear-gradient(90deg,#faf7ff 0,#fff 70%)!important;border-color:#ece6fa!important}.recommend-icon{width:38px;height:38px;border-radius:12px;background:#f0eaff;color:#7a5ec2;display:flex;align-items:center;justify-content:center;font-size:1rem;flex:none}.recommend-copy{flex:1}.recommend-copy h3{font-family:var(--v7-display);font-size:.98rem;margin-top:5px}.recommend-copy p{font-size:.68rem;color:#6d7580;margin-top:3px}.outline-action{height:38px;padding:0 14px;border:1px solid #9e85db;border-radius:9px;background:#fff;color:#6d51ad;font-size:.64rem;font-weight:800;cursor:pointer}.quick-section{margin-top:18px}.quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:9px}.quick-card{padding:15px;text-align:left;cursor:pointer}.quick-card>span{width:30px;height:30px;border-radius:9px;background:#f0f6f2;color:#16884b;display:flex;align-items:center;justify-content:center;font-weight:800}.quick-card strong{display:block;font-size:.72rem;margin-top:10px}.quick-card small{display:block;color:#848d97;font-size:.59rem;margin-top:3px}.rail-card{padding:18px}.calendar-rail{min-height:310px;position:relative}.calendar-nav{position:absolute;right:18px;top:18px;display:flex;gap:4px}.modern-calendar{margin-top:12px;background:transparent!important}.modern-calendar .cal-head-dark{color:#9aa3ac!important;font-size:.52rem!important}.modern-calendar .cal-cell-dark{background:transparent!important;color:#2e3944!important;border-radius:8px!important;font-size:.64rem!important;min-height:30px!important}.modern-calendar .cal-cell-dark.today-dark{background:#16884b!important;color:#fff!important;border:0!important;box-shadow:none!important}.modern-calendar .cal-cell-dark .exam-dot{background:#ef5c5c!important;bottom:2px}.event-list .item{background:transparent!important;border:0!important;border-bottom:1px solid #eef0f2!important;border-radius:0!important;padding:11px 0!important;margin:0!important}.event-list .item::before{display:none!important}.event-list .item:last-child{border-bottom:0!important}.event-list .item-title{font-size:.66rem!important}.event-list .meta{font-size:.58rem!important;color:#838c96!important}.event-list .exam-countdown{border:0!important;background:transparent!important;padding:4px 0 0!important;font-size:.58rem!important;color:#6f7983!important}.focus-rail{min-height:200px}.focus-widget{display:flex;align-items:center;gap:15px;margin-top:13px}.focus-ring{width:118px;height:118px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;background:conic-gradient(#16884b 0 72%,#e7ede9 72% 100%);position:relative}.focus-ring::before{content:"";position:absolute;inset:9px;background:#fff;border-radius:50%}.focus-ring-value{position:relative;z-index:1;text-align:center}.focus-ring-value span{display:block;font-family:var(--v7-display);font-size:1.45rem;font-weight:800;line-height:1}.focus-ring-value small{display:block;font-size:.55rem;color:#7c8690;margin-top:4px}.focus-controls{flex:1}.focus-controls .panel-select{display:block;width:100%;border:1px solid #e7eaed;border-radius:8px;margin:8px 0;padding:8px;font-size:.6rem}.full{width:100%}.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.v7-view{padding-bottom:22px}.v7-section-title{font-family:var(--v7-display)!important;font-size:1.35rem!important;font-weight:800!important;letter-spacing:-.04em!important;margin:8px 0 18px!important}.v7-focus-card,.v7-page-grid .grid-stack-item-content{background:#fff!important;border:1px solid var(--v7-line)!important;box-shadow:0 2px 14px rgba(15,23,42,.035)!important}.v7-main button,.v7-main input,.v7-main select,.v7-main textarea{font-family:var(--v7-font)!important}.v7-mobile-menu{background:#fff!important;border:1px solid #e6e9ed!important;color:#4a5560!important;border-radius:9px!important}.v7-avatar{font-family:var(--v7-display)!important}@media(max-width:1150px){.dashboard-layout{grid-template-columns:1fr}.dashboard-rail{display:grid;grid-template-columns:repeat(3,1fr)}.metric-row{grid-template-columns:repeat(2,1fr)}}@media(max-width:860px){.content-grid{grid-template-columns:1fr}.quick-grid{grid-template-columns:repeat(2,1fr)}.dashboard-rail{grid-template-columns:1fr}.next-content{max-width:70%}}@media(max-width:680px){.v7-main{padding:20px 15px 25px!important}.premium-topbar{padding-bottom:18px!important}.topbar-right-premium{gap:5px}.premium-command{width:180px!important}.greeting-row h1{font-size:1.45rem}.next-commitment{min-height:230px;padding:22px}.next-content{max-width:100%}.next-art{opacity:.24}.metric-row{grid-template-columns:1fr}.quick-grid{grid-template-columns:1fr}.content-grid{grid-template-columns:1fr}.dashboard-rail{display:flex}.v7-page-title{font-size:.95rem!important}.v7-page-subtitle{font-size:.68rem!important}}
+body.theme-all-dark{background:#0f1418!important;color:#edf2ee!important}body.theme-all-dark .v7-sidebar{background:#0c1115!important;border-color:#20272d!important}body.theme-all-dark .v7-main,body.theme-all-dark .premium-panel,body.theme-all-dark .glass{background:#11171c!important;color:#edf2ee!important;border-color:#252d34!important;box-shadow:none!important}body.theme-all-dark .v7-page-title,body.theme-all-dark .greeting-row h1,body.theme-all-dark .next-commitment h2,body.theme-all-dark .metric-value,body.theme-all-dark .panel-heading h3,body.theme-all-dark .recommend-copy h3{color:#f4f7f5!important}body.theme-all-dark .v7-nav-item{color:#c5cdd3!important}body.theme-all-dark .v7-nav-item.active{background:#143020!important;color:#7ae0a4!important}body.theme-all-dark .next-commitment{background:linear-gradient(120deg,#17271e 0,#11171c 60%,#15261d 100%)!important}body.theme-all-dark .metric-icon.green{background:#153022}body.theme-all-dark .metric-icon.blue{background:#172438}body.theme-all-dark .metric-icon.red{background:#2a1c1c}body.theme-all-dark .metric-icon.orange{background:#2a2418}body.theme-all-dark .positive-note{background:#14221a;color:#9ee0b8}body.theme-all-dark .recommendation-panel{background:#17121f!important;border-color:#2c2540!important}body.theme-all-dark .focus-ring::before{background:#11171c}.reduced-motion *, .reduced-motion *::before, .reduced-motion *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 </style>
 
 </head>
@@ -1045,27 +1067,35 @@ body.theme-all-dark .v10-resource-row{background:rgba(255,255,255,.035)}
       <div><strong>Central de Estudos</strong><small>Farmácia • 2026/2</small></div>
     </div>
 
-    <div class="v7-nav-label">Principal</div>
+    <div class="v7-nav-label">PRINCIPAL</div>
     <nav class="v7-nav">
-      <button class="v7-nav-item active" data-view="dashboard" onclick="v7SetView('dashboard')"><span class="v7-nav-icon">⌂</span>Visão geral</button>
+      <button class="v7-nav-item active" data-view="dashboard" onclick="v7SetView('dashboard')"><span class="v7-nav-icon">⌂</span>Início</button>
+    </nav>
+
+    <div class="v7-nav-label">ESTUDOS</div>
+    <nav class="v7-nav">
       <button class="v7-nav-item" data-view="subjects" onclick="v7SetView('subjects')"><span class="v7-nav-icon">▦</span>Disciplinas</button>
       <button class="v7-nav-item" data-view="tasks" onclick="v7SetView('tasks')"><span class="v7-nav-icon">✓</span>Tarefas</button>
-      <button class="v7-nav-item" data-view="focus" onclick="v7SetView('focus')"><span class="v7-nav-icon">◷</span>Foco e desempenho</button>
+      <button class="v7-nav-item" data-view="focus" onclick="v7SetView('focus')"><span class="v7-nav-icon">◷</span>Foco</button>
+    </nav>
+
+    <div class="v7-nav-label">AGENDA</div>
+    <nav class="v7-nav">
       <button class="v7-nav-item" data-view="calendar" onclick="v7SetView('calendar')"><span class="v7-nav-icon">□</span>Calendário</button>
+      <button class="v7-nav-item" onclick="openTasksCenter()"><span class="v7-nav-icon">☑</span>Avaliações</button>
     </nav>
 
-    <div class="v7-nav-label">Organização</div>
+    <div class="v7-nav-label">RECURSOS</div>
     <nav class="v7-nav">
-      <button class="v7-nav-item" onclick="openTasksCenter()"><span class="v7-nav-icon">☑</span>Central de tarefas</button>
-      <button class="v7-nav-item" onclick="openV6Plan()"><span class="v7-nav-icon">⌁</span>Plano sugerido</button>
-      <button class="v7-nav-item" onclick="openV6Settings()"><span class="v7-nav-icon">⚙</span>Meta semanal</button>
+      <button class="v7-nav-item" onclick="openTasksCenter()"><span class="v7-nav-icon">▤</span>Materiais</button>
+      <button class="v7-nav-item" onclick="openTasksCenter()"><span class="v7-nav-icon">□</span>Anotações</button>
     </nav>
 
-    <div class="v7-nav-label">Recursos</div>
+    <div class="v7-nav-label">ANÁLISE</div>
     <nav class="v7-nav">
-      <button class="v7-nav-item" onclick="openGlobalMaterials()"><span class="v7-nav-icon">⌑</span>Materiais</button>
-      <button class="v7-nav-item" onclick="openGlobalNotes()"><span class="v7-nav-icon">✎</span>Anotações</button>
-      <button class="v7-nav-item" onclick="openAssessmentsCenter()"><span class="v7-nav-icon">!</span>Avaliações</button>
+      <button class="v7-nav-item" data-view="focus" onclick="v7SetView('focus')"><span class="v7-nav-icon">◫</span>Desempenho</button>
+      <button class="v7-nav-item" onclick="openV6Plan()"><span class="v7-nav-icon">⌁</span>Plano de estudo</button>
+      <button class="v7-nav-item" onclick="openV6Settings()"><span class="v7-nav-icon">⚙</span>Configurações</button>
     </nav>
 
     <div class="v7-sidebar-footer">
@@ -1077,110 +1107,134 @@ body.theme-all-dark .v10-resource-row{background:rgba(255,255,255,.035)}
   </aside>
 
   <main class="v7-main">
-    <div class="v7-topbar">
-      <div style="display:flex;align-items:center;gap:10px">
+    <div class="v7-topbar premium-topbar">
+      <div class="topbar-left">
         <button class="v7-mobile-menu" onclick="v7ToggleSidebar()">☰</button>
-        <div><div style="display:flex;align-items:center;gap:10px"><div class="v7-page-title" id="v7PageTitle">Visão geral</div><span class="v10-product-mark">Academic OS</span></div><div class="v7-page-subtitle" id="v7PageSubtitle">Sua rotina acadêmica em um só lugar.</div></div>
+        <div>
+          <div class="v7-page-title" id="v7PageTitle">Visão geral</div>
+          <div class="v7-page-subtitle" id="v7PageSubtitle">Sua rotina acadêmica em um só lugar.</div>
+        </div>
       </div>
-      <div class="v7-top-actions">
-        <div class="v7-command">
+      <div class="topbar-right-premium">
+        <div class="v7-command premium-command">
           <span>⌕</span>
-          <input id="aiInput" placeholder="Comando rápido..." onkeydown="if(event.key==='Enter')runAICommand()">
-          <button id="aiBtn" onclick="runAICommand()">Executar</button>
+          <input id="aiInput" placeholder="Pesquisar ou usar um comando…" onkeydown="if(event.key==='Enter')runAICommand()">
+          <button id="aiBtn" onclick="runAICommand()" title="Executar comando">↵</button>
         </div>
         <button class="v7-icon-btn" onclick="cycleTheme()" id="themeBtn" title="Alterar tema">◐</button>
         <button class="v7-icon-btn" onclick="toggleEditMode()" id="editLayoutBtn" title="Personalizar layout">⠿</button>
-        <div class="v7-avatar">DR</div>
+        <div class="v7-avatar premium-avatar">DR</div>
       </div>
     </div>
 
     <section class="v7-view active" data-view="dashboard">
-      <div class="v7-hero">
-        <div>
-          <div class="v7-eyebrow">Visão geral acadêmica</div>
-          <h2 id="dashGreeting">Olá, Daniel.</h2>
-          <p id="dashDate">Carregando sua agenda...</p>
-          <p style="margin-top:14px">A Central reúne sua grade, avaliações, foco e organização acadêmica em um único ambiente.</p>
-        </div>
-        <div class="v7-next">
-          <div class="v7-next-label">Próximo compromisso</div>
-          <strong id="dashNextTitle">Calculando próxima atividade...</strong>
-          <span id="dashNextDetail">Aguarde os dados da sua agenda.</span>
-          <button class="btn btn-green" onclick="v6StartRecommendation()">▶ Estudar agora</button>
-        </div>
-      </div>
 
-      <div class="v7-metrics">
-        <div class="v7-metric"><div class="v7-metric-label">Aulas hoje</div><div class="v7-metric-value" id="dashTodayCount">0</div><div class="v7-metric-detail" id="dashTodayDetail">Nenhuma aula hoje</div></div>
-        <div class="v7-metric"><div class="v7-metric-label">Carga semanal</div><div class="v7-metric-value" id="dashWeekHours">0h</div><div class="v7-metric-detail" id="dashWeekDetail">0 aulas programadas</div></div>
-        <div class="v7-metric"><div class="v7-metric-label">Próxima avaliação</div><div class="v7-metric-value" id="dashExamDays">—</div><div class="v7-metric-detail" id="dashExamDetail">Nenhuma avaliação cadastrada</div></div>
-        <div class="v7-metric"><div class="v7-metric-label">Foco esta semana</div><div class="v7-metric-value" id="v5WeekFocus">0h</div><div class="v7-metric-detail"><span id="v5PendingTasks">0</span> tarefas pendentes</div></div>
-      </div>
+      <div class="dashboard-layout">
+        <div class="dashboard-main">
 
-      <div class="glass v5-focus-strip">
-        <div class="v5-focus-title"><span>✓</span><div><strong>Organização de estudos</strong><small>Seu progresso local neste navegador</small></div></div>
-        <div class="v5-focus-stat"><span id="v5PendingTasks2">0</span><small>tarefas pendentes</small></div>
-        <div class="v5-focus-stat"><span id="v5TodayFocus">0m</span><small>foco hoje</small></div>
-        <div class="v5-focus-stat"><span id="v5WeekFocus2">0h</span><small>foco na semana</small></div>
-        <button class="btn btn-green" onclick="openTasksCenter()">Abrir tarefas</button>
-      </div>
-
-      <div class="glass v6-intel" style="margin-top:12px">
-        <div class="v6-intel-grid">
-          <div class="v6-recommend">
-            <div class="v6-kicker">Seu foco recomendado</div>
-            <h3 id="v6RecommendationTitle">Analisando sua rotina...</h3>
-            <p id="v6RecommendationDetail">O painel vai considerar provas, tarefas e seu histórico de foco.</p>
-            <div class="v6-recommend-actions"><button class="btn" onclick="v6StartRecommendation()">▶ Começar foco</button><button class="btn" onclick="openV6Plan()">Ver plano</button></div>
-          </div>
-          <div class="v6-card"><div class="v6-card-head"><span class="v6-label">Meta semanal</span><span>🎯</span></div><div class="v6-value" id="v6GoalValue">0h</div><div class="v6-detail" id="v6GoalDetail">0% da meta</div><div class="v6-progress"><span id="v6GoalBar" style="width:0%"></span></div></div>
-          <div class="v6-card"><div class="v6-card-head"><span class="v6-label">Sequência</span><span>🔥</span></div><div class="v6-value" id="v6StreakValue">0 dias</div><div class="v6-detail" id="v6StreakDetail">Comece uma sessão hoje.</div><div class="v6-streak" id="v6StreakDays"></div></div>
-          <div class="v6-card"><div class="v6-card-head"><span class="v6-label">Prioridade</span><span>⚠️</span></div><div class="v6-value" id="v6PriorityValue">—</div><div class="v6-detail" id="v6PriorityDetail">Calculando suas disciplinas.</div></div>
-        </div>
-      </div>
-
-      <div class="grid-stack">
-        <div class="grid-stack-item" gs-w="12" gs-h="3" gs-id="box-inteligencia">
-          <div class="grid-stack-item-content glass">
-            <div class="section-head"><div><span class="drag-handle">⠿</span><span class="title">Inteligência acadêmica</span></div><button class="btn btn-sec" onclick="openV6Settings()">⚙ Meta</button></div>
-            <div class="v6-priority-panel"><div class="v6-priority-list"><div class="v6-panel-title">🔴 Disciplinas por prioridade</div><div id="v6PriorityList"></div></div><div class="v6-week-plan"><div class="v6-panel-title">📈 Foco dos últimos 7 dias</div><div id="v6FocusChart" class="v6-chart"></div></div></div>
-          </div>
-        </div>
-
-        <div class="grid-stack-item" gs-w="4" gs-h="4" gs-id="box-pomodoro">
-          <div class="grid-stack-item-content glass">
-            <div class="section-head"><div><span class="drag-handle">⠿</span><span class="title">Foco</span></div><select id="studySubject" style="max-width:120px;padding:6px;border-radius:8px;border:1px solid var(--v7-line);background:transparent;color:inherit;font-size:8px;font-weight:700"><option value="">Disciplina</option></select></div>
-            <div class="pomodoro-wrap">
-              <div class="pomodoro-modes" id="pomodoroModes"><button type="button" class="pomodoro-mode active" data-mode="focus" onclick="setPomodoroMode('focus')">Foco · 25m</button><button type="button" class="pomodoro-mode" data-mode="short" onclick="setPomodoroMode('short')">Pausa · 5m</button><button type="button" class="pomodoro-mode" data-mode="long" onclick="setPomodoroMode('long')">Longa · 15m</button></div>
-              <div class="custom-timer-input"><span style="font-size:8px;font-weight:700">Definir:</span><input type="number" id="customMinutesInput" min="1" max="180" placeholder="25" onchange="applyCustomMinutes(this.value)"><span style="font-size:8px;font-weight:700">min</span></div>
-              <div class="timer-wrap mode-focus" id="timerWrap"><div class="timer-label focus" id="timerLabel">Tempo de foco</div><div class="timer" id="timer">25:00</div><div id="pomodoroStatus" style="font-size:8px;font-weight:700;margin-top:3px">Pronto para iniciar</div></div>
-              <div class="pomodoro-actions"><button class="btn btn-green" id="startBtn" onclick="toggleTimer()">Iniciar</button><button class="btn btn-sec" id="pauseBtn" onclick="pauseTimer()" disabled>Pausar</button><button class="btn btn-sec" onclick="resetTimer()">Reiniciar</button></div>
+          <div class="greeting-row">
+            <div>
+              <div class="greeting-overline">CENTRAL DE ESTUDOS</div>
+              <h1 id="dashGreeting">Boa noite, Daniel</h1>
+              <p id="dashDate">Domingo, 16 de agosto de 2026</p>
             </div>
           </div>
-        </div>
 
-        <div class="grid-stack-item" gs-w="4" gs-h="4" gs-id="box-calendario">
-          <div class="grid-stack-item-content glass dark-glass-card">
-            <div class="section-head"><span id="calendarMonth" style="font-size:12px;font-weight:800;color:#fff"></span><div style="display:flex;gap:5px"><button class="cal-nav-btn" onclick="prevMonth()">‹</button><button class="cal-nav-btn" onclick="nextMonth()">›</button></div></div>
-            <div id="calendar" class="calendar-dark"></div>
+          <div class="next-commitment premium-panel">
+            <div class="next-content">
+              <div class="eyebrow-row"><span class="eyebrow-dot"></span><span>PRÓXIMO COMPROMISSO</span><span class="status-pill" id="dashNextBadge">Amanhã</span></div>
+              <h2 id="dashNextTitle">Controle de Qualidade Microbiológico</h2>
+              <div class="next-meta"><span id="dashNextDetail">13:00 – 16:30</span></div>
+              <button class="primary-action" onclick="v6StartRecommendation()">Começar foco <span>▶</span></button>
+            </div>
+            <div class="next-art" aria-hidden="true">
+              <div class="art-leaf leaf-a"></div><div class="art-leaf leaf-b"></div><div class="art-book book-a"></div><div class="art-book book-b"></div><div class="art-mug"></div>
+            </div>
           </div>
+
+          <div class="metric-row">
+            <div class="metric-card premium-panel">
+              <div class="metric-icon green">◷</div><div><div class="metric-label">FOCO ESTA SEMANA</div><div class="metric-value" id="v5WeekFocus">6h 40m</div><div class="metric-detail" id="dashWeekDetail">Tempo total de foco</div></div>
+            </div>
+            <div class="metric-card premium-panel">
+              <div class="metric-icon blue">✓</div><div><div class="metric-label">TAREFAS PENDENTES</div><div class="metric-value" id="v5PendingTasks">4</div><div class="metric-detail">3 para hoje</div></div>
+            </div>
+            <div class="metric-card premium-panel">
+              <div class="metric-icon red">▣</div><div><div class="metric-label">PRÓXIMA AVALIAÇÃO</div><div class="metric-value" id="dashExamDays">43 dias</div><div class="metric-detail" id="dashExamDetail">28 de setembro</div></div>
+            </div>
+            <div class="metric-card premium-panel">
+              <div class="metric-icon orange">◎</div><div><div class="metric-label">META SEMANAL</div><div class="metric-value" id="v6GoalValue">67%</div><div class="metric-detail" id="v6GoalDetail">10h de 15h</div><div class="metric-progress"><span id="v6GoalBar" style="width:67%"></span></div></div>
+            </div>
+          </div>
+
+          <div class="content-grid">
+            <div class="premium-panel panel-block">
+              <div class="panel-heading"><div><span class="panel-kicker">ATIVIDADE</span><h3>Tempo de foco</h3></div><select class="panel-select"><option>Esta semana</option></select></div>
+              <div class="big-stat" id="dashboardFocusTotal">6h 40m</div>
+              <div class="small-caption">Tempo total de foco</div>
+              <div id="v6FocusChart" class="v6-chart premium-chart"></div>
+              <div class="positive-note">↗ Você está mantendo uma rotina consistente de estudos.</div>
+            </div>
+
+            <div class="premium-panel panel-block">
+              <div class="panel-heading"><div><span class="panel-kicker">PRIORIDADES</span><h3>Disciplinas que merecem atenção</h3></div></div>
+              <div id="v6PriorityList" class="priority-modern"></div>
+              <button class="text-action" onclick="v7SetView('subjects')">Ver todas as disciplinas <span>›</span></button>
+            </div>
+          </div>
+
+          <div class="premium-panel recommendation-panel">
+            <div class="recommend-icon">✦</div>
+            <div class="recommend-copy"><div class="panel-kicker purple">RECOMENDAÇÃO INTELIGENTE</div><h3 id="v6RecommendationTitle">Controle de Qualidade de Alimentos</h3><p id="v6RecommendationDetail">Sua próxima avaliação está chegando. Vale concentrar mais tempo nesta disciplina.</p></div>
+            <button class="outline-action" onclick="openV6Plan()">Ver plano sugerido <span>›</span></button>
+          </div>
+
+          <div class="compatibility-hidden" aria-hidden="true">
+            <div id="subjectsGrid" class="subjects"></div>
+            <div id="schedule" class="schedule"></div>
+          </div>
+
+          <div class="quick-section">
+            <div class="panel-kicker">ACESSO RÁPIDO</div>
+            <div class="quick-grid">
+              <button class="quick-card premium-panel" onclick="v7SetView('subjects')"><span>▦</span><strong>Disciplinas</strong><small>Ver matérias do semestre</small></button>
+              <button class="quick-card premium-panel" onclick="openTasksCenter()"><span>✓</span><strong>Tarefas</strong><small>Organizar pendências</small></button>
+              <button class="quick-card premium-panel" onclick="v7SetView('calendar')"><span>□</span><strong>Calendário</strong><small>Agenda acadêmica</small></button>
+              <button class="quick-card premium-panel" onclick="v7SetView('focus')"><span>◷</span><strong>Foco</strong><small>Começar uma sessão</small></button>
+            </div>
+          </div>
+
         </div>
 
-        <div class="grid-stack-item" gs-w="4" gs-h="4" gs-id="box-disciplinas">
-          <div class="grid-stack-item-content glass"><div class="section-head"><div><span class="drag-handle">⠿</span><span class="title">Disciplinas</span></div><button class="btn btn-sec" onclick="openSubjectModal()">＋ Nova</button></div><div id="subjectsGrid" class="subjects"></div></div>
-        </div>
+        <aside class="dashboard-rail">
+          <div class="premium-panel rail-card calendar-rail">
+            <div class="panel-heading"><div><span class="panel-kicker">CALENDÁRIO</span><h3 id="calendarMonth">Agosto 2026</h3></div><button class="text-link" onclick="v7SetView('calendar')">Ver agenda</button></div>
+            <div class="calendar-nav"><button class="cal-nav-btn" onclick="prevMonth()">‹</button><button class="cal-nav-btn" onclick="nextMonth()">›</button></div>
+            <div id="calendar" class="calendar-dark modern-calendar"></div>
+          </div>
 
-        <div class="grid-stack-item" gs-w="12" gs-h="3" gs-id="box-horarios">
-          <div class="grid-stack-item-content glass"><div class="section-head"><div><span class="drag-handle">⠿</span><span class="title">Horários da semana</span></div><button class="btn btn-sec" onclick="openClassModal()">＋ Horário</button></div><div id="schedule" class="schedule"></div></div>
-        </div>
+          <div class="premium-panel rail-card">
+            <div class="panel-kicker">PRÓXIMOS EVENTOS</div>
+            <div id="assessmentsList" class="event-list"></div>
+          </div>
 
-        <div class="grid-stack-item" gs-w="12" gs-h="3" gs-id="box-provas">
-          <div class="grid-stack-item-content glass"><div class="section-head"><div><span class="drag-handle">⠿</span><span class="title">Próximas avaliações</span></div><button class="btn btn-red" onclick="openAssessmentModal()">＋ Prova</button></div><div id="assessmentsList"></div></div>
-        </div>
+          <div class="premium-panel rail-card focus-rail">
+            <div class="panel-kicker">FOCO RÁPIDO</div>
+            <div class="focus-widget">
+              <div class="focus-ring"><div class="focus-ring-value"><span id="timer">25</span><small>min</small></div></div>
+              <div class="focus-controls"><div class="small-caption">Sessão focada</div><select id="studySubject" class="panel-select"><option value="">Escolha uma disciplina</option></select><button class="primary-action full" onclick="toggleTimer()"><span id="startBtnLabel">Iniciar foco</span><span>▶</span></button></div>
+            </div>
+            <div class="focus-actions" style="display:none"><button id="startBtn" onclick="toggleTimer()">Iniciar</button><button id="pauseBtn" onclick="pauseTimer()">Pausar</button></div>
+            <div id="pomodoroStatus" class="sr-only">Pronto</div>
+            <div id="timerLabel" class="sr-only">Tempo de foco</div>
+            <div id="timerWrap" class="sr-only"></div>
+          </div>
+        </aside>
       </div>
+
     </section>
 
-    <section class="v7-view" data-view="subjects">
+<section class="v7-view" data-view="subjects">
       <div class="v7-section-title">Suas disciplinas</div>
       <div class="v7-page-grid">
         <div class="grid-stack-item"><div class="grid-stack-item-content glass"><div class="section-head"><div><span class="title">Todas as disciplinas</span></div><button class="btn btn-green" onclick="openSubjectModal()">＋ Nova disciplina</button></div><div id="subjectsGridV7" class="subjects"></div></div></div>
@@ -1215,46 +1269,12 @@ body.theme-all-dark .v10-resource-row{background:rgba(255,255,255,.035)}
   </main>
 </div>
 
-<div style="display:none" aria-hidden="true" id="finalBuildMarker">Central de Estudos • Academic OS • Final</div>
 <button class="back-to-top" id="backToTopBtn" onclick="scrollToTop()" title="Voltar ao topo">↑</button>
 <div id="modalWrap" class="modal-wrap" onclick="if(event.target===this)closeModal()"><div class="modal"><div class="modal-head"><h3 id="modalTitle">Detalhes</h3><button class="close" onclick="closeModal()">✕</button></div><div id="modalBody"></div></div></div>
 <div id="toast" class="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/gridstack@9.2.0/dist/gridstack-all.js"></script>
 
-<script>
-(function(){
-  const PASSWORD = "ueg2026";
-  window.checkPassword = function(){
-    const input = document.getElementById("passInput");
-    if (!input || input.value !== PASSWORD) {
-      alert("Senha incorreta!");
-      return false;
-    }
-    localStorage.setItem("ueg_access_granted", "true");
-    const login = document.getElementById("loginScreen");
-    const app = document.getElementById("app");
-    if (login) login.classList.add("hidden");
-    if (app) app.style.display = "flex";
-    document.body.classList.add("app-active");
-    if (typeof window.showApp === "function") {
-      try { window.showApp(); } catch (e) {
-        console.warn("Inicialização do painel adiada:", e);
-      }
-    }
-    return true;
-  };
-  window.addEventListener("load", function(){
-    if (localStorage.getItem("ueg_access_granted") === "true") {
-      const login = document.getElementById("loginScreen");
-      const app = document.getElementById("app");
-      if (login) login.classList.add("hidden");
-      if (app) app.style.display = "flex";
-      document.body.classList.add("app-active");
-    }
-  });
-})();
-</script>
 <script type="module">
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
 import {getFirestore,collection,addDoc,onSnapshot,deleteDoc,doc,updateDoc,enableIndexedDbPersistence,query,orderBy,limit,serverTimestamp} from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
@@ -1887,7 +1907,7 @@ window.addEventListener('load',()=>{
   if(localStorage.getItem('ueg_access_granted')==='true')window.showApp();
   loadAll();
 });
-\n/* =========================================================\n   FINAL — GLOBAL RESOURCE CENTERS\n   ========================================================= */\nwindow.openGlobalMaterials=function(){\n  const items=[...(v5?.materials||[])].sort((a,b)=>(b.created||0)-(a.created||0));\n  const rows=items.map(m=>{const sub=v5Subject(m.subjectId);return `<div class="v10-resource-row"><div class="v10-resource-icon">⌑</div><div><strong>${escapeHtml(m.title||'Material')}</strong><small>${escapeHtml(sub?.name||'Sem disciplina')} · ${escapeHtml(m.url||'')}</small></div><a class="mini-btn" href="${escapeHtml(m.url||'#')}" target="_blank" rel="noopener">Abrir</a></div>`}).join('');\n  openModal('Materiais acadêmicos',`<div><div class="v10-section-caption">Todos os materiais cadastrados por disciplina.</div><div class="v10-resource-list" style="margin-top:14px">${rows||'<div class="workspace-empty">Nenhum material cadastrado. Abra uma disciplina para adicionar materiais.</div>'}</div></div>`);\n};\nwindow.openGlobalNotes=function(){\n  const items=[...(v5?.notes||[])].sort((a,b)=>(b.created||0)-(a.created||0));\n  const rows=items.map(n=>{const sub=v5Subject(n.subjectId);return `<div class="v10-resource-row"><div class="v10-resource-icon">✎</div><div style="min-width:0;flex:1"><strong>${escapeHtml(n.title||'Anotação')}</strong><small>${escapeHtml(sub?.name||'Sem disciplina')} · ${new Date(n.created||Date.now()).toLocaleDateString('pt-BR')}</small><div style="margin-top:7px;color:var(--v7-muted);font-size:11px;line-height:1.55;white-space:pre-wrap">${escapeHtml(n.text||'')}</div></div></div>`}).join('');\n  openModal('Anotações acadêmicas',`<div><div class="v10-section-caption">Suas anotações organizadas por data.</div><div class="v10-resource-list" style="margin-top:14px">${rows||'<div class="workspace-empty">Nenhuma anotação cadastrada. Abra uma disciplina para criar uma.</div>'}</div></div>`);\n};\nwindow.openAssessmentsCenter=function(){\n  const items=[...(data.assessments||[])].sort((a,b)=>(a.date||'').localeCompare(b.date||''));\n  const rows=items.map(x=>{const sub=data.subjects.find(s=>s.id===x.subjectId);const d=daysUntil(x.date);const label=d<0?'Realizada':d===0?'Hoje':d===1?'Amanhã':`${d} dias`;return `<div class="v10-resource-row"><div class="v10-resource-icon" style="color:var(--danger);background:rgba(220,38,38,.09)">!</div><div><strong>${escapeHtml(x.title||'Avaliação')}</strong><small>${escapeHtml(sub?.name||'Geral')} · ${formatDate(x.date)}${x.time?' · '+escapeHtml(x.time):''}</small></div><span class="badge red">${label}</span></div>`}).join('');\n  openModal('Avaliações acadêmicas',`<div><div class="v10-section-caption">Todas as avaliações cadastradas no semestre.</div><div class="v10-resource-list" style="margin-top:14px">${rows||'<div class="workspace-empty">Nenhuma avaliação cadastrada.</div>'}</div></div>`);\n};\n\n/* =========================================================
+/* =========================================================
    V7 — PREMIUM UI NAVIGATION
    ========================================================= */
 window.v7SetView = function(view){
@@ -1896,7 +1916,7 @@ window.v7SetView = function(view){
   const titles={
     dashboard:['Visão geral','Sua rotina acadêmica em um só lugar.'],
     subjects:['Disciplinas','Acompanhe cada matéria do semestre.'],
-    focus:['Foco e desempenho','Tempo, consistência e evolução acadêmica.'],
+    focus:['Foco e desempenho','Transforme tempo de estudo em progresso.'],
     calendar:['Calendário','Aulas e avaliações organizadas.'],
     tasks:['Tarefas','Tudo o que precisa ser concluído.']
   };
@@ -1940,6 +1960,25 @@ document.addEventListener('click',function(e){
   if(!sidebar || window.innerWidth>760 || !sidebar.classList.contains('mobile-open')) return;
   if(!sidebar.contains(e.target) && !e.target.closest('.v7-mobile-menu')) sidebar.classList.remove('mobile-open');
 });
+</script>
+
+<script>
+(function(){
+  const originalUpdateDisplay = window.updateDisplay;
+  // Existing V6 timer is module-scoped; mirror any visible #timer when its text changes.
+  const sync = ()=>{
+    const timer = document.getElementById('timer');
+    if(!timer) return;
+    if(timer.textContent.includes(':')){
+      const parts=timer.textContent.split(':');
+      const mins=parseInt(parts[0]||'0',10);
+      const secs=parseInt(parts[1]||'0',10);
+      const value=document.getElementById('startBtnLabel');
+      if(value && mins===0 && secs===0) value.textContent='Iniciar foco';
+    }
+  };
+  setInterval(sync,500);
+})();
 </script>
 </body>
 </html>
