@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,7 +34,20 @@
             --radius-sm: 8px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        [data-theme="dark"] {
+            --bg-body: #0F172A;
+            --bg-card: #1E293B;
+            --bg-sidebar: #1E293B;
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --border: #334155;
+            --primary-light: rgba(16, 185, 129, 0.15);
+            --purple-bg: #1E1B4B;
+            --purple-border: #4338CA;
+            --purple-text: #C084FC;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; transition: background-color 0.2s, color 0.2s, border-color 0.2s; }
         body { background-color: var(--bg-body); color: var(--text-main); display: flex; min-height: 100vh; font-size: 14px; }
 
         /* SIDEBAR */
@@ -46,19 +59,19 @@
 
         .brand { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2rem; padding: 0 0.5rem; }
         .brand-icon { width: 32px; height: 32px; background: #059669; border-radius: 8px; display: grid; place-items: center; color: white; }
-        .brand-text h2 { font-size: 0.95rem; font-weight: 800; line-height: 1.1; color: #064E3B; }
-        .brand-text span { font-size: 0.75rem; color: var(--primary-dark); font-weight: 600; }
+        .brand-text h2 { font-size: 0.95rem; font-weight: 800; line-height: 1.1; color: var(--text-main); }
+        .brand-text span { font-size: 0.75rem; color: var(--primary); font-weight: 600; }
 
-        .nav-group { margin-bottom: 1.5rem; }
-        .nav-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; color: #9CA3AF; letter-spacing: 0.05em; padding: 0 0.75rem; margin-bottom: 0.5rem; }
+        .nav-group { margin-bottom: 1.25rem; }
+        .nav-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em; padding: 0 0.75rem; margin-bottom: 0.5rem; }
         
         .nav-item {
             display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.75rem;
-            color: #4B5563; text-decoration: none; border-radius: var(--radius-sm); font-weight: 500;
-            cursor: pointer; transition: 0.2s;
+            color: var(--text-muted); text-decoration: none; border-radius: var(--radius-sm); font-weight: 500;
+            cursor: pointer;
         }
-        .nav-item:hover { background: #F3F4F6; color: var(--text-main); }
-        .nav-item.active { background: var(--primary-light); color: var(--primary-dark); font-weight: 600; }
+        .nav-item:hover { background: var(--border); color: var(--text-main); }
+        .nav-item.active { background: var(--primary-light); color: var(--primary); font-weight: 600; }
 
         .user-profile {
             display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem;
@@ -73,90 +86,58 @@
         .header-title h1 { font-size: 1.5rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
         .header-title span { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
         .header-actions { display: flex; gap: 0.75rem; }
-        .icon-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: white; display: grid; place-items: center; color: #4B5563; cursor: pointer; }
+        .icon-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-card); display: grid; place-items: center; color: var(--text-main); cursor: pointer; }
 
         /* DASHBOARD GRID */
         .dashboard-grid { display: grid; grid-template-columns: 1fr 300px; gap: 1.5rem; }
         .left-column { display: flex; flex-direction: column; gap: 1.25rem; }
         .right-column { display: flex; flex-direction: column; gap: 1.25rem; }
 
+        /* CARDS */
+        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .card-header h3 { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--text-main); letter-spacing: 0.02em; }
+
         /* HERO CARD */
         .hero-card {
-            background: linear-gradient(135deg, #EFFBF5 0%, #E6F4ED 100%);
-            border: 1px solid #D1EBE0; border-radius: var(--radius-lg); padding: 1.75rem;
-            display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.05) 100%);
+            border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.75rem;
+            display: flex; justify-content: space-between; align-items: center;
         }
         .badge-tag { background: #D1FAE5; color: #065F46; font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 4px; display: inline-block; margin-left: 0.5rem; }
-        .hero-title { font-size: 1.35rem; font-weight: 800; margin: 0.5rem 0 0.75rem 0; color: #064E3B; }
-        .hero-info { display: flex; align-items: center; gap: 0.5rem; color: #374151; font-size: 0.85rem; font-weight: 500; }
-        .hero-teacher { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; }
-        .btn-primary { background: #059669; color: white; border: none; padding: 0.65rem 1.25rem; border-radius: var(--radius-md); font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; transition: 0.2s; }
-        .btn-primary:hover { background: #047857; }
+        .hero-title { font-size: 1.35rem; font-weight: 800; margin: 0.5rem 0 0.75rem 0; color: var(--text-main); }
+        .btn-primary { background: var(--primary); color: white; border: none; padding: 0.65rem 1.25rem; border-radius: var(--radius-md); font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; }
 
-        /* METRICS ROW */
+        /* METRICS */
         .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
         .metric-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem; display: flex; align-items: center; gap: 0.85rem; }
         .metric-icon { width: 36px; height: 36px; border-radius: var(--radius-sm); display: grid; place-items: center; flex-shrink: 0; }
-        .metric-val { font-size: 1.1rem; font-weight: 700; margin-top: 0.1rem; }
+        .metric-val { font-size: 1.1rem; font-weight: 700; }
         .metric-lbl { font-size: 0.72rem; color: var(--text-muted); font-weight: 600; }
 
-        /* MIDDLE ROW */
         .middle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
-        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-        .card-header h3 { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: #374151; letter-spacing: 0.02em; }
-
-        /* CHART CONTAINER */
-        .chart-wrapper { position: relative; height: 140px; width: 100%; margin-top: 0.5rem; }
+        .chart-wrapper { position: relative; height: 140px; width: 100%; }
 
         /* DISCIPLINAS LIST */
         .disc-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
         .disc-info { display: flex; align-items: center; gap: 0.75rem; }
         .disc-icon { width: 28px; height: 28px; border-radius: 6px; display: grid; place-items: center; font-size: 0.8rem; }
-        .disc-name { font-weight: 600; font-size: 0.85rem; }
-        .disc-sub { font-size: 0.72rem; color: #EF4444; font-weight: 500; }
-        .progress-bar { width: 80px; height: 6px; background: #E5E7EB; border-radius: 10px; overflow: hidden; }
-        .progress-fill { height: 100%; border-radius: 10px; transition: width 0.4s ease; }
+        .progress-bar { width: 80px; height: 6px; background: var(--border); border-radius: 10px; overflow: hidden; }
+        .progress-fill { height: 100%; border-radius: 10px; }
 
-        /* RECOMMENDATION BANNER */
-        .rec-banner {
-            background: var(--purple-bg); border: 1px solid var(--purple-border);
-            border-radius: var(--radius-lg); padding: 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-        }
-        .rec-text h4 { font-size: 0.75rem; font-weight: 700; color: var(--purple-text); text-transform: uppercase; margin-bottom: 0.25rem; }
-        .rec-text p { font-size: 0.82rem; color: #4C1D95; }
-        .btn-purple { background: white; border: 1px solid var(--purple-border); color: var(--purple-text); font-weight: 600; padding: 0.5rem 1rem; border-radius: var(--radius-md); cursor: pointer; white-space: nowrap; }
-
-        /* CALENDAR RIGHT COLUMN */
+        /* CALENDÁRIO */
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.25rem; text-align: center; font-size: 0.75rem; }
         .cal-day-name { font-weight: 700; color: var(--text-muted); padding-bottom: 0.5rem; }
-        .cal-day { padding: 0.4rem 0; border-radius: 50%; cursor: pointer; color: #374151; font-weight: 500; transition: 0.2s; }
-        .cal-day:hover { background: #F3F4F6; }
-        .cal-day.active { background: #059669; color: white; font-weight: 700; }
-        .cal-day.muted { color: #D1D5DB; }
-
-        /* EVENT LIST */
-        .event-item { display: flex; gap: 0.85rem; margin-bottom: 0.85rem; align-items: flex-start; }
-        .event-date { text-align: center; line-height: 1.1; min-width: 32px; }
-        .event-date .day { font-size: 0.9rem; font-weight: 800; color: #EF4444; }
-        .event-date .month { font-size: 0.65rem; font-weight: 700; color: #EF4444; text-transform: uppercase; }
+        .cal-day { padding: 0.4rem 0; border-radius: 50%; cursor: pointer; color: var(--text-main); font-weight: 500; }
+        .cal-day.active { background: var(--primary); color: white; font-weight: 700; }
 
         /* FOCO RÁPIDO */
         .foco-box { text-align: center; display: flex; flex-direction: column; align-items: center; }
-        .timer-circle {
-            width: 110px; height: 110px; border-radius: 50%;
-            border: 6px solid #10B981; display: grid; place-items: center;
-            margin: 1rem 0; font-family: 'JetBrains Mono', monospace; position: relative;
-        }
+        .timer-circle { width: 110px; height: 110px; border-radius: 50%; border: 6px solid var(--primary); display: grid; place-items: center; margin: 1rem 0; font-family: 'JetBrains Mono', monospace; }
         .timer-time { font-size: 1.5rem; font-weight: 800; }
-        .timer-unit { font-size: 0.7rem; color: var(--text-muted); font-family: 'Plus Jakarta Sans', sans-serif; }
+        select.select-disc, input.input-field { width: 100%; padding: 0.6rem; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 0.8rem; color: var(--text-main); margin-bottom: 0.75rem; background: var(--bg-card); outline: none; }
 
-        select.select-disc {
-            width: 100%; padding: 0.6rem; border: 1px solid var(--border);
-            border-radius: var(--radius-sm); font-size: 0.8rem; color: var(--text-main);
-            margin-bottom: 0.75rem; outline: none; background: white; cursor: pointer;
-        }
-
+        /* PAGES CONTROL */
         .page-view { display: none; }
         .page-view.active { display: block; }
     </style>
@@ -188,23 +169,16 @@
             <div class="nav-group">
                 <div class="nav-label">Agenda</div>
                 <a class="nav-item" onclick="switchPage('calendario', this)"><i data-lucide="calendar" size="18"></i> Calendário</a>
-                <a class="nav-item" onclick="switchPage('avaliacoes', this)"><i data-lucide="file-text" size="18"></i> Avaliações</a>
             </div>
 
             <div class="nav-group">
                 <div class="nav-label">Recursos</div>
-                <a class="nav-item" onclick="switchPage('materiais', this)"><i data-lucide="folder" size="18"></i> Materiais</a>
                 <a class="nav-item" onclick="switchPage('anotacoes', this)"><i data-lucide="edit-3" size="18"></i> Anotações</a>
-            </div>
-
-            <div class="nav-group">
-                <div class="nav-label">Análise</div>
-                <a class="nav-item" onclick="switchPage('desempenho', this)"><i data-lucide="bar-chart-2" size="18"></i> Desempenho</a>
             </div>
         </div>
 
         <div>
-            <a class="nav-item" style="margin-bottom: 0.5rem;"><i data-lucide="settings" size="18"></i> Configurações</a>
+            <a class="nav-item" onclick="switchPage('configuracoes', this)" style="margin-bottom: 0.5rem;"><i data-lucide="settings" size="18"></i> Configurações</a>
             <div class="user-profile">
                 <div class="avatar">D</div>
                 <div>
@@ -220,211 +194,139 @@
         <header class="header">
             <div class="header-title">
                 <h1 id="page-title">Boa noite, Daniel 👋</h1>
-                <span id="current-date">Carregando data...</span>
+                <span id="current-date">--</span>
             </div>
             <div class="header-actions">
-                <button class="icon-btn" title="Buscar"><i data-lucide="search" size="18"></i></button>
-                <button class="icon-btn" title="Notificações"><i data-lucide="bell" size="18"></i></button>
-                <button class="icon-btn" title="Tema"><i data-lucide="moon" size="18"></i></button>
+                <button class="icon-btn" title="Alternar Tema" onclick="toggleTheme()"><i data-lucide="moon" id="theme-icon" size="18"></i></button>
             </div>
         </header>
 
-        <!-- PÁGINA INÍCIO (DASHBOARD) -->
+        <!-- DASHBOARD (INÍCIO) -->
         <div id="view-dashboard" class="page-view active">
             <div class="dashboard-grid">
-                <!-- COLUNA ESQUERDA -->
                 <div class="left-column">
-                    <!-- HERO COMPROMISSO -->
                     <div class="hero-card">
                         <div>
-                            <span style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: #047857;">PRÓXIMO COMPROMISSO</span>
+                            <span style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--primary);">PRÓXIMO COMPROMISSO</span>
                             <span class="badge-tag">Amanhã</span>
                             <h2 class="hero-title">Controle de Qualidade<br>Microbiológico</h2>
-                            <div class="hero-info"><i data-lucide="clock" size="16"></i> 13:00 – 16:30</div>
-                            <div class="hero-teacher">Pamela Cristina de Sousa</div>
-                            <button class="btn-primary" onclick="iniciarFocoDireto('Controle de Qualidade Microbiológico')"><i data-lucide="play" size="16"></i> Começar foco</button>
+                            <div class="hero-info" style="display:flex; gap:0.5rem;"><i data-lucide="clock" size="16"></i> 13:00 – 16:30</div>
+                            <button class="btn-primary" style="margin-top: 1rem;" onclick="switchPage('foco', document.querySelectorAll('.nav-item')[3])"><i data-lucide="play" size="16"></i> Começar foco</button>
                         </div>
-                        <div style="width: 160px; height: 130px; background: url('https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=300&q=80') center/cover; border-radius: 12px;"></div>
                     </div>
 
-                    <!-- METRICAS -->
                     <div class="metrics-grid">
                         <div class="metric-card">
                             <div class="metric-icon" style="background: #D1FAE5; color: #059669;"><i data-lucide="clock" size="18"></i></div>
                             <div>
                                 <div class="metric-lbl">Foco esta semana</div>
-                                <div class="metric-val" id="metric-foco">6h 40m</div>
-                                <div style="font-size: 0.65rem; color: #10B981; font-weight: 700;">↑ +18% vs. semana passada</div>
+                                <div class="metric-val" id="total-foco-val">6h 40m</div>
                             </div>
                         </div>
                         <div class="metric-card">
                             <div class="metric-icon" style="background: #EFF6FF; color: #2563EB;"><i data-lucide="check-square" size="18"></i></div>
                             <div>
                                 <div class="metric-lbl">Tarefas pendentes</div>
-                                <div class="metric-val">4</div>
-                                <div style="font-size: 0.65rem; color: #F59E0B; font-weight: 700;">● 3 para hoje</div>
-                            </div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-icon" style="background: #FEF2F2; color: #EF4444;"><i data-lucide="calendar" size="18"></i></div>
-                            <div>
-                                <div class="metric-lbl">Próxima avaliação</div>
-                                <div class="metric-val">43 dias</div>
-                                <div style="font-size: 0.65rem; color: var(--text-muted);">28 de setembro</div>
-                            </div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-icon" style="background: #FEF3C7; color: #D97706;"><i data-lucide="target" size="18"></i></div>
-                            <div>
-                                <div class="metric-lbl">Meta semanal</div>
-                                <div class="metric-val">67%</div>
-                                <div style="font-size: 0.65rem; color: var(--text-muted);">10h de 15h</div>
+                                <div class="metric-val" id="count-tarefas">2</div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- GRÁFICOS E DISCIPLINAS -->
                     <div class="middle-grid">
                         <div class="card">
-                            <div class="card-header">
-                                <h3>TEMPO DE FOCO</h3>
-                                <span style="font-size: 0.75rem; color: var(--text-muted);">Esta semana ▾</span>
-                            </div>
-                            <div style="font-size: 1.2rem; font-weight: 800;">6h 40m</div>
-                            <div style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.5rem;">Tempo total de foco</div>
-                            
-                            <div class="chart-wrapper">
-                                <canvas id="chartFocoSemanal"></canvas>
-                            </div>
+                            <div class="card-header"><h3>TEMPO DE FOCO</h3></div>
+                            <div class="chart-wrapper"><canvas id="chartFocoSemanal"></canvas></div>
                         </div>
-
                         <div class="card">
-                            <div class="card-header">
-                                <h3>DISCIPLINAS QUE MERECEM ATENÇÃO</h3>
-                            </div>
-                            
-                            <div class="disc-item">
-                                <div class="disc-info">
-                                    <div class="disc-icon" style="background: #E0E7FF; color: #4338CA;"><i data-lucide="book" size="14"></i></div>
-                                    <div>
-                                        <div class="disc-name">Controle de Qualidade de Alimentos</div>
-                                        <div class="disc-sub">Próx. prova em 43 dias</div>
-                                    </div>
-                                </div>
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <div class="progress-bar"><div class="progress-fill" style="width: 72%; background: #10B981;"></div></div>
-                                    <span style="font-size: 0.75rem; font-weight: 700;">72%</span>
-                                </div>
-                            </div>
-
-                            <div class="disc-item">
-                                <div class="disc-info">
-                                    <div class="disc-icon" style="background: #FEF3C7; color: #D97706;"><i data-lucide="pie-chart" size="14"></i></div>
-                                    <div>
-                                        <div class="disc-name">Bioestatística</div>
-                                        <div class="disc-sub" style="color: #F59E0B;">Próx. prova em 61 dias</div>
-                                    </div>
-                                </div>
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <div class="progress-bar"><div class="progress-fill" style="width: 61%; background: #F59E0B;"></div></div>
-                                    <span style="font-size: 0.75rem; font-weight: 700;">61%</span>
-                                </div>
-                            </div>
-
-                            <div class="disc-item">
-                                <div class="disc-info">
-                                    <div class="disc-icon" style="background: #F3E8FF; color: #7E22CE;"><i data-lucide="activity" size="14"></i></div>
-                                    <div>
-                                        <div class="disc-name">Farmacologia Aplicada</div>
-                                        <div class="disc-sub" style="color: #F59E0B;">Próx. prova em 75 dias</div>
-                                    </div>
-                                </div>
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <div class="progress-bar"><div class="progress-fill" style="width: 48%; background: #F59E0B;"></div></div>
-                                    <span style="font-size: 0.75rem; font-weight: 700;">48%</span>
-                                </div>
-                            </div>
+                            <div class="card-header"><h3>DISCIPLINAS QUE MERECEM ATENÇÃO</h3></div>
+                            <div id="list-disciplinas-dashboard"></div>
                         </div>
-                    </div>
-
-                    <!-- BANNER RECOMENDAÇÃO -->
-                    <div class="rec-banner">
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <div style="width: 36px; height: 36px; background: #E9D5FF; border-radius: 50%; display: grid; place-items: center; color: #7E22CE; flex-shrink: 0;"><i data-lucide="cpu" size="20"></i></div>
-                            <div class="rec-text">
-                                <h4>RECOMENDAÇÃO INTELIGENTE</h4>
-                                <p>Sua próxima prova é em 43 dias. Recomendamos aumentar o foco em <strong>Controle de Qualidade de Alimentos</strong>.</p>
-                            </div>
-                        </div>
-                        <button class="btn-purple">Ver plano sugerido ›</button>
                     </div>
                 </div>
 
-                <!-- COLUNA DIREITA -->
                 <div class="right-column">
-                    <!-- CALENDÁRIO -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>CALENDÁRIO</h3>
-                            <a href="#" style="font-size: 0.75rem; color: #10B981; font-weight: 600; text-decoration: none;">Ver agenda</a>
-                        </div>
-                        <div style="font-weight: 700; margin-bottom: 0.75rem;" id="cal-month-title">Agosto 2026</div>
-                        <div class="calendar-grid" id="calendar-days-container">
-                            <!-- Inserido dinamicamente via JS -->
-                        </div>
-                    </div>
-
-                    <!-- PRÓXIMOS EVENTOS -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>PRÓXIMOS EVENTOS</h3>
-                        </div>
-                        <div class="event-item">
-                            <div class="event-date"><div class="day">28</div><div class="month">SET</div></div>
-                            <div>
-                                <div style="font-weight: 700; font-size: 0.85rem;">Prova 1</div>
-                                <div style="font-size: 0.72rem; color: var(--text-muted);">Controle de Qualidade de Alimentos</div>
-                            </div>
-                        </div>
-                        <div class="event-item">
-                            <div class="event-date"><div class="day" style="color: #F59E0B;">07</div><div class="month" style="color: #F59E0B;">DEZ</div></div>
-                            <div>
-                                <div style="font-weight: 700; font-size: 0.85rem;">Prova 2</div>
-                                <div style="font-size: 0.72rem; color: var(--text-muted);">Controle de Qualidade de Alimentos</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- FOCO RÁPIDO (POMODORO) -->
                     <div class="card foco-box">
-                        <div class="card-header" style="width: 100%;">
-                            <h3>FOCO RÁPIDO</h3>
-                        </div>
+                        <div class="card-header"><h3>FOCO RÁPIDO</h3></div>
                         <div class="timer-circle">
                             <div>
-                                <div class="timer-time" id="timer-display">25:00</div>
-                                <div class="timer-unit" id="timer-status">Pronto</div>
+                                <div class="timer-time" id="dash-timer">25:00</div>
                             </div>
                         </div>
-                        <select class="select-disc" id="foco-materia-select">
-                            <option value="">Escolha uma disciplina</option>
-                            <option value="Controle de Qualidade">Controle de Qualidade de Alimentos</option>
-                            <option value="Bioestatística">Bioestatística</option>
-                            <option value="Farmacologia">Farmacologia Aplicada</option>
+                        <select class="select-disc" id="dash-materia-select">
+                            <option>Controle de Qualidade de Alimentos</option>
+                            <option>Bioestatística</option>
                         </select>
-                        <button class="btn-primary" id="btn-toggle-foco" style="width: 100%;" onclick="toggleTimer()">
-                            <i data-lucide="play" size="16"></i> Iniciar foco
-                        </button>
+                        <button class="btn-primary" style="width: 100%;" onclick="toggleTimer()"><i data-lucide="play" size="16"></i> Iniciar foco</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- OUTRAS VIEW PANELS DE EXEMPLO -->
+        <!-- DISCIPLINAS -->
         <div id="view-disciplinas" class="page-view">
+            <div class="card" style="margin-bottom: 1.5rem;">
+                <div class="card-header">
+                    <h3>Cadastrar Nova Disciplina</h3>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <input type="text" id="new-disc-name" class="input-field" placeholder="Nome da Disciplina..." style="margin: 0;">
+                    <button class="btn-primary" onclick="addDisciplina()">Adicionar</button>
+                </div>
+            </div>
             <div class="card">
-                <h2>Disciplinas Cadastradas</h2>
-                <p style="color: var(--text-muted); margin-top: 0.5rem;">Gerencie suas matérias do semestre aqui.</p>
+                <div class="card-header"><h3>Minhas Disciplinas</h3></div>
+                <div id="full-disciplinas-list"></div>
+            </div>
+        </div>
+
+        <!-- TAREFAS -->
+        <div id="view-tarefas" class="page-view">
+            <div class="card" style="margin-bottom: 1.5rem;">
+                <div class="card-header"><h3>Nova Tarefa</h3></div>
+                <div style="display: flex; gap: 1rem;">
+                    <input type="text" id="new-task-title" class="input-field" placeholder="Descrição da tarefa..." style="margin: 0;">
+                    <button class="btn-primary" onclick="addTarefa()">Adicionar</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header"><h3>Lista de Tarefas</h3></div>
+                <div id="tasks-list-container"></div>
+            </div>
+        </div>
+
+        <!-- FOCO COMPLETO -->
+        <div id="view-foco" class="page-view">
+            <div class="card foco-box" style="max-width: 500px; margin: 0 auto; padding: 2.5rem;">
+                <h2>Modo Foco Pomodoro</h2>
+                <div class="timer-circle" style="width: 160px; height: 160px; font-size: 2rem;">
+                    <div class="timer-time" id="full-timer" style="font-size: 2.5rem;">25:00</div>
+                </div>
+                <select class="select-disc" id="full-materia-select" style="margin-bottom: 1rem;">
+                    <option>Controle de Qualidade de Alimentos</option>
+                    <option>Bioestatística</option>
+                </select>
+                <div style="display: flex; gap: 1rem; width: 100%;">
+                    <button class="btn-primary" style="flex:1;" onclick="toggleTimer()">Iniciar / Pausar</button>
+                    <button class="btn-primary" style="background:#EF4444;" onclick="resetTimer()">Resetar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ANOTAÇÕES -->
+        <div id="view-anotacoes" class="page-view">
+            <div class="card">
+                <div class="card-header"><h3>Bloco de Notas</h3></div>
+                <textarea class="input-field" id="notes-text" style="height: 200px; resize: none;" placeholder="Escreva suas anotações aqui..."></textarea>
+                <button class="btn-primary" onclick="alert('Anotações salvas com sucesso!')">Salvar Anotação</button>
+            </div>
+        </div>
+
+        <!-- CONFIGURAÇÕES -->
+        <div id="view-configuracoes" class="page-view">
+            <div class="card">
+                <div class="card-header"><h3>Configurações de Tema e Preferências</h3></div>
+                <p style="margin-bottom: 1rem;">Alterne as preferências visuais do seu ambiente acadêmico.</p>
+                <button class="btn-primary" onclick="toggleTheme()">Alternar Tema Escuro / Claro</button>
             </div>
         </div>
     </main>
@@ -432,124 +334,164 @@
     <script>
         lucide.createIcons();
 
-        // 1. DATA ATUAL DINÂMICA
-        const dateOptions = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
-        const now = new Date();
-        document.getElementById('current-date').innerText = now.toLocaleDateString('pt-BR', dateOptions);
+        // ESTADO GLOBAL DA APLICAÇÃO
+        let disciplinas = [
+            { id: 1, nome: 'Controle de Qualidade de Alimentos', progresso: 72 },
+            { id: 2, nome: 'Bioestatística', progresso: 61 }
+        ];
 
-        // 2. NAVEGAÇÃO ENTRE ABAS DA SIDEBAR
-        function switchPage(pageId, element) {
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            element.classList.add('active');
+        let tarefas = [
+            { id: 1, titulo: 'Relatório de Microbiologia', feita: false },
+            { id: 2, titulo: 'Exercícios de Bioestatística', feita: true }
+        ];
 
-            document.querySelectorAll('.page-view').forEach(view => view.classList.remove('active'));
-            const targetView = document.getElementById(`view-${pageId}`);
-            if (targetView) targetView.classList.add('active');
+        // 1. DATA E DATA ATUAL
+        const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+        document.getElementById('current-date').innerText = new Date().toLocaleDateString('pt-BR', options);
 
-            const titleMap = {
-                'dashboard': 'Boa noite, Daniel 👋',
-                'disciplinas': 'Disciplinas',
-                'tarefas': 'Gerenciador de Tarefas',
-                'foco': 'Sessão de Foco',
-                'calendario': 'Calendário Acadêmico'
-            };
-            document.getElementById('page-title').innerText = titleMap[pageId] || 'Central de Estudos';
+        // 2. ALTERNADOR DE TEMAS (DARK / LIGHT)
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
         }
 
-        // 3. GRÁFICO DINÂMICO (CHART.JS)
+        // 3. TROCA DE PÁGINAS
+        function switchPage(pageId, element) {
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            if(element) element.classList.add('active');
+
+            document.querySelectorAll('.page-view').forEach(view => view.classList.remove('active'));
+            const target = document.getElementById(`view-${pageId}`);
+            if(target) target.classList.add('active');
+
+            const pageTitles = {
+                'dashboard': 'Boa noite, Daniel 👋',
+                'disciplinas': 'Gerenciar Disciplinas',
+                'tarefas': 'Lista de Tarefas',
+                'foco': 'Ambiente de Foco',
+                'anotacoes': 'Minhas Anotações',
+                'configuracoes': 'Configurações do Sistema'
+            };
+            document.getElementById('page-title').innerText = pageTitles[pageId] || 'Central de Estudos';
+        }
+
+        // 4. RENDERIZAR DISCIPLINAS
+        function renderDisciplinas() {
+            const dashList = document.getElementById('list-disciplinas-dashboard');
+            const fullList = document.getElementById('full-disciplinas-list');
+            
+            dashList.innerHTML = '';
+            fullList.innerHTML = '';
+
+            disciplinas.forEach(d => {
+                const itemHTML = `
+                    <div class="disc-item">
+                        <div class="disc-info">
+                            <div class="disc-icon" style="background: #E0E7FF; color: #4338CA;"><i data-lucide="book" size="14"></i></div>
+                            <div class="disc-name">${d.nome}</div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <div class="progress-bar"><div class="progress-fill" style="width: ${d.progresso}%; background: #10B981;"></div></div>
+                            <span style="font-size: 0.75rem; font-weight: 700;">${d.progresso}%</span>
+                        </div>
+                    </div>`;
+                dashList.innerHTML += itemHTML;
+                fullList.innerHTML += itemHTML;
+            });
+            lucide.createIcons();
+        }
+
+        function addDisciplina() {
+            const input = document.getElementById('new-disc-name');
+            if (input.value.trim() !== '') {
+                disciplinas.push({ id: Date.now(), nome: input.value, progresso: 0 });
+                input.value = '';
+                renderDisciplinas();
+            }
+        }
+
+        // 5. RENDERIZAR TAREFAS
+        function renderTarefas() {
+            const container = document.getElementById('tasks-list-container');
+            container.innerHTML = '';
+            
+            tarefas.forEach(t => {
+                container.innerHTML += `
+                    <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0; border-bottom: 1px solid var(--border);">
+                        <input type="checkbox" ${t.feita ? 'checked' : ''} onchange="toggleTask(${t.id})">
+                        <span style="${t.feita ? 'text-decoration: line-through; color: var(--text-muted);' : ''}">${t.titulo}</span>
+                    </div>`;
+            });
+
+            document.getElementById('count-tarefas').innerText = tarefas.filter(t => !t.feita).length;
+        }
+
+        function addTarefa() {
+            const input = document.getElementById('new-task-title');
+            if (input.value.trim() !== '') {
+                tarefas.push({ id: Date.now(), titulo: input.value, feita: false });
+                input.value = '';
+                renderTarefas();
+            }
+        }
+
+        function toggleTask(id) {
+            const task = tarefas.find(t => t.id === id);
+            if (task) task.feita = !task.feita;
+            renderTarefas();
+        }
+
+        // 6. TIMER DE FOCO
+        let seconds = 25 * 60;
+        let timer = null;
+
+        function updateDisplays() {
+            const min = Math.floor(seconds / 60).toString().padStart(2, '0');
+            const sec = (seconds % 60).toString().padStart(2, '0');
+            const str = `${min}:${sec}`;
+            document.getElementById('dash-timer').innerText = str;
+            document.getElementById('full-timer').innerText = str;
+        }
+
+        function toggleTimer() {
+            if (timer) {
+                clearInterval(timer);
+                timer = null;
+            } else {
+                timer = setInterval(() => {
+                    if (seconds > 0) {
+                        seconds--;
+                        updateDisplays();
+                    } else {
+                        clearInterval(timer);
+                        alert("Sessão Finalizada!");
+                    }
+                }, 1000);
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(timer);
+            timer = null;
+            seconds = 25 * 60;
+            updateDisplays();
+        }
+
+        // INICIALIZAÇÃO DE GRÁFICOS
         const ctx = document.getElementById('chartFocoSemanal').getContext('2d');
         new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
-                datasets: [{
-                    data: [1.8, 2.2, 1.2, 2.4, 1.5, 2.0, 0.8],
-                    backgroundColor: '#10B981',
-                    borderRadius: 4,
-                    barThickness: 20
-                }]
+                datasets: [{ data: [2, 3, 1.5, 3, 2, 4, 1], backgroundColor: '#10B981', borderRadius: 4 }]
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    x: { grid: { display: false } },
-                    y: { display: false }
-                }
-            }
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
         });
 
-        // 4. CRONÔMETRO POMODORO FUNCIONAL
-        let timerSeconds = 25 * 60;
-        let timerInterval = null;
-        let isRunning = false;
-
-        function updateTimerDisplay() {
-            const minutes = Math.floor(timerSeconds / 60);
-            const seconds = timerSeconds % 60;
-            document.getElementById('timer-display').innerText = 
-                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        }
-
-        function toggleTimer() {
-            const btn = document.getElementById('btn-toggle-foco');
-            const status = document.getElementById('timer-status');
-
-            if (isRunning) {
-                clearInterval(timerInterval);
-                isRunning = false;
-                btn.innerHTML = `<i data-lucide="play" size="16"></i> Continuar`;
-                status.innerText = "Pausado";
-            } else {
-                isRunning = true;
-                btn.innerHTML = `<i data-lucide="pause" size="16"></i> Pausar`;
-                status.innerText = "Em Foco";
-                timerInterval = setInterval(() => {
-                    if (timerSeconds > 0) {
-                        timerSeconds--;
-                        updateTimerDisplay();
-                    } else {
-                        clearInterval(timerInterval);
-                        alert("Sessão de foco concluída!");
-                        isRunning = false;
-                        timerSeconds = 25 * 60;
-                        updateTimerDisplay();
-                        btn.innerHTML = `<i data-lucide="play" size="16"></i> Iniciar foco`;
-                        status.innerText = "Pronto";
-                    }
-                }, 1000);
-            }
-            lucide.createIcons();
-        }
-
-        function iniciarFocoDireto(materia) {
-            const select = document.getElementById('foco-materia-select');
-            select.value = 'Controle de Qualidade';
-            if (!isRunning) toggleTimer();
-        }
-
-        // 5. CONSTRUTOR DINÂMICO DE CALENDÁRIO
-        function renderCalendar() {
-            const container = document.getElementById('calendar-days-container');
-            const daysNames = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
-            container.innerHTML = '';
-
-            daysNames.forEach(d => {
-                container.innerHTML += `<div class="cal-day-name">${d}</div>`;
-            });
-
-            // Mock visual de Agosto 2026
-            for (let i = 26; i <= 31; i++) {
-                container.innerHTML += `<div class="cal-day muted">${i}</div>`;
-            }
-            for (let i = 1; i <= 22; i++) {
-                const activeClass = i === 16 ? 'active' : '';
-                container.innerHTML += `<div class="cal-day ${activeClass}">${i}</div>`;
-            }
-        }
-
-        renderCalendar();
+        // INIT
+        renderDisciplinas();
+        renderTarefas();
     </script>
 </body>
 </html>
