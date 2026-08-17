@@ -1,337 +1,421 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="dark">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal do Aluno UEG - V9 Pro</title>
-
-    <!-- Google Fonts & Lucide Icons -->
+    <title>Central de Estudos - Academic OS</title>
+    
+    <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <!-- Chart.js & FullCalendar -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/locales/pt-br.global.min.js"></script>
-
-    <!-- Firebase App & Firestore -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-
     <style>
-        /* ==========================================================================
-           1. VARIÁVEIS E TEMA BASE (DESIGN SYSTEM V9)
-           ========================================================================== */
         :root {
-            --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-            --font-mono: 'JetBrains Mono', monospace;
+            --bg-body: #F4F6F8;
+            --bg-card: #FFFFFF;
+            --bg-sidebar: #FFFFFF;
+            --text-main: #111827;
+            --text-muted: #6B7280;
+            --border: #E5E7EB;
             
-            --bg-page: #0B0F17;
-            --bg-card: rgba(22, 27, 38, 0.7);
-            --bg-card-hover: rgba(30, 37, 52, 0.8);
-            --border-color: rgba(255, 255, 255, 0.08);
+            --primary: #10B981;
+            --primary-dark: #059669;
+            --primary-light: #ECFDF5;
             
-            --primary: #3B82F6;
-            --primary-hover: #2563EB;
-            --primary-glow: rgba(59, 130, 246, 0.25);
+            --purple-bg: #F5F3FF;
+            --purple-border: #DDD6FE;
+            --purple-text: #6D28D9;
             
-            --success: #10B981;
-            --warning: #F59E0B;
-            --danger: #EF4444;
-            
-            --text-main: #F3F4F6;
-            --text-muted: #9CA3AF;
-            
-            --sidebar-width: 260px;
-            --header-height: 70px;
             --radius-lg: 16px;
             --radius-md: 10px;
-            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --radius-sm: 8px;
         }
 
-        [data-theme="light"] {
-            --bg-page: #F8FAFC;
-            --bg-card: rgba(255, 255, 255, 0.9);
-            --bg-card-hover: #FFFFFF;
-            --border-color: rgba(0, 0, 0, 0.08);
-            --text-main: #0F172A;
-            --text-muted: #64748B;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-main); display: flex; min-height: 100vh; font-size: 14px; }
 
-        /* RESET & BASE */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: var(--font-sans);
-            background-color: var(--bg-page);
-            color: var(--text-main);
-            display: flex;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* AUTH OVERLAY */
-        #auth-overlay {
-            position: fixed; inset: 0; z-index: 9999;
-            background: var(--bg-page);
-            display: flex; align-items: center; justify-content: center;
-        }
-        .auth-card {
-            background: var(--bg-card);
-            padding: 2.5rem; border-radius: var(--radius-lg);
-            border: 1px solid var(--border-color);
-            width: 100%; max-width: 400px; text-align: center;
-        }
-
-        /* LAYOUT PRINCIPAL */
+        /* SIDEBAR */
         #sidebar {
-            width: var(--sidebar-width);
-            background: var(--bg-card);
-            border-right: 1px solid var(--border-color);
-            display: flex; flex-direction: column;
-            padding: 1.5rem 1rem; position: fixed; height: 100vh; z-index: 100;
-        }
-        #main-content {
-            margin-left: var(--sidebar-width);
-            flex: 1; display: flex; flex-direction: column; min-width: 0;
-        }
-        #header {
-            height: var(--header-height);
-            border-bottom: 1px solid var(--border-color);
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 2rem; background: var(--bg-card); backdrop-filter: blur(8px);
+            width: 240px; background: var(--bg-sidebar); border-right: 1px solid var(--border);
+            padding: 1.5rem 1rem; display: flex; flex-direction: column; justify-content: space-between;
+            position: fixed; height: 100vh; z-index: 10;
         }
 
-        /* NAVEGAÇÃO SIDEBAR */
-        .nav-link {
-            display: flex; align-items: center; gap: 0.75rem;
-            padding: 0.75rem 1rem; color: var(--text-muted);
-            text-decoration: none; border-radius: var(--radius-md);
-            margin-bottom: 0.25rem; transition: var(--transition); cursor: pointer;
-        }
-        .nav-link:hover, .nav-link.active {
-            color: var(--text-main); background: var(--primary-glow);
-        }
+        .brand { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2rem; padding: 0 0.5rem; }
+        .brand-icon { width: 32px; height: 32px; background: #059669; border-radius: 8px; display: grid; place-items: center; color: white; }
+        .brand-text h2 { font-size: 0.95rem; font-weight: 800; line-height: 1.1; color: #064E3B; }
+        .brand-text span { font-size: 0.75rem; color: var(--primary-dark); font-weight: 600; }
 
-        /* CONTEÚDO DAS VIEWS */
-        .content-body { padding: 2rem; flex: 1; }
-        .view-panel { display: none; }
-        .view-panel.active { display: block; animation: fadeIn 0.3s ease; }
+        .nav-group { margin-bottom: 1.5rem; }
+        .nav-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; color: #9CA3AF; letter-spacing: 0.05em; padding: 0 0.75rem; margin-bottom: 0.5rem; }
+        
+        .nav-item {
+            display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.75rem;
+            color: #4B5563; text-decoration: none; border-radius: var(--radius-sm); font-weight: 500;
+            cursor: pointer; transition: 0.2s;
+        }
+        .nav-item:hover { background: #F3F4F6; color: var(--text-main); }
+        .nav-item.active { background: var(--primary-light); color: var(--primary-dark); font-weight: 600; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
+        .user-profile {
+            display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem;
+            border-top: 1px solid var(--border); padding-top: 1rem; cursor: pointer;
         }
+        .avatar { width: 36px; height: 36px; background: #065F46; color: white; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 0.85rem; }
 
-        /* CARDS & COMPONENTES */
-        .grid-dashboard {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;
-        }
-        .card {
-            background: var(--bg-card); border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg); padding: 1.5rem; transition: var(--transition);
-        }
-        .card:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.15); }
+        /* MAIN CONTENT */
+        #main-content { margin-left: 240px; flex: 1; padding: 2rem 2.5rem; max-width: 1400px; }
 
-        /* BOTÕES & INPUTS */
-        .btn {
-            background: var(--primary); color: white; border: none;
-            padding: 0.6rem 1.2rem; border-radius: var(--radius-md);
-            cursor: pointer; font-weight: 600; transition: var(--transition);
-            display: inline-flex; align-items: center; gap: 0.5rem;
-        }
-        .btn:hover { background: var(--primary-hover); }
-        .input-field {
-            width: 100%; padding: 0.75rem; background: rgba(0,0,0,0.2);
-            border: 1px solid var(--border-color); border-radius: var(--radius-md);
-            color: var(--text-main); margin-bottom: 1rem; outline: none;
-        }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .header-title h1 { font-size: 1.5rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
+        .header-title span { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+        .header-actions { display: flex; gap: 0.75rem; }
+        .icon-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: white; display: grid; place-items: center; color: #4B5563; cursor: pointer; }
 
-        @media (max-width: 768px) {
-            #sidebar { width: 70px; padding: 1rem 0.5rem; }
-            #sidebar .nav-text { display: none; }
-            #main-content { margin-left: 70px; }
+        /* DASHBOARD GRID */
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 300px; gap: 1.5rem; }
+        .left-column { display: flex; flex-direction: column; gap: 1.25rem; }
+        .right-column { display: flex; flex-direction: column; gap: 1.25rem; }
+
+        /* HERO CARD */
+        .hero-card {
+            background: linear-gradient(135deg, #EFFBF5 0%, #E6F4ED 100%);
+            border: 1px solid #D1EBE0; border-radius: var(--radius-lg); padding: 1.75rem;
+            display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden;
         }
+        .badge-tag { background: #D1FAE5; color: #065F46; font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 4px; display: inline-block; margin-left: 0.5rem; }
+        .hero-title { font-size: 1.35rem; font-weight: 800; margin: 0.5rem 0 0.75rem 0; color: #064E3B; }
+        .hero-info { display: flex; align-items: center; gap: 0.5rem; color: #374151; font-size: 0.85rem; font-weight: 500; }
+        .hero-teacher { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; }
+        .btn-primary { background: #059669; color: white; border: none; padding: 0.65rem 1.25rem; border-radius: var(--radius-md); font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1.25rem; }
+
+        /* METRICS ROW */
+        .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+        .metric-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem; display: flex; align-items: center; gap: 0.85rem; }
+        .metric-icon { width: 36px; height: 36px; border-radius: var(--radius-sm); display: grid; place-items: center; }
+        .metric-val { font-size: 1.1rem; font-weight: 700; margin-top: 0.1rem; }
+        .metric-lbl { font-size: 0.72rem; color: var(--text-muted); font-weight: 600; }
+
+        /* MIDDLE ROW */
+        .middle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .card-header h3 { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: #374151; letter-spacing: 0.02em; }
+
+        /* BAR CHART MOCK */
+        .chart-container { height: 120px; display: flex; align-items: flex-end; justify-content: space-between; gap: 0.5rem; padding-top: 1rem; }
+        .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+        .bar { width: 100%; max-width: 24px; background: #10B981; border-radius: 4px; }
+        .bar-label { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; }
+
+        /* DISCIPLINAS LIST */
+        .disc-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .disc-info { display: flex; align-items: center; gap: 0.75rem; }
+        .disc-icon { width: 28px; height: 28px; border-radius: 6px; display: grid; place-items: center; font-size: 0.8rem; }
+        .disc-name { font-weight: 600; font-size: 0.85rem; }
+        .disc-sub { font-size: 0.72rem; color: #EF4444; font-weight: 500; }
+        .progress-bar { width: 80px; height: 6px; background: #E5E7EB; border-radius: 10px; overflow: hidden; }
+        .progress-fill { height: 100%; border-radius: 10px; }
+
+        /* RECOMMENDATION BANNER */
+        .rec-banner {
+            background: var(--purple-bg); border: 1px solid var(--purple-border);
+            border-radius: var(--radius-lg); padding: 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+        }
+        .rec-text h4 { font-size: 0.75rem; font-weight: 700; color: var(--purple-text); text-transform: uppercase; margin-bottom: 0.25rem; }
+        .rec-text p { font-size: 0.82rem; color: #4C1D95; }
+        .btn-purple { background: white; border: 1px solid var(--purple-border); color: var(--purple-text); font-weight: 600; padding: 0.5rem 1rem; border-radius: var(--radius-md); cursor: pointer; white-space: nowrap; }
+
+        /* CALENDAR RIGHT COLUMN */
+        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.25rem; text-align: center; font-size: 0.75rem; }
+        .cal-day-name { font-weight: 700; color: var(--text-muted); padding-bottom: 0.5rem; }
+        .cal-day { padding: 0.4rem 0; border-radius: 50%; cursor: pointer; color: #374151; font-weight: 500; }
+        .cal-day.active { background: #059669; color: white; font-weight: 700; }
+        .cal-day.muted { color: #D1D5DB; }
+
+        /* EVENT LIST */
+        .event-item { display: flex; gap: 0.85rem; margin-bottom: 0.85rem; align-items: flex-start; }
+        .event-date { text-align: center; line-height: 1.1; }
+        .event-date .day { font-size: 0.9rem; font-weight: 800; color: #EF4444; }
+        .event-date .month { font-size: 0.65rem; font-weight: 700; color: #EF4444; text-transform: uppercase; }
+
+        /* FOCO RÁPIDO */
+        .foco-box { text-align: center; display: flex; flex-direction: column; align-items: center; }
+        .timer-circle { width: 100px; height: 100px; border-radius: 50%; border: 6px solid #10B981; display: grid; place-items: center; margin: 1rem 0; }
+        .timer-time { font-size: 1.4rem; font-weight: 800; }
+        .timer-unit { font-size: 0.7rem; color: var(--text-muted); }
+
+        select.select-disc { width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 0.8rem; color: var(--text-main); margin-bottom: 0.75rem; outline: none; }
     </style>
 </head>
 <body>
 
-    <!-- AUTH OVERLAY -->
-    <div id="auth-overlay">
-        <div class="auth-card">
-            <h2 style="margin-bottom: 1rem;">Portal UEG</h2>
-            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Insira a senha de acesso para continuar</p>
-            <input type="password" id="authPass" class="input-field" placeholder="Digite a senha..." />
-            <button class="btn" style="width: 100%; justify-content: center;" onclick="v8Authenticate()">Entrar</button>
-        </div>
-    </div>
-
     <!-- SIDEBAR -->
     <aside id="sidebar">
-        <div style="font-weight: 800; font-size: 1.25rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 0.5rem;">
-            <i data-lucide="graduation-cap"></i> <span class="nav-text">UEG Digital</span>
+        <div>
+            <div class="brand">
+                <div class="brand-icon"><i data-lucide="box"></i></div>
+                <div class="brand-text">
+                    <h2>CENTRAL DE ESTUDOS</h2>
+                    <span>Academic OS</span>
+                </div>
+            </div>
+
+            <div class="nav-group">
+                <a class="nav-item active"><i data-lucide="home" size="18"></i> Início</a>
+            </div>
+
+            <div class="nav-group">
+                <div class="nav-label">Estudos</div>
+                <a class="nav-item"><i data-lucide="book-open" size="18"></i> Disciplinas</a>
+                <a class="nav-item"><i data-lucide="check-square" size="18"></i> Tarefas</a>
+                <a class="nav-item"><i data-lucide="target" size="18"></i> Foco</a>
+            </div>
+
+            <div class="nav-group">
+                <div class="nav-label">Agenda</div>
+                <a class="nav-item"><i data-lucide="calendar" size="18"></i> Calendário</a>
+                <a class="nav-item"><i data-lucide="file-text" size="18"></i> Avaliações</a>
+            </div>
+
+            <div class="nav-group">
+                <div class="nav-label">Recursos</div>
+                <a class="nav-item"><i data-lucide="folder" size="18"></i> Materiais</a>
+                <a class="nav-item"><i data-lucide="edit-3" size="18"></i> Anotações</a>
+            </div>
+
+            <div class="nav-group">
+                <div class="nav-label">Análise</div>
+                <a class="nav-item"><i data-lucide="bar-chart-2" size="18"></i> Desempenho</a>
+            </div>
         </div>
-        <nav style="flex: 1;">
-            <a class="nav-link active" onclick="v7SetView('v7-dash', this)" aria-label="Acessar Dashboard">
-                <i data-lucide="layout-dashboard"></i><span class="nav-text">Dashboard</span>
-            </a>
-            <a class="nav-link" onclick="v7SetView('v7-disciplinas', this)" aria-label="Acessar Disciplinas">
-                <i data-lucide="book-open"></i><span class="nav-text">Disciplinas</span>
-            </a>
-            <a class="nav-link" onclick="v7SetView('v7-horarios', this)" aria-label="Acessar Horários">
-                <i data-lucide="clock"></i><span class="nav-text">Horários</span>
-            </a>
-            <a class="nav-link" onclick="v7SetView('v7-calendario', this)" aria-label="Acessar Calendário">
-                <i data-lucide="calendar"></i><span class="nav-text">Calendário</span>
-            </a>
-            <a class="nav-link" onclick="v7SetView('v7-foco', this)" aria-label="Acessar Modo Foco">
-                <i data-lucide="target"></i><span class="nav-text">Modo Foco</span>
-            </a>
-        </nav>
+
+        <div>
+            <a class="nav-item" style="margin-bottom: 0.5rem;"><i data-lucide="settings" size="18"></i> Configurações</a>
+            <div class="user-profile">
+                <div class="avatar">D</div>
+                <div>
+                    <div style="font-weight: 700; font-size: 0.85rem;">Daniel</div>
+                    <div style="font-size: 0.7rem; color: var(--text-muted);">2026/2 • Farmácia</div>
+                </div>
+            </div>
+        </div>
     </aside>
 
-    <!-- CONTENT AREA -->
-    <div id="main-content">
-        <header id="header">
-            <h3 id="page-title">Dashboard</h3>
-            <div style="display: flex; gap: 1rem; align-items: center;">
-                <button class="btn" style="background: transparent; border: 1px solid var(--border-color); padding: 0.5rem;" onclick="toggleTheme()" aria-label="Alternar Tema">
-                    <i data-lucide="sun-moon"></i>
-                </button>
+    <!-- MAIN CONTENT -->
+    <main id="main-content">
+        <header class="header">
+            <div class="header-title">
+                <h1>Boa noite, Daniel 👋</h1>
+                <span>Domingo, 16 de agosto de 2026</span>
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn"><i data-lucide="search" size="18"></i></button>
+                <button class="icon-btn"><i data-lucide="bell" size="18"></i></button>
+                <button class="icon-btn"><i data-lucide="moon" size="18"></i></button>
             </div>
         </header>
 
-        <main class="content-body">
-            <!-- DASHBOARD VIEW -->
-            <section id="v7-dash" class="view-panel active">
-                <div class="grid-dashboard">
-                    <div class="card">
-                        <h4>Progresso Geral</h4>
-                        <canvas id="chartProgresso" style="margin-top: 1rem; max-height: 200px;"></canvas>
+        <div class="dashboard-grid">
+            <!-- COLUNA ESQUERDA -->
+            <div class="left-column">
+                <!-- HERO COMPROMISSO -->
+                <div class="hero-card">
+                    <div>
+                        <span style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: #047857;">PRÓXIMO COMPROMISSO</span>
+                        <span class="badge-tag">Amanhã</span>
+                        <h2 class="hero-title">Controle de Qualidade<br>Microbiológico</h2>
+                        <div class="hero-info"><i data-lucide="clock" size="16"></i> 13:00 – 16:30</div>
+                        <div class="hero-teacher">Pamela Cristina de Sousa</div>
+                        <button class="btn-primary"><i data-lucide="play" size="16"></i> Começar foco</button>
                     </div>
-                    <div class="card">
-                        <h4>Avisos Recentes</h4>
-                        <p style="color: var(--text-muted); margin-top: 0.5rem;">Nenhum aviso novo no momento.</p>
+                    <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=220&q=80" style="border-radius: 12px; height: 140px; object-fit: cover;" alt="Estudos">
+                </div>
+
+                <!-- METRICAS -->
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon" style="background: #D1FAE5; color: #059669;"><i data-lucide="clock" size="18"></i></div>
+                        <div>
+                            <div class="metric-lbl">Foco esta semana</div>
+                            <div class="metric-val">6h 40m</div>
+                            <div style="font-size: 0.65rem; color: #10B981; font-weight: 700;">↑ +18% vs. semana passada</div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon" style="background: #EFF6FF; color: #2563EB;"><i data-lucide="check-square" size="18"></i></div>
+                        <div>
+                            <div class="metric-lbl">Tarefas pendentes</div>
+                            <div class="metric-val">4</div>
+                            <div style="font-size: 0.65rem; color: #F59E0B; font-weight: 700;">● 3 para hoje</div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon" style="background: #FEF2F2; color: #EF4444;"><i data-lucide="calendar" size="18"></i></div>
+                        <div>
+                            <div class="metric-lbl">Próxima avaliação</div>
+                            <div class="metric-val">43 dias</div>
+                            <div style="font-size: 0.65rem; color: var(--text-muted);">28 de setembro</div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon" style="background: #FEF3C7; color: #D97706;"><i data-lucide="target" size="18"></i></div>
+                        <div>
+                            <div class="metric-lbl">Meta semanal</div>
+                            <div class="metric-val">67%</div>
+                            <div style="font-size: 0.65rem; color: var(--text-muted);">10h de 15h</div>
+                        </div>
                     </div>
                 </div>
-            </section>
 
-            <!-- DISCIPLINAS VIEW -->
-            <section id="v7-disciplinas" class="view-panel">
+                <!-- GRÁFICOS E DISCIPLINAS -->
+                <div class="middle-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>TEMPO DE FOCO</h3>
+                            <span style="font-size: 0.75rem; color: var(--text-muted);">Esta semana ▾</span>
+                        </div>
+                        <div style="font-size: 1.2rem; font-weight: 800;">6h 40m</div>
+                        <div style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.5rem;">Tempo total de foco</div>
+                        
+                        <div class="chart-container">
+                            <div class="bar-col"><div class="bar" style="height: 50%;"></div><span class="bar-label">Seg</span></div>
+                            <div class="bar-col"><div class="bar" style="height: 75%;"></div><span class="bar-label">Ter</span></div>
+                            <div class="bar-col"><div class="bar" style="height: 40%;"></div><span class="bar-label">Qua</span></div>
+                            <div class="bar-col"><div class="bar" style="height: 85%;"></div><span class="bar-label">Qui</span></div>
+                            <div class="bar-col"><div class="bar" style="height: 60%;"></div><span class="bar-label">Sex</span></div>
+                            <div class="bar-col"><div class="bar" style="height: 70%;"></div><span class="bar-label">Sáb</span></div>
+                            <div class="bar-col"><div class="bar" style="height: 20%;"></div><span class="bar-label">Dom</span></div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>DISCIPLINAS QUE MERECEM ATENÇÃO</h3>
+                        </div>
+                        
+                        <div class="disc-item">
+                            <div class="disc-info">
+                                <div class="disc-icon" style="background: #E0E7FF; color: #4338CA;"><i data-lucide="book" size="14"></i></div>
+                                <div>
+                                    <div class="disc-name">Controle de Qualidade de Alimentos</div>
+                                    <div class="disc-sub">Próx. prova em 43 dias</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <div class="progress-bar"><div class="progress-fill" style="width: 72%; background: #10B981;"></div></div>
+                                <span style="font-size: 0.75rem; font-weight: 700;">72%</span>
+                            </div>
+                        </div>
+
+                        <div class="disc-item">
+                            <div class="disc-info">
+                                <div class="disc-icon" style="background: #FEF3C7; color: #D97706;"><i data-lucide="pie-chart" size="14"></i></div>
+                                <div>
+                                    <div class="disc-name">Bioestatística</div>
+                                    <div class="disc-sub" style="color: #F59E0B;">Próx. prova em 61 dias</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <div class="progress-bar"><div class="progress-fill" style="width: 61%; background: #F59E0B;"></div></div>
+                                <span style="font-size: 0.75rem; font-weight: 700;">61%</span>
+                            </div>
+                        </div>
+
+                        <div class="disc-item">
+                            <div class="disc-info">
+                                <div class="disc-icon" style="background: #F3E8FF; color: #7E22CE;"><i data-lucide="activity" size="14"></i></div>
+                                <div>
+                                    <div class="disc-name">Farmacologia Aplicada</div>
+                                    <div class="disc-sub" style="color: #F59E0B;">Próx. prova em 75 dias</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <div class="progress-bar"><div class="progress-fill" style="width: 48%; background: #F59E0B;"></div></div>
+                                <span style="font-size: 0.75rem; font-weight: 700;">48%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BANNER RECOMENDAÇÃO -->
+                <div class="rec-banner">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="width: 36px; height: 36px; background: #E9D5FF; border-radius: 50%; display: grid; place-items: center; color: #7E22CE;"><i data-lucide="cpu" size="20"></i></div>
+                        <div class="rec-text">
+                            <h4>RECOMENDAÇÃO INTELIGENTE</h4>
+                            <p>Sua próxima prova é em 43 dias. Recomendamos aumentar o foco em <strong>Controle de Qualidade de Alimentos</strong>.</p>
+                        </div>
+                    </div>
+                    <button class="btn-purple">Ver plano sugerido ›</button>
+                </div>
+            </div>
+
+            <!-- COLUNA DIREITA -->
+            <div class="right-column">
+                <!-- CALENDÁRIO -->
                 <div class="card">
-                    <h3>Minhas Disciplinas</h3>
-                    <p style="color: var(--text-muted); margin-top: 0.5rem;">Lista de matérias do semestre ativo.</p>
+                    <div class="calendar-header">
+                        <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted);">CALENDÁRIO</span>
+                        <a href="#" style="font-size: 0.75rem; color: #10B981; font-weight: 600; text-decoration: none;">Ver agenda</a>
+                    </div>
+                    <div style="font-weight: 700; margin-bottom: 0.75rem;">Agosto 2026</div>
+                    <div class="calendar-grid">
+                        <div class="cal-day-name">D</div><div class="cal-day-name">S</div><div class="cal-day-name">T</div><div class="cal-day-name">Q</div><div class="cal-day-name">Q</div><div class="cal-day-name">S</div><div class="cal-day-name">S</div>
+                        <div class="cal-day muted">26</div><div class="cal-day muted">27</div><div class="cal-day muted">28</div><div class="cal-day muted">29</div><div class="cal-day muted">30</div><div class="cal-day muted">31</div><div class="cal-day">1</div>
+                        <div class="cal-day">2</div><div class="cal-day">3</div><div class="cal-day">4</div><div class="cal-day">5</div><div class="cal-day">6</div><div class="cal-day">7</div><div class="cal-day">8</div>
+                        <div class="cal-day">9</div><div class="cal-day">10</div><div class="cal-day">11</div><div class="cal-day">12</div><div class="cal-day">13</div><div class="cal-day">14</div><div class="cal-day">15</div>
+                        <div class="cal-day active">16</div><div class="cal-day">17</div><div class="cal-day">18</div><div class="cal-day">19</div><div class="cal-day">20</div><div class="cal-day">21</div><div class="cal-day">22</div>
+                    </div>
                 </div>
-            </section>
 
-            <!-- HORÁRIOS VIEW -->
-            <section id="v7-horarios" class="view-panel">
+                <!-- PRÓXIMOS EVENTOS -->
                 <div class="card">
-                    <h3>Grade Horária</h3>
+                    <div class="card-header">
+                        <h3>PRÓXIMOS EVENTOS</h3>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-date"><div class="day">28</div><div class="month">SET</div></div>
+                        <div>
+                            <div style="font-weight: 700; font-size: 0.85rem;">Prova 1</div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted);">Controle de Qualidade de Alimentos</div>
+                        </div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-date"><div class="day" style="color: #F59E0B;">07</div><div class="month" style="color: #F59E0B;">DEZ</div></div>
+                        <div>
+                            <div style="font-weight: 700; font-size: 0.85rem;">Prova 2</div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted);">Controle de Qualidade de Alimentos</div>
+                        </div>
+                    </div>
                 </div>
-            </section>
 
-            <!-- CALENDÁRIO VIEW -->
-            <section id="v7-calendario" class="view-panel">
-                <div class="card">
-                    <div id="calendar"></div>
+                <!-- FOCO RÁPIDO -->
+                <div class="card foco-box">
+                    <div class="card-header" style="width: 100%;">
+                        <h3>FOCO RÁPIDO</h3>
+                    </div>
+                    <div class="timer-circle">
+                        <div>
+                            <div class="timer-time">25</div>
+                            <div class="timer-unit">min</div>
+                        </div>
+                    </div>
+                    <span style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">Sessão focada</span>
+                    <select class="select-disc">
+                        <option>Escolha uma disciplina</option>
+                    </select>
+                    <button class="btn-primary" style="width: 100%; justify-content: center;"><i data-lucide="play" size="16"></i> Iniciar foco</button>
                 </div>
-            </section>
-
-            <!-- FOCO VIEW -->
-            <section id="v7-foco" class="view-panel">
-                <div class="card" style="text-align: center; max-width: 400px; margin: 0 auto;">
-                    <h3>Timer Pomodoro</h3>
-                    <div style="font-size: 3rem; font-family: var(--font-mono); margin: 1.5rem 0;">25:00</div>
-                    <button class="btn">Iniciar Sessão</button>
-                </div>
-            </section>
-        </main>
-    </div>
+            </div>
+        </div>
+    </main>
 
     <script>
-        // Inicializar Lucide Icons
         lucide.createIcons();
-
-        // Autenticação básica
-        function v8Authenticate() {
-            const pass = document.getElementById('authPass').value;
-            if (pass === 'ueg2026') {
-                document.getElementById('auth-overlay').style.display = 'none';
-                localStorage.setItem('auth_token', 'granted');
-            } else {
-                alert('Senha incorreta!');
-            }
-        }
-
-        // Checar Sessão
-        if (localStorage.getItem('auth_token') === 'granted') {
-            document.getElementById('auth-overlay').style.display = 'none';
-        }
-
-        // Troca de Visões / Abas
-        function v7SetView(viewId, el) {
-            document.querySelectorAll('.view-panel').forEach(panel => panel.classList.remove('active'));
-            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-            
-            const target = document.getElementById(viewId);
-            if (target) {
-                target.classList.add('active');
-                if (el) el.classList.add('active');
-                
-                // Atualizar título do cabeçalho
-                const text = el ? el.querySelector('.nav-text').innerText : 'Dashboard';
-                document.getElementById('page-title').innerText = text;
-
-                // Renderização pontual do Calendário FullCalendar se ativado
-                if (viewId === 'v7-calendario' && !window.calendarInitialized) {
-                    initCalendar();
-                }
-            }
-        }
-
-        // Alternador de Tema Dark/Light
-        function toggleTheme() {
-            const current = document.documentElement.getAttribute('data-theme');
-            const next = current === 'light' ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', next);
-        }
-
-        // Inicialização do Gráfico de Progresso (Chart.js)
-        const ctx = document.getElementById('chartProgresso');
-        if (ctx) {
-            new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Concluído', 'Pendente'],
-                    datasets: [{
-                        data: [70, 30],
-                        backgroundColor: ['#3B82F6', '#1E293B'],
-                        borderWidth: 0
-                    }]
-                },
-                options: { responsive: true, plugins: { legend: { display: false } } }
-            });
-        }
-
-        // Inicialização sob demanda do FullCalendar
-        function initCalendar() {
-            const calendarEl = document.getElementById('calendar');
-            if (calendarEl) {
-                const calendar = new FullCalendar.Calendar(calendarEl, {
-                    initialView: 'dayGridMonth',
-                    locale: 'pt-br',
-                    headerToolbar: {
-                        left: 'prev,next today',
-                        center: 'title',
-                        right: 'dayGridMonth,timeGridWeek'
-                    }
-                });
-                calendar.render();
-                window.calendarInitialized = true;
-            }
-        }
     </script>
 </body>
 </html>
