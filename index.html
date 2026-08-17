@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Central de Estudos | UEG — V3.0</title>
+<title>Central de Estudos | UEG — V4.0</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <!-- GridStack CSS -->
 <link href="https://cdn.jsdelivr.net/npm/gridstack@9.2.0/dist/gridstack.min.css" rel="stylesheet"/>
@@ -204,6 +204,9 @@ header{min-height:88px;padding:17px 22px}.brand{gap:13px}.brand>div:first-child{
 @media(max-width:700px){body{padding:9px}header{min-height:70px;padding:12px 14px}.brand>div:first-child{width:40px;height:40px;border-radius:13px;font-size:1.05rem}.brand h1{font-size:.90rem}.brand p{font-size:.52rem}.clock{display:none}.toolbar{padding:8px}.toolbar-right{display:grid;grid-template-columns:repeat(2,1fr);width:100%}.toolbar-right .btn{width:100%}.grid-stack-item-content{padding:14px!important}.subjects{grid-template-columns:1fr}.schedule{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}}
 @media(max-width:450px){.login{margin-top:7vh;padding:30px 22px}.toolbar-right{grid-template-columns:1fr}.timer{font-size:2.35rem}}
 
+
+/* V4.0 — DASHBOARD INTELIGENTE */
+.dashboard-panel{display:grid;grid-template-columns:1.35fr 1fr 1fr 1fr;gap:10px;height:100%}.dashboard-hero{position:relative;min-width:0;padding:16px 18px;border-radius:16px;background:linear-gradient(135deg,rgba(21,128,61,.96),rgba(34,197,94,.82));color:#fff;overflow:hidden;box-shadow:0 12px 30px rgba(21,128,61,.18)}.dashboard-hero::after{content:"";position:absolute;width:150px;height:150px;right:-55px;top:-70px;border-radius:50%;background:rgba(255,255,255,.12)}.dashboard-kicker{font-size:.52rem;font-weight:800;text-transform:uppercase;letter-spacing:.12em;opacity:.82}.dashboard-hero h2{position:relative;z-index:1;margin-top:4px;font-size:1rem;line-height:1.2;letter-spacing:-.03em}.dashboard-hero p{position:relative;z-index:1;margin-top:5px;font-size:.57rem;font-weight:650;opacity:.88}.dashboard-next{position:relative;z-index:1;margin-top:11px;display:flex;align-items:center;gap:9px}.dashboard-next-icon{width:31px;height:31px;flex:none;display:flex;align-items:center;justify-content:center;border-radius:10px;background:rgba(255,255,255,.16);font-size:.82rem}.dashboard-next strong{display:block;font-size:.61rem;line-height:1.2}.dashboard-next span{display:block;margin-top:2px;font-size:.50rem;font-weight:650;opacity:.84}.dashboard-stat{min-width:0;padding:14px;border-radius:15px;background:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.42);display:flex;flex-direction:column;justify-content:space-between}.dashboard-stat-top{display:flex;justify-content:space-between;align-items:center;gap:6px}.dashboard-stat-icon{width:27px;height:27px;display:flex;align-items:center;justify-content:center;border-radius:9px;background:rgba(15,23,42,.06);font-size:.75rem}.dashboard-stat-label{color:var(--muted);font-size:.49rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em}.dashboard-stat-value{margin-top:5px;font-size:1.05rem;font-weight:800;letter-spacing:-.04em;line-height:1}.dashboard-stat-detail{margin-top:4px;color:var(--muted);font-size:.49rem;font-weight:700;line-height:1.3}.dashboard-attention{margin-top:7px;padding:5px 7px;border-radius:7px;background:rgba(239,68,68,.08);color:#b91c1c;font-size:.47rem;font-weight:800}.dashboard-today{margin-top:7px;display:flex;flex-direction:column;gap:4px}.dashboard-class-row{display:flex;align-items:center;gap:6px;min-width:0}.dashboard-class-dot{width:5px;height:5px;flex:none;border-radius:50%;background:var(--accent)}.dashboard-class-row span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.49rem;font-weight:750}.dashboard-mini-bar{height:4px;margin-top:7px;overflow:hidden;border-radius:99px;background:rgba(15,23,42,.07)}.dashboard-mini-bar span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--accent-dark),var(--accent-light))}body.theme-all-dark .dashboard-stat{background:rgba(255,255,255,.055);border-color:rgba(255,255,255,.10)}body.theme-all-dark .dashboard-stat-icon{background:rgba(255,255,255,.07)}body.theme-all-dark .dashboard-attention{background:rgba(239,68,68,.12);color:#fca5a5}@media(max-width:1100px){.dashboard-panel{grid-template-columns:1.4fr 1fr 1fr}.dashboard-hero{grid-column:1/-1}}@media(max-width:700px){.dashboard-panel{grid-template-columns:1fr 1fr}.dashboard-hero{grid-column:1/-1}}@media(max-width:450px){.dashboard-panel{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -236,6 +239,32 @@ header{min-height:88px;padding:17px 22px}.brand{gap:13px}.brand>div:first-child{
   </div>
 
   <div class="grid-stack">
+
+    <!-- V4.0 — VISÃO GERAL INTELIGENTE -->
+    <div class="grid-stack-item" gs-w="12" gs-h="2" gs-id="box-dashboard">
+      <div class="grid-stack-item-content glass">
+        <div class="dashboard-panel">
+          <div class="dashboard-hero">
+            <div class="dashboard-kicker">Visão geral acadêmica</div>
+            <h2 id="dashGreeting">Seu painel está pronto.</h2>
+            <p id="dashDate">Carregando sua agenda...</p>
+            <div class="dashboard-next">
+              <div class="dashboard-next-icon" id="dashNextIcon">📚</div>
+              <div><strong id="dashNextTitle">Calculando próxima atividade...</strong><span id="dashNextDetail">Aguarde os dados da sua agenda.</span></div>
+            </div>
+          </div>
+          <div class="dashboard-stat">
+            <div><div class="dashboard-stat-top"><span class="dashboard-stat-label">Hoje</span><span class="dashboard-stat-icon">🕐</span></div><div class="dashboard-stat-value" id="dashTodayCount">0</div><div class="dashboard-stat-detail" id="dashTodayDetail">Nenhuma aula hoje</div><div class="dashboard-today" id="dashTodayList"></div></div>
+          </div>
+          <div class="dashboard-stat">
+            <div><div class="dashboard-stat-top"><span class="dashboard-stat-label">Esta semana</span><span class="dashboard-stat-icon">📊</span></div><div class="dashboard-stat-value" id="dashWeekHours">0h</div><div class="dashboard-stat-detail" id="dashWeekDetail">0 aulas programadas</div><div class="dashboard-mini-bar"><span id="dashWeekBar" style="width:0%"></span></div></div>
+          </div>
+          <div class="dashboard-stat">
+            <div><div class="dashboard-stat-top"><span class="dashboard-stat-label">Próxima prova</span><span class="dashboard-stat-icon">🔴</span></div><div class="dashboard-stat-value" id="dashExamDays">—</div><div class="dashboard-stat-detail" id="dashExamDetail">Nenhuma avaliação cadastrada</div><div class="dashboard-attention" id="dashAttention" style="display:none"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
     
     <!-- CRONÔMETRO -->
     <div class="grid-stack-item" gs-w="4" gs-h="4" gs-id="box-pomodoro">
@@ -330,7 +359,7 @@ header{min-height:88px;padding:17px 22px}.brand{gap:13px}.brand>div:first-child{
 
 <script type="module">
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-import {getFirestore,collection,addDoc,onSnapshot,deleteDoc,doc,updateDoc,enableIndexedDbPersistence,query,orderBy,limit,serverTimestamp,getDocs} from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+import {getFirestore,collection,addDoc,onSnapshot,deleteDoc,doc,updateDoc,enableIndexedDbPersistence,query,orderBy,limit,serverTimestamp} from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 
 const firebaseConfig={apiKey:'AIzaSyC09EhGx9GSo4IUjxWXJxqksnKgOU4khQ',authDomain:'painel-estudos-54958.firebaseapp.com',projectId:'painel-estudos-54958',storageBucket:'painel-estudos-54958.firebasestorage.app',messagingSenderId:'491796500394',appId:'1:491796500394:web:f6d85850484df33b8de5d3'};
 const app=initializeApp(firebaseConfig);const db=getFirestore(app);
@@ -435,132 +464,10 @@ function subscribeRealtime(name,key,{sort=null,sortDir='asc',limitTo=null,revers
   realtimeUnsubs.push(unsub);
 }
 
-
-// =========================================================
-// DADOS INICIAIS — FARMÁCIA UEG ITUMBIARA 2026/2
-// Os dados abaixo são inseridos automaticamente apenas quando
-// ainda não existirem no Firebase. Itens já cadastrados não são duplicados.
-// =========================================================
-const ACADEMIC_DATA_2026_2 = {
-  subjects: [
-    {name:'Bioestatística', teacher:'Yuri Flores Albuquerque', color:'#2563eb'},
-    {name:'Controle de Qualidade de Alimentos', teacher:'Pamela Cristina de Sousa Guardiano Reis Oliveira', color:'#f59e0b'},
-    {name:'Economia e Gestão Farmacêutica', teacher:'João Nilson da Rosa', color:'#8b5cf6'},
-    {name:'Serviços Clínicos Farmacêuticos II', teacher:'Anna Paula de Sá Borges', color:'#ec4899'},
-    {name:'Controle de Qualidade Microbiológico', teacher:'Daniela Borges Marquez Barbosa', color:'#16a34a'},
-    {name:'Pesquisa e Desenvolvimento de Medicamentos', teacher:'Leonardo Gomes Souza', color:'#0891b2'},
-    {name:'Controle de Qualidade em Laboratório', teacher:'Nathália Cristina Morais Ferreira Pacífico', color:'#dc2626'}
-  ],
-  classes: [
-    {subject:'Controle de Qualidade Microbiológico', day:1, start:'13:00', end:'16:30'},
-    {subject:'Controle de Qualidade de Alimentos', day:2, start:'13:00', end:'16:30'},
-    {subject:'Pesquisa e Desenvolvimento de Medicamentos', day:3, start:'13:00', end:'15:30'},
-    {subject:'Serviços Clínicos Farmacêuticos II', day:3, start:'15:40', end:'19:50'},
-    {subject:'Bioestatística', day:4, start:'07:00', end:'08:40'},
-    {subject:'Economia e Gestão Farmacêutica', day:4, start:'13:00', end:'16:30'},
-    {subject:'Bioestatística', day:5, start:'07:00', end:'08:40'},
-    {subject:'Controle de Qualidade em Laboratório', day:5, start:'13:00', end:'15:30'}
-  ],
-  assessments: [
-    {subject:'Bioestatística', title:'Prova 1', date:'2026-10-08'},
-    {subject:'Bioestatística', title:'Prova 2', date:'2026-12-10', endDate:'2026-12-11'},
-    {subject:'Controle de Qualidade de Alimentos', title:'Prova 1', date:'2026-09-28'},
-    {subject:'Controle de Qualidade de Alimentos', title:'Prova 2', date:'2026-12-07'},
-    {subject:'Economia e Gestão Farmacêutica', title:'Prova 1', date:'2026-10-08'},
-    {subject:'Economia e Gestão Farmacêutica', title:'Prova 2', date:'2026-12-10'},
-    {subject:'Serviços Clínicos Farmacêuticos II', title:'Prova 1', date:'2026-09-30'},
-    {subject:'Serviços Clínicos Farmacêuticos II', title:'Prova 2', date:'2026-12-08'}
-  ]
-};
-
-async function ensureAcademicData2026_2(){
-  try{
-    const subjectSnap = await getDocs(col('subjects'));
-    const subjectMap = new Map();
-    subjectSnap.forEach(d=>subjectMap.set(d.data().name,d.id));
-
-    for(const s of ACADEMIC_DATA_2026_2.subjects){
-      if(!subjectMap.has(s.name)){
-        const ref = await addDoc(col('subjects'), {
-          name:s.name,
-          teacher:s.teacher,
-          color:s.color,
-          notes:'Semestre 2026/2 — Farmácia | UEG Itumbiara',
-          source:'academic_data_2026_2',
-          createdAt:serverTimestamp(),
-          updatedAt:serverTimestamp(),
-          clientTs:Date.now()
-        });
-        subjectMap.set(s.name,ref.id);
-      }
-    }
-
-    const classSnap = await getDocs(col('classes'));
-    const existingClasses = new Set();
-    classSnap.forEach(d=>{
-      const x=d.data();
-      existingClasses.add(`${x.subjectId}|${x.day}|${x.start}|${x.end}`);
-    });
-
-    for(const c of ACADEMIC_DATA_2026_2.classes){
-      const subjectId=subjectMap.get(c.subject);
-      if(!subjectId) continue;
-      const key=`${subjectId}|${c.day}|${c.start}|${c.end}`;
-      if(existingClasses.has(key)) continue;
-      const subject=ACADEMIC_DATA_2026_2.subjects.find(x=>x.name===c.subject);
-      await addDoc(col('classes'),{
-        subjectId,
-        title:c.subject,
-        day:c.day,
-        start:c.start,
-        end:c.end,
-        teacher:subject?.teacher||'',
-        room:'',
-        source:'academic_data_2026_2',
-        createdAt:serverTimestamp(),
-        updatedAt:serverTimestamp(),
-        clientTs:Date.now()
-      });
-      existingClasses.add(key);
-    }
-
-    const assessmentSnap = await getDocs(col('assessments'));
-    const existingAssessments = new Set();
-    assessmentSnap.forEach(d=>{
-      const x=d.data();
-      existingAssessments.add(`${x.subjectId}|${x.title}|${x.date}|${x.endDate||''}`);
-    });
-
-    for(const a of ACADEMIC_DATA_2026_2.assessments){
-      const subjectId=subjectMap.get(a.subject);
-      if(!subjectId) continue;
-      const key=`${subjectId}|${a.title}|${a.date}|${a.endDate||''}`;
-      if(existingAssessments.has(key)) continue;
-      await addDoc(col('assessments'),{
-        title:a.title,
-        subjectId,
-        date:a.date,
-        endDate:a.endDate||'',
-        time:'',
-        location:'',
-        content:'Calendário acadêmico 2026/2',
-        source:'academic_data_2026_2',
-        createdAt:serverTimestamp(),
-        updatedAt:serverTimestamp(),
-        clientTs:Date.now()
-      });
-      existingAssessments.add(key);
-    }
-  }catch(e){
-    console.error('Falha ao carregar dados acadêmicos iniciais:',e);
-    showToast('Não foi possível carregar os dados iniciais');
-  }
-}
-
 function bindRealtimeListeners(){
-  subscribeRealtime('subjects','subjects',{sort:'name',onData:()=>{renderSubjects();renderSchedule();renderStudySubjects()}});
-  subscribeRealtime('classes','classes',{sort:'day',onData:()=>{renderSubjects();renderSchedule()}});
-  subscribeRealtime('assessments','assessments',{sort:'date',onData:()=>{renderAssessments();renderCalendar()}});
+  subscribeRealtime('subjects','subjects',{sort:'name',onData:()=>{renderSubjects();renderSchedule();renderStudySubjects();renderDashboard()}});
+  subscribeRealtime('classes','classes',{sort:'day',onData:()=>{renderSubjects();renderSchedule();renderDashboard()}});
+  subscribeRealtime('assessments','assessments',{sort:'date',onData:()=>{renderAssessments();renderCalendar();renderDashboard()}});
 }
 
 async function writeDoc(name,id,payload){
@@ -664,7 +571,16 @@ function dayName(n){return ['','Segunda','Terça','Quarta','Quinta','Sexta'][n]|
 function formatDate(s){if(!s)return 'Sem data';const [y,m,d]=s.split('-');return `${d}/${m}/${y}`}
 function daysUntil(date){const a=new Date();a.setHours(0,0,0,0);const b=new Date(date+'T00:00:00');return Math.ceil((b-a)/86400000)}
 
-function renderAll(){renderSubjects();renderSchedule();renderAssessments();renderCalendar();renderStudySubjects()}
+
+/* V4.0 — DASHBOARD INTELIGENTE */
+function formatDurationMinutes(totalMinutes){const total=Math.max(0,Math.round(totalMinutes));const h=Math.floor(total/60),m=total%60;if(!h)return `${m}min`;if(!m)return `${h}h`;return `${h}h ${m}min`}
+function getClassMinutes(c){if(!c.start||!c.end)return 0;const [sh,sm]=c.start.split(':').map(Number),[eh,em]=c.end.split(':').map(Number);if([sh,sm,eh,em].some(Number.isNaN))return 0;let diff=(eh*60+em)-(sh*60+sm);if(diff<0)diff+=1440;return diff}
+function getNextClass(){const now=new Date(),today=now.getDay(),currentMinutes=now.getHours()*60+now.getMinutes();return data.classes.filter(c=>Number(c.day)>=1&&Number(c.day)<=5).map(c=>{const day=Number(c.day);let deltaDays=day-today;if(deltaDays<0)deltaDays+=7;const [h,m]=(c.start||'00:00').split(':').map(Number),startMinutes=(h||0)*60+(m||0);if(deltaDays===0&&startMinutes<=currentMinutes)deltaDays=7;return {...c,subject:data.subjects.find(s=>s.id===c.subjectId),deltaDays,startMinutes}}).sort((a,b)=>a.deltaDays-b.deltaDays||a.startMinutes-b.startMinutes)[0]||null}
+function getNextAssessment(){return data.assessments.filter(x=>x.date).map(x=>({...x,days:daysUntil(x.date)})).filter(x=>x.days>=0).sort((a,b)=>a.days-b.days||a.date.localeCompare(b.date))[0]||null}
+function getDayLabel(dayNumber){return ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'][dayNumber]||''}
+function renderDashboard(){const greeting=$('dashGreeting'),dateEl=$('dashDate');if(!greeting||!dateEl)return;const now=new Date(),dayName=now.toLocaleDateString('pt-BR',{weekday:'long'}),dateText=now.toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});greeting.textContent='Visão geral da sua faculdade';dateEl.textContent=`${dayName.charAt(0).toUpperCase()+dayName.slice(1)} • ${dateText}`;const todayNumber=now.getDay(),todayClasses=data.classes.filter(c=>Number(c.day)===todayNumber&&todayNumber>=1&&todayNumber<=5).sort((a,b)=>(a.start||'').localeCompare(b.start||''));$('dashTodayCount').textContent=todayClasses.length;$('dashTodayDetail').textContent=todayClasses.length===1?'1 aula programada hoje':`${todayClasses.length} aulas programadas hoje`;$('dashTodayList').innerHTML=todayClasses.slice(0,2).map(c=>{const s=data.subjects.find(x=>x.id===c.subjectId);return `<div class="dashboard-class-row"><span class="dashboard-class-dot" style="background:${s?.color||'var(--accent)'}"></span><span>${escapeHtml(c.start||'')} · ${escapeHtml(s?.name||c.title||'Aula')}</span></div>`}).join('')||'<div class="subtle" style="font-size:.49rem">Sem aulas hoje. Bom momento para organizar os estudos.</div>';const weekClasses=data.classes.filter(c=>Number(c.day)>=1&&Number(c.day)<=5),weekMinutes=weekClasses.reduce((sum,c)=>sum+getClassMinutes(c),0);$('dashWeekHours').textContent=formatDurationMinutes(weekMinutes);$('dashWeekDetail').textContent=`${weekClasses.length} ${weekClasses.length===1?'aula':'aulas'} na grade semanal`;$('dashWeekBar').style.width=`${Math.min(100,Math.round((weekMinutes/(30*60))*100))}%`;const nextClass=getNextClass();if(nextClass){const sub=nextClass.subject,when=nextClass.deltaDays===0?`Hoje às ${nextClass.start||'--:--'}`:nextClass.deltaDays===1?`Amanhã às ${nextClass.start||'--:--'}`:`${getDayLabel(Number(nextClass.day))} às ${nextClass.start||'--:--'}`;$('dashNextIcon').textContent='📚';$('dashNextTitle').textContent=sub?.name||nextClass.title||'Próxima aula';$('dashNextDetail').textContent=`${when}${nextClass.room?` • ${nextClass.room}`:''}`}else{$('dashNextIcon').textContent='✓';$('dashNextTitle').textContent='Nenhuma aula programada';$('dashNextDetail').textContent='Sua grade semanal está vazia.'}const exam=getNextAssessment();if(exam){$('dashExamDays').textContent=exam.days===0?'Hoje':exam.days===1?'1 dia':`${exam.days} dias`;const subject=data.subjects.find(s=>s.id===exam.subjectId);$('dashExamDetail').textContent=`${subject?.name||'Avaliação'} • ${formatDate(exam.date)}`;const attention=$('dashAttention');if(exam.days<=7){attention.style.display='block';attention.textContent=exam.days===0?'⚠️ Avaliação hoje':'⚠️ Atenção: avaliação próxima'}else if(exam.days<=14){attention.style.display='block';attention.textContent='Atenção: faltam menos de 15 dias'}else{attention.style.display='none'}}else{$('dashExamDays').textContent='—';$('dashExamDetail').textContent='Nenhuma avaliação futura';$('dashAttention').style.display='none'}}
+
+function renderAll(){renderSubjects();renderSchedule();renderAssessments();renderCalendar();renderStudySubjects();renderDashboard()}
 
 function renderSubjects(){
   $('subjectsGrid').innerHTML=data.subjects.length?data.subjects.map(s=>{
@@ -711,7 +627,7 @@ function assessmentBlock(x){
   const s=data.subjects.find(v=>v.id===x.subjectId);
   const d=daysUntil(x.date);
   const state=d<0?'Realizada':d===0?'É hoje!':d===1?'Amanhã':`Faltam ${d} dias`;
-  const dateLabel=x.endDate?`${formatDate(x.date)} – ${formatDate(x.endDate)}`:formatDate(x.date); return `<div class="item"><div class="item-head"><div class="item-title">${escapeHtml(x.title)}</div><span class="badge red">${d<0?'Realizada':d===0?'Hoje':d===1?'Amanhã':d+' dias'}</span></div><div class="meta">${escapeHtml(s?.name||'Geral')} • ${dateLabel}${x.time?' • '+x.time:''}</div><div class="exam-countdown"><strong>${state}</strong></div><div class="subject-actions"><button class="mini-btn" onclick="openAssessmentModal('${x.id}')">Editar</button><button class="mini-btn" onclick="removeDoc('assessments','${x.id}')">Excluir</button></div></div>`;
+  return `<div class="item"><div class="item-head"><div class="item-title">${escapeHtml(x.title)}</div><span class="badge red">${d<0?'Realizada':d===0?'Hoje':d===1?'Amanhã':d+' dias'}</span></div><div class="meta">${escapeHtml(s?.name||'Geral')} • ${formatDate(x.date)}${x.time?' • '+x.time:''}</div><div class="exam-countdown"><strong>${state}</strong></div><div class="subject-actions"><button class="mini-btn" onclick="openAssessmentModal('${x.id}')">Editar</button><button class="mini-btn" onclick="removeDoc('assessments','${x.id}')">Excluir</button></div></div>`;
 }
 
 function renderAssessments(){
@@ -885,7 +801,6 @@ window.addEventListener('scroll', () => {
 
 async function loadAll(){
   await initPersistence();
-  await ensureAcademicData2026_2();
   bindRealtimeListeners();
 }
 window.refreshAll=()=>{renderAll();showToast('Painel atualizado')};
