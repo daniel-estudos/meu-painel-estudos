@@ -8,7 +8,11 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link
+  href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+  rel="stylesheet"
+>
 
 <link
   href="https://cdn.jsdelivr.net/npm/gridstack@9.2.0/dist/gridstack.min.css"
@@ -16,33 +20,47 @@
 />
 
 <style>
+
 /* =========================================================
-   CENTRAL DE ESTUDOS 2.0
+   CENTRAL DE ESTUDOS — V2.0
+   IDENTIDADE VISUAL
    ========================================================= */
 
 :root{
-  --bg-overlay:rgba(5,10,18,.22);
-  --surface:rgba(255,255,255,.48);
-  --surface-strong:rgba(255,255,255,.66);
-  --surface-soft:rgba(255,255,255,.30);
-
-  --text:#0f172a;
-  --muted:#475569;
-  --border:rgba(255,255,255,.62);
 
   --accent:#15803d;
+  --accent-light:#22c55e;
   --accent-soft:rgba(21,128,61,.12);
 
   --danger:#dc2626;
   --warning:#d97706;
-  --info:#2563eb;
+  --blue:#2563eb;
 
-  --shadow:0 10px 35px rgba(0,0,0,.13);
-  --shadow-soft:0 5px 20px rgba(0,0,0,.09);
+  --text:#0f172a;
+  --muted:#475569;
+
+  --glass:rgba(255,255,255,.38);
+  --glass-strong:rgba(255,255,255,.58);
+  --glass-soft:rgba(255,255,255,.24);
+
+  --border:rgba(255,255,255,.62);
+
+  --shadow:
+    0 12px 40px rgba(0,0,0,.12);
+
+  --shadow-soft:
+    0 6px 22px rgba(0,0,0,.09);
 
   --radius:18px;
   --radius-small:12px;
+
+  --blur:18px;
+
+  --transition:
+    .18s ease;
+
 }
+
 
 /* =========================================================
    RESET
@@ -60,1111 +78,1828 @@ html{
 }
 
 body{
+
   min-height:100vh;
+
   padding:20px;
+
   color:var(--text);
+
   background:
-    linear-gradient(var(--bg-overlay),var(--bg-overlay)),
+    linear-gradient(
+      rgba(4,10,18,.18),
+      rgba(4,10,18,.18)
+    ),
     url('https://images8.alphacoders.com/896/thumb-1920-896653.jpg')
     center/cover fixed no-repeat;
+
+  transition:
+    background .3s ease,
+    color .3s ease;
+
+}
+
+body.app-active{
+
+  background:
+    linear-gradient(
+      rgba(4,10,18,.20),
+      rgba(4,10,18,.20)
+    ),
+    url('https://images8.alphacoders.com/896/thumb-1920-896653.jpg')
+    center/cover fixed no-repeat;
+
 }
 
 button,
 input,
 select,
 textarea{
+
   font:inherit;
+
 }
 
 button{
+
   user-select:none;
+
 }
 
 .hidden{
+
   display:none!important;
+
 }
+
 
 /* =========================================================
    TEMAS
    ========================================================= */
 
 body.theme-all-dark{
+
   --text:#f8fafc;
   --muted:#94a3b8;
-  --surface:rgba(20,24,35,.76);
-  --surface-strong:rgba(25,30,43,.86);
-  --surface-soft:rgba(255,255,255,.07);
+
+  --glass:rgba(18,23,34,.72);
+  --glass-strong:rgba(22,28,41,.84);
+  --glass-soft:rgba(255,255,255,.06);
+
   --border:rgba(255,255,255,.12);
-  --shadow:0 10px 35px rgba(0,0,0,.35);
+
+  --shadow:
+    0 14px 42px rgba(0,0,0,.35);
+
 }
 
-body.theme-all-dark .glass,
-body.theme-all-dark .login{
-  background:rgba(20,24,35,.78)!important;
-  border-color:rgba(255,255,255,.12)!important;
-  color:#f8fafc;
-}
+body.theme-all-dark .glass{
 
-body.theme-all-dark .input,
-body.theme-all-dark input,
-body.theme-all-dark select,
-body.theme-all-dark textarea{
-  color:#f8fafc;
-  background:rgba(255,255,255,.08);
-  border-color:rgba(255,255,255,.15);
+  background:var(--glass)!important;
+
+  border-color:
+    rgba(255,255,255,.12)!important;
+
+  color:#f8fafc!important;
+
 }
 
 body.theme-all-dark .subject-card,
 body.theme-all-dark .day,
 body.theme-all-dark .class-mini,
 body.theme-all-dark .item{
-  background:rgba(255,255,255,.055);
-  border-color:rgba(255,255,255,.10);
+
+  background:
+    rgba(255,255,255,.055)!important;
+
+  border-color:
+    rgba(255,255,255,.10)!important;
+
+}
+
+body.theme-all-dark .teacher,
+body.theme-all-dark .meta,
+body.theme-all-dark .subtle,
+body.theme-all-dark .clock span,
+body.theme-all-dark .brand p{
+
+  color:#94a3b8!important;
+
 }
 
 body.theme-all-dark .mini-btn,
 body.theme-all-dark .btn-sec{
+
   color:#f8fafc;
-  background:rgba(255,255,255,.08);
-  border-color:rgba(255,255,255,.15);
+
+  background:
+    rgba(255,255,255,.08);
+
+  border-color:
+    rgba(255,255,255,.14);
+
 }
 
+
 body.theme-all-light{
+
   --text:#0f172a;
   --muted:#475569;
-  --surface:rgba(255,255,255,.66);
-  --surface-strong:rgba(255,255,255,.82);
-  --surface-soft:rgba(255,255,255,.45);
-  --border:rgba(255,255,255,.75);
+
+  --glass:rgba(255,255,255,.68);
+  --glass-strong:rgba(255,255,255,.82);
+  --glass-soft:rgba(255,255,255,.48);
+
+  --border:rgba(255,255,255,.78);
+
 }
 
 body.theme-all-light{
+
   background:
-    linear-gradient(rgba(255,255,255,.15),rgba(255,255,255,.15)),
+    linear-gradient(
+      rgba(255,255,255,.16),
+      rgba(255,255,255,.16)
+    ),
     url('https://images8.alphacoders.com/896/thumb-1920-896653.jpg')
     center/cover fixed no-repeat;
+
 }
+
+body.theme-all-light .dark-glass-card{
+
+  background:
+    rgba(255,255,255,.60)!important;
+
+  color:var(--text)!important;
+
+}
+
+body.theme-all-light #calendarMonth,
+body.theme-all-light .cal-head-dark{
+
+  color:var(--text)!important;
+
+}
+
+body.theme-all-light .cal-nav-btn{
+
+  color:#000;
+
+  background:
+    rgba(0,0,0,.10);
+
+}
+
+
+/* =========================================================
+   APLICAÇÃO
+   ========================================================= */
+
+.app{
+
+  width:100%;
+
+  max-width:1450px;
+
+  margin:0 auto;
+
+  display:none;
+
+  flex-direction:column;
+
+  gap:15px;
+
+}
+
 
 /* =========================================================
    GLASS
    ========================================================= */
 
 .glass{
-  background:var(--surface)!important;
-  backdrop-filter:blur(18px) saturate(130%);
-  -webkit-backdrop-filter:blur(18px) saturate(130%);
 
-  border:1px solid var(--border)!important;
-  border-radius:var(--radius);
+  position:relative;
 
-  box-shadow:var(--shadow);
+  background:
+    var(--glass)!important;
 
-  color:var(--text);
+  backdrop-filter:
+    blur(var(--blur))
+    saturate(135%)!important;
+
+  -webkit-backdrop-filter:
+    blur(var(--blur))
+    saturate(135%)!important;
+
+  border:
+    1px solid var(--border)!important;
+
+  border-radius:
+    var(--radius);
+
+  box-shadow:
+    var(--shadow);
+
+  color:
+    var(--text);
+
+  transition:
+    transform var(--transition),
+    box-shadow var(--transition),
+    background var(--transition);
+
 }
+
+.glass::before{
+
+  content:"";
+
+  position:absolute;
+
+  inset:0;
+
+  border-radius:inherit;
+
+  pointer-events:none;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.18),
+      transparent 45%
+    );
+
+  opacity:.55;
+
+}
+
 
 /* =========================================================
    LOGIN
    ========================================================= */
 
 .login{
-  max-width:400px;
-  margin:12vh auto;
-  padding:38px 28px;
+
+  width:100%;
+
+  max-width:390px;
+
+  margin:
+    12vh auto;
+
+  padding:
+    38px 28px;
 
   display:flex;
+
   flex-direction:column;
+
   gap:15px;
 
   text-align:center;
 
-  background:rgba(255,255,255,.64);
-  backdrop-filter:blur(18px);
-  -webkit-backdrop-filter:blur(18px);
+  background:
+    rgba(255,255,255,.58)!important;
 
-  border:1px solid var(--border);
-  border-radius:24px;
+  backdrop-filter:
+    blur(20px)!important;
 
-  box-shadow:var(--shadow);
+  -webkit-backdrop-filter:
+    blur(20px)!important;
+
+  border:
+    1px solid var(--border);
+
+  border-radius:
+    24px;
+
+  box-shadow:
+    var(--shadow);
+
 }
 
 .login-icon{
-  font-size:2.6rem;
+
+  width:58px;
+
+  height:58px;
+
+  margin:0 auto;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  border-radius:18px;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--accent),
+      var(--accent-light)
+    );
+
+  color:#fff;
+
+  font-size:1.65rem;
+
+  box-shadow:
+    0 8px 22px rgba(21,128,61,.28);
+
 }
 
 .login h2{
+
   font-size:1.35rem;
+
   font-weight:800;
+
 }
 
 .login p{
+
   color:var(--muted);
-  font-size:.78rem;
+
+  font-size:.70rem;
+
   font-weight:600;
+
   line-height:1.5;
+
 }
 
 .login input{
+
   width:100%;
-  padding:13px 15px;
 
-  border-radius:12px;
-  border:1px solid rgba(15,23,42,.18);
+  padding:
+    12px 14px;
 
-  background:rgba(255,255,255,.65);
+  border:
+    1px solid rgba(15,23,42,.18);
+
+  border-radius:
+    12px;
+
+  background:
+    rgba(255,255,255,.68);
+
   outline:none;
 
   text-align:center;
+
+  transition:
+    .18s ease;
+
 }
 
 .login input:focus{
-  border-color:var(--accent);
-  box-shadow:0 0 0 3px var(--accent-soft);
+
+  border-color:
+    var(--accent);
+
+  box-shadow:
+    0 0 0 3px
+    var(--accent-soft);
+
 }
+
 
 /* =========================================================
    BOTÕES
    ========================================================= */
 
 .btn{
-  border:0;
-  border-radius:999px;
 
-  padding:10px 15px;
+  border:0;
+
+  border-radius:
+    999px;
+
+  padding:
+    9px 14px;
 
   background:#000;
+
   color:#fff;
 
-  font-size:.72rem;
+  font-size:.70rem;
+
   font-weight:800;
 
   cursor:pointer;
+
+  box-shadow:
+    0 3px 10px rgba(0,0,0,.15);
 
   transition:
     transform .15s ease,
     opacity .15s ease,
     box-shadow .15s ease;
+
 }
 
 .btn:hover{
-  opacity:.9;
-  transform:translateY(-1px);
+
+  opacity:.90;
+
+  transform:
+    translateY(-1px);
+
 }
 
 .btn:active{
-  transform:translateY(0);
+
+  transform:
+    translateY(0);
+
 }
 
 .btn-green{
-  background:var(--accent);
+
+  background:
+    linear-gradient(
+      135deg,
+      #15803d,
+      #16a34a
+    );
+
 }
 
 .btn-red{
-  background:var(--danger);
+
+  background:
+    linear-gradient(
+      135deg,
+      #dc2626,
+      #ef4444
+    );
+
 }
 
 .btn-orange{
-  background:var(--warning);
+
+  background:
+    linear-gradient(
+      135deg,
+      #d97706,
+      #f59e0b
+    );
+
 }
 
 .btn-sec{
-  color:#0f172a;
-  background:rgba(255,255,255,.48);
-  border:1px solid rgba(15,23,42,.18);
+
+  background:
+    rgba(255,255,255,.42);
+
+  color:
+    var(--text);
+
+  border:
+    1px solid rgba(15,23,42,.15);
+
 }
 
-/* =========================================================
-   APP
-   ========================================================= */
-
-.app{
-  width:100%;
-  max-width:1450px;
-
-  margin:0 auto;
-
-  display:none;
-  flex-direction:column;
-  gap:16px;
-}
 
 /* =========================================================
    HEADER
    ========================================================= */
 
 header{
-  min-height:90px;
 
-  padding:18px 22px;
+  min-height:
+    86px;
+
+  padding:
+    17px 21px;
 
   display:flex;
-  justify-content:space-between;
+
+  justify-content:
+    space-between;
+
   align-items:center;
+
   gap:20px;
+
 }
 
 .brand{
+
   display:flex;
+
   align-items:center;
+
   gap:13px;
+
 }
 
 .brand-icon{
-  width:44px;
-  height:44px;
+
+  width:46px;
+
+  height:46px;
 
   display:flex;
+
   align-items:center;
+
   justify-content:center;
 
-  border-radius:14px;
+  border-radius:15px;
 
-  background:var(--accent);
+  background:
+    linear-gradient(
+      135deg,
+      var(--accent),
+      var(--accent-light)
+    );
+
   color:#fff;
 
   font-size:1.3rem;
 
-  box-shadow:0 6px 16px rgba(21,128,61,.25);
+  box-shadow:
+    0 8px 20px
+    rgba(21,128,61,.24);
+
 }
 
 .brand h1{
-  font-size:1.15rem;
-  font-weight:800;
+
+  font-size:
+    1.18rem;
+
+  font-weight:
+    800;
+
+  letter-spacing:
+    -.02em;
+
 }
 
 .brand p{
+
   margin-top:3px;
 
-  color:var(--muted);
+  color:
+    var(--muted);
 
-  font-size:.68rem;
-  font-weight:700;
+  font-size:
+    .67rem;
+
+  font-weight:
+    700;
+
 }
 
 .brand-meta{
-  margin-top:5px;
 
-  color:var(--muted);
+  margin-top:4px;
 
-  font-size:.61rem;
-  font-weight:700;
+  color:
+    var(--muted);
+
+  font-size:
+    .56rem;
+
+  font-weight:
+    800;
+
+  text-transform:
+    uppercase;
+
+  letter-spacing:
+    .07em;
+
 }
 
 .clock{
+
   text-align:right;
+
 }
 
 .clock strong{
+
   display:block;
-  font-size:1.15rem;
-  font-weight:800;
+
+  font-size:
+    1.12rem;
+
+  font-weight:
+    800;
+
+  letter-spacing:
+    -.02em;
+
 }
 
 .clock span{
+
   display:block;
+
   margin-top:3px;
 
-  color:var(--muted);
+  color:
+    var(--muted);
 
-  font-size:.65rem;
-  font-weight:700;
+  font-size:
+    .62rem;
 
-  text-transform:capitalize;
+  font-weight:
+    700;
+
+  text-transform:
+    capitalize;
+
 }
+
 
 /* =========================================================
    TOOLBAR
    ========================================================= */
 
 .toolbar{
-  padding:12px 15px;
+
+  padding:
+    11px 14px;
 
   display:flex;
+
+  justify-content:
+    space-between;
+
   align-items:center;
-  justify-content:space-between;
 
-  gap:12px;
+  gap:11px;
+
   flex-wrap:wrap;
-}
 
-.quick-title{
-  font-size:.65rem;
-  font-weight:800;
-
-  text-transform:uppercase;
-  letter-spacing:.06em;
 }
 
 .ai-bar{
+
   display:flex;
+
   align-items:center;
 
-  gap:8px;
+  gap:7px;
 
   flex:1;
-  min-width:280px;
+
+  min-width:300px;
+
 }
 
 .ai-bar input{
+
   flex:1;
 
-  padding:10px 15px;
+  padding:
+    10px 16px;
 
-  border-radius:999px;
-  border:1px solid rgba(15,23,42,.18);
+  border:
+    1px solid rgba(15,23,42,.16);
 
-  background:rgba(255,255,255,.62);
+  border-radius:
+    999px;
+
+  background:
+    rgba(255,255,255,.58);
 
   outline:none;
 
-  font-size:.72rem;
+  font-size:
+    .70rem;
+
+  transition:
+    .18s ease;
+
 }
 
 .ai-bar input:focus{
-  border-color:var(--accent);
-  box-shadow:0 0 0 3px var(--accent-soft);
+
+  border-color:
+    var(--accent);
+
+  box-shadow:
+    0 0 0 3px
+    var(--accent-soft);
+
 }
 
 .toolbar-right{
+
   display:flex;
+
   align-items:center;
-  gap:7px;
+
+  gap:6px;
+
   flex-wrap:wrap;
+
 }
+
 
 /* =========================================================
    GRID
    ========================================================= */
 
 .grid-stack{
-  min-height:400px;
+
+  min-height:
+    450px;
+
 }
 
 .grid-stack-item-content{
-  padding:18px!important;
-  overflow:auto!important;
-  border-radius:var(--radius)!important;
+
+  padding:
+    18px!important;
+
+  overflow:
+    auto!important;
+
+}
+
+.grid-stack-item-content:hover{
+
+  box-shadow:
+    0 15px 45px rgba(0,0,0,.15);
+
 }
 
 .section-head{
+
   display:flex;
-  justify-content:space-between;
+
+  justify-content:
+    space-between;
+
   align-items:center;
 
   gap:8px;
 
-  margin-bottom:14px;
+  margin-bottom:
+    13px;
+
 }
 
 .title{
-  font-size:.76rem;
-  font-weight:800;
 
-  text-transform:uppercase;
-  letter-spacing:.05em;
+  font-size:
+    .73rem;
+
+  font-weight:
+    800;
+
+  text-transform:
+    uppercase;
+
+  letter-spacing:
+    .065em;
+
 }
 
 .subtle{
-  color:var(--muted);
-  font-size:.65rem;
-  font-weight:700;
+
+  color:
+    var(--muted);
+
+  font-size:
+    .62rem;
+
+  font-weight:
+    700;
+
 }
 
+
 /* =========================================================
-   MODO EDIÇÃO
+   MODO DE EDIÇÃO
    ========================================================= */
 
 .drag-handle{
+
   display:none;
 
   cursor:grab;
 
   margin-right:6px;
-  padding:3px 6px;
+
+  padding:
+    2px 6px;
 
   border-radius:6px;
 
-  background:rgba(0,0,0,.08);
+  background:
+    rgba(0,0,0,.08);
 
-  font-size:.9rem;
+  font-size:
+    .9rem;
+
 }
 
 body.edit-mode .drag-handle{
+
   display:inline-block;
+
 }
 
-body.edit-mode .grid-stack-item-content{
-  border:2px dashed var(--accent)!important;
+body.edit-mode
+.grid-stack-item-content{
+
+  border:
+    2px dashed
+    var(--accent)!important;
+
 }
 
-/* =========================================================
-   POMODORO
-   ========================================================= */
-
-.pomodoro-modes{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-
-  gap:6px;
-
-  margin-bottom:10px;
-}
-
-.pomodoro-mode{
-  padding:8px 5px;
-
-  border:1px solid rgba(15,23,42,.14);
-  border-radius:10px;
-
-  background:rgba(255,255,255,.38);
-
-  font-size:.62rem;
-  font-weight:800;
-
-  cursor:pointer;
-}
-
-.pomodoro-mode.active{
-  border-color:var(--accent);
-  background:var(--accent-soft);
-}
-
-.custom-timer-input{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  gap:6px;
-
-  margin-bottom:10px;
-
-  color:var(--muted);
-
-  font-size:.62rem;
-  font-weight:700;
-}
-
-.custom-timer-input input{
-  width:62px;
-
-  padding:5px 7px;
-
-  border:1px solid rgba(15,23,42,.16);
-  border-radius:8px;
-
-  background:rgba(255,255,255,.55);
-
-  text-align:center;
-}
-
-.timer-wrap{
-  padding:20px 14px;
-
-  border-radius:16px;
-
-  background:rgba(255,255,255,.34);
-  border:2px solid rgba(21,128,61,.18);
-
-  text-align:center;
-}
-
-.timer{
-  margin:6px 0;
-
-  font-size:3rem;
-  line-height:1;
-
-  font-weight:800;
-  letter-spacing:-.04em;
-}
-
-.timer-label{
-  font-size:.62rem;
-  font-weight:800;
-
-  color:var(--muted);
-
-  text-transform:uppercase;
-}
-
-.pomodoro-status{
-  color:var(--muted);
-
-  font-size:.6rem;
-  font-weight:700;
-}
-
-.pomodoro-actions{
-  display:flex;
-  justify-content:center;
-  gap:6px;
-
-  margin-top:10px;
-}
-
-.study-select{
-  max-width:125px;
-
-  padding:5px 7px;
-
-  border-radius:8px;
-  border:1px solid rgba(15,23,42,.18);
-
-  background:rgba(255,255,255,.55);
-
-  font-size:.62rem;
-  font-weight:700;
-}
-
-/* =========================================================
-   CALENDÁRIO
-   ========================================================= */
-
-.calendar-card{
-  background:rgba(15,23,42,.78)!important;
-  color:#fff!important;
-
-  border-color:rgba(255,255,255,.12)!important;
-}
-
-.cal-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-
-  margin-bottom:15px;
-}
-
-.cal-month{
-  color:#fff;
-
-  font-size:.88rem;
-  font-weight:800;
-}
-
-.cal-nav{
-  display:flex;
-  gap:5px;
-}
-
-.cal-nav-btn{
-  width:28px;
-  height:28px;
-
-  border:0;
-  border-radius:8px;
-
-  background:rgba(255,255,255,.12);
-  color:#fff;
-
-  cursor:pointer;
-
-  font-size:.9rem;
-}
-
-.cal-nav-btn:hover{
-  background:rgba(255,255,255,.22);
-}
-
-.calendar-grid{
-  display:grid;
-  grid-template-columns:repeat(7,1fr);
-
-  gap:4px;
-
-  text-align:center;
-}
-
-.cal-weekday{
-  padding:5px 0;
-
-  color:#94a3b8;
-
-  font-size:.58rem;
-  font-weight:700;
-}
-
-.cal-day{
-  min-height:34px;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  position:relative;
-
-  border-radius:8px;
-
-  color:#e2e8f0;
-
-  font-size:.68rem;
-  font-weight:600;
-
-  background:rgba(255,255,255,.035);
-}
-
-.cal-day.empty{
-  background:transparent;
-}
-
-.cal-day.today{
-  color:#fff;
-
-  background:rgba(21,128,61,.65);
-
-  box-shadow:0 0 0 1px rgba(255,255,255,.25);
-}
-
-.exam-dot{
-  width:4px;
-  height:4px;
-
-  position:absolute;
-  bottom:4px;
-
-  border-radius:50%;
-
-  background:#ef4444;
-}
 
 /* =========================================================
    DISCIPLINAS
    ========================================================= */
 
 .subjects{
+
   display:grid;
 
   grid-template-columns:
-    repeat(auto-fill,minmax(230px,1fr));
+    repeat(
+      auto-fill,
+      minmax(230px,1fr)
+    );
 
   gap:10px;
+
 }
 
 .subject-card{
-  padding:13px;
 
-  border-radius:13px;
+  position:relative;
 
-  background:rgba(255,255,255,.30);
+  padding:
+    13px;
 
-  border:1px solid var(--border);
-  border-left:4px solid var(--accent);
+  border-radius:
+    13px;
 
-  box-shadow:var(--shadow-soft);
+  background:
+    rgba(255,255,255,.30);
+
+  border:
+    1px solid var(--border);
+
+  border-left:
+    4px solid var(--accent);
+
+  box-shadow:
+    var(--shadow-soft);
 
   cursor:pointer;
 
   transition:
-    transform .15s ease,
-    box-shadow .15s ease;
+    transform .16s ease,
+    box-shadow .16s ease,
+    background .16s ease;
+
 }
 
 .subject-card:hover{
-  transform:translateY(-2px);
 
-  box-shadow:0 10px 25px rgba(0,0,0,.13);
+  transform:
+    translateY(-2px);
+
+  box-shadow:
+    0 12px 30px
+    rgba(0,0,0,.13);
+
+  background:
+    rgba(255,255,255,.40);
+
 }
 
 .subject-top{
+
   display:flex;
-  justify-content:space-between;
+
+  justify-content:
+    space-between;
 
   gap:8px;
+
 }
 
 .subject-name{
-  font-size:.77rem;
-  font-weight:800;
-  line-height:1.25;
+
+  font-size:
+    .78rem;
+
+  font-weight:
+    800;
+
+  line-height:
+    1.25;
+
 }
 
 .teacher{
+
   margin-top:3px;
 
-  color:var(--muted);
+  color:
+    var(--muted);
 
-  font-size:.61rem;
-  font-weight:700;
+  font-size:
+    .61rem;
+
+  font-weight:
+    700;
+
 }
 
 .subject-time{
+
   margin-top:7px;
 
-  font-size:.62rem;
-  font-weight:800;
+  font-size:
+    .62rem;
+
+  font-weight:
+    800;
+
 }
 
 .chips{
+
   display:flex;
+
   flex-wrap:wrap;
+
   gap:4px;
 
   margin-top:7px;
+
 }
 
 .chip{
-  padding:3px 7px;
 
-  border-radius:999px;
+  padding:
+    3px 7px;
 
-  background:#fee2e2;
-  color:#991b1b;
+  border-radius:
+    999px;
 
-  font-size:.54rem;
-  font-weight:800;
+  background:
+    #fee2e2;
+
+  color:
+    #991b1b;
+
+  font-size:
+    .52rem;
+
+  font-weight:
+    800;
+
 }
 
 .subject-actions{
+
   display:flex;
+
   gap:5px;
 
   margin-top:9px;
+
 }
 
 .mini-btn{
-  padding:5px 8px;
 
-  border-radius:7px;
+  padding:
+    5px 8px;
 
-  border:1px solid rgba(15,23,42,.16);
+  border:
+    1px solid rgba(15,23,42,.15);
 
-  background:rgba(255,255,255,.55);
-  color:#334155;
+  border-radius:
+    7px;
 
-  font-size:.56rem;
-  font-weight:800;
+  background:
+    rgba(255,255,255,.54);
+
+  color:
+    var(--text);
+
+  font-size:
+    .55rem;
+
+  font-weight:
+    800;
 
   cursor:pointer;
+
+  transition:
+    .15s ease;
+
 }
 
 .mini-btn:hover{
+
   background:#000;
+
   color:#fff;
+
+  transform:
+    translateY(-1px);
+
 }
 
 .mini-btn.red:hover{
-  background:var(--danger);
+
+  background:
+    var(--danger);
+
 }
+
 
 /* =========================================================
    HORÁRIOS
    ========================================================= */
 
 .schedule{
+
   display:grid;
 
-  grid-template-columns:repeat(5,1fr);
+  grid-template-columns:
+    repeat(5,1fr);
 
   gap:10px;
+
 }
 
 .day{
-  min-height:110px;
 
-  padding:11px;
+  min-height:
+    100px;
 
-  border-radius:13px;
+  padding:
+    11px;
 
-  background:rgba(255,255,255,.25);
+  border-radius:
+    13px;
 
-  border:1px solid var(--border);
+  background:
+    rgba(255,255,255,.25);
+
+  border:
+    1px solid var(--border);
+
+  transition:
+    .16s ease;
+
 }
 
 .day.is-today{
-  border-color:var(--accent);
+
+  border-color:
+    var(--accent);
 
   box-shadow:
-    0 0 0 1px var(--accent),
-    0 5px 20px rgba(21,128,61,.10);
+    0 0 0 1px
+    var(--accent),
+    0 8px 24px
+    rgba(21,128,61,.10);
+
 }
 
 .day h4{
+
   display:flex;
+
+  justify-content:
+    space-between;
+
   align-items:center;
-  justify-content:space-between;
 
-  margin-bottom:7px;
+  margin-bottom:
+    7px;
 
-  font-size:.62rem;
+  font-size:
+    .61rem;
 
-  text-transform:uppercase;
+  font-weight:
+    800;
+
+  text-transform:
+    uppercase;
+
 }
 
 .today-tag{
-  padding:3px 6px;
 
-  border-radius:999px;
+  padding:
+    3px 6px;
 
-  background:var(--accent);
+  border-radius:
+    999px;
+
+  background:
+    var(--accent);
+
   color:#fff;
 
-  font-size:.48rem;
-  font-weight:800;
+  font-size:
+    .47rem;
+
+  font-weight:
+    800;
+
 }
 
 .class-mini{
-  padding:8px;
 
-  margin-top:6px;
+  padding:
+    8px 9px;
 
-  border-radius:9px;
+  margin-top:
+    6px;
 
-  background:rgba(255,255,255,.42);
+  border-radius:
+    9px;
 
-  border:1px solid rgba(0,0,0,.07);
-  border-left:4px solid var(--accent);
+  background:
+    rgba(255,255,255,.40);
+
+  border:
+    1px solid rgba(0,0,0,.07);
+
+  border-left:
+    4px solid var(--accent);
 
   display:flex;
-  flex-direction:column;
+
+  flex-direction:
+    column;
+
   gap:4px;
+
+}
+
+.class-mini-top{
+
+  display:flex;
+
+  justify-content:
+    space-between;
+
+  align-items:
+    flex-start;
+
+  gap:6px;
+
 }
 
 .class-mini strong{
-  font-size:.61rem;
-  line-height:1.2;
+
+  font-size:
+    .61rem;
+
+  line-height:
+    1.2;
+
 }
 
 .class-mini span{
-  color:var(--muted);
 
-  font-size:.54rem;
-  font-weight:700;
+  color:
+    var(--muted);
+
+  font-size:
+    .54rem;
+
+  font-weight:
+    700;
+
 }
 
 .class-mini-actions{
+
   display:flex;
+
   gap:4px;
+
 }
+
 
 /* =========================================================
    PROVAS
    ========================================================= */
 
 .item{
-  padding:11px 12px;
 
-  margin-top:8px;
+  padding:
+    11px 12px;
 
-  border-radius:11px;
+  margin-top:
+    8px;
 
-  background:rgba(255,255,255,.32);
+  border-radius:
+    11px;
 
-  border:1px solid rgba(0,0,0,.10);
+  background:
+    rgba(255,255,255,.30);
+
+  border:
+    1px solid rgba(0,0,0,.09);
+
+  transition:
+    .16s ease;
+
+}
+
+.item:hover{
+
+  transform:
+    translateY(-1px);
+
+  box-shadow:
+    var(--shadow-soft);
+
 }
 
 .item-head{
-  display:flex;
-  justify-content:space-between;
 
-  gap:7px;
+  display:flex;
+
+  justify-content:
+    space-between;
+
+  align-items:
+    flex-start;
+
+  gap:8px;
+
 }
 
 .item-title{
-  font-size:.68rem;
-  font-weight:800;
+
+  font-size:
+    .68rem;
+
+  font-weight:
+    800;
+
 }
 
 .meta{
+
   margin-top:3px;
 
-  color:var(--muted);
+  color:
+    var(--muted);
 
-  font-size:.57rem;
-  font-weight:700;
+  font-size:
+    .56rem;
+
+  font-weight:
+    700;
+
 }
 
 .exam-countdown{
+
   display:flex;
+
+  justify-content:
+    space-between;
+
   align-items:center;
-  justify-content:space-between;
 
-  margin-top:8px;
-  padding:7px 9px;
+  gap:10px;
 
-  border-radius:8px;
+  margin-top:
+    8px;
 
-  background:rgba(255,255,255,.34);
+  padding:
+    7px 9px;
 
-  border:1px solid rgba(220,38,38,.20);
+  border-radius:
+    8px;
 
-  font-size:.61rem;
+  background:
+    rgba(255,255,255,.32);
+
+  border:
+    1px solid
+    rgba(220,38,38,.18);
+
+  font-size:
+    .59rem;
+
 }
 
 .badge{
-  padding:3px 7px;
 
-  border-radius:999px;
+  padding:
+    3px 7px;
 
-  font-size:.53rem;
-  font-weight:800;
+  border-radius:
+    999px;
+
+  font-size:
+    .51rem;
+
+  font-weight:
+    800;
+
 }
 
 .badge.red{
-  background:#fee2e2;
-  color:#991b1b;
+
+  background:
+    #fee2e2;
+
+  color:
+    #991b1b;
+
 }
+
 
 /* =========================================================
-   TAREFAS
+   CALENDÁRIO
    ========================================================= */
 
-.task-item{
-  display:flex;
-  align-items:flex-start;
+.dark-glass-card{
 
-  gap:9px;
+  background:
+    rgba(14,20,30,.74)!important;
 
-  padding:9px;
+  backdrop-filter:
+    blur(20px)
+    saturate(125%)!important;
 
-  margin-top:7px;
+  -webkit-backdrop-filter:
+    blur(20px)
+    saturate(125%)!important;
 
-  border-radius:10px;
+  border:
+    1px solid
+    rgba(255,255,255,.13)!important;
 
-  background:rgba(255,255,255,.32);
+  color:#fff!important;
 
-  border:1px solid rgba(0,0,0,.08);
 }
 
-.task-check{
-  width:17px;
-  height:17px;
+.cal-nav-btn{
 
-  margin-top:1px;
+  width:28px;
 
-  accent-color:var(--accent);
+  height:28px;
+
+  border:0;
+
+  border-radius:8px;
+
+  background:
+    rgba(255,255,255,.11);
+
+  color:#fff;
 
   cursor:pointer;
+
+  font-size:.9rem;
+
+  transition:
+    .15s ease;
+
 }
 
-.task-content{
-  flex:1;
-  min-width:0;
+.cal-nav-btn:hover{
+
+  background:
+    rgba(255,255,255,.22);
+
 }
 
-.task-title{
-  font-size:.65rem;
-  font-weight:800;
-}
+.calendar-dark{
 
-.task-title.done{
-  text-decoration:line-through;
-  opacity:.5;
-}
-
-.task-meta{
-  margin-top:3px;
-
-  color:var(--muted);
-
-  font-size:.53rem;
-  font-weight:700;
-}
-
-.priority{
-  padding:3px 6px;
-
-  border-radius:999px;
-
-  font-size:.48rem;
-  font-weight:800;
-}
-
-.priority.high{
-  background:#fee2e2;
-  color:#991b1b;
-}
-
-.priority.medium{
-  background:#fef3c7;
-  color:#92400e;
-}
-
-.priority.low{
-  background:#dcfce7;
-  color:#166534;
-}
-
-/* =========================================================
-   ESTATÍSTICAS
-   ========================================================= */
-
-.stats-grid{
   display:grid;
 
-  grid-template-columns:repeat(3,1fr);
+  grid-template-columns:
+    repeat(7,1fr);
 
-  gap:8px;
-}
-
-.stat{
-  padding:12px;
-
-  border-radius:11px;
-
-  background:rgba(255,255,255,.30);
-
-  border:1px solid var(--border);
+  gap:4px;
 
   text-align:center;
+
 }
 
-.stat-value{
-  font-size:1.15rem;
-  font-weight:800;
+.cal-head-dark{
+
+  padding:
+    5px 0;
+
+  color:
+    #94a3b8;
+
+  font-size:
+    .55rem;
+
+  font-weight:
+    700;
+
 }
 
-.stat-label{
-  margin-top:3px;
+.cal-cell-dark{
 
-  color:var(--muted);
+  min-height:
+    34px;
 
-  font-size:.52rem;
-  font-weight:800;
+  position:relative;
 
-  text-transform:uppercase;
-}
-
-.study-bar{
-  margin-top:8px;
-}
-
-.study-bar-head{
   display:flex;
-  justify-content:space-between;
 
-  margin-bottom:4px;
+  align-items:center;
 
-  font-size:.54rem;
-  font-weight:800;
+  justify-content:center;
+
+  border-radius:
+    8px;
+
+  color:
+    #e2e8f0;
+
+  font-size:
+    .65rem;
+
+  font-weight:
+    600;
+
+  background:
+    rgba(255,255,255,.035);
+
+  transition:
+    .15s ease;
+
 }
 
-.study-progress{
-  height:6px;
+.cal-cell-dark:hover{
 
-  overflow:hidden;
+  background:
+    rgba(255,255,255,.09);
 
-  border-radius:99px;
-
-  background:rgba(0,0,0,.08);
 }
 
-.study-progress span{
-  display:block;
+.cal-cell-dark.empty-cell{
 
-  height:100%;
+  background:
+    transparent;
 
-  border-radius:99px;
-
-  background:var(--accent);
 }
+
+.cal-cell-dark.today-dark{
+
+  background:
+    rgba(21,128,61,.60);
+
+  border:
+    1px solid
+    rgba(255,255,255,.25);
+
+  color:#fff;
+
+  font-weight:
+    800;
+
+}
+
+.cal-cell-dark .exam-dot{
+
+  width:4px;
+
+  height:4px;
+
+  position:absolute;
+
+  bottom:4px;
+
+  border-radius:50%;
+
+  background:
+    #ef4444;
+
+}
+
+
+/* =========================================================
+   POMODORO
+   ========================================================= */
+
+.pomodoro-modes{
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(3,1fr);
+
+  gap:5px;
+
+  margin-bottom:
+    9px;
+
+}
+
+.pomodoro-mode{
+
+  padding:
+    7px 5px;
+
+  border:
+    1px solid
+    rgba(15,23,42,.13);
+
+  border-radius:
+    9px;
+
+  background:
+    rgba(255,255,255,.32);
+
+  font-size:
+    .57rem;
+
+  font-weight:
+    800;
+
+  cursor:pointer;
+
+  transition:
+    .15s ease;
+
+}
+
+.pomodoro-mode:hover{
+
+  transform:
+    translateY(-1px);
+
+}
+
+.pomodoro-mode.active{
+
+  border-color:
+    var(--accent);
+
+  background:
+    var(--accent-soft);
+
+  color:
+    var(--accent);
+
+}
+
+.custom-timer-input{
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  gap:6px;
+
+  margin-bottom:
+    9px;
+
+}
+
+.custom-timer-input input{
+
+  width:60px;
+
+  padding:
+    5px 7px;
+
+  border:
+    1px solid
+    rgba(15,23,42,.16);
+
+  border-radius:
+    8px;
+
+  background:
+    rgba(255,255,255,.50);
+
+  text-align:center;
+
+  font-size:
+    .62rem;
+
+  font-weight:
+    700;
+
+}
+
+.timer-wrap{
+
+  padding:
+    15px;
+
+  border-radius:
+    15px;
+
+  background:
+    rgba(255,255,255,.30);
+
+  border:
+    2px solid
+    rgba(21,128,61,.18);
+
+  text-align:center;
+
+  transition:
+    .2s ease;
+
+}
+
+.timer-wrap.running{
+
+  border-color:
+    rgba(21,128,61,.50);
+
+  box-shadow:
+    0 0 0 3px
+    rgba(21,128,61,.06);
+
+}
+
+.timer{
+
+  margin:
+    5px 0;
+
+  font-size:
+    2.65rem;
+
+  line-height:
+    1;
+
+  font-weight:
+    800;
+
+  letter-spacing:
+    -.05em;
+
+}
+
+.timer-label{
+
+  color:
+    var(--muted);
+
+  font-size:
+    .57rem;
+
+  font-weight:
+    800;
+
+  text-transform:
+    uppercase;
+
+  letter-spacing:
+    .06em;
+
+}
+
+.pomodoro-actions{
+
+  display:flex;
+
+  justify-content:center;
+
+  gap:5px;
+
+  margin-top:
+    9px;
+
+}
+
+
+/* =========================================================
+   EMPTY
+   ========================================================= */
+
+.empty{
+
+  padding:
+    14px;
+
+  text-align:center;
+
+  color:
+    var(--muted);
+
+  font-size:
+    .62rem;
+
+  font-weight:
+    700;
+
+}
+
+
+/* =========================================================
+   VOLTAR AO TOPO
+   ========================================================= */
+
+.back-to-top{
+
+  position:fixed;
+
+  right:24px;
+
+  bottom:24px;
+
+  width:44px;
+
+  height:44px;
+
+  z-index:9999;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  border-radius:50%;
+
+  border:
+    1px solid var(--border)!important;
+
+  background:
+    rgba(255,255,255,.38)!important;
+
+  backdrop-filter:
+    blur(16px)!important;
+
+  -webkit-backdrop-filter:
+    blur(16px)!important;
+
+  color:
+    var(--text);
+
+  font-size:
+    1.15rem;
+
+  font-weight:
+    800;
+
+  cursor:pointer;
+
+  box-shadow:
+    var(--shadow);
+
+  opacity:0;
+
+  visibility:hidden;
+
+  transition:
+    .2s ease;
+
+}
+
+.back-to-top.show{
+
+  opacity:1;
+
+  visibility:visible;
+
+}
+
+.back-to-top:hover{
+
+  transform:
+    translateY(-2px);
+
+}
+
 
 /* =========================================================
    MODAIS
    ========================================================= */
 
 .modal-wrap{
+
   display:none;
 
   position:fixed;
+
   inset:0;
 
   z-index:10000;
@@ -1172,309 +1907,351 @@ body.edit-mode .grid-stack-item-content{
   padding:18px;
 
   align-items:center;
+
   justify-content:center;
 
-  background:rgba(0,0,0,.62);
+  background:
+    rgba(0,0,0,.62);
+
+  backdrop-filter:
+    blur(4px);
+
 }
 
 .modal{
+
   width:100%;
+
   max-width:820px;
+
   max-height:92vh;
 
   overflow:auto;
 
   padding:22px;
 
-  border-radius:18px;
+  border-radius:
+    18px;
 
   background:#fff;
+
   color:#0f172a;
 
-  box-shadow:0 15px 50px rgba(0,0,0,.30);
+  box-shadow:
+    0 20px 60px
+    rgba(0,0,0,.30);
+
 }
 
 .modal-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
 
-  margin-bottom:16px;
+  display:flex;
+
+  justify-content:
+    space-between;
+
+  align-items:center;
+
+  gap:10px;
+
+  margin-bottom:
+    15px;
+
 }
 
 .modal-head h3{
-  font-size:1rem;
-  font-weight:800;
+
+  font-size:
+    .95rem;
+
+  font-weight:
+    800;
+
 }
 
 .close{
-  padding:7px 10px;
 
   border:0;
-  border-radius:8px;
 
-  background:var(--danger);
+  border-radius:
+    7px;
+
+  padding:
+    6px 10px;
+
+  background:
+    var(--danger);
+
   color:#fff;
 
-  font-weight:800;
+  font-weight:
+    800;
 
   cursor:pointer;
+
 }
 
 .form-grid{
+
   display:grid;
 
-  grid-template-columns:repeat(2,1fr);
+  grid-template-columns:
+    repeat(2,1fr);
 
   gap:10px;
+
 }
 
 .field{
+
   display:flex;
+
   flex-direction:column;
-  gap:5px;
+
+  gap:4px;
+
 }
 
 .field.full{
-  grid-column:1/-1;
+
+  grid-column:
+    1/-1;
+
 }
 
 .field label{
-  font-size:.58rem;
-  font-weight:800;
 
-  text-transform:uppercase;
+  font-size:
+    .60rem;
+
+  font-weight:
+    800;
+
+  text-transform:
+    uppercase;
+
 }
 
 .field input,
 .field select,
 .field textarea{
+
   width:100%;
 
-  padding:9px 11px;
+  padding:
+    9px 11px;
 
-  border-radius:9px;
+  border:
+    1px solid
+    rgba(15,23,42,.18);
 
-  border:1px solid rgba(15,23,42,.18);
+  border-radius:
+    9px;
 
-  background:#fff;
-
-  outline:none;
+  background:
+    rgba(255,255,255,.72);
 
   color:#0f172a;
 
-  font-size:.72rem;
+  outline:none;
+
+  font-size:
+    .70rem;
+
 }
 
 .field textarea{
-  min-height:80px;
+
+  min-height:
+    80px;
+
   resize:vertical;
+
 }
 
 .field input:focus,
 .field select:focus,
 .field textarea:focus{
-  border-color:var(--accent);
 
-  box-shadow:0 0 0 3px rgba(21,128,61,.10);
+  border-color:
+    var(--accent);
+
+  box-shadow:
+    0 0 0 3px
+    rgba(21,128,61,.10);
+
 }
 
 .modal-actions{
+
   display:flex;
+
   justify-content:flex-end;
 
   gap:8px;
 
-  margin-top:15px;
+  margin-top:
+    15px;
+
 }
+
 
 /* =========================================================
    TOAST
    ========================================================= */
 
 .toast{
-  display:none;
 
   position:fixed;
 
   right:20px;
+
   bottom:20px;
 
   z-index:11001;
 
-  padding:11px 16px;
+  display:none;
 
-  border-radius:10px;
+  padding:
+    10px 16px;
+
+  border-radius:
+    10px;
 
   background:#000;
+
   color:#fff;
 
-  font-size:.68rem;
-  font-weight:800;
+  font-size:
+    .68rem;
 
-  box-shadow:0 8px 25px rgba(0,0,0,.25);
+  font-weight:
+    800;
+
+  box-shadow:
+    0 8px 25px
+    rgba(0,0,0,.25);
+
 }
 
-/* =========================================================
-   STATUS DE CONEXÃO
-   ========================================================= */
-
-.connection-status{
-  position:fixed;
-
-  left:20px;
-  bottom:20px;
-
-  z-index:9999;
-
-  display:flex;
-  align-items:center;
-
-  gap:6px;
-
-  padding:7px 10px;
-
-  border-radius:999px;
-
-  background:rgba(255,255,255,.55);
-
-  backdrop-filter:blur(12px);
-
-  border:1px solid var(--border);
-
-  box-shadow:var(--shadow-soft);
-
-  font-size:.52rem;
-  font-weight:800;
-}
-
-.connection-dot{
-  width:7px;
-  height:7px;
-
-  border-radius:50%;
-
-  background:#16a34a;
-}
-
-.connection-status.offline .connection-dot{
-  background:#dc2626;
-}
-
-/* =========================================================
-   VOLTAR AO TOPO
-   ========================================================= */
-
-.back-to-top{
-  position:fixed;
-
-  right:24px;
-  bottom:24px;
-
-  width:45px;
-  height:45px;
-
-  z-index:9999;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  border-radius:50%;
-
-  border:1px solid var(--border);
-
-  background:rgba(255,255,255,.45);
-
-  backdrop-filter:blur(15px);
-
-  color:var(--text);
-
-  font-size:1.15rem;
-  font-weight:800;
-
-  cursor:pointer;
-
-  opacity:0;
-  visibility:hidden;
-
-  transition:.2s;
-}
-
-.back-to-top.show{
-  opacity:1;
-  visibility:visible;
-}
 
 /* =========================================================
    RESPONSIVIDADE
    ========================================================= */
 
-@media(max-width:1100px){
+@media(max-width:1000px){
 
   .schedule{
-    grid-template-columns:repeat(2,1fr);
+
+    grid-template-columns:
+      repeat(2,1fr);
+
   }
 
 }
 
-@media(max-width:700px){
+@media(max-width:720px){
 
   body{
+
     padding:10px;
+
   }
 
   .app{
+
     gap:10px;
+
   }
 
   header{
-    padding:15px;
+
+    padding:
+      14px;
+
   }
 
   .brand h1{
-    font-size:1rem;
+
+    font-size:
+      1rem;
+
   }
 
-  .brand p,
+  .brand p{
+
+    font-size:
+      .58rem;
+
+  }
+
   .brand-meta{
-    font-size:.58rem;
+
+    font-size:
+      .50rem;
+
   }
 
-  .clock strong{
-    font-size:.9rem;
+  .clock{
+
+    display:none;
+
   }
 
   .toolbar{
-    align-items:stretch;
+
+    padding:
+      10px;
+
   }
 
   .ai-bar{
+
+    width:100%;
+
     min-width:100%;
+
   }
 
   .toolbar-right{
+
     width:100%;
+
   }
 
   .toolbar-right .btn{
-    flex:1;
+
+    flex:
+      1 1 auto;
+
   }
 
   .schedule{
-    grid-template-columns:1fr;
+
+    grid-template-columns:
+      1fr;
+
+  }
+
+  .subjects{
+
+    grid-template-columns:
+      1fr;
+
   }
 
   .form-grid{
-    grid-template-columns:1fr;
+
+    grid-template-columns:
+      1fr;
+
   }
 
   .field.full{
-    grid-column:auto;
-  }
 
-  .stats-grid{
-    grid-template-columns:1fr;
+    grid-column:
+      auto;
+
   }
 
 }
@@ -1482,44 +2259,81 @@ body.edit-mode .grid-stack-item-content{
 @media(max-width:480px){
 
   .login{
-    margin:7vh auto;
-  }
 
-  .brand-icon{
-    width:38px;
-    height:38px;
-  }
+    margin:
+      7vh auto;
 
-  .clock{
-    display:none;
   }
 
   .grid-stack-item-content{
-    padding:14px!important;
+
+    padding:
+      14px!important;
+
   }
 
-  .subjects{
-    grid-template-columns:1fr;
+  .timer{
+
+    font-size:
+      2.35rem;
+
   }
 
 }
+
+
+/* =========================================================
+   GRIDSTACK
+   ========================================================= */
+
+.grid-stack-item-removing{
+
+  opacity:
+    .3;
+
+}
+
+.grid-stack-placeholder > .placeholder-content{
+
+  background:
+    rgba(21,128,61,.12);
+
+  border:
+    2px dashed
+    var(--accent);
+
+  border-radius:
+    var(--radius);
+
+}
+
+
+/* =========================================================
+   FIM CSS
+   ========================================================= */
+
 </style>
 </head>
 
 <body>
 
-<!-- =========================================================
+
+<!-- =======================================================
      LOGIN
-     ========================================================= -->
+     ======================================================= -->
 
 <div id="loginScreen" class="login">
 
-  <div class="login-icon">📚</div>
+  <div class="login-icon">
+    📚
+  </div>
 
-  <h2>Central de Estudos</h2>
+  <h2>
+    Central de Estudos
+  </h2>
 
   <p>
-    Seu painel acadêmico em um único lugar.
+    Digite a senha de acesso para liberar seu painel.
   </p>
 
   <input
@@ -1539,13 +2353,16 @@ body.edit-mode .grid-stack-item-content{
 </div>
 
 
-<!-- =========================================================
+<!-- =======================================================
      APLICAÇÃO
-     ========================================================= -->
+     ======================================================= -->
 
 <div id="app" class="app">
 
-  <!-- HEADER -->
+
+  <!-- =====================================================
+       CABEÇALHO
+       ===================================================== -->
 
   <header class="glass">
 
@@ -1557,19 +2374,22 @@ body.edit-mode .grid-stack-item-content{
 
       <div>
 
-        <h1>Central de Estudos</h1>
+        <h1>
+          Central de Estudos
+        </h1>
 
         <p>
-          Seu painel acadêmico em um único lugar
+          Todas as matérias da faculdade em uma única tela
         </p>
 
         <div class="brand-meta">
-          Farmácia • Painel pessoal
+          Painel acadêmico pessoal
         </div>
 
       </div>
 
     </div>
+
 
     <div class="clock">
 
@@ -1584,7 +2404,9 @@ body.edit-mode .grid-stack-item-content{
   </header>
 
 
-  <!-- AÇÕES RÁPIDAS -->
+  <!-- =====================================================
+       BARRA DE AÇÕES
+       ===================================================== -->
 
   <div class="glass toolbar">
 
@@ -1593,26 +2415,27 @@ body.edit-mode .grid-stack-item-content{
       <input
         id="aiInput"
         type="text"
-        placeholder="⚡ Ação rápida: iniciar timer, pausar, adicionar disciplina..."
+        placeholder="⚡ Comando rápido: iniciar timer, apagar provas..."
         onkeydown="if(event.key==='Enter')runAICommand()"
       >
 
       <button
         class="btn btn-green"
-        id="aiBtn"
         onclick="runAICommand()"
+        id="aiBtn"
       >
         Executar
       </button>
 
     </div>
 
+
     <div class="toolbar-right">
 
       <button
         class="btn btn-sec"
-        id="themeBtn"
         onclick="cycleTheme()"
+        id="themeBtn"
       >
         🌙 Tema: Híbrido
       </button>
@@ -1646,21 +2469,28 @@ body.edit-mode .grid-stack-item-content{
         ＋ Disciplina
       </button>
 
+      <button
+        class="btn btn-sec"
+        onclick="refreshAll()"
+      >
+        ↻ Atualizar
+      </button>
+
     </div>
 
   </div>
 
 
-  <!-- =======================================================
-       GRID PRINCIPAL
-       ======================================================= -->
+  <!-- =====================================================
+       GRID
+       ===================================================== -->
 
   <div class="grid-stack">
 
 
-    <!-- =====================================================
+    <!-- ===================================================
          POMODORO
-         ===================================================== -->
+         =================================================== -->
 
     <div
       class="grid-stack-item"
@@ -1674,17 +2504,36 @@ body.edit-mode .grid-stack-item-content{
         <div class="section-head">
 
           <div>
-            <span class="drag-handle">⠿</span>
-            <span class="title">⏱️ Foco</span>
+
+            <span class="drag-handle">
+              ⠿
+            </span>
+
+            <span class="title">
+              ⏱️ Cronômetro
+            </span>
+
           </div>
+
 
           <select
             id="studySubject"
-            class="study-select"
+            style="
+              max-width:110px;
+              padding:5px 7px;
+              border-radius:8px;
+              border:1px solid rgba(0,0,0,.18);
+              background:rgba(255,255,255,.50);
+              font-size:.58rem;
+              font-weight:700;
+              outline:none;
+            "
           >
+
             <option value="">
               Disciplina
             </option>
+
           </select>
 
         </div>
@@ -1693,6 +2542,7 @@ body.edit-mode .grid-stack-item-content{
         <div class="pomodoro-modes">
 
           <button
+            type="button"
             class="pomodoro-mode active"
             data-mode="focus"
             onclick="setPomodoroMode('focus')"
@@ -1701,6 +2551,7 @@ body.edit-mode .grid-stack-item-content{
           </button>
 
           <button
+            type="button"
             class="pomodoro-mode"
             data-mode="short"
             onclick="setPomodoroMode('short')"
@@ -1709,6 +2560,7 @@ body.edit-mode .grid-stack-item-content{
           </button>
 
           <button
+            type="button"
             class="pomodoro-mode"
             data-mode="long"
             onclick="setPomodoroMode('long')"
@@ -1721,7 +2573,12 @@ body.edit-mode .grid-stack-item-content{
 
         <div class="custom-timer-input">
 
-          <span>
+          <span
+            style="
+              font-size:.60rem;
+              font-weight:700;
+            "
+          >
             Definir:
           </span>
 
@@ -1734,14 +2591,22 @@ body.edit-mode .grid-stack-item-content{
             onchange="applyCustomMinutes(this.value)"
           >
 
-          <span>
+          <span
+            style="
+              font-size:.60rem;
+              font-weight:700;
+            "
+          >
             min
           </span>
 
         </div>
 
 
-        <div class="timer-wrap">
+        <div
+          class="timer-wrap mode-focus"
+          id="timerWrap"
+        >
 
           <div
             class="timer-label"
@@ -1758,8 +2623,13 @@ body.edit-mode .grid-stack-item-content{
           </div>
 
           <div
-            class="pomodoro-status"
             id="pomodoroStatus"
+            style="
+              font-size:.58rem;
+              font-weight:700;
+              margin-top:3px;
+              color:var(--muted);
+            "
           >
             Pronto para iniciar
           </div>
@@ -1800,9 +2670,9 @@ body.edit-mode .grid-stack-item-content{
     </div>
 
 
-    <!-- =====================================================
+    <!-- ===================================================
          CALENDÁRIO
-         ===================================================== -->
+         =================================================== -->
 
     <div
       class="grid-stack-item"
@@ -1811,18 +2681,34 @@ body.edit-mode .grid-stack-item-content{
       gs-id="box-calendario"
     >
 
-      <div class="grid-stack-item-content glass calendar-card">
+      <div
+        class="
+          grid-stack-item-content
+          glass
+          dark-glass-card
+        "
+      >
 
-        <div class="cal-head">
+        <div
+          class="section-head"
+          style="margin-bottom:15px"
+        >
 
           <span
             id="calendarMonth"
-            class="cal-month"
-          >
-            Agosto 2026
-          </span>
+            style="
+              font-size:.85rem;
+              font-weight:800;
+              color:#fff;
+            "
+          ></span>
 
-          <div class="cal-nav">
+          <div
+            style="
+              display:flex;
+              gap:5px;
+            "
+          >
 
             <button
               class="cal-nav-btn"
@@ -1842,9 +2728,10 @@ body.edit-mode .grid-stack-item-content{
 
         </div>
 
+
         <div
           id="calendar"
-          class="calendar-grid"
+          class="calendar-dark"
         ></div>
 
       </div>
@@ -1852,9 +2739,9 @@ body.edit-mode .grid-stack-item-content{
     </div>
 
 
-    <!-- =====================================================
+    <!-- ===================================================
          DISCIPLINAS
-         ===================================================== -->
+         =================================================== -->
 
     <div
       class="grid-stack-item"
@@ -1869,7 +2756,9 @@ body.edit-mode .grid-stack-item-content{
 
           <div>
 
-            <span class="drag-handle">⠿</span>
+            <span class="drag-handle">
+              ⠿
+            </span>
 
             <span class="title">
               📚 Disciplinas
@@ -1886,6 +2775,7 @@ body.edit-mode .grid-stack-item-content{
 
         </div>
 
+
         <div
           id="subjectsGrid"
           class="subjects"
@@ -1896,9 +2786,9 @@ body.edit-mode .grid-stack-item-content{
     </div>
 
 
-    <!-- =====================================================
+    <!-- ===================================================
          HORÁRIOS
-         ===================================================== -->
+         =================================================== -->
 
     <div
       class="grid-stack-item"
@@ -1913,7 +2803,9 @@ body.edit-mode .grid-stack-item-content{
 
           <div>
 
-            <span class="drag-handle">⠿</span>
+            <span class="drag-handle">
+              ⠿
+            </span>
 
             <span class="title">
               🕐 Horários da semana
@@ -1930,6 +2822,7 @@ body.edit-mode .grid-stack-item-content{
 
         </div>
 
+
         <div
           id="schedule"
           class="schedule"
@@ -1940,14 +2833,14 @@ body.edit-mode .grid-stack-item-content{
     </div>
 
 
-    <!-- =====================================================
+    <!-- ===================================================
          PROVAS
-         ===================================================== -->
+         =================================================== -->
 
     <div
       class="grid-stack-item"
-      gs-w="6"
-      gs-h="4"
+      gs-w="12"
+      gs-h="3"
       gs-id="box-provas"
     >
 
@@ -1957,7 +2850,9 @@ body.edit-mode .grid-stack-item-content{
 
           <div>
 
-            <span class="drag-handle">⠿</span>
+            <span class="drag-handle">
+              ⠿
+            </span>
 
             <span class="title">
               🔴 Próximas provas
@@ -1974,138 +2869,10 @@ body.edit-mode .grid-stack-item-content{
 
         </div>
 
-        <div id="assessmentsList"></div>
 
-      </div>
-
-    </div>
-
-
-    <!-- =====================================================
-         TAREFAS
-         ===================================================== -->
-
-    <div
-      class="grid-stack-item"
-      gs-w="6"
-      gs-h="4"
-      gs-id="box-tarefas"
-    >
-
-      <div class="grid-stack-item-content glass">
-
-        <div class="section-head">
-
-          <div>
-
-            <span class="drag-handle">⠿</span>
-
-            <span class="title">
-              ✅ Tarefas
-            </span>
-
-          </div>
-
-          <button
-            class="btn btn-sec"
-            onclick="openTaskModal()"
-          >
-            ＋ Tarefa
-          </button>
-
-        </div>
-
-        <div id="tasksList"></div>
-
-      </div>
-
-    </div>
-
-
-    <!-- =====================================================
-         ESTATÍSTICAS
-         ===================================================== -->
-
-    <div
-      class="grid-stack-item"
-      gs-w="12"
-      gs-h="3"
-      gs-id="box-estatisticas"
-    >
-
-      <div class="grid-stack-item-content glass">
-
-        <div class="section-head">
-
-          <div>
-
-            <span class="drag-handle">⠿</span>
-
-            <span class="title">
-              📊 Meu estudo
-            </span>
-
-          </div>
-
-          <span
-            class="subtle"
-            id="studyStatsSubtitle"
-          >
-            Tempo registrado
-          </span>
-
-        </div>
-
-        <div class="stats-grid">
-
-          <div class="stat">
-
-            <div
-              class="stat-value"
-              id="todayStudy"
-            >
-              0min
-            </div>
-
-            <div class="stat-label">
-              Hoje
-            </div>
-
-          </div>
-
-          <div class="stat">
-
-            <div
-              class="stat-value"
-              id="weekStudy"
-            >
-              0min
-            </div>
-
-            <div class="stat-label">
-              Semana
-            </div>
-
-          </div>
-
-          <div class="stat">
-
-            <div
-              class="stat-value"
-              id="totalStudy"
-            >
-              0min
-            </div>
-
-            <div class="stat-label">
-              Total
-            </div>
-
-          </div>
-
-        </div>
-
-        <div id="studyBreakdown"></div>
+        <div
+          id="assessmentsList"
+        ></div>
 
       </div>
 
@@ -2117,32 +2884,23 @@ body.edit-mode .grid-stack-item-content{
 </div>
 
 
-<!-- =========================================================
-     CONTROLES
-     ========================================================= -->
+<!-- =======================================================
+     VOLTAR AO TOPO
+     ======================================================= -->
 
 <button
   class="back-to-top"
   id="backToTopBtn"
   onclick="scrollToTop()"
+  title="Voltar ao topo"
 >
   ↑
 </button>
 
-<div
-  class="connection-status"
-  id="connectionStatus"
->
-  <span class="connection-dot"></span>
-  <span id="connectionText">
-    Online
-  </span>
-</div>
 
-
-<!-- =========================================================
+<!-- =======================================================
      MODAL
-     ========================================================= -->
+     ======================================================= -->
 
 <div
   id="modalWrap"
@@ -2180,22 +2938,24 @@ body.edit-mode .grid-stack-item-content{
 ></div>
 
 
-<!-- =========================================================
+<!-- =======================================================
      GRIDSTACK
-     ========================================================= -->
+     ======================================================= -->
 
 <script src="https://cdn.jsdelivr.net/npm/gridstack@9.2.0/dist/gridstack-all.js"></script>
 
 
-<!-- =========================================================
-     FIREBASE + APLICAÇÃO
-     ========================================================= -->
+<!-- =======================================================
+     JAVASCRIPT ORIGINAL
+     ======================================================= -->
 
 <script type="module">
 
 import {
   initializeApp
-} from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+}
+from
+'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
 
 import {
   getFirestore,
@@ -2210,60 +2970,66 @@ import {
   orderBy,
   limit,
   serverTimestamp
-} from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+}
+from
+'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 
 
 /* =========================================================
    FIREBASE
    ========================================================= */
 
-const firebaseConfig = {
+const firebaseConfig={
 
-  apiKey:'AIzaSyC09EhGx9GSo4IUjxWXJxqksnKgOU4khQ',
+  apiKey:
+    'AIzaSyC09EhGx9GSo4IUjxWXJxqksnKgOU4khQ',
 
-  authDomain:'painel-estudos-54958.firebaseapp.com',
+  authDomain:
+    'painel-estudos-54958.firebaseapp.com',
 
-  projectId:'painel-estudos-54958',
+  projectId:
+    'painel-estudos-54958',
 
-  storageBucket:'painel-estudos-54958.firebasestorage.app',
+  storageBucket:
+    'painel-estudos-54958.firebasestorage.app',
 
-  messagingSenderId:'491796500394',
+  messagingSenderId:
+    '491796500394',
 
-  appId:'1:491796500394:web:f6d85850484df33b8de5d3'
+  appId:
+    '1:491796500394:web:f6d85850484df33b8de5d3'
 
 };
 
 
-const app = initializeApp(firebaseConfig);
+const app=
+  initializeApp(firebaseConfig);
 
-const db = getFirestore(app);
+const db=
+  getFirestore(app);
 
 
-/* =========================================================
-   ESTADO
-   ========================================================= */
+let realtimeUnsubs=[];
 
-let realtimeUnsubs = [];
+let isEditMode=false;
 
-let grid = null;
+let grid=null;
 
-let isEditMode = false;
 
-const data = {
+const data={
 
   subjects:[],
   classes:[],
-  assessments:[],
-  tasks:[],
-  studySessions:[]
+  assessments:[]
 
 };
 
 
-const SITE_PASSWORD = 'ueg2026';
+const SITE_PASSWORD=
+  'ueg2026';
 
 
-const POMODORO = {
+const POMODORO={
 
   focus:25,
   short:5,
@@ -2272,7 +3038,7 @@ const POMODORO = {
 };
 
 
-const POMODORO_LABELS = {
+const POMODORO_LABELS={
 
   focus:'Tempo de foco',
   short:'Pausa curta',
@@ -2281,97 +3047,117 @@ const POMODORO_LABELS = {
 };
 
 
-let timerId = null;
+let timerId=null;
 
-let timerEndTime = null;
+let timerEndTime=null;
 
-let timerMinutes = 25;
+let timerMinutes=25;
 
-let timeLeft = 1500;
+let timeLeft=1500;
 
-let pomodoroMode = 'focus';
+let pomodoroMode='focus';
 
-let timerRunning = false;
+let timerRunning=false;
 
-let timerPaused = false;
-
-
-let calViewDate = new Date();
-
-let currentTheme =
-  localStorage.getItem('user_theme') || 'hybrid';
+let timerPaused=false;
 
 
-const $ = id =>
-  document.getElementById(id);
+let calViewDate=
+  new Date();
 
 
-const col = name =>
-  collection(db,name);
+let currentTheme=
+  localStorage.getItem(
+    'user_theme'
+  ) ||
+  'hybrid';
+
+
+const $=
+  id =>
+    document.getElementById(id);
+
+
+const col=
+  name =>
+    collection(db,name);
 
 
 /* =========================================================
    UTILITÁRIOS
    ========================================================= */
 
-window.escapeHtml = value => {
-
-  return String(value ?? '').replace(
-
+window.escapeHtml=
+s =>
+  String(s??'').replace(
     /[&<>'"]/g,
-
-    char => ({
-
-      '&':'&amp;',
-      '<':'&lt;',
-      '>':'&gt;',
-      "'":'&#39;',
-      '"':'&quot;'
-
-    }[char])
-
+    m =>
+      ({
+        '&':'&amp;',
+        '<':'&lt;',
+        '>':'&gt;',
+        "'":'&#39;',
+        '"':'&quot;'
+      }[m])
   );
 
-};
 
+window.showToast=
+msg => {
 
-window.showToast = message => {
+  const t=
+    $('toast');
 
-  const toast = $('toast');
+  t.textContent=
+    msg;
 
-  toast.textContent = message;
+  t.style.display=
+    'block';
 
-  toast.style.display = 'block';
-
-  clearTimeout(window.toastId);
-
-  window.toastId = setTimeout(
-
-    () => toast.style.display = 'none',
-
-    2500
-
+  clearTimeout(
+    window.toastId
   );
+
+  window.toastId=
+    setTimeout(
+      () =>
+        t.style.display=
+          'none',
+      2200
+    );
 
 };
 
 
 /* =========================================================
-   TEMA
+   TEMAS
    ========================================================= */
 
-window.cycleTheme = () => {
+window.cycleTheme=
+function(){
 
-  if(currentTheme === 'hybrid')
-    currentTheme = 'dark';
+  if(
+    currentTheme===
+    'hybrid'
+  )
 
-  else if(currentTheme === 'dark')
-    currentTheme = 'light';
+    currentTheme='dark';
+
+  else if(
+    currentTheme===
+    'dark'
+  )
+
+    currentTheme='light';
 
   else
-    currentTheme = 'hybrid';
 
-  applyTheme(currentTheme);
+    currentTheme='hybrid';
+
+
+  applyTheme(
+    currentTheme
+  );
 
 };
 
@@ -2383,36 +3169,50 @@ function applyTheme(theme){
     'theme-all-light'
   );
 
-  const btn = $('themeBtn');
 
-  if(theme === 'dark'){
+  const btn=
+    $('themeBtn');
+
+
+  if(
+    theme==='dark'
+  ){
 
     document.body.classList.add(
       'theme-all-dark'
     );
 
-    btn.textContent =
-      '🌙 Tema: Escuro';
+    if(btn)
+
+      btn.textContent=
+        '🌙 Tema: Escuro';
 
   }
 
-  else if(theme === 'light'){
+  else if(
+    theme==='light'
+  ){
 
     document.body.classList.add(
       'theme-all-light'
     );
 
-    btn.textContent =
-      '☀️ Tema: Claro';
+    if(btn)
+
+      btn.textContent=
+        '☀️ Tema: Claro';
 
   }
 
   else{
 
-    btn.textContent =
-      '🌙 Tema: Híbrido';
+    if(btn)
+
+      btn.textContent=
+        '🌙 Tema: Híbrido';
 
   }
+
 
   localStorage.setItem(
     'user_theme',
@@ -2423,40 +3223,174 @@ function applyTheme(theme){
 
 
 /* =========================================================
+   SOM
+   ========================================================= */
+
+function playFinishSound(){
+
+  try{
+
+    const ctx=
+      new(
+        window.AudioContext ||
+        window.webkitAudioContext
+      )();
+
+
+    const playBeep=
+      (
+        freq,
+        time,
+        duration
+      )=>{
+
+        const osc=
+          ctx.createOscillator();
+
+        const gain=
+          ctx.createGain();
+
+
+        osc.type='sine';
+
+        osc.frequency.setValueAtTime(
+          freq,
+          ctx.currentTime+
+          time
+        );
+
+
+        gain.gain.setValueAtTime(
+          .3,
+          ctx.currentTime+
+          time
+        );
+
+
+        gain.gain.exponentialRampToValueAtTime(
+          .01,
+          ctx.currentTime+
+          time+
+          duration
+        );
+
+
+        osc.connect(gain);
+
+        gain.connect(
+          ctx.destination
+        );
+
+
+        osc.start(
+          ctx.currentTime+
+          time
+        );
+
+        osc.stop(
+          ctx.currentTime+
+          time+
+          duration
+        );
+
+      };
+
+
+    playBeep(
+      523.25,
+      0,
+      .2
+    );
+
+    playBeep(
+      659.25,
+      .25,
+      .2
+    );
+
+    playBeep(
+      783.99,
+      .5,
+      .4
+    );
+
+  }
+
+  catch(e){}
+
+}
+
+
+/* =========================================================
    LOGIN
    ========================================================= */
 
-window.showApp = () => {
+window.showApp=
+function(){
 
-  $('loginScreen').classList.add('hidden');
+  const login=
+    $('loginScreen');
 
-  $('app').style.display = 'flex';
+  const appEl=
+    $('app');
 
-  applyTheme(currentTheme);
+
+  if(login)
+
+    login.classList.add(
+      'hidden'
+    );
+
+
+  if(appEl)
+
+    appEl.style.display=
+      'flex';
+
+
+  document.body.classList.add(
+    'app-active'
+  );
+
+
+  applyTheme(
+    currentTheme
+  );
+
 
   initGridStack();
 
 };
 
 
-window.checkPassword = () => {
+window.checkPassword=
+function(){
 
-  const input = $('passInput');
+  const input=
+    $('passInput');
 
-  if(input && input.value === SITE_PASSWORD){
+
+  if(
+    input &&
+    input.value===
+    SITE_PASSWORD
+  ){
 
     localStorage.setItem(
       'ueg_access_granted',
       'true'
     );
 
-    showApp();
+
+    window.showApp();
 
   }
 
   else{
 
-    alert('Senha incorreta!');
+    alert(
+      'Senha incorreta!'
+    );
 
   }
 
@@ -2464,32 +3398,23 @@ window.checkPassword = () => {
 
 
 /* =========================================================
-   PERSISTÊNCIA FIREBASE
+   FIREBASE
    ========================================================= */
 
 async function initPersistence(){
 
   try{
 
-    await enableIndexedDbPersistence(db);
-
-  }
-
-  catch(error){
-
-    console.warn(
-      'Persistência local:',
-      error
+    await enableIndexedDbPersistence(
+      db
     );
 
   }
 
+  catch(err){}
+
 }
 
-
-/* =========================================================
-   FIRESTORE REALTIME
-   ========================================================= */
 
 function subscribeRealtime(
   name,
@@ -2503,64 +3428,80 @@ function subscribeRealtime(
   }={}
 ){
 
-  const constraints = [];
+  const constraints=[];
+
 
   if(sort)
+
     constraints.push(
-      orderBy(sort,sortDir)
+      orderBy(
+        sort,
+        sortDir
+      )
     );
 
+
   if(limitTo)
+
     constraints.push(
       limit(limitTo)
     );
 
-  const q =
+
+  const q=
     constraints.length
-      ? query(
+      ?
+        query(
           col(name),
           ...constraints
         )
-      : col(name);
+      :
+        col(name);
 
-  const unsubscribe =
+
+  const unsub=
     onSnapshot(
-
       q,
+      snapshot=>{
 
-      snapshot => {
-
-        let items =
+        let items=
           snapshot.docs.map(
-            d => ({
+            d=>({
               id:d.id,
               ...d.data()
             })
           );
 
-        if(reverse)
-          items.reverse();
 
-        data[key] = items;
+        if(reverse)
+
+          items=
+            items.reverse();
+
+
+        data[key]=items;
+
 
         if(onData)
-          onData(data[key]);
+
+          onData(
+            data[key]
+          );
 
       },
 
-      error => {
-
-        console.error(error);
+      err=>
 
         showToast(
           `Erro ao carregar ${name}`
-        );
-
-      }
+        )
 
     );
 
-  realtimeUnsubs.push(unsubscribe);
+
+  realtimeUnsubs.push(
+    unsub
+  );
 
 }
 
@@ -2571,16 +3512,19 @@ function bindRealtimeListeners(){
     'subjects',
     'subjects',
     {
+
       sort:'name',
-      onData:() => {
+
+      onData:()=>{
 
         renderSubjects();
+
         renderSchedule();
+
         renderStudySubjects();
-        renderTasks();
-        renderAssessments();
 
       }
+
     }
   );
 
@@ -2589,13 +3533,17 @@ function bindRealtimeListeners(){
     'classes',
     'classes',
     {
+
       sort:'day',
-      onData:() => {
+
+      onData:()=>{
 
         renderSubjects();
+
         renderSchedule();
 
       }
+
     }
   );
 
@@ -2604,53 +3552,22 @@ function bindRealtimeListeners(){
     'assessments',
     'assessments',
     {
+
       sort:'date',
-      onData:() => {
+
+      onData:()=>{
 
         renderAssessments();
+
         renderCalendar();
 
       }
-    }
-  );
 
-
-  subscribeRealtime(
-    'tasks',
-    'tasks',
-    {
-      sort:'createdAt',
-      sortDir:'desc',
-      onData:() => {
-
-        renderTasks();
-
-      }
-    }
-  );
-
-
-  subscribeRealtime(
-    'studySessions',
-    'studySessions',
-    {
-      sort:'createdAt',
-      sortDir:'desc',
-      limitTo:100,
-      onData:() => {
-
-        renderStudyStats();
-
-      }
     }
   );
 
 }
 
-
-/* =========================================================
-   SALVAR DOCUMENTOS
-   ========================================================= */
 
 async function writeDoc(
   name,
@@ -2660,7 +3577,7 @@ async function writeDoc(
 
   try{
 
-    const body = {
+    const body={
 
       ...payload,
 
@@ -2673,16 +3590,14 @@ async function writeDoc(
     };
 
 
-    if(id){
+    if(id)
 
       await updateDoc(
         doc(db,name,id),
         body
       );
 
-    }
-
-    else{
+    else
 
       await addDoc(
         col(name),
@@ -2696,13 +3611,9 @@ async function writeDoc(
         }
       );
 
-    }
-
   }
 
-  catch(error){
-
-    console.error(error);
+  catch(e){
 
     showToast(
       'Erro ao salvar alterações'
@@ -2713,92 +3624,39 @@ async function writeDoc(
 }
 
 
-async function saveDoc(
-  name,
-  id,
-  payload
-){
-
-  await writeDoc(
-    name,
-    id,
-    payload
-  );
-
-  showToast(
-    'Salvo com sucesso'
-  );
-
-  closeModal();
-
-}
-
-
-window.removeDoc = async (
-  name,
-  id
-) => {
-
-  if(!confirm(
-    'Excluir este item?'
-  ))
-    return;
-
-  try{
-
-    await deleteDoc(
-      doc(db,name,id)
-    );
-
-    showToast(
-      'Item excluído'
-    );
-
-  }
-
-  catch(error){
-
-    console.error(error);
-
-    showToast(
-      'Erro ao excluir'
-    );
-
-  }
-
-};
-
-
 /* =========================================================
    MODAIS
    ========================================================= */
 
-window.closeModal = () => {
+window.closeModal=
+()=>{
 
-  $('modalWrap').style.display =
+  $('modalWrap').style.display=
     'none';
 
 };
 
 
-window.openModal = (
+window.openModal=
+(
   title,
   body
-) => {
+)=>{
 
-  $('modalTitle').textContent =
+  $('modalTitle').textContent=
     title;
 
-  $('modalBody').innerHTML =
+  $('modalBody').innerHTML=
     body;
 
-  $('modalWrap').style.display =
+  $('modalWrap').style.display=
     'flex';
 
 };
 
 
-const modalActions = () => `
+const modalActions=
+()=>`
 
   <div class="modal-actions">
 
@@ -2822,89 +3680,176 @@ const modalActions = () => `
 `;
 
 
+async function saveDoc(
+  name,
+  id,
+  payload
+){
+
+  await writeDoc(
+    name,
+    id,
+    payload
+  );
+
+
+  showToast(
+    'Salvo com sucesso'
+  );
+
+
+  closeModal();
+
+}
+
+
+window.removeDoc=
+async(
+  name,
+  id
+)=>{
+
+  if(
+    confirm(
+      'Excluir este item?'
+    )
+  ){
+
+    try{
+
+      await deleteDoc(
+        doc(
+          db,
+          name,
+          id
+        )
+      );
+
+
+      showToast(
+        'Item excluído'
+      );
+
+    }
+
+    catch(e){
+
+      showToast(
+        'Erro ao excluir'
+      );
+
+    }
+
+  }
+
+};
+
+
 /* =========================================================
    DISCIPLINAS
    ========================================================= */
 
-window.openSubjectModal = id => {
+window.openSubjectModal=
+async id=>{
 
-  const item =
+  const x=
     id
-      ? data.subjects.find(
-          x => x.id === id
+      ?
+        data.subjects.find(
+          v=>v.id===id
         )
-      : {};
+      :
+        {};
+
 
   openModal(
 
     id
-      ? 'Editar disciplina'
-      : 'Nova disciplina',
+      ?
+        'Editar disciplina'
+      :
+        'Nova disciplina',
 
     `
 
-    <form
-      onsubmit="saveSubject(event,'${id || ''}')"
-    >
+      <form
+        onsubmit="
+          saveSubject(
+            event,
+            '${id||''}'
+          )
+        "
+      >
 
-      <div class="form-grid">
+        <div class="form-grid">
 
-        <div class="field full">
+          <div class="field full">
 
-          <label>
-            Nome da disciplina
-          </label>
+            <label>
+              Nome da disciplina
+            </label>
 
-          <input
-            name="name"
-            required
-            value="${escapeHtml(item.name || '')}"
-          >
+            <input
+              name="name"
+              required
+              value="${escapeHtml(
+                x.name||''
+              )}"
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Professor
+            </label>
+
+            <input
+              name="teacher"
+              value="${escapeHtml(
+                x.teacher||''
+              )}"
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Cor
+            </label>
+
+            <input
+              name="color"
+              type="color"
+              value="${x.color||'#15803d'}"
+            >
+
+          </div>
+
+
+          <div class="field full">
+
+            <label>
+              Observações
+            </label>
+
+            <textarea
+              name="notes"
+            >${escapeHtml(
+              x.notes||''
+            )}</textarea>
+
+          </div>
 
         </div>
 
-        <div class="field">
+        ${modalActions()}
 
-          <label>
-            Professor
-          </label>
-
-          <input
-            name="teacher"
-            value="${escapeHtml(item.teacher || '')}"
-          >
-
-        </div>
-
-        <div class="field">
-
-          <label>
-            Cor
-          </label>
-
-          <input
-            name="color"
-            type="color"
-            value="${item.color || '#15803d'}"
-          >
-
-        </div>
-
-        <div class="field full">
-
-          <label>
-            Observações
-          </label>
-
-          <textarea name="notes">${escapeHtml(item.notes || '')}</textarea>
-
-        </div>
-
-      </div>
-
-      ${modalActions()}
-
-    </form>
+      </form>
 
     `
 
@@ -2913,15 +3858,20 @@ window.openSubjectModal = id => {
 };
 
 
-window.saveSubject = async (
-  event,
+window.saveSubject=
+async(
+  e,
   id
-) => {
+)=>{
 
-  event.preventDefault();
+  e.preventDefault();
 
-  const form =
-    new FormData(event.target);
+
+  const f=
+    new FormData(
+      e.target
+    );
+
 
   await saveDoc(
 
@@ -2932,16 +3882,24 @@ window.saveSubject = async (
     {
 
       name:
-        form.get('name').trim(),
+        f.get(
+          'name'
+        ).trim(),
 
       teacher:
-        form.get('teacher').trim(),
+        f.get(
+          'teacher'
+        ).trim(),
 
       color:
-        form.get('color'),
+        f.get(
+          'color'
+        ),
 
       notes:
-        form.get('notes').trim()
+        f.get(
+          'notes'
+        ).trim()
 
     }
 
@@ -2954,20 +3912,27 @@ window.saveSubject = async (
    HORÁRIOS
    ========================================================= */
 
-window.openClassModal = id => {
+window.openClassModal=
+async id=>{
 
-  const item =
+  const x=
     id
-      ? data.classes.find(
-          x => x.id === id
+      ?
+        data.classes.find(
+          v=>v.id===id
         )
-      : {};
+      :
+        {};
 
-  if(!data.subjects.length){
+
+  if(
+    !data.subjects.length
+  ){
 
     alert(
-      'Cadastre pelo menos uma disciplina primeiro.'
+      'Cadastre pelo menos uma disciplina antes de adicionar um horário.'
     );
+
 
     return openSubjectModal();
 
@@ -2977,126 +3942,194 @@ window.openClassModal = id => {
   openModal(
 
     id
-      ? 'Editar horário'
-      : 'Novo horário',
+      ?
+        'Editar horário'
+      :
+        'Novo horário',
 
     `
 
-    <form
-      onsubmit="saveClass(event,'${id || ''}')"
-    >
+      <form
+        onsubmit="
+          saveClass(
+            event,
+            '${id||''}'
+          )
+        "
+      >
 
-      <div class="form-grid">
+        <div class="form-grid">
 
-        <div class="field full">
+          <div class="field full">
 
-          <label>
-            Disciplina
-          </label>
+            <label>
+              Disciplina
+            </label>
 
-          <select
-            name="subjectId"
-            required
-          >
+            <select
+              name="subjectId"
+              required
+            >
 
-            ${data.subjects.map(
-              s => `
+              ${data.subjects.map(
+                s=>`
+
+                  <option
+                    value="${s.id}"
+                    ${
+                      x.subjectId===s.id
+                        ?
+                          'selected'
+                        :
+                          ''
+                    }
+                  >
+                    ${escapeHtml(
+                      s.name
+                    )}
+                  </option>
+
+                `
+              ).join('')}
+
+            </select>
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Dia
+            </label>
+
+            <select
+              name="day"
+            >
 
               <option
-                value="${s.id}"
-                ${item.subjectId === s.id ? 'selected' : ''}
+                value="1"
+                ${
+                  x.day===1
+                    ?
+                      'selected'
+                    :
+                      ''
+                }
               >
-                ${escapeHtml(s.name)}
+                Segunda-feira
               </option>
 
-              `
-            ).join('')}
+              <option
+                value="2"
+                ${
+                  x.day===2
+                    ?
+                      'selected'
+                    :
+                      ''
+                }
+              >
+                Terça-feira
+              </option>
 
-          </select>
+              <option
+                value="3"
+                ${
+                  x.day===3
+                    ?
+                      'selected'
+                    :
+                      ''
+                }
+              >
+                Quarta-feira
+              </option>
+
+              <option
+                value="4"
+                ${
+                  x.day===4
+                    ?
+                      'selected'
+                    :
+                      ''
+                }
+              >
+                Quinta-feira
+              </option>
+
+              <option
+                value="5"
+                ${
+                  x.day===5
+                    ?
+                      'selected'
+                    :
+                      ''
+                }
+              >
+                Sexta-feira
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Sala / Bloco
+            </label>
+
+            <input
+              name="room"
+              placeholder="Ex: Sala 204"
+              value="${escapeHtml(
+                x.room||''
+              )}"
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Início
+            </label>
+
+            <input
+              name="start"
+              type="time"
+              required
+              value="${x.start||''}"
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Fim
+            </label>
+
+            <input
+              name="end"
+              type="time"
+              required
+              value="${x.end||''}"
+            >
+
+          </div>
 
         </div>
 
-        <div class="field">
+        ${modalActions()}
 
-          <label>
-            Dia
-          </label>
-
-          <select name="day">
-
-            <option value="1" ${item.day === 1 ? 'selected' : ''}>
-              Segunda-feira
-            </option>
-
-            <option value="2" ${item.day === 2 ? 'selected' : ''}>
-              Terça-feira
-            </option>
-
-            <option value="3" ${item.day === 3 ? 'selected' : ''}>
-              Quarta-feira
-            </option>
-
-            <option value="4" ${item.day === 4 ? 'selected' : ''}>
-              Quinta-feira
-            </option>
-
-            <option value="5" ${item.day === 5 ? 'selected' : ''}>
-              Sexta-feira
-            </option>
-
-          </select>
-
-        </div>
-
-        <div class="field">
-
-          <label>
-            Sala / Bloco
-          </label>
-
-          <input
-            name="room"
-            placeholder="Ex: Sala 204"
-            value="${escapeHtml(item.room || '')}"
-          >
-
-        </div>
-
-        <div class="field">
-
-          <label>
-            Início
-          </label>
-
-          <input
-            name="start"
-            type="time"
-            required
-            value="${item.start || ''}"
-          >
-
-        </div>
-
-        <div class="field">
-
-          <label>
-            Fim
-          </label>
-
-          <input
-            name="end"
-            type="time"
-            required
-            value="${item.end || ''}"
-          >
-
-        </div>
-
-      </div>
-
-      ${modalActions()}
-
-    </form>
+      </form>
 
     `
 
@@ -3105,20 +4138,30 @@ window.openClassModal = id => {
 };
 
 
-window.saveClass = async (
-  event,
+window.saveClass=
+async(
+  e,
   id
-) => {
+)=>{
 
-  event.preventDefault();
+  e.preventDefault();
 
-  const form =
-    new FormData(event.target);
 
-  const subject =
-    data.subjects.find(
-      s => s.id === form.get('subjectId')
+  const f=
+    new FormData(
+      e.target
     );
+
+
+  const subject=
+    data.subjects.find(
+      s =>
+        s.id===
+        f.get(
+          'subjectId'
+        )
+    );
+
 
   await saveDoc(
 
@@ -3129,25 +4172,39 @@ window.saveClass = async (
     {
 
       subjectId:
-        form.get('subjectId'),
+        f.get(
+          'subjectId'
+        ),
 
       title:
-        subject?.name || '',
+        subject?.name||
+        '',
 
       day:
-        Number(form.get('day')),
+        Number(
+          f.get(
+            'day'
+          )
+        ),
 
       start:
-        form.get('start'),
+        f.get(
+          'start'
+        ),
 
       end:
-        form.get('end'),
+        f.get(
+          'end'
+        ),
 
       teacher:
-        subject?.teacher || '',
+        subject?.teacher||
+        '',
 
       room:
-        form.get('room').trim()
+        f.get(
+          'room'
+        ).trim()
 
     }
 
@@ -3160,128 +4217,174 @@ window.saveClass = async (
    PROVAS
    ========================================================= */
 
-window.openAssessmentModal = id => {
+window.openAssessmentModal=
+async id=>{
 
-  const item =
+  const x=
     id
-      ? data.assessments.find(
-          x => x.id === id
+      ?
+        data.assessments.find(
+          v=>v.id===id
         )
-      : {};
+      :
+        {};
+
+
+  if(
+    !data.subjects.length
+  ){
+
+    alert(
+      'Cadastre pelo menos uma disciplina antes de adicionar uma prova.'
+    );
+
+
+    return openSubjectModal();
+
+  }
+
 
   openModal(
 
     id
-      ? 'Editar prova'
-      : 'Nova prova',
+      ?
+        'Editar prova'
+      :
+        'Nova prova',
 
     `
 
-    <form
-      onsubmit="saveAssessment(event,'${id || ''}')"
-    >
+      <form
+        onsubmit="
+          saveAssessment(
+            event,
+            '${id||''}'
+          )
+        "
+      >
 
-      <div class="form-grid">
+        <div class="form-grid">
 
-        <div class="field full">
+          <div class="field full">
 
-          <label>
-            Prova / avaliação
-          </label>
+            <label>
+              Prova / avaliação
+            </label>
 
-          <input
-            name="title"
-            required
-            value="${escapeHtml(item.title || '')}"
-          >
+            <input
+              name="title"
+              required
+              value="${escapeHtml(
+                x.title||''
+              )}"
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Disciplina
+            </label>
+
+            <select
+              name="subjectId"
+              required
+            >
+
+              ${data.subjects.map(
+                s=>`
+
+                  <option
+                    value="${s.id}"
+                    ${
+                      x.subjectId===s.id
+                        ?
+                          'selected'
+                        :
+                          ''
+                    }
+                  >
+                    ${escapeHtml(
+                      s.name
+                    )}
+                  </option>
+
+                `
+              ).join('')}
+
+            </select>
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Data
+            </label>
+
+            <input
+              name="date"
+              type="date"
+              required
+              value="${x.date||''}"
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Horário
+            </label>
+
+            <input
+              name="time"
+              type="time"
+              value="${x.time||''}"
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Local
+            </label>
+
+            <input
+              name="location"
+              value="${escapeHtml(
+                x.location||''
+              )}"
+            >
+
+          </div>
+
+
+          <div class="field full">
+
+            <label>
+              Conteúdo
+            </label>
+
+            <textarea
+              name="content"
+            >${escapeHtml(
+              x.content||''
+            )}</textarea>
+
+          </div>
 
         </div>
 
-        <div class="field">
+        ${modalActions()}
 
-          <label>
-            Disciplina
-          </label>
-
-          <select
-            name="subjectId"
-            required
-          >
-
-            ${data.subjects.map(
-              s => `
-
-              <option
-                value="${s.id}"
-                ${item.subjectId === s.id ? 'selected' : ''}
-              >
-                ${escapeHtml(s.name)}
-              </option>
-
-              `
-            ).join('')}
-
-          </select>
-
-        </div>
-
-        <div class="field">
-
-          <label>
-            Data
-          </label>
-
-          <input
-            name="date"
-            type="date"
-            required
-            value="${item.date || ''}"
-          >
-
-        </div>
-
-        <div class="field">
-
-          <label>
-            Horário
-          </label>
-
-          <input
-            name="time"
-            type="time"
-            value="${item.time || ''}"
-          >
-
-        </div>
-
-        <div class="field">
-
-          <label>
-            Local
-          </label>
-
-          <input
-            name="location"
-            value="${escapeHtml(item.location || '')}"
-          >
-
-        </div>
-
-        <div class="field full">
-
-          <label>
-            Conteúdo
-          </label>
-
-          <textarea name="content">${escapeHtml(item.content || '')}</textarea>
-
-        </div>
-
-      </div>
-
-      ${modalActions()}
-
-    </form>
+      </form>
 
     `
 
@@ -3290,15 +4393,20 @@ window.openAssessmentModal = id => {
 };
 
 
-window.saveAssessment = async (
-  event,
+window.saveAssessment=
+async(
+  e,
   id
-) => {
+)=>{
 
-  event.preventDefault();
+  e.preventDefault();
 
-  const form =
-    new FormData(event.target);
+
+  const f=
+    new FormData(
+      e.target
+    );
+
 
   await saveDoc(
 
@@ -3309,22 +4417,34 @@ window.saveAssessment = async (
     {
 
       title:
-        form.get('title').trim(),
+        f.get(
+          'title'
+        ).trim(),
 
       subjectId:
-        form.get('subjectId'),
+        f.get(
+          'subjectId'
+        ),
 
       date:
-        form.get('date'),
+        f.get(
+          'date'
+        ),
 
       time:
-        form.get('time'),
+        f.get(
+          'time'
+        ),
 
       location:
-        form.get('location').trim(),
+        f.get(
+          'location'
+        ).trim(),
 
       content:
-        form.get('content').trim()
+        f.get(
+          'content'
+        ).trim()
 
     }
 
@@ -3334,289 +4454,113 @@ window.saveAssessment = async (
 
 
 /* =========================================================
-   TAREFAS
-   ========================================================= */
-
-window.openTaskModal = id => {
-
-  const item =
-    id
-      ? data.tasks.find(
-          x => x.id === id
-        )
-      : {};
-
-  openModal(
-
-    id
-      ? 'Editar tarefa'
-      : 'Nova tarefa',
-
-    `
-
-    <form
-      onsubmit="saveTask(event,'${id || ''}')"
-    >
-
-      <div class="form-grid">
-
-        <div class="field full">
-
-          <label>
-            Tarefa
-          </label>
-
-          <input
-            name="title"
-            required
-            value="${escapeHtml(item.title || '')}"
-          >
-
-        </div>
-
-        <div class="field">
-
-          <label>
-            Disciplina
-          </label>
-
-          <select name="subjectId">
-
-            <option value="">
-              Geral
-            </option>
-
-            ${data.subjects.map(
-              s => `
-
-              <option
-                value="${s.id}"
-                ${item.subjectId === s.id ? 'selected' : ''}
-              >
-                ${escapeHtml(s.name)}
-              </option>
-
-              `
-            ).join('')}
-
-          </select>
-
-        </div>
-
-        <div class="field">
-
-          <label>
-            Prazo
-          </label>
-
-          <input
-            name="dueDate"
-            type="date"
-            value="${item.dueDate || ''}"
-          >
-
-        </div>
-
-        <div class="field">
-
-          <label>
-            Prioridade
-          </label>
-
-          <select name="priority">
-
-            <option value="low"
-              ${item.priority === 'low' ? 'selected' : ''}>
-              Baixa
-            </option>
-
-            <option value="medium"
-              ${!item.priority || item.priority === 'medium' ? 'selected' : ''}>
-              Média
-            </option>
-
-            <option value="high"
-              ${item.priority === 'high' ? 'selected' : ''}>
-              Alta
-            </option>
-
-          </select>
-
-        </div>
-
-        <div class="field full">
-
-          <label>
-            Observações
-          </label>
-
-          <textarea name="notes">${escapeHtml(item.notes || '')}</textarea>
-
-        </div>
-
-      </div>
-
-      ${modalActions()}
-
-    </form>
-
-    `
-
-  );
-
-};
-
-
-window.saveTask = async (
-  event,
-  id
-) => {
-
-  event.preventDefault();
-
-  const form =
-    new FormData(event.target);
-
-  await saveDoc(
-
-    'tasks',
-
-    id,
-
-    {
-
-      title:
-        form.get('title').trim(),
-
-      subjectId:
-        form.get('subjectId'),
-
-      dueDate:
-        form.get('dueDate'),
-
-      priority:
-        form.get('priority'),
-
-      notes:
-        form.get('notes').trim(),
-
-      completed:
-        id
-          ? (
-              data.tasks.find(
-                x => x.id === id
-              )?.completed || false
-            )
-          : false
-
-    }
-
-  );
-
-};
-
-
-window.toggleTask = async (
-  id,
-  completed
-) => {
-
-  await writeDoc(
-
-    'tasks',
-
-    id,
-
-    {
-
-      completed
-
-    }
-
-  );
-
-};
-
-
-/* =========================================================
-   RENDER DISCIPLINAS
+   DISCIPLINAS
    ========================================================= */
 
 function renderSubjects(){
 
-  $('subjectsGrid').innerHTML =
+  const container=
+    $('subjectsGrid');
 
+
+  container.innerHTML=
     data.subjects.length
 
-      ? data.subjects.map(
-          subject => {
+      ?
 
-            const classes =
+        data.subjects.map(
+          subject=>{
+
+            const classes=
               data.classes
                 .filter(
                   c =>
-                    c.subjectId ===
+                    c.subjectId===
                     subject.id
                 )
                 .sort(
-                  (a,b) =>
+                  (a,b)=>
                     a.start.localeCompare(
                       b.start
                     )
                 );
 
-            const tests =
+
+            const tests=
               data.assessments
                 .filter(
                   x =>
-                    x.subjectId ===
+                    x.subjectId===
                     subject.id
                 )
                 .sort(
-                  (a,b) =>
+                  (a,b)=>
                     a.date.localeCompare(
                       b.date
                     )
                 );
 
-            const next =
+
+            const next=
               tests.find(
                 x =>
-                  daysUntil(x.date) >= 0
+                  daysUntil(
+                    x.date
+                  )>=0
               );
 
 
-            const grouped = {};
+            const grouped={};
+
 
             classes.forEach(
-              c => {
+              c=>{
 
-                if(!grouped[c.day])
-                  grouped[c.day] = [];
+                if(
+                  !grouped[c.day]
+                )
 
-                grouped[c.day].push(c);
+                  grouped[c.day]=[];
+
+
+                grouped[c.day].push(
+                  c
+                );
 
               }
             );
 
 
-            const timeLabel =
-              Object.entries(grouped)
-                .map(
-                  ([day,blocks]) =>
-                    `${dayName(day)} ${blocks
-                      .map(c => `${c.start}–${c.end}`)
-                      .join(' / ')}`
-                )
-                .join(' • ');
+            const timeLabel=
+              Object.entries(
+                grouped
+              )
+              .map(
+                ([day,blocks])=>
+                  `${dayName(day)}
+                   ${blocks
+                     .map(
+                       c =>
+                         `${c.start}–${c.end}`
+                     )
+                     .join(' / ')}`
+              )
+              .join(' • ');
 
 
             return `
 
               <div
                 class="subject-card"
-                style="border-left-color:${subject.color || 'var(--accent)'}"
-                onclick="openSubjectDetails('${subject.id}')"
+                style="
+                  border-left-color:
+                    ${subject.color||'var(--accent)'};
+                "
+                onclick="
+                  openSubjectDetails(
+                    '${subject.id}'
+                  )
+                "
               >
 
                 <div class="subject-top">
@@ -3624,19 +4568,27 @@ function renderSubjects(){
                   <div>
 
                     <div class="subject-name">
-                      ${escapeHtml(subject.name)}
+
+                      ${escapeHtml(
+                        subject.name
+                      )}
+
                     </div>
 
                     <div class="teacher">
+
                       ${escapeHtml(
-                        subject.teacher ||
+                        subject.teacher||
                         'Professor não informado'
                       )}
+
                     </div>
 
                   </div>
 
-                  <div class="subtle">
+                  <div
+                    class="subtle"
+                  >
                     ↗
                   </div>
 
@@ -3647,8 +4599,10 @@ function renderSubjects(){
 
                   ${
                     classes.length
-                      ? timeLabel
-                      : 'Sem horário'
+                      ?
+                        timeLabel
+                      :
+                        'Sem horário'
                   }
 
                 </div>
@@ -3658,12 +4612,23 @@ function renderSubjects(){
 
                   ${
                     next
-                      ? `
-                        <span class="chip">
-                          Prova ${formatDate(next.date)}
-                        </span>
+                      ?
+
                         `
-                      : ''
+
+                        <span class="chip">
+
+                          Prova
+                          ${formatDate(
+                            next.date
+                          )}
+
+                        </span>
+
+                        `
+
+                      :
+                        ''
                   }
 
                 </div>
@@ -3671,19 +4636,30 @@ function renderSubjects(){
 
                 <div
                   class="subject-actions"
-                  onclick="event.stopPropagation()"
+                  onclick="
+                    event.stopPropagation()
+                  "
                 >
 
                   <button
                     class="mini-btn"
-                    onclick="openClassModalFor('${subject.id}')"
+                    onclick="
+                      openClassModalFor(
+                        '${subject.id}'
+                      )
+                    "
                   >
                     ＋ Horário
                   </button>
 
+
                   <button
                     class="mini-btn"
-                    onclick="openSubjectModal('${subject.id}')"
+                    onclick="
+                      openSubjectModal(
+                        '${subject.id}'
+                      )
+                    "
                   >
                     Editar
                   </button>
@@ -3697,31 +4673,40 @@ function renderSubjects(){
           }
         ).join('')
 
-      : `
+      :
 
-        <div class="empty">
-          Nenhuma disciplina cadastrada.
-        </div>
+        `
 
-      `;
+          <div class="empty">
+
+            Nenhuma disciplina cadastrada.
+
+          </div>
+
+        `;
 
 }
 
 
-window.openClassModalFor = id => {
+window.openClassModalFor=
+id=>{
 
   openClassModal();
 
-  setTimeout(
-    () => {
 
-      const select =
+  setTimeout(
+    ()=>{
+
+      const select=
         document.querySelector(
           '[name="subjectId"]'
         );
 
+
       if(select)
-        select.value = id;
+
+        select.value=
+          id;
 
     },
     50
@@ -3730,32 +4715,30 @@ window.openClassModalFor = id => {
 };
 
 
-/* =========================================================
-   DETALHES DISCIPLINA
-   ========================================================= */
+window.openSubjectDetails=
+id=>{
 
-window.openSubjectDetails = id => {
-
-  const subject =
+  const subject=
     data.subjects.find(
-      x => x.id === id
+      x=>x.id===id
     );
+
 
   if(!subject)
     return;
 
 
-  const classes =
+  const classes=
     data.classes.filter(
       x =>
-        x.subjectId === id
+        x.subjectId===id
     );
 
 
-  const tests =
+  const tests=
     data.assessments.filter(
       x =>
-        x.subjectId === id
+        x.subjectId===id
     );
 
 
@@ -3765,92 +4748,177 @@ window.openSubjectDetails = id => {
 
     `
 
-    <div>
+      <div>
 
-      <p>
-        <strong>👩‍🏫 Professor</strong>
-      </p>
+        <p>
+          <strong>
+            👨‍🏫 Professor
+          </strong>
+        </p>
 
-      <p style="margin:5px 0 15px">
-        ${escapeHtml(
-          subject.teacher ||
-          'Não informado'
-        )}
-      </p>
+        <p
+          style="
+            margin:5px 0 15px;
+          "
+        >
+
+          ${escapeHtml(
+            subject.teacher||
+            'Não informado'
+          )}
+
+        </p>
 
 
-      <p>
-        <strong>🕐 Horários</strong>
-      </p>
+        <p>
+          <strong>
+            🕐 Horários
+          </strong>
+        </p>
 
-      <p style="margin:5px 0 15px">
+        <p
+          style="
+            margin:5px 0 15px;
+          "
+        >
+
+          ${
+            classes.length
+
+              ?
+
+                classes
+                  .map(
+                    x=>
+                      `${dayName(x.day)}
+                       • ${x.start}–${x.end}
+                       ${
+                         x.room
+                           ?
+                             ' • Sala '+
+                             escapeHtml(
+                               x.room
+                             )
+                           :
+                             ''
+                       }`
+                  )
+                  .join('<br>')
+
+              :
+
+                'Nenhum horário cadastrado'
+
+          }
+
+        </p>
+
+
+        <p>
+          <strong>
+            🔴 Provas
+          </strong>
+        </p>
+
+        <p
+          style="
+            margin:5px 0 15px;
+          "
+        >
+
+          ${
+            tests.length
+
+              ?
+
+                tests
+                  .map(
+                    x=>
+                      `${formatDate(
+                        x.date
+                      )}
+                       ${
+                         x.time
+                           ?
+                             ' • '+x.time
+                           :
+                             ''
+                       }
+                       — ${escapeHtml(
+                         x.title
+                       )}`
+                  )
+                  .join('<br>')
+
+              :
+
+                'Nenhuma prova cadastrada'
+
+          }
+
+        </p>
+
 
         ${
-          classes.length
-            ? classes.map(
-                x =>
-                  `${dayName(x.day)} • ${x.start}–${x.end}${x.room ? ' • Sala ' + escapeHtml(x.room) : ''}`
-              ).join('<br>')
-            : 'Nenhum horário cadastrado'
+          subject.notes
+
+            ?
+
+              `
+
+              <p>
+                <strong>
+                  📝 Observações
+                </strong>
+              </p>
+
+              <p
+                style="
+                  margin:5px 0 15px;
+                "
+              >
+                ${escapeHtml(
+                  subject.notes
+                )}
+              </p>
+
+              `
+
+            :
+              ''
         }
 
-      </p>
+
+        <div class="modal-actions">
+
+          <button
+            class="btn btn-sec"
+            onclick="
+              openSubjectModal(
+                '${id}'
+              )
+            "
+          >
+            Editar
+          </button>
 
 
-      <p>
-        <strong>🔴 Provas</strong>
-      </p>
+          <button
+            class="btn btn-red"
+            onclick="
+              removeDoc(
+                'subjects',
+                '${id}'
+              );
+              closeModal()
+            "
+          >
+            Excluir
+          </button>
 
-      <p style="margin:5px 0 15px">
-
-        ${
-          tests.length
-            ? tests.map(
-                x =>
-                  `${formatDate(x.date)}${x.time ? ' • ' + x.time : ''} — ${escapeHtml(x.title)}`
-              ).join('<br>')
-            : 'Nenhuma prova cadastrada'
-        }
-
-      </p>
-
-
-      ${
-        subject.notes
-          ? `
-
-            <p>
-              <strong>📝 Observações</strong>
-            </p>
-
-            <p style="margin:5px 0 15px">
-              ${escapeHtml(subject.notes)}
-            </p>
-
-            `
-          : ''
-      }
-
-
-      <div class="modal-actions">
-
-        <button
-          class="btn btn-sec"
-          onclick="openSubjectModal('${id}')"
-        >
-          Editar
-        </button>
-
-        <button
-          class="btn btn-red"
-          onclick="removeDoc('subjects','${id}');closeModal()"
-        >
-          Excluir
-        </button>
+        </div>
 
       </div>
-
-    </div>
 
     `
 
@@ -3865,144 +4933,197 @@ window.openSubjectDetails = id => {
 
 function renderSchedule(){
 
-  const today =
+  const today=
     new Date().getDay();
 
 
-  const daysHtml =
-    [1,2,3,4,5].map(
-      day => {
+  const daysHtml=
+    [1,2,3,4,5]
+      .map(
+        day=>{
 
-        const isToday =
-          today === day;
-
-
-        const classes =
-          data.classes
-            .filter(
-              c =>
-                Number(c.day) === day
-            )
-            .sort(
-              (a,b) =>
-                a.start.localeCompare(
-                  b.start
-                )
-            );
+          const isToday=
+            today===day;
 
 
-        return `
+          const classes=
+            data.classes
+              .filter(
+                c =>
+                  Number(c.day)===day
+              )
+              .sort(
+                (a,b)=>
+                  a.start.localeCompare(
+                    b.start
+                  )
+              );
 
-          <div
-            class="day ${isToday ? 'is-today' : ''}"
-          >
 
-            <h4>
+          return `
 
-              ${dayName(day)}
+            <div
+              class="
+                day
+                ${isToday?'is-today':''}
+              "
+            >
+
+              <h4>
+
+                ${dayName(day)}
+
+                ${
+                  isToday
+
+                    ?
+
+                      `
+                      <span class="today-tag">
+                        Hoje
+                      </span>
+                      `
+
+                    :
+                      ''
+                }
+
+              </h4>
+
 
               ${
-                isToday
-                  ? `
-                    <span class="today-tag">
-                      Hoje
-                    </span>
+                classes.length
+
+                  ?
+
+                    classes
+                      .map(
+                        c=>{
+
+                          const subject=
+                            data.subjects.find(
+                              s =>
+                                s.id===
+                                c.subjectId
+                            );
+
+
+                          return `
+
+                            <div
+                              class="class-mini"
+                              style="
+                                border-left-color:
+                                  ${
+                                    subject?.color||
+                                    'var(--accent)'
+                                  };
+                              "
+                            >
+
+                              <div
+                                class="class-mini-top"
+                              >
+
+                                <strong>
+
+                                  ${escapeHtml(
+                                    subject?.name||
+                                    c.title||
+                                    'Disciplina'
+                                  )}
+
+                                </strong>
+
+                              </div>
+
+
+                              <span>
+
+                                ${c.start}–${c.end}
+
+                                ${
+                                  c.room
+
+                                    ?
+
+                                      ' • '+
+                                      escapeHtml(
+                                        c.room
+                                      )
+
+                                    :
+                                      ''
+                                }
+
+                              </span>
+
+
+                              <div
+                                class="
+                                  class-mini-actions
+                                "
+                              >
+
+                                <button
+                                  class="mini-btn"
+                                  onclick="
+                                    openClassModal(
+                                      '${c.id}'
+                                    )
+                                  "
+                                >
+                                  ✏️
+                                </button>
+
+                                <button
+                                  class="
+                                    mini-btn
+                                    red
+                                  "
+                                  onclick="
+                                    removeDoc(
+                                      'classes',
+                                      '${c.id}'
+                                    )
+                                  "
+                                >
+                                  🗑️
+                                </button>
+
+                              </div>
+
+                            </div>
+
+                          `;
+
+                        }
+                      )
+                      .join('')
+
+                  :
+
                     `
-                  : ''
+
+                    <div class="empty">
+
+                      Sem aula
+
+                    </div>
+
+                    `
+
               }
 
-            </h4>
+            </div>
+
+          `;
+
+        }
+      );
 
 
-            ${
-              classes.length
-
-                ? classes.map(
-                    item => {
-
-                      const subject =
-                        data.subjects.find(
-                          s =>
-                            s.id ===
-                            item.subjectId
-                        );
-
-
-                      const name =
-                        subject
-                          ? subject.name
-                          : item.title ||
-                            'Disciplina';
-
-
-                      const color =
-                        subject?.color ||
-                        'var(--accent)';
-
-
-                      return `
-
-                        <div
-                          class="class-mini"
-                          style="border-left-color:${color}"
-                        >
-
-                          <strong>
-                            ${escapeHtml(name)}
-                          </strong>
-
-                          <span>
-                            ${item.start}–${item.end}
-                            ${
-                              item.room
-                                ? ' • ' +
-                                  escapeHtml(item.room)
-                                : ''
-                            }
-                          </span>
-
-                          <div class="class-mini-actions">
-
-                            <button
-                              class="mini-btn"
-                              onclick="openClassModal('${item.id}')"
-                            >
-                              ✏️
-                            </button>
-
-                            <button
-                              class="mini-btn red"
-                              onclick="removeDoc('classes','${item.id}')"
-                            >
-                              🗑️
-                            </button>
-
-                          </div>
-
-                        </div>
-
-                      `;
-
-                    }
-                  ).join('')
-
-                : `
-                  <div class="empty">
-                    Sem aula
-                  </div>
-                  `
-
-            }
-
-          </div>
-
-        `;
-
-      }
-    );
-
-
-  $('schedule').innerHTML =
+  $('schedule').innerHTML=
     daysHtml.join('');
 
 }
@@ -4012,62 +5133,36 @@ function renderSchedule(){
    PROVAS
    ========================================================= */
 
-function renderAssessments(){
+function assessmentBlock(x){
 
-  const list =
-    data.assessments
-      .filter(
-        x =>
-          daysUntil(x.date) >= -1
-      )
-      .sort(
-        (a,b) =>
-          a.date.localeCompare(
-            b.date
-          )
-      );
-
-
-  $('assessmentsList').innerHTML =
-
-    list.length
-
-      ? list.map(
-          assessmentBlock
-        ).join('')
-
-      : `
-
-        <div class="empty">
-          Nenhuma prova cadastrada.
-        </div>
-
-      `;
-
-}
-
-
-function assessmentBlock(item){
-
-  const subject =
+  const s=
     data.subjects.find(
-      x =>
-        x.id === item.subjectId
+      v =>
+        v.id===
+        x.subjectId
     );
 
 
-  const days =
-    daysUntil(item.date);
+  const d=
+    daysUntil(
+      x.date
+    );
 
 
-  const state =
-    days < 0
-      ? 'Realizada'
-      : days === 0
-        ? 'É hoje!'
-        : days === 1
-          ? 'Amanhã'
-          : `Faltam ${days} dias`;
+  const state=
+    d<0
+      ?
+        'Realizada'
+      :
+        d===0
+          ?
+            'É hoje!'
+          :
+            d===1
+              ?
+                'Amanhã'
+              :
+                `Faltam ${d} dias`;
 
 
   return `
@@ -4077,19 +5172,32 @@ function assessmentBlock(item){
       <div class="item-head">
 
         <div class="item-title">
-          ${escapeHtml(item.title)}
+
+          ${escapeHtml(
+            x.title
+          )}
+
         </div>
 
-        <span class="badge red">
+
+        <span
+          class="badge red"
+        >
 
           ${
-            days < 0
-              ? 'Realizada'
-              : days === 0
-                ? 'Hoje'
-                : days === 1
-                  ? 'Amanhã'
-                  : days + ' dias'
+            d<0
+              ?
+                'Realizada'
+              :
+                d===0
+                  ?
+                    'Hoje'
+                  :
+                    d===1
+                      ?
+                        'Amanhã'
+                      :
+                        d+' dias'
           }
 
         </span>
@@ -4100,16 +5208,21 @@ function assessmentBlock(item){
       <div class="meta">
 
         ${escapeHtml(
-          subject?.name ||
+          s?.name||
           'Geral'
         )}
 
-        • ${formatDate(item.date)}
+        •
+        ${formatDate(
+          x.date
+        )}
 
         ${
-          item.time
-            ? ' • ' + item.time
-            : ''
+          x.time
+            ?
+              ' • '+x.time
+            :
+              ''
         }
 
       </div>
@@ -4121,12 +5234,17 @@ function assessmentBlock(item){
           ${state}
         </strong>
 
-        <span>
-          ${escapeHtml(
-            item.location ||
-            ''
-          )}
-        </span>
+        ${
+          x.location
+            ?
+              `<span>
+                ${escapeHtml(
+                  x.location
+                )}
+              </span>`
+            :
+              ''
+        }
 
       </div>
 
@@ -4135,14 +5253,24 @@ function assessmentBlock(item){
 
         <button
           class="mini-btn"
-          onclick="openAssessmentModal('${item.id}')"
+          onclick="
+            openAssessmentModal(
+              '${x.id}'
+            )
+          "
         >
           Editar
         </button>
 
+
         <button
           class="mini-btn red"
-          onclick="removeDoc('assessments','${item.id}')"
+          onclick="
+            removeDoc(
+              'assessments',
+              '${x.id}'
+            )
+          "
         >
           Excluir
         </button>
@@ -4156,122 +5284,77 @@ function assessmentBlock(item){
 }
 
 
-/* =========================================================
-   TAREFAS
-   ========================================================= */
+function renderAssessments(){
 
-function renderTasks(){
-
-  const list =
-    [...data.tasks]
+  const arr=
+    data.assessments
+      .filter(
+        x =>
+          daysUntil(
+            x.date
+          )>=-1
+      )
       .sort(
-        (a,b) => {
-
-          if(a.completed !== b.completed)
-            return a.completed ? 1 : -1;
-
-          return (
-            (a.dueDate || '9999')
-              .localeCompare(
-                b.dueDate || '9999'
-              )
-          );
-
-        }
+        (a,b)=>
+          a.date.localeCompare(
+            b.date
+          )
       );
 
 
-  $('tasksList').innerHTML =
+  $('assessmentsList').innerHTML=
 
-    list.length
+    arr.length
 
-      ? list.slice(0,12)
+      ?
+        arr
           .map(
-            task => {
+            x =>
+              assessmentBlock(x)
+          )
+          .join('')
 
-              const subject =
-                data.subjects.find(
-                  x =>
-                    x.id ===
-                    task.subjectId
-                );
+      :
+        `
 
+          <div class="empty">
 
-              return `
+            Nenhuma prova cadastrada.
 
-                <div class="task-item">
+          </div>
 
-                  <input
-                    class="task-check"
-                    type="checkbox"
-                    ${task.completed ? 'checked' : ''}
-                    onchange="toggleTask('${task.id}',this.checked)"
-                  >
+        `;
 
-                  <div class="task-content">
-
-                    <div
-                      class="task-title ${task.completed ? 'done' : ''}"
-                    >
-                      ${escapeHtml(task.title)}
-                    </div>
-
-                    <div class="task-meta">
-
-                      ${
-                        subject
-                          ? escapeHtml(subject.name)
-                          : 'Geral'
-                      }
-
-                      ${
-                        task.dueDate
-                          ? ' • ' +
-                            formatDate(task.dueDate)
-                          : ''
-                      }
-
-                    </div>
-
-                  </div>
+}
 
 
-                  <span
-                    class="priority ${task.priority || 'medium'}"
-                  >
+/* =========================================================
+   SELECT DO POMODORO
+   ========================================================= */
 
-                    ${
-                      task.priority === 'high'
-                        ? 'Alta'
-                        : task.priority === 'low'
-                          ? 'Baixa'
-                          : 'Média'
-                    }
+function renderStudySubjects(){
 
-                  </span>
+  $('studySubject').innerHTML=
 
+    '<option value="">Disciplina</option>'+
 
-                  <button
-                    class="mini-btn"
-                    onclick="openTaskModal('${task.id}')"
-                  >
-                    ✏️
-                  </button>
+    data.subjects
+      .map(
+        s=>
 
-                </div>
+          `
 
-              `;
+          <option
+            value="${s.id}"
+          >
+            ${escapeHtml(
+              s.name
+            )}
+          </option>
 
-            }
-          ).join('')
-
-      : `
-
-        <div class="empty">
-          Nenhuma tarefa cadastrada.
-        </div>
-
-      `;
+          `
+      )
+      .join('');
 
 }
 
@@ -4282,18 +5365,17 @@ function renderTasks(){
 
 function renderCalendar(){
 
-  const year =
+  const y=
     calViewDate.getFullYear();
 
-  const month =
+  const m=
     calViewDate.getMonth();
 
-
-  const today =
+  const today=
     new Date();
 
 
-  const monthName =
+  const monthName=
     calViewDate.toLocaleDateString(
       'pt-BR',
       {
@@ -4303,36 +5385,41 @@ function renderCalendar(){
     );
 
 
-  $('calendarMonth').textContent =
-    monthName.charAt(0).toUpperCase() +
+  $('calendarMonth').textContent=
+    monthName
+      .charAt(0)
+      .toUpperCase()+
     monthName.slice(1);
 
 
-  const firstDay =
+  const firstDay=
     new Date(
-      year,
-      month,
+      y,
+      m,
       1
     );
 
 
-  let startDay =
-    firstDay.getDay() - 1;
+  let startDay=
+    firstDay.getDay()-1;
 
 
-  if(startDay === -1)
-    startDay = 6;
+  if(
+    startDay===-1
+  )
+
+    startDay=6;
 
 
-  const totalDays =
+  const totalDays=
     new Date(
-      year,
-      month + 1,
+      y,
+      m+1,
       0
     ).getDate();
 
 
-  const headers =
+  const headers=
     [
       'Seg',
       'Ter',
@@ -4344,14 +5431,16 @@ function renderCalendar(){
     ];
 
 
-  let html =
+  let html=
     headers
       .map(
-        day =>
+        h=>
           `
-            <div class="cal-weekday">
-              ${day}
-            </div>
+
+          <div class="cal-head-dark">
+            ${h}
+          </div>
+
           `
       )
       .join('');
@@ -4363,49 +5452,70 @@ function renderCalendar(){
     i++
   ){
 
-    html +=
+    html+=
       `
-        <div class="cal-day empty"></div>
+      <div
+        class="cal-cell-dark empty-cell"
+      ></div>
       `;
 
   }
 
 
   for(
-    let day=1;
-    day<=totalDays;
-    day++
+    let d=1;
+    d<=totalDays;
+    d++
   ){
 
-    const iso =
-      `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const isoDate=
+      `${y}-${String(
+        m+1
+      ).padStart(
+        2,
+        '0'
+      )}-${String(
+        d
+      ).padStart(
+        2,
+        '0'
+      )}`;
 
 
-    const isToday =
-      day === today.getDate() &&
-      month === today.getMonth() &&
-      year === today.getFullYear();
+    const isToday=
+      d===
+        today.getDate() &&
+      m===
+        today.getMonth() &&
+      y===
+        today.getFullYear();
 
 
-    const hasExam =
+    const hasExam=
       data.assessments.some(
-        x =>
-          x.date === iso
+        a =>
+          a.date===
+          isoDate
       );
 
 
-    html += `
+    html+=`
 
       <div
-        class="cal-day ${isToday ? 'today' : ''}"
+        class="
+          cal-cell-dark
+          ${isToday?'today-dark':''}
+        "
       >
 
-        ${day}
+        ${d}
 
         ${
           hasExam
-            ? '<div class="exam-dot"></div>'
-            : ''
+            ?
+              '<div class="exam-dot"></div>'
+            :
+              ''
         }
 
       </div>
@@ -4415,16 +5525,17 @@ function renderCalendar(){
   }
 
 
-  $('calendar').innerHTML =
+  $('calendar').innerHTML=
     html;
 
 }
 
 
-window.prevMonth = () => {
+window.prevMonth=
+()=>{
 
   calViewDate.setMonth(
-    calViewDate.getMonth() - 1
+    calViewDate.getMonth()-1
   );
 
   renderCalendar();
@@ -4432,10 +5543,11 @@ window.prevMonth = () => {
 };
 
 
-window.nextMonth = () => {
+window.nextMonth=
+()=>{
 
   calViewDate.setMonth(
-    calViewDate.getMonth() + 1
+    calViewDate.getMonth()+1
   );
 
   renderCalendar();
@@ -4447,277 +5559,132 @@ window.nextMonth = () => {
    POMODORO
    ========================================================= */
 
-function playFinishSound(){
+window.applyCustomMinutes=
+val=>{
 
-  try{
-
-    const AudioContext =
-      window.AudioContext ||
-      window.webkitAudioContext;
-
-    const context =
-      new AudioContext();
+  const min=
+    parseInt(
+      val
+    );
 
 
-    [523.25,659.25,783.99]
-      .forEach(
-        (frequency,index) => {
+  if(
+    isNaN(min)||
+    min<=0
+  )
 
-          const oscillator =
-            context.createOscillator();
-
-          const gain =
-            context.createGain();
+    return;
 
 
-          oscillator.type =
-            'sine';
+  if(
+    timerRunning||
+    timerPaused
+  ){
 
-          oscillator.frequency.value =
-            frequency;
+    if(
+      !confirm(
+        'Alterar o tempo vai reiniciar o cronômetro. Deseja continuar?'
+      )
+    )
 
-
-          gain.gain.setValueAtTime(
-            .25,
-            context.currentTime +
-            index*.25
-          );
-
-
-          gain.gain.exponentialRampToValueAtTime(
-            .01,
-            context.currentTime +
-            index*.25 +
-            .3
-          );
-
-
-          oscillator.connect(gain);
-
-          gain.connect(
-            context.destination
-          );
-
-
-          oscillator.start(
-            context.currentTime +
-            index*.25
-          );
-
-          oscillator.stop(
-            context.currentTime +
-            index*.25 +
-            .3
-          );
-
-        }
-      );
-
-  }
-
-  catch(error){}
-
-}
-
-
-function saveTimerState(){
-
-  localStorage.setItem(
-
-    'pomodoro_state',
-
-    JSON.stringify({
-
-      timerRunning,
-      timerPaused,
-      timerEndTime,
-      timerMinutes,
-      timeLeft,
-      pomodoroMode
-
-    })
-
-  );
-
-}
-
-
-function restoreTimerState(){
-
-  try{
-
-    const saved =
-      JSON.parse(
-        localStorage.getItem(
-          'pomodoro_state'
-        )
-      );
-
-
-    if(!saved)
       return;
 
 
-    timerMinutes =
-      saved.timerMinutes || 25;
-
-    pomodoroMode =
-      saved.pomodoroMode || 'focus';
-
-
-    if(saved.timerRunning &&
-       saved.timerEndTime){
-
-      const remaining =
-        Math.max(
-          0,
-          Math.round(
-            (
-              saved.timerEndTime -
-              Date.now()
-            ) / 1000
-          )
-        );
-
-
-      if(remaining > 0){
-
-        timeLeft =
-          remaining;
-
-        timerEndTime =
-          saved.timerEndTime;
-
-        timerRunning =
-          true;
-
-        timerPaused =
-          false;
-
-        timerId =
-          setInterval(
-            timerTick,
-            500
-          );
-
-      }
-
-      else{
-
-        timerRunning = false;
-
-        timeLeft =
-          timerMinutes * 60;
-
-      }
-
-    }
-
-    else{
-
-      timeLeft =
-        saved.timeLeft ||
-        timerMinutes * 60;
-
-      timerPaused =
-        !!saved.timerPaused;
-
-    }
+    resetTimer();
 
   }
 
-  catch(error){
 
-    console.warn(
-      'Erro ao restaurar timer',
-      error
+  timerMinutes=
+    min;
+
+
+  timeLeft=
+    timerMinutes*
+    60;
+
+
+  document
+    .querySelectorAll(
+      '.pomodoro-mode'
+    )
+    .forEach(
+      btn =>
+        btn.classList.remove(
+          'active'
+        )
     );
-
-  }
 
 
   updateDisplay();
 
   updatePomodoroUI();
 
-}
-
-
-function timerTick(){
-
-  const now =
-    Date.now();
-
-
-  timeLeft =
-    Math.max(
-      0,
-      Math.round(
-        (
-          timerEndTime -
-          now
-        ) / 1000
-      )
-    );
-
-
-  updateDisplay();
-
-
-  if(timeLeft <= 0){
-
-    finishPomodoro();
-
-  }
-
-}
-
-
-function updateDisplay(){
-
-  $('timer').textContent =
-
-    `${String(
-      Math.floor(timeLeft / 60)
-    ).padStart(2,'0')}:${String(
-      timeLeft % 60
-    ).padStart(2,'0')}`;
-
-}
+};
 
 
 function updatePomodoroUI(){
 
-  $('timerLabel').textContent =
+  const wrap=
+    $('timerWrap');
+
+  const label=
+    $('timerLabel');
+
+  const status=
+    $('pomodoroStatus');
+
+
+  wrap.className=
+    'timer-wrap mode-'+
+    pomodoroMode+
+    (
+      timerRunning
+        ?
+          ' running'
+        :
+          ''
+    );
+
+
+  label.textContent=
     POMODORO_LABELS[
       pomodoroMode
-    ] ||
-    `${timerMinutes} minutos`;
+    ]||
+    `${timerMinutes} Minutos`;
 
 
-  $('pomodoroStatus').textContent =
-
-    timerRunning
-      ? 'Em andamento...'
-      : timerPaused
-        ? 'Pausado'
-        : 'Pronto para iniciar';
-
-
-  $('startBtn').textContent =
+  status.textContent=
 
     timerRunning
-      ? 'Em curso'
-      : timerPaused
-        ? 'Continuar'
-        : 'Iniciar';
+      ?
+        'Em andamento...'
+      :
+        timerPaused
+          ?
+            'Pausado'
+          :
+            'Pronto para iniciar';
 
 
-  $('startBtn').disabled =
+  $('startBtn').textContent=
+
+    timerRunning
+      ?
+        'Em curso'
+      :
+        timerPaused
+          ?
+            'Continuar'
+          :
+            'Iniciar';
+
+
+  $('startBtn').disabled=
     timerRunning;
 
 
-  $('pauseBtn').disabled =
+  $('pauseBtn').disabled=
     !timerRunning;
 
 
@@ -4726,13 +5693,13 @@ function updatePomodoroUI(){
       '.pomodoro-mode'
     )
     .forEach(
-      button => {
+      btn=>{
 
-        button.classList.toggle(
+        btn.classList.toggle(
 
           'active',
 
-          button.dataset.mode ===
+          btn.dataset.mode===
           pomodoroMode
 
         );
@@ -4743,91 +5710,201 @@ function updatePomodoroUI(){
 }
 
 
-window.toggleTimer = () => {
+function updateDisplay(){
 
-  if(timerRunning)
-    return;
+  $('timer').textContent=
+
+    `${String(
+      Math.floor(
+        timeLeft/60
+      )
+    ).padStart(
+      2,
+      '0'
+    )}:${String(
+      timeLeft%60
+    ).padStart(
+      2,
+      '0'
+    )}`;
+
+}
 
 
-  timerRunning =
-    true;
+function stopTimerInterval(){
 
-  timerPaused =
+  if(timerId){
+
+    clearInterval(
+      timerId
+    );
+
+    timerId=null;
+
+  }
+
+
+  timerRunning=
     false;
 
 
-  timerEndTime =
-    Date.now() +
-    timeLeft * 1000;
-
-
-  timerId =
-    setInterval(
-      timerTick,
-      500
-    );
-
-
-  saveTimerState();
-
   updatePomodoroUI();
 
-};
+}
 
 
-window.pauseTimer = () => {
+function finishPomodoro(){
 
-  if(!timerRunning)
-    return;
+  stopTimerInterval();
 
-
-  clearInterval(timerId);
-
-  timerId = null;
-
-  timerRunning = false;
-
-  timerPaused = true;
+  timerPaused=
+    false;
 
 
-  saveTimerState();
-
-  updatePomodoroUI();
-
-};
+  playFinishSound();
 
 
-window.resetTimer = () => {
-
-  clearInterval(timerId);
-
-  timerId = null;
-
-  timerRunning = false;
-
-  timerPaused = false;
-
-  timeLeft =
-    timerMinutes * 60;
+  showToast(
+    '⏰ Tempo finalizado!'
+  );
 
 
-  saveTimerState();
+  timeLeft=
+    timerMinutes*
+    60;
+
 
   updateDisplay();
 
   updatePomodoroUI();
 
+}
+
+
+window.toggleTimer=
+()=>{
+
+  if(timerRunning)
+
+    return;
+
+
+  timerRunning=
+    true;
+
+  timerPaused=
+    false;
+
+
+  $('startBtn').disabled=
+    true;
+
+
+  updatePomodoroUI();
+
+
+  timerEndTime=
+    Date.now()+
+    (
+      timeLeft*
+      1000
+    );
+
+
+  timerId=
+    setInterval(
+      ()=>{
+
+        const now=
+          Date.now();
+
+
+        timeLeft=
+          Math.max(
+            0,
+            Math.round(
+              (
+                timerEndTime-
+                now
+              )/
+              1000
+            )
+          );
+
+
+        updateDisplay();
+
+
+        if(
+          timeLeft<=0
+        )
+
+          finishPomodoro();
+
+      },
+      200
+    );
+
 };
 
 
-window.setPomodoroMode = mode => {
+window.pauseTimer=
+()=>{
 
-  if(!POMODORO[mode])
+  if(!timerRunning)
+
+    return;
+
+
+  stopTimerInterval();
+
+  timerPaused=
+    true;
+
+
+  updatePomodoroUI();
+
+
+  $('startBtn').disabled=
+    false;
+
+};
+
+
+window.resetTimer=
+()=>{
+
+  stopTimerInterval();
+
+  timerPaused=
+    false;
+
+  timeLeft=
+    timerMinutes*
+    60;
+
+
+  updateDisplay();
+
+
+  $('startBtn').disabled=
+    false;
+
+};
+
+
+window.setPomodoroMode=
+mode=>{
+
+  if(
+    !POMODORO[mode]
+  )
+
     return;
 
 
   if(
-    timerRunning ||
+    timerRunning||
     timerPaused
   ){
 
@@ -4836,36 +5913,34 @@ window.setPomodoroMode = mode => {
         'Trocar o modo vai reiniciar o cronômetro. Continuar?'
       )
     )
+
       return;
+
+
+    resetTimer();
 
   }
 
 
-  clearInterval(timerId);
-
-  timerId = null;
-
-  timerRunning = false;
-
-  timerPaused = false;
-
-
-  pomodoroMode =
+  pomodoroMode=
     mode;
 
-  timerMinutes =
-    POMODORO[mode];
 
-  timeLeft =
-    timerMinutes * 60;
+  timerMinutes=
+    POMODORO[
+      mode
+    ];
 
 
-  $('customMinutesInput').value =
+  timeLeft=
+    timerMinutes*
+    60;
+
+
+  $('customMinutesInput').value=
     '';
 
 
-  saveTimerState();
-
   updateDisplay();
 
   updatePomodoroUI();
@@ -4873,791 +5948,9 @@ window.setPomodoroMode = mode => {
 };
 
 
-window.applyCustomMinutes = value => {
+updateDisplay();
 
-  const minutes =
-    parseInt(value);
-
-
-  if(
-    isNaN(minutes) ||
-    minutes <= 0
-  )
-    return;
-
-
-  if(
-    timerRunning ||
-    timerPaused
-  ){
-
-    if(
-      !confirm(
-        'Alterar o tempo vai reiniciar o cronômetro. Continuar?'
-      )
-    )
-      return;
-
-    resetTimer();
-
-  }
-
-
-  timerMinutes =
-    Math.min(
-      minutes,
-      180
-    );
-
-
-  timeLeft =
-    timerMinutes * 60;
-
-
-  pomodoroMode =
-    'custom';
-
-
-  saveTimerState();
-
-  updateDisplay();
-
-  updatePomodoroUI();
-
-};
-
-
-/* =========================================================
-   REGISTRO DE SESSÃO DE ESTUDO
-   ========================================================= */
-
-async function registerStudySession(){
-
-  const subjectId =
-    $('studySubject').value;
-
-
-  const duration =
-    timerMinutes;
-
-
-  if(!subjectId)
-    return;
-
-
-  await writeDoc(
-
-    'studySessions',
-
-    null,
-
-    {
-
-      subjectId,
-
-      duration,
-
-      date:
-        new Date()
-          .toISOString()
-          .slice(0,10)
-
-    }
-
-  );
-
-}
-
-
-function finishPomodoro(){
-
-  clearInterval(timerId);
-
-  timerId = null;
-
-  timerRunning = false;
-
-  timerPaused = false;
-
-
-  if(
-    pomodoroMode ===
-    'focus'
-  ){
-
-    registerStudySession();
-
-  }
-
-
-  playFinishSound();
-
-  showToast(
-    '⏰ Tempo finalizado!'
-  );
-
-
-  timeLeft =
-    timerMinutes * 60;
-
-
-  saveTimerState();
-
-  updateDisplay();
-
-  updatePomodoroUI();
-
-}
-
-
-/* =========================================================
-   ESTATÍSTICAS
-   ========================================================= */
-
-function formatMinutes(minutes){
-
-  const hours =
-    Math.floor(
-      minutes / 60
-    );
-
-
-  const mins =
-    minutes % 60;
-
-
-  if(hours === 0)
-    return `${mins}min`;
-
-
-  return `${hours}h ${mins}min`;
-
-}
-
-
-function renderStudyStats(){
-
-  const sessions =
-    data.studySessions || [];
-
-
-  const today =
-    new Date();
-
-  today.setHours(
-    0,0,0,0
-  );
-
-
-  const startWeek =
-    new Date(today);
-
-  const day =
-    startWeek.getDay();
-
-
-  const diff =
-    day === 0
-      ? 6
-      : day - 1;
-
-
-  startWeek.setDate(
-    startWeek.getDate() - diff
-  );
-
-
-  let todayMinutes = 0;
-
-  let weekMinutes = 0;
-
-  let totalMinutes = 0;
-
-
-  const bySubject = {};
-
-
-  sessions.forEach(
-    session => {
-
-      const duration =
-        Number(
-          session.duration || 0
-        );
-
-
-      totalMinutes +=
-        duration;
-
-
-      const sessionDate =
-        session.date
-          ? new Date(
-              session.date +
-              'T00:00:00'
-            )
-          : null;
-
-
-      if(sessionDate){
-
-        sessionDate.setHours(
-          0,0,0,0
-        );
-
-
-        if(
-          sessionDate.getTime() ===
-          today.getTime()
-        ){
-
-          todayMinutes +=
-            duration;
-
-        }
-
-
-        if(
-          sessionDate >=
-          startWeek
-        ){
-
-          weekMinutes +=
-            duration;
-
-        }
-
-      }
-
-
-      if(session.subjectId){
-
-        bySubject[
-          session.subjectId
-        ] =
-          (
-            bySubject[
-              session.subjectId
-            ] || 0
-          ) +
-          duration;
-
-      }
-
-    }
-  );
-
-
-  $('todayStudy').textContent =
-    formatMinutes(
-      todayMinutes
-    );
-
-
-  $('weekStudy').textContent =
-    formatMinutes(
-      weekMinutes
-    );
-
-
-  $('totalStudy').textContent =
-    formatMinutes(
-      totalMinutes
-    );
-
-
-  const ranking =
-    Object.entries(
-      bySubject
-    )
-    .sort(
-      (a,b) =>
-        b[1] - a[1]
-    )
-    .slice(0,5);
-
-
-  const max =
-    ranking.length
-      ? ranking[0][1]
-      : 1;
-
-
-  $('studyBreakdown').innerHTML =
-    ranking.map(
-      ([subjectId,minutes]) => {
-
-        const subject =
-          data.subjects.find(
-            s =>
-              s.id === subjectId
-          );
-
-
-        if(!subject)
-          return '';
-
-
-        return `
-
-          <div class="study-bar">
-
-            <div class="study-bar-head">
-
-              <span>
-                ${escapeHtml(subject.name)}
-              </span>
-
-              <span>
-                ${formatMinutes(minutes)}
-              </span>
-
-            </div>
-
-            <div class="study-progress">
-
-              <span
-                style="width:${Math.max(
-                  4,
-                  (minutes / max) * 100
-                )}%"
-              ></span>
-
-            </div>
-
-          </div>
-
-        `;
-
-      }
-    ).join('');
-
-}
-
-
-/* =========================================================
-   SELECT DO POMODORO
-   ========================================================= */
-
-function renderStudySubjects(){
-
-  $('studySubject').innerHTML =
-
-    `<option value="">
-      Disciplina
-    </option>` +
-
-    data.subjects
-      .map(
-        subject => `
-
-          <option
-            value="${subject.id}"
-          >
-            ${escapeHtml(
-              subject.name
-            )}
-          </option>
-
-        `
-      )
-      .join('');
-
-}
-
-
-/* =========================================================
-   UTILITÁRIOS DE DATA
-   ========================================================= */
-
-function dayName(number){
-
-  return {
-
-    1:'Segunda',
-    2:'Terça',
-    3:'Quarta',
-    4:'Quinta',
-    5:'Sexta'
-
-  }[number] || '';
-
-}
-
-
-function formatDate(value){
-
-  if(!value)
-    return 'Sem data';
-
-
-  const [
-    year,
-    month,
-    day
-  ] =
-    value.split('-');
-
-
-  return `${day}/${month}/${year}`;
-
-}
-
-
-function daysUntil(date){
-
-  const now =
-    new Date();
-
-  now.setHours(
-    0,0,0,0
-  );
-
-
-  const target =
-    new Date(
-      date + 'T00:00:00'
-    );
-
-
-  return Math.ceil(
-    (
-      target - now
-    ) / 86400000
-  );
-
-}
-
-
-/* =========================================================
-   GRIDSTACK
-   ========================================================= */
-
-function initGridStack(){
-
-  if(grid)
-    return;
-
-
-  grid =
-    GridStack.init({
-
-      cellHeight:85,
-
-      margin:10,
-
-      disableResize:true,
-
-      disableDrag:true,
-
-      float:false,
-
-      handle:'.drag-handle'
-
-    });
-
-
-  const saved =
-    localStorage.getItem(
-      'user_grid_layout_v3'
-    );
-
-
-  if(saved){
-
-    try{
-
-      grid.load(
-        JSON.parse(saved)
-      );
-
-    }
-
-    catch(error){
-
-      console.warn(
-        'Layout inválido'
-      );
-
-    }
-
-  }
-
-
-  grid.on(
-    'change',
-    () => {
-
-      const layout =
-        grid.save(false);
-
-      localStorage.setItem(
-        'user_grid_layout_v3',
-        JSON.stringify(layout)
-      );
-
-    }
-  );
-
-}
-
-
-window.toggleEditMode = () => {
-
-  isEditMode =
-    !isEditMode;
-
-
-  const button =
-    $('editLayoutBtn');
-
-
-  if(isEditMode){
-
-    document.body.classList.add(
-      'edit-mode'
-    );
-
-    button.textContent =
-      '🔒 Travar Layout';
-
-    button.classList.replace(
-      'btn-orange',
-      'btn-green'
-    );
-
-
-    grid.enable();
-
-    showToast(
-      'Modo de personalização ativado'
-    );
-
-  }
-
-  else{
-
-    document.body.classList.remove(
-      'edit-mode'
-    );
-
-    button.textContent =
-      '🔓 Personalizar';
-
-    button.classList.replace(
-      'btn-green',
-      'btn-orange'
-    );
-
-
-    grid.disable();
-
-    showToast(
-      'Layout salvo!'
-    );
-
-  }
-
-};
-
-
-/* =========================================================
-   AÇÕES RÁPIDAS
-   ========================================================= */
-
-window.runAICommand = async () => {
-
-  const input =
-    $('aiInput');
-
-
-  const raw =
-    input.value.trim();
-
-
-  if(!raw)
-    return;
-
-
-  const text =
-    raw
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(
-        /[\u0300-\u036f]/g,
-        ''
-      );
-
-
-  if(
-    text.includes('iniciar') ||
-    text.includes('start') ||
-    text.includes('comecar')
-  ){
-
-    toggleTimer();
-
-    showToast(
-      '⏱️ Cronômetro iniciado!'
-    );
-
-    input.value = '';
-
-    return;
-
-  }
-
-
-  if(
-    text.includes('pausar') ||
-    text.includes('parar')
-  ){
-
-    pauseTimer();
-
-    showToast(
-      '⏸️ Cronômetro pausado!'
-    );
-
-    input.value = '';
-
-    return;
-
-  }
-
-
-  if(
-    text.includes('reiniciar') ||
-    text.includes('resetar')
-  ){
-
-    resetTimer();
-
-    showToast(
-      '↻ Cronômetro reiniciado!'
-    );
-
-    input.value = '';
-
-    return;
-
-  }
-
-
-  if(
-    text.includes(
-      'adicionar materia'
-    ) ||
-    text.includes(
-      'adicionar disciplina'
-    ) ||
-    text.includes(
-      'criar materia'
-    ) ||
-    text.includes(
-      'criar disciplina'
-    )
-  ){
-
-    const name =
-      raw
-        .replace(
-          /adicionar|adicione|criar|cria|materia|disciplina/gi,
-          ''
-        )
-        .trim();
-
-
-    if(name){
-
-      await writeDoc(
-
-        'subjects',
-
-        null,
-
-        {
-
-          name,
-
-          teacher:'',
-
-          color:'#15803d',
-
-          notes:''
-
-        }
-
-      );
-
-
-      showToast(
-        `📚 Disciplina "${name}" criada!`
-      );
-
-    }
-
-
-    input.value = '';
-
-    return;
-
-  }
-
-
-  if(
-    text.includes(
-      'personalizar'
-    ) ||
-    text.includes(
-      'editar layout'
-    )
-  ){
-
-    toggleEditMode();
-
-    input.value = '';
-
-    return;
-
-  }
-
-
-  showToast(
-    "Comando não reconhecido."
-  );
-
-
-  input.value = '';
-
-};
-
-
-/* =========================================================
-   ATUALIZAÇÃO
-   ========================================================= */
-
-window.refreshAll = () => {
-
-  renderSubjects();
-
-  renderSchedule();
-
-  renderAssessments();
-
-  renderTasks();
-
-  renderCalendar();
-
-  renderStudySubjects();
-
-  renderStudyStats();
-
-  showToast(
-    'Painel atualizado'
-  );
-
-};
+updatePomodoroUI();
 
 
 /* =========================================================
@@ -5666,18 +5959,18 @@ window.refreshAll = () => {
 
 function updateClock(){
 
-  const now =
+  const n=
     new Date();
 
 
-  $('digitalClock').textContent =
-    now.toLocaleTimeString(
+  $('digitalClock').textContent=
+    n.toLocaleTimeString(
       'pt-BR'
     );
 
 
-  $('currentDate').textContent =
-    now.toLocaleDateString(
+  $('currentDate').textContent=
+    n.toLocaleDateString(
       'pt-BR',
       {
         weekday:'long',
@@ -5694,14 +5987,233 @@ setInterval(
   1000
 );
 
+
 updateClock();
 
 
 /* =========================================================
-   VOLTAR AO TOPO
+   GRIDSTACK
    ========================================================= */
 
-window.scrollToTop = () => {
+function initGridStack(){
+
+  grid=
+    GridStack.init({
+
+      cellHeight:85,
+
+      margin:10,
+
+      disableResize:true,
+
+      disableDrag:true,
+
+      handle:
+        '.drag-handle'
+
+    });
+
+
+  const savedLayout=
+    localStorage.getItem(
+      'user_grid_layout_v2'
+    );
+
+
+  if(savedLayout){
+
+    try{
+
+      const layout=
+        JSON.parse(
+          savedLayout
+        );
+
+
+      grid.load(
+        layout
+      );
+
+    }
+
+    catch(e){}
+
+  }
+
+
+  grid.on(
+    'change',
+    function(){
+
+      const layout=
+        grid.save(
+          false
+        );
+
+
+      localStorage.setItem(
+        'user_grid_layout_v2',
+        JSON.stringify(
+          layout
+        )
+      );
+
+    }
+  );
+
+}
+
+
+window.toggleEditMode=
+function(){
+
+  isEditMode=
+    !isEditMode;
+
+
+  const btn=
+    $('editLayoutBtn');
+
+
+  if(isEditMode){
+
+    document.body.classList.add(
+      'edit-mode'
+    );
+
+
+    btn.textContent=
+      '🔒 Travar Layout';
+
+
+    btn.classList.replace(
+      'btn-orange',
+      'btn-green'
+    );
+
+
+    grid.enable();
+
+
+    showToast(
+      'Modo de personalização ativado'
+    );
+
+  }
+
+  else{
+
+    document.body.classList.remove(
+      'edit-mode'
+    );
+
+
+    btn.textContent=
+      '🔓 Personalizar';
+
+
+    btn.classList.replace(
+      'btn-green',
+      'btn-orange'
+    );
+
+
+    grid.disable();
+
+
+    showToast(
+      'Layout salvo!'
+    );
+
+  }
+
+};
+
+
+/* =========================================================
+   DATAS
+   ========================================================= */
+
+function dayName(number){
+
+  return {
+
+    1:'Segunda',
+
+    2:'Terça',
+
+    3:'Quarta',
+
+    4:'Quinta',
+
+    5:'Sexta'
+
+  }[number]||
+  '';
+
+}
+
+
+function formatDate(value){
+
+  if(!value)
+
+    return 'Sem data';
+
+
+  const [
+    year,
+    month,
+    day
+  ]=
+    value.split('-');
+
+
+  return `
+    ${day}/${month}/${year}
+  `;
+
+}
+
+
+function daysUntil(date){
+
+  const now=
+    new Date();
+
+
+  now.setHours(
+    0,
+    0,
+    0,
+    0
+  );
+
+
+  const target=
+    new Date(
+      date+
+      'T00:00:00'
+    );
+
+
+  return Math.ceil(
+    (
+      target-
+      now
+    )/
+    86400000
+  );
+
+}
+
+
+/* =========================================================
+   TOPO
+   ========================================================= */
+
+window.scrollToTop=
+function(){
 
   window.scrollTo({
 
@@ -5716,98 +6228,383 @@ window.scrollToTop = () => {
 
 window.addEventListener(
   'scroll',
-  () => {
+  ()=>{
 
-    const button =
+    const btn=
       $('backToTopBtn');
 
 
+    if(!btn)
+
+      return;
+
+
     if(
-      window.scrollY > 180
-    ){
+      window.scrollY>150
+    )
 
-      button.classList.add(
+      btn.classList.add(
         'show'
       );
 
-    }
+    else
 
-    else{
-
-      button.classList.remove(
+      btn.classList.remove(
         'show'
       );
-
-    }
 
   }
 );
 
 
 /* =========================================================
-   ONLINE / OFFLINE
+   ATUALIZAR
    ========================================================= */
 
-function updateConnection(){
+function renderAll(){
 
-  const status =
-    $('connectionStatus');
+  renderSubjects();
 
-  const text =
-    $('connectionText');
+  renderSchedule();
 
+  renderAssessments();
 
-  if(navigator.onLine){
+  renderStudySubjects();
 
-    status.classList.remove(
-      'offline'
-    );
-
-    text.textContent =
-      'Online';
-
-  }
-
-  else{
-
-    status.classList.add(
-      'offline'
-    );
-
-    text.textContent =
-      'Offline';
-
-  }
+  renderCalendar();
 
 }
 
 
-window.addEventListener(
-  'online',
-  () => {
+window.refreshAll=
+()=>{
 
-    updateConnection();
+  renderAll();
+
+  showToast(
+    'Painel atualizado'
+  );
+
+};
+
+
+/* =========================================================
+   COMANDOS RÁPIDOS
+   ========================================================= */
+
+window.runAICommand=
+async()=>{
+
+  const input=
+    $('aiInput');
+
+
+  const rawText=
+    input.value.trim();
+
+
+  if(!rawText)
+
+    return;
+
+
+  const textClean=
+    rawText
+      .toLowerCase()
+      .normalize(
+        'NFD'
+      )
+      .replace(
+        /[\u0300-\u036f]/g,
+        ''
+      );
+
+
+  if(
+    textClean.includes(
+      'iniciar'
+    )||
+    textClean.includes(
+      'start'
+    )||
+    textClean.includes(
+      'play'
+    )
+  ){
+
+    window.toggleTimer();
 
     showToast(
-      '🌐 Conexão restaurada'
+      '✨ Cronômetro rodando!'
     );
 
+
+    input.value='';
+
+    return;
+
   }
-);
 
 
-window.addEventListener(
-  'offline',
-  () => {
+  if(
+    textClean.includes(
+      'pausar'
+    )||
+    textClean.includes(
+      'pausa'
+    )||
+    textClean.includes(
+      'parar'
+    )
+  ){
 
-    updateConnection();
+    window.pauseTimer();
 
     showToast(
-      '📡 Você está offline'
+      '✨ Cronômetro pausado!'
     );
 
+
+    input.value='';
+
+    return;
+
   }
-);
+
+
+  if(
+    textClean.includes(
+      'reiniciar'
+    )||
+    textClean.includes(
+      'resetar'
+    )
+  ){
+
+    window.resetTimer();
+
+    showToast(
+      '✨ Cronômetro reiniciado!'
+    );
+
+
+    input.value='';
+
+    return;
+
+  }
+
+
+  const isDelete=
+    textClean.includes(
+      'apagar'
+    )||
+    textClean.includes(
+      'excluir'
+    )||
+    textClean.includes(
+      'limpar'
+    )||
+    textClean.includes(
+      'deletar'
+    );
+
+
+  if(
+    isDelete&&
+    textClean.includes(
+      'prova'
+    )
+  ){
+
+    if(
+      confirm(
+        'Quer mesmo apagar TODAS as provas?'
+      )
+    ){
+
+      for(
+        const item
+        of data.assessments
+      ){
+
+        await deleteDoc(
+          doc(
+            db,
+            'assessments',
+            item.id
+          )
+        );
+
+      }
+
+
+      showToast(
+        '✨ Todas as provas foram apagadas!'
+      );
+
+    }
+
+
+    input.value='';
+
+    return;
+
+  }
+
+
+  if(
+    isDelete&&
+    (
+      textClean.includes(
+        'materia'
+      )||
+      textClean.includes(
+        'disciplina'
+      )
+    )
+  ){
+
+    if(
+      confirm(
+        'Quer mesmo apagar TODAS as disciplinas?'
+      )
+    ){
+
+      for(
+        const item
+        of data.subjects
+      ){
+
+        await deleteDoc(
+          doc(
+            db,
+            'subjects',
+            item.id
+          )
+        );
+
+      }
+
+
+      showToast(
+        '✨ Todas as disciplinas foram apagadas!'
+      );
+
+    }
+
+
+    input.value='';
+
+    return;
+
+  }
+
+
+  if(
+    isDelete&&
+    textClean.includes(
+      'horario'
+    )
+  ){
+
+    if(
+      confirm(
+        'Quer mesmo apagar TODOS os horários da semana?'
+      )
+    ){
+
+      for(
+        const item
+        of data.classes
+      ){
+
+        await deleteDoc(
+          doc(
+            db,
+            'classes',
+            item.id
+          )
+        );
+
+      }
+
+
+      showToast(
+        '✨ Todos os horários foram apagados!'
+      );
+
+    }
+
+
+    input.value='';
+
+    return;
+
+  }
+
+
+  if(
+    textClean.includes(
+      'adicionar materia'
+    )||
+    textClean.includes(
+      'adicionar disciplina'
+    )||
+    textClean.includes(
+      'criar materia'
+    )||
+    textClean.includes(
+      'criar disciplina'
+    )
+  ){
+
+    const name=
+      rawText.replace(
+        /(adicionar|adicione|criar|cria|materia|disciplina)/gi,
+        ''
+      ).trim();
+
+
+    if(name){
+
+      await writeDoc(
+        'subjects',
+        null,
+        {
+
+          name,
+
+          teacher:'',
+
+          color:'#15803d'
+
+        }
+      );
+
+
+      showToast(
+        `✨ Disciplina "${name}" criada!`
+      );
+
+    }
+
+
+    input.value='';
+
+    return;
+
+  }
+
+
+  showToast(
+    "Comando não reconhecido."
+  );
+
+
+  input.value='';
+
+};
 
 
 /* =========================================================
@@ -5825,27 +6622,21 @@ async function loadAll(){
 
 window.addEventListener(
   'load',
-  () => {
-
-    updateConnection();
-
-    restoreTimerState();
-
-    renderCalendar();
-
-    renderStudyStats();
-
+  ()=>{
 
     if(
       localStorage.getItem(
         'ueg_access_granted'
-      ) === 'true'
+      )===
+      'true'
     ){
 
-      showApp();
+      window.showApp();
 
     }
 
+
+    renderCalendar();
 
     loadAll();
 
