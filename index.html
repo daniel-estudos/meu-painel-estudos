@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Central de Estudos - Academic OS</title>
     
-    <!-- Fonts & Icons -->
+    <!-- Fonts, Icons & Chart.js -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         :root {
@@ -89,12 +90,13 @@
         .hero-title { font-size: 1.35rem; font-weight: 800; margin: 0.5rem 0 0.75rem 0; color: #064E3B; }
         .hero-info { display: flex; align-items: center; gap: 0.5rem; color: #374151; font-size: 0.85rem; font-weight: 500; }
         .hero-teacher { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; }
-        .btn-primary { background: #059669; color: white; border: none; padding: 0.65rem 1.25rem; border-radius: var(--radius-md); font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1.25rem; }
+        .btn-primary { background: #059669; color: white; border: none; padding: 0.65rem 1.25rem; border-radius: var(--radius-md); font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; transition: 0.2s; }
+        .btn-primary:hover { background: #047857; }
 
         /* METRICS ROW */
         .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
         .metric-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem; display: flex; align-items: center; gap: 0.85rem; }
-        .metric-icon { width: 36px; height: 36px; border-radius: var(--radius-sm); display: grid; place-items: center; }
+        .metric-icon { width: 36px; height: 36px; border-radius: var(--radius-sm); display: grid; place-items: center; flex-shrink: 0; }
         .metric-val { font-size: 1.1rem; font-weight: 700; margin-top: 0.1rem; }
         .metric-lbl { font-size: 0.72rem; color: var(--text-muted); font-weight: 600; }
 
@@ -104,11 +106,8 @@
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
         .card-header h3 { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: #374151; letter-spacing: 0.02em; }
 
-        /* BAR CHART MOCK */
-        .chart-container { height: 120px; display: flex; align-items: flex-end; justify-content: space-between; gap: 0.5rem; padding-top: 1rem; }
-        .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
-        .bar { width: 100%; max-width: 24px; background: #10B981; border-radius: 4px; }
-        .bar-label { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; }
+        /* CHART CONTAINER */
+        .chart-wrapper { position: relative; height: 140px; width: 100%; margin-top: 0.5rem; }
 
         /* DISCIPLINAS LIST */
         .disc-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
@@ -117,7 +116,7 @@
         .disc-name { font-weight: 600; font-size: 0.85rem; }
         .disc-sub { font-size: 0.72rem; color: #EF4444; font-weight: 500; }
         .progress-bar { width: 80px; height: 6px; background: #E5E7EB; border-radius: 10px; overflow: hidden; }
-        .progress-fill { height: 100%; border-radius: 10px; }
+        .progress-fill { height: 100%; border-radius: 10px; transition: width 0.4s ease; }
 
         /* RECOMMENDATION BANNER */
         .rec-banner {
@@ -129,26 +128,37 @@
         .btn-purple { background: white; border: 1px solid var(--purple-border); color: var(--purple-text); font-weight: 600; padding: 0.5rem 1rem; border-radius: var(--radius-md); cursor: pointer; white-space: nowrap; }
 
         /* CALENDAR RIGHT COLUMN */
-        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.25rem; text-align: center; font-size: 0.75rem; }
         .cal-day-name { font-weight: 700; color: var(--text-muted); padding-bottom: 0.5rem; }
-        .cal-day { padding: 0.4rem 0; border-radius: 50%; cursor: pointer; color: #374151; font-weight: 500; }
+        .cal-day { padding: 0.4rem 0; border-radius: 50%; cursor: pointer; color: #374151; font-weight: 500; transition: 0.2s; }
+        .cal-day:hover { background: #F3F4F6; }
         .cal-day.active { background: #059669; color: white; font-weight: 700; }
         .cal-day.muted { color: #D1D5DB; }
 
         /* EVENT LIST */
         .event-item { display: flex; gap: 0.85rem; margin-bottom: 0.85rem; align-items: flex-start; }
-        .event-date { text-align: center; line-height: 1.1; }
+        .event-date { text-align: center; line-height: 1.1; min-width: 32px; }
         .event-date .day { font-size: 0.9rem; font-weight: 800; color: #EF4444; }
         .event-date .month { font-size: 0.65rem; font-weight: 700; color: #EF4444; text-transform: uppercase; }
 
         /* FOCO RÁPIDO */
         .foco-box { text-align: center; display: flex; flex-direction: column; align-items: center; }
-        .timer-circle { width: 100px; height: 100px; border-radius: 50%; border: 6px solid #10B981; display: grid; place-items: center; margin: 1rem 0; }
-        .timer-time { font-size: 1.4rem; font-weight: 800; }
-        .timer-unit { font-size: 0.7rem; color: var(--text-muted); }
+        .timer-circle {
+            width: 110px; height: 110px; border-radius: 50%;
+            border: 6px solid #10B981; display: grid; place-items: center;
+            margin: 1rem 0; font-family: 'JetBrains Mono', monospace; position: relative;
+        }
+        .timer-time { font-size: 1.5rem; font-weight: 800; }
+        .timer-unit { font-size: 0.7rem; color: var(--text-muted); font-family: 'Plus Jakarta Sans', sans-serif; }
 
-        select.select-disc { width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 0.8rem; color: var(--text-main); margin-bottom: 0.75rem; outline: none; }
+        select.select-disc {
+            width: 100%; padding: 0.6rem; border: 1px solid var(--border);
+            border-radius: var(--radius-sm); font-size: 0.8rem; color: var(--text-main);
+            margin-bottom: 0.75rem; outline: none; background: white; cursor: pointer;
+        }
+
+        .page-view { display: none; }
+        .page-view.active { display: block; }
     </style>
 </head>
 <body>
@@ -165,31 +175,31 @@
             </div>
 
             <div class="nav-group">
-                <a class="nav-item active"><i data-lucide="home" size="18"></i> Início</a>
+                <a class="nav-item active" onclick="switchPage('dashboard', this)"><i data-lucide="home" size="18"></i> Início</a>
             </div>
 
             <div class="nav-group">
                 <div class="nav-label">Estudos</div>
-                <a class="nav-item"><i data-lucide="book-open" size="18"></i> Disciplinas</a>
-                <a class="nav-item"><i data-lucide="check-square" size="18"></i> Tarefas</a>
-                <a class="nav-item"><i data-lucide="target" size="18"></i> Foco</a>
+                <a class="nav-item" onclick="switchPage('disciplinas', this)"><i data-lucide="book-open" size="18"></i> Disciplinas</a>
+                <a class="nav-item" onclick="switchPage('tarefas', this)"><i data-lucide="check-square" size="18"></i> Tarefas</a>
+                <a class="nav-item" onclick="switchPage('foco', this)"><i data-lucide="target" size="18"></i> Foco</a>
             </div>
 
             <div class="nav-group">
                 <div class="nav-label">Agenda</div>
-                <a class="nav-item"><i data-lucide="calendar" size="18"></i> Calendário</a>
-                <a class="nav-item"><i data-lucide="file-text" size="18"></i> Avaliações</a>
+                <a class="nav-item" onclick="switchPage('calendario', this)"><i data-lucide="calendar" size="18"></i> Calendário</a>
+                <a class="nav-item" onclick="switchPage('avaliacoes', this)"><i data-lucide="file-text" size="18"></i> Avaliações</a>
             </div>
 
             <div class="nav-group">
                 <div class="nav-label">Recursos</div>
-                <a class="nav-item"><i data-lucide="folder" size="18"></i> Materiais</a>
-                <a class="nav-item"><i data-lucide="edit-3" size="18"></i> Anotações</a>
+                <a class="nav-item" onclick="switchPage('materiais', this)"><i data-lucide="folder" size="18"></i> Materiais</a>
+                <a class="nav-item" onclick="switchPage('anotacoes', this)"><i data-lucide="edit-3" size="18"></i> Anotações</a>
             </div>
 
             <div class="nav-group">
                 <div class="nav-label">Análise</div>
-                <a class="nav-item"><i data-lucide="bar-chart-2" size="18"></i> Desempenho</a>
+                <a class="nav-item" onclick="switchPage('desempenho', this)"><i data-lucide="bar-chart-2" size="18"></i> Desempenho</a>
             </div>
         </div>
 
@@ -209,213 +219,337 @@
     <main id="main-content">
         <header class="header">
             <div class="header-title">
-                <h1>Boa noite, Daniel 👋</h1>
-                <span>Domingo, 16 de agosto de 2026</span>
+                <h1 id="page-title">Boa noite, Daniel 👋</h1>
+                <span id="current-date">Carregando data...</span>
             </div>
             <div class="header-actions">
-                <button class="icon-btn"><i data-lucide="search" size="18"></i></button>
-                <button class="icon-btn"><i data-lucide="bell" size="18"></i></button>
-                <button class="icon-btn"><i data-lucide="moon" size="18"></i></button>
+                <button class="icon-btn" title="Buscar"><i data-lucide="search" size="18"></i></button>
+                <button class="icon-btn" title="Notificações"><i data-lucide="bell" size="18"></i></button>
+                <button class="icon-btn" title="Tema"><i data-lucide="moon" size="18"></i></button>
             </div>
         </header>
 
-        <div class="dashboard-grid">
-            <!-- COLUNA ESQUERDA -->
-            <div class="left-column">
-                <!-- HERO COMPROMISSO -->
-                <div class="hero-card">
-                    <div>
-                        <span style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: #047857;">PRÓXIMO COMPROMISSO</span>
-                        <span class="badge-tag">Amanhã</span>
-                        <h2 class="hero-title">Controle de Qualidade<br>Microbiológico</h2>
-                        <div class="hero-info"><i data-lucide="clock" size="16"></i> 13:00 – 16:30</div>
-                        <div class="hero-teacher">Pamela Cristina de Sousa</div>
-                        <button class="btn-primary"><i data-lucide="play" size="16"></i> Começar foco</button>
+        <!-- PÁGINA INÍCIO (DASHBOARD) -->
+        <div id="view-dashboard" class="page-view active">
+            <div class="dashboard-grid">
+                <!-- COLUNA ESQUERDA -->
+                <div class="left-column">
+                    <!-- HERO COMPROMISSO -->
+                    <div class="hero-card">
+                        <div>
+                            <span style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: #047857;">PRÓXIMO COMPROMISSO</span>
+                            <span class="badge-tag">Amanhã</span>
+                            <h2 class="hero-title">Controle de Qualidade<br>Microbiológico</h2>
+                            <div class="hero-info"><i data-lucide="clock" size="16"></i> 13:00 – 16:30</div>
+                            <div class="hero-teacher">Pamela Cristina de Sousa</div>
+                            <button class="btn-primary" onclick="iniciarFocoDireto('Controle de Qualidade Microbiológico')"><i data-lucide="play" size="16"></i> Começar foco</button>
+                        </div>
+                        <div style="width: 160px; height: 130px; background: url('https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=300&q=80') center/cover; border-radius: 12px;"></div>
                     </div>
-                    <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=220&q=80" style="border-radius: 12px; height: 140px; object-fit: cover;" alt="Estudos">
+
+                    <!-- METRICAS -->
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-icon" style="background: #D1FAE5; color: #059669;"><i data-lucide="clock" size="18"></i></div>
+                            <div>
+                                <div class="metric-lbl">Foco esta semana</div>
+                                <div class="metric-val" id="metric-foco">6h 40m</div>
+                                <div style="font-size: 0.65rem; color: #10B981; font-weight: 700;">↑ +18% vs. semana passada</div>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon" style="background: #EFF6FF; color: #2563EB;"><i data-lucide="check-square" size="18"></i></div>
+                            <div>
+                                <div class="metric-lbl">Tarefas pendentes</div>
+                                <div class="metric-val">4</div>
+                                <div style="font-size: 0.65rem; color: #F59E0B; font-weight: 700;">● 3 para hoje</div>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon" style="background: #FEF2F2; color: #EF4444;"><i data-lucide="calendar" size="18"></i></div>
+                            <div>
+                                <div class="metric-lbl">Próxima avaliação</div>
+                                <div class="metric-val">43 dias</div>
+                                <div style="font-size: 0.65rem; color: var(--text-muted);">28 de setembro</div>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon" style="background: #FEF3C7; color: #D97706;"><i data-lucide="target" size="18"></i></div>
+                            <div>
+                                <div class="metric-lbl">Meta semanal</div>
+                                <div class="metric-val">67%</div>
+                                <div style="font-size: 0.65rem; color: var(--text-muted);">10h de 15h</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- GRÁFICOS E DISCIPLINAS -->
+                    <div class="middle-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>TEMPO DE FOCO</h3>
+                                <span style="font-size: 0.75rem; color: var(--text-muted);">Esta semana ▾</span>
+                            </div>
+                            <div style="font-size: 1.2rem; font-weight: 800;">6h 40m</div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.5rem;">Tempo total de foco</div>
+                            
+                            <div class="chart-wrapper">
+                                <canvas id="chartFocoSemanal"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>DISCIPLINAS QUE MERECEM ATENÇÃO</h3>
+                            </div>
+                            
+                            <div class="disc-item">
+                                <div class="disc-info">
+                                    <div class="disc-icon" style="background: #E0E7FF; color: #4338CA;"><i data-lucide="book" size="14"></i></div>
+                                    <div>
+                                        <div class="disc-name">Controle de Qualidade de Alimentos</div>
+                                        <div class="disc-sub">Próx. prova em 43 dias</div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <div class="progress-bar"><div class="progress-fill" style="width: 72%; background: #10B981;"></div></div>
+                                    <span style="font-size: 0.75rem; font-weight: 700;">72%</span>
+                                </div>
+                            </div>
+
+                            <div class="disc-item">
+                                <div class="disc-info">
+                                    <div class="disc-icon" style="background: #FEF3C7; color: #D97706;"><i data-lucide="pie-chart" size="14"></i></div>
+                                    <div>
+                                        <div class="disc-name">Bioestatística</div>
+                                        <div class="disc-sub" style="color: #F59E0B;">Próx. prova em 61 dias</div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <div class="progress-bar"><div class="progress-fill" style="width: 61%; background: #F59E0B;"></div></div>
+                                    <span style="font-size: 0.75rem; font-weight: 700;">61%</span>
+                                </div>
+                            </div>
+
+                            <div class="disc-item">
+                                <div class="disc-info">
+                                    <div class="disc-icon" style="background: #F3E8FF; color: #7E22CE;"><i data-lucide="activity" size="14"></i></div>
+                                    <div>
+                                        <div class="disc-name">Farmacologia Aplicada</div>
+                                        <div class="disc-sub" style="color: #F59E0B;">Próx. prova em 75 dias</div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <div class="progress-bar"><div class="progress-fill" style="width: 48%; background: #F59E0B;"></div></div>
+                                    <span style="font-size: 0.75rem; font-weight: 700;">48%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BANNER RECOMENDAÇÃO -->
+                    <div class="rec-banner">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div style="width: 36px; height: 36px; background: #E9D5FF; border-radius: 50%; display: grid; place-items: center; color: #7E22CE; flex-shrink: 0;"><i data-lucide="cpu" size="20"></i></div>
+                            <div class="rec-text">
+                                <h4>RECOMENDAÇÃO INTELIGENTE</h4>
+                                <p>Sua próxima prova é em 43 dias. Recomendamos aumentar o foco em <strong>Controle de Qualidade de Alimentos</strong>.</p>
+                            </div>
+                        </div>
+                        <button class="btn-purple">Ver plano sugerido ›</button>
+                    </div>
                 </div>
 
-                <!-- METRICAS -->
-                <div class="metrics-grid">
-                    <div class="metric-card">
-                        <div class="metric-icon" style="background: #D1FAE5; color: #059669;"><i data-lucide="clock" size="18"></i></div>
-                        <div>
-                            <div class="metric-lbl">Foco esta semana</div>
-                            <div class="metric-val">6h 40m</div>
-                            <div style="font-size: 0.65rem; color: #10B981; font-weight: 700;">↑ +18% vs. semana passada</div>
-                        </div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-icon" style="background: #EFF6FF; color: #2563EB;"><i data-lucide="check-square" size="18"></i></div>
-                        <div>
-                            <div class="metric-lbl">Tarefas pendentes</div>
-                            <div class="metric-val">4</div>
-                            <div style="font-size: 0.65rem; color: #F59E0B; font-weight: 700;">● 3 para hoje</div>
-                        </div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-icon" style="background: #FEF2F2; color: #EF4444;"><i data-lucide="calendar" size="18"></i></div>
-                        <div>
-                            <div class="metric-lbl">Próxima avaliação</div>
-                            <div class="metric-val">43 dias</div>
-                            <div style="font-size: 0.65rem; color: var(--text-muted);">28 de setembro</div>
-                        </div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-icon" style="background: #FEF3C7; color: #D97706;"><i data-lucide="target" size="18"></i></div>
-                        <div>
-                            <div class="metric-lbl">Meta semanal</div>
-                            <div class="metric-val">67%</div>
-                            <div style="font-size: 0.65rem; color: var(--text-muted);">10h de 15h</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- GRÁFICOS E DISCIPLINAS -->
-                <div class="middle-grid">
+                <!-- COLUNA DIREITA -->
+                <div class="right-column">
+                    <!-- CALENDÁRIO -->
                     <div class="card">
                         <div class="card-header">
-                            <h3>TEMPO DE FOCO</h3>
-                            <span style="font-size: 0.75rem; color: var(--text-muted);">Esta semana ▾</span>
+                            <h3>CALENDÁRIO</h3>
+                            <a href="#" style="font-size: 0.75rem; color: #10B981; font-weight: 600; text-decoration: none;">Ver agenda</a>
                         </div>
-                        <div style="font-size: 1.2rem; font-weight: 800;">6h 40m</div>
-                        <div style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.5rem;">Tempo total de foco</div>
-                        
-                        <div class="chart-container">
-                            <div class="bar-col"><div class="bar" style="height: 50%;"></div><span class="bar-label">Seg</span></div>
-                            <div class="bar-col"><div class="bar" style="height: 75%;"></div><span class="bar-label">Ter</span></div>
-                            <div class="bar-col"><div class="bar" style="height: 40%;"></div><span class="bar-label">Qua</span></div>
-                            <div class="bar-col"><div class="bar" style="height: 85%;"></div><span class="bar-label">Qui</span></div>
-                            <div class="bar-col"><div class="bar" style="height: 60%;"></div><span class="bar-label">Sex</span></div>
-                            <div class="bar-col"><div class="bar" style="height: 70%;"></div><span class="bar-label">Sáb</span></div>
-                            <div class="bar-col"><div class="bar" style="height: 20%;"></div><span class="bar-label">Dom</span></div>
+                        <div style="font-weight: 700; margin-bottom: 0.75rem;" id="cal-month-title">Agosto 2026</div>
+                        <div class="calendar-grid" id="calendar-days-container">
+                            <!-- Inserido dinamicamente via JS -->
                         </div>
                     </div>
 
+                    <!-- PRÓXIMOS EVENTOS -->
                     <div class="card">
                         <div class="card-header">
-                            <h3>DISCIPLINAS QUE MERECEM ATENÇÃO</h3>
+                            <h3>PRÓXIMOS EVENTOS</h3>
                         </div>
-                        
-                        <div class="disc-item">
-                            <div class="disc-info">
-                                <div class="disc-icon" style="background: #E0E7FF; color: #4338CA;"><i data-lucide="book" size="14"></i></div>
-                                <div>
-                                    <div class="disc-name">Controle de Qualidade de Alimentos</div>
-                                    <div class="disc-sub">Próx. prova em 43 dias</div>
-                                </div>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                <div class="progress-bar"><div class="progress-fill" style="width: 72%; background: #10B981;"></div></div>
-                                <span style="font-size: 0.75rem; font-weight: 700;">72%</span>
+                        <div class="event-item">
+                            <div class="event-date"><div class="day">28</div><div class="month">SET</div></div>
+                            <div>
+                                <div style="font-weight: 700; font-size: 0.85rem;">Prova 1</div>
+                                <div style="font-size: 0.72rem; color: var(--text-muted);">Controle de Qualidade de Alimentos</div>
                             </div>
                         </div>
-
-                        <div class="disc-item">
-                            <div class="disc-info">
-                                <div class="disc-icon" style="background: #FEF3C7; color: #D97706;"><i data-lucide="pie-chart" size="14"></i></div>
-                                <div>
-                                    <div class="disc-name">Bioestatística</div>
-                                    <div class="disc-sub" style="color: #F59E0B;">Próx. prova em 61 dias</div>
-                                </div>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                <div class="progress-bar"><div class="progress-fill" style="width: 61%; background: #F59E0B;"></div></div>
-                                <span style="font-size: 0.75rem; font-weight: 700;">61%</span>
-                            </div>
-                        </div>
-
-                        <div class="disc-item">
-                            <div class="disc-info">
-                                <div class="disc-icon" style="background: #F3E8FF; color: #7E22CE;"><i data-lucide="activity" size="14"></i></div>
-                                <div>
-                                    <div class="disc-name">Farmacologia Aplicada</div>
-                                    <div class="disc-sub" style="color: #F59E0B;">Próx. prova em 75 dias</div>
-                                </div>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                <div class="progress-bar"><div class="progress-fill" style="width: 48%; background: #F59E0B;"></div></div>
-                                <span style="font-size: 0.75rem; font-weight: 700;">48%</span>
+                        <div class="event-item">
+                            <div class="event-date"><div class="day" style="color: #F59E0B;">07</div><div class="month" style="color: #F59E0B;">DEZ</div></div>
+                            <div>
+                                <div style="font-weight: 700; font-size: 0.85rem;">Prova 2</div>
+                                <div style="font-size: 0.72rem; color: var(--text-muted);">Controle de Qualidade de Alimentos</div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- BANNER RECOMENDAÇÃO -->
-                <div class="rec-banner">
-                    <div style="display: flex; align-items: center; gap: 1rem;">
-                        <div style="width: 36px; height: 36px; background: #E9D5FF; border-radius: 50%; display: grid; place-items: center; color: #7E22CE;"><i data-lucide="cpu" size="20"></i></div>
-                        <div class="rec-text">
-                            <h4>RECOMENDAÇÃO INTELIGENTE</h4>
-                            <p>Sua próxima prova é em 43 dias. Recomendamos aumentar o foco em <strong>Controle de Qualidade de Alimentos</strong>.</p>
+                    <!-- FOCO RÁPIDO (POMODORO) -->
+                    <div class="card foco-box">
+                        <div class="card-header" style="width: 100%;">
+                            <h3>FOCO RÁPIDO</h3>
                         </div>
+                        <div class="timer-circle">
+                            <div>
+                                <div class="timer-time" id="timer-display">25:00</div>
+                                <div class="timer-unit" id="timer-status">Pronto</div>
+                            </div>
+                        </div>
+                        <select class="select-disc" id="foco-materia-select">
+                            <option value="">Escolha uma disciplina</option>
+                            <option value="Controle de Qualidade">Controle de Qualidade de Alimentos</option>
+                            <option value="Bioestatística">Bioestatística</option>
+                            <option value="Farmacologia">Farmacologia Aplicada</option>
+                        </select>
+                        <button class="btn-primary" id="btn-toggle-foco" style="width: 100%;" onclick="toggleTimer()">
+                            <i data-lucide="play" size="16"></i> Iniciar foco
+                        </button>
                     </div>
-                    <button class="btn-purple">Ver plano sugerido ›</button>
                 </div>
             </div>
+        </div>
 
-            <!-- COLUNA DIREITA -->
-            <div class="right-column">
-                <!-- CALENDÁRIO -->
-                <div class="card">
-                    <div class="calendar-header">
-                        <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted);">CALENDÁRIO</span>
-                        <a href="#" style="font-size: 0.75rem; color: #10B981; font-weight: 600; text-decoration: none;">Ver agenda</a>
-                    </div>
-                    <div style="font-weight: 700; margin-bottom: 0.75rem;">Agosto 2026</div>
-                    <div class="calendar-grid">
-                        <div class="cal-day-name">D</div><div class="cal-day-name">S</div><div class="cal-day-name">T</div><div class="cal-day-name">Q</div><div class="cal-day-name">Q</div><div class="cal-day-name">S</div><div class="cal-day-name">S</div>
-                        <div class="cal-day muted">26</div><div class="cal-day muted">27</div><div class="cal-day muted">28</div><div class="cal-day muted">29</div><div class="cal-day muted">30</div><div class="cal-day muted">31</div><div class="cal-day">1</div>
-                        <div class="cal-day">2</div><div class="cal-day">3</div><div class="cal-day">4</div><div class="cal-day">5</div><div class="cal-day">6</div><div class="cal-day">7</div><div class="cal-day">8</div>
-                        <div class="cal-day">9</div><div class="cal-day">10</div><div class="cal-day">11</div><div class="cal-day">12</div><div class="cal-day">13</div><div class="cal-day">14</div><div class="cal-day">15</div>
-                        <div class="cal-day active">16</div><div class="cal-day">17</div><div class="cal-day">18</div><div class="cal-day">19</div><div class="cal-day">20</div><div class="cal-day">21</div><div class="cal-day">22</div>
-                    </div>
-                </div>
-
-                <!-- PRÓXIMOS EVENTOS -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3>PRÓXIMOS EVENTOS</h3>
-                    </div>
-                    <div class="event-item">
-                        <div class="event-date"><div class="day">28</div><div class="month">SET</div></div>
-                        <div>
-                            <div style="font-weight: 700; font-size: 0.85rem;">Prova 1</div>
-                            <div style="font-size: 0.72rem; color: var(--text-muted);">Controle de Qualidade de Alimentos</div>
-                        </div>
-                    </div>
-                    <div class="event-item">
-                        <div class="event-date"><div class="day" style="color: #F59E0B;">07</div><div class="month" style="color: #F59E0B;">DEZ</div></div>
-                        <div>
-                            <div style="font-weight: 700; font-size: 0.85rem;">Prova 2</div>
-                            <div style="font-size: 0.72rem; color: var(--text-muted);">Controle de Qualidade de Alimentos</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- FOCO RÁPIDO -->
-                <div class="card foco-box">
-                    <div class="card-header" style="width: 100%;">
-                        <h3>FOCO RÁPIDO</h3>
-                    </div>
-                    <div class="timer-circle">
-                        <div>
-                            <div class="timer-time">25</div>
-                            <div class="timer-unit">min</div>
-                        </div>
-                    </div>
-                    <span style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">Sessão focada</span>
-                    <select class="select-disc">
-                        <option>Escolha uma disciplina</option>
-                    </select>
-                    <button class="btn-primary" style="width: 100%; justify-content: center;"><i data-lucide="play" size="16"></i> Iniciar foco</button>
-                </div>
+        <!-- OUTRAS VIEW PANELS DE EXEMPLO -->
+        <div id="view-disciplinas" class="page-view">
+            <div class="card">
+                <h2>Disciplinas Cadastradas</h2>
+                <p style="color: var(--text-muted); margin-top: 0.5rem;">Gerencie suas matérias do semestre aqui.</p>
             </div>
         </div>
     </main>
 
     <script>
         lucide.createIcons();
+
+        // 1. DATA ATUAL DINÂMICA
+        const dateOptions = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+        const now = new Date();
+        document.getElementById('current-date').innerText = now.toLocaleDateString('pt-BR', dateOptions);
+
+        // 2. NAVEGAÇÃO ENTRE ABAS DA SIDEBAR
+        function switchPage(pageId, element) {
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            element.classList.add('active');
+
+            document.querySelectorAll('.page-view').forEach(view => view.classList.remove('active'));
+            const targetView = document.getElementById(`view-${pageId}`);
+            if (targetView) targetView.classList.add('active');
+
+            const titleMap = {
+                'dashboard': 'Boa noite, Daniel 👋',
+                'disciplinas': 'Disciplinas',
+                'tarefas': 'Gerenciador de Tarefas',
+                'foco': 'Sessão de Foco',
+                'calendario': 'Calendário Acadêmico'
+            };
+            document.getElementById('page-title').innerText = titleMap[pageId] || 'Central de Estudos';
+        }
+
+        // 3. GRÁFICO DINÂMICO (CHART.JS)
+        const ctx = document.getElementById('chartFocoSemanal').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                datasets: [{
+                    data: [1.8, 2.2, 1.2, 2.4, 1.5, 2.0, 0.8],
+                    backgroundColor: '#10B981',
+                    borderRadius: 4,
+                    barThickness: 20
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { display: false }
+                }
+            }
+        });
+
+        // 4. CRONÔMETRO POMODORO FUNCIONAL
+        let timerSeconds = 25 * 60;
+        let timerInterval = null;
+        let isRunning = false;
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timerSeconds / 60);
+            const seconds = timerSeconds % 60;
+            document.getElementById('timer-display').innerText = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function toggleTimer() {
+            const btn = document.getElementById('btn-toggle-foco');
+            const status = document.getElementById('timer-status');
+
+            if (isRunning) {
+                clearInterval(timerInterval);
+                isRunning = false;
+                btn.innerHTML = `<i data-lucide="play" size="16"></i> Continuar`;
+                status.innerText = "Pausado";
+            } else {
+                isRunning = true;
+                btn.innerHTML = `<i data-lucide="pause" size="16"></i> Pausar`;
+                status.innerText = "Em Foco";
+                timerInterval = setInterval(() => {
+                    if (timerSeconds > 0) {
+                        timerSeconds--;
+                        updateTimerDisplay();
+                    } else {
+                        clearInterval(timerInterval);
+                        alert("Sessão de foco concluída!");
+                        isRunning = false;
+                        timerSeconds = 25 * 60;
+                        updateTimerDisplay();
+                        btn.innerHTML = `<i data-lucide="play" size="16"></i> Iniciar foco`;
+                        status.innerText = "Pronto";
+                    }
+                }, 1000);
+            }
+            lucide.createIcons();
+        }
+
+        function iniciarFocoDireto(materia) {
+            const select = document.getElementById('foco-materia-select');
+            select.value = 'Controle de Qualidade';
+            if (!isRunning) toggleTimer();
+        }
+
+        // 5. CONSTRUTOR DINÂMICO DE CALENDÁRIO
+        function renderCalendar() {
+            const container = document.getElementById('calendar-days-container');
+            const daysNames = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
+            container.innerHTML = '';
+
+            daysNames.forEach(d => {
+                container.innerHTML += `<div class="cal-day-name">${d}</div>`;
+            });
+
+            // Mock visual de Agosto 2026
+            for (let i = 26; i <= 31; i++) {
+                container.innerHTML += `<div class="cal-day muted">${i}</div>`;
+            }
+            for (let i = 1; i <= 22; i++) {
+                const activeClass = i === 16 ? 'active' : '';
+                container.innerHTML += `<div class="cal-day ${activeClass}">${i}</div>`;
+            }
+        }
+
+        renderCalendar();
     </script>
 </body>
 </html>
