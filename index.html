@@ -237,214 +237,430 @@ body.theme-all-dark .v6-card,body.theme-all-dark .v6-priority-list,body.theme-al
 @media(max-width:500px){.v6-intel-grid{grid-template-columns:1fr}.v6-recommend{grid-column:auto}.v6-chart{gap:3px}}
 
 </style>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&display=swap');
+
+:root{
+  --v7-bg:#eef2ef;
+  --v7-panel:rgba(255,255,255,.72);
+  --v7-panel-solid:#ffffff;
+  --v7-text:#111827;
+  --v7-muted:#667085;
+  --v7-line:rgba(15,23,42,.08);
+  --v7-green:#157f3d;
+  --v7-green-2:#20a354;
+  --v7-green-soft:#eaf7ee;
+  --v7-red:#dc3b3b;
+  --v7-orange:#d98a17;
+  --v7-shadow:0 18px 55px rgba(16,24,40,.08);
+  --v7-shadow-sm:0 8px 28px rgba(16,24,40,.06);
+  --v7-radius:20px;
+  --v7-sidebar:250px;
+}
+*{box-sizing:border-box}
+html,body{min-height:100%;font-family:Inter,system-ui,sans-serif}
+body{
+  margin:0;
+  padding:0!important;
+  color:var(--v7-text);
+  background:
+    linear-gradient(120deg,rgba(248,250,249,.86),rgba(234,241,236,.78)),
+    url('https://images8.alphacoders.com/896/thumb-1920-896653.jpg') center/cover fixed no-repeat;
+}
+body:before{
+  content:"";position:fixed;inset:0;z-index:-1;
+  background:linear-gradient(120deg,rgba(248,250,249,.84),rgba(236,243,239,.70));
+  backdrop-filter:blur(3px);
+}
+body.theme-all-dark{
+  --v7-bg:#080d0b;--v7-panel:rgba(15,23,20,.78);--v7-panel-solid:#101713;
+  --v7-text:#f2f7f3;--v7-muted:#94a49a;--v7-line:rgba(255,255,255,.09);
+  background:linear-gradient(120deg,rgba(5,10,8,.94),rgba(7,13,10,.88)),url('https://images8.alphacoders.com/896/thumb-1920-896653.jpg') center/cover fixed no-repeat;
+}
+body.theme-all-dark:before{background:rgba(3,8,6,.62)}
+button,input,select,textarea{font-family:inherit}
+.hidden{display:none!important}
+
+/* login */
+#loginScreen{
+  width:min(430px,calc(100% - 32px));
+  min-height:460px;
+  margin:8vh auto;
+  padding:42px;
+  display:flex;
+  justify-content:center;
+  border:1px solid rgba(255,255,255,.7)!important;
+  border-radius:30px!important;
+  background:rgba(255,255,255,.78)!important;
+  box-shadow:0 30px 90px rgba(16,24,40,.16);
+  backdrop-filter:blur(26px)!important;
+  color:#111827;
+}
+#loginScreen:before{
+  content:'◈';
+  width:68px;height:68px;margin-bottom:6px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:20px;
+  background:linear-gradient(145deg,#0d6931,#22a955);
+  color:white;font-size:26px;font-weight:800;
+  box-shadow:0 12px 28px rgba(21,127,61,.22);
+}
+#loginScreen h2{font-family:Manrope,sans-serif;font-size:25px;letter-spacing:-.05em}
+#loginScreen p{font-size:12px;line-height:1.65;color:#667085;max-width:290px}
+#loginScreen input{height:46px!important;border-radius:12px!important;border:1px solid #dce3df!important;background:rgba(255,255,255,.82)!important;color:#111827!important}
+#loginScreen .btn{width:100%;height:46px;border-radius:12px}
+
+/* app shell */
+.app{
+  width:100%!important;max-width:none!important;min-height:100vh;
+  margin:0!important;display:none;flex-direction:row!important;gap:0!important;
+}
+.v7-sidebar{
+  position:fixed;left:0;top:0;bottom:0;width:var(--v7-sidebar);z-index:1000;
+  padding:22px 16px;
+  display:flex;flex-direction:column;
+  background:rgba(248,251,249,.78);
+  border-right:1px solid rgba(15,23,42,.07);
+  backdrop-filter:blur(26px) saturate(140%);
+}
+body.theme-all-dark .v7-sidebar{background:rgba(7,13,10,.82);border-color:rgba(255,255,255,.08)}
+.v7-brand{display:flex;align-items:center;gap:11px;padding:2px 8px 26px}
+.v7-brand-mark{width:39px;height:39px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#0d6931,#22a955);color:#fff;font-weight:800;box-shadow:0 9px 22px rgba(21,127,61,.2)}
+.v7-brand strong{font-family:Manrope,sans-serif;font-size:14px;letter-spacing:-.035em}
+.v7-brand small{display:block;margin-top:2px;color:var(--v7-muted);font-size:9px;font-weight:700}
+.v7-nav-label{padding:0 10px;margin:14px 0 7px;color:#98a39c;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.11em}
+.v7-nav{display:flex;flex-direction:column;gap:3px}
+.v7-nav-item{
+  width:100%;height:40px;padding:0 11px;border:0;border-radius:11px;
+  display:flex;align-items:center;gap:10px;
+  background:transparent;color:var(--v7-muted);
+  font-size:11px;font-weight:700;text-align:left;cursor:pointer;
+  transition:.18s ease;
+}
+.v7-nav-item:hover{background:rgba(21,127,61,.06);color:var(--v7-text)}
+.v7-nav-item.active{background:var(--v7-green-soft);color:var(--v7-green);box-shadow:inset 3px 0 0 var(--v7-green)}
+body.theme-all-dark .v7-nav-item.active{background:rgba(34,197,94,.10);color:#66d995}
+.v7-nav-icon{width:20px;text-align:center;font-size:14px}
+.v7-sidebar-footer{margin-top:auto;padding:12px 8px}
+.v7-user-card{padding:12px;border-radius:14px;background:rgba(21,127,61,.06);border:1px solid rgba(21,127,61,.08)}
+.v7-user-card strong{font-size:10px}.v7-user-card small{display:block;margin-top:3px;color:var(--v7-muted);font-size:8px;font-weight:700}
+.v7-user-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#20a354;margin-right:5px}
+
+/* main */
+.v7-main{width:calc(100% - var(--v7-sidebar));margin-left:var(--v7-sidebar);min-width:0;padding:22px 28px 38px}
+.v7-topbar{height:58px;display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:22px}
+.v7-mobile-menu{display:none}
+.v7-page-title{font-family:Manrope,sans-serif;font-size:20px;letter-spacing:-.045em;font-weight:800}
+.v7-page-subtitle{margin-top:3px;color:var(--v7-muted);font-size:10px;font-weight:600}
+.v7-top-actions{display:flex;align-items:center;gap:7px}
+.v7-icon-btn{width:37px;height:37px;border:1px solid var(--v7-line);border-radius:11px;background:var(--v7-panel);color:var(--v7-text);cursor:pointer;box-shadow:var(--v7-shadow-sm)}
+.v7-avatar{width:37px;height:37px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:#dcefe2;color:#176d38;font-size:10px;font-weight:800}
+
+/* command */
+.v7-command{
+  display:flex;align-items:center;gap:10px;width:min(430px,42vw);height:39px;
+  padding:0 8px 0 12px;border:1px solid var(--v7-line);border-radius:11px;
+  background:var(--v7-panel);box-shadow:var(--v7-shadow-sm);backdrop-filter:blur(18px)
+}
+.v7-command span{color:var(--v7-muted);font-size:13px}.v7-command input{flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--v7-text);font-size:10px;font-weight:600}
+.v7-command button{height:29px;padding:0 10px;border:0;border-radius:8px;background:var(--v7-green);color:#fff;font-size:9px;font-weight:800;cursor:pointer}
+
+/* hero */
+.v7-hero{
+  min-height:185px;padding:25px 28px;display:grid;grid-template-columns:1.35fr .65fr;gap:25px;
+  border:1px solid var(--v7-line);border-radius:24px;
+  background:linear-gradient(120deg,rgba(255,255,255,.82),rgba(246,250,247,.60));
+  box-shadow:var(--v7-shadow);backdrop-filter:blur(20px)
+}
+body.theme-all-dark .v7-hero{background:linear-gradient(120deg,rgba(16,25,20,.88),rgba(13,21,17,.68))}
+.v7-eyebrow{color:var(--v7-green);font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.13em}
+.v7-hero h2{margin:7px 0 0;font-family:Manrope,sans-serif;font-size:27px;line-height:1.1;letter-spacing:-.055em}
+.v7-hero p{margin:8px 0 0;max-width:540px;color:var(--v7-muted);font-size:10px;line-height:1.6;font-weight:600}
+.v7-next{align-self:center;padding:15px;border-radius:15px;background:rgba(21,127,61,.07);border:1px solid rgba(21,127,61,.11)}
+.v7-next-label{color:var(--v7-muted);font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+.v7-next strong{display:block;margin-top:5px;font-size:11px}
+.v7-next span{display:block;margin-top:3px;color:var(--v7-muted);font-size:9px;font-weight:700}
+.v7-next .btn{margin-top:10px}
+
+/* metrics */
+.v7-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}
+.v7-metric{min-height:92px;padding:15px 16px;border:1px solid var(--v7-line);border-radius:16px;background:var(--v7-panel);box-shadow:var(--v7-shadow-sm);backdrop-filter:blur(18px)}
+.v7-metric-label{color:var(--v7-muted);font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+.v7-metric-value{margin-top:8px;font-family:Manrope,sans-serif;font-size:20px;font-weight:800;letter-spacing:-.05em}
+.v7-metric-detail{margin-top:3px;color:var(--v7-muted);font-size:8px;font-weight:650}
+
+/* cards/grid overrides */
+.glass{background:var(--v7-panel)!important;border:1px solid var(--v7-line)!important;border-radius:20px!important;box-shadow:var(--v7-shadow)!important;backdrop-filter:blur(20px)!important;-webkit-backdrop-filter:blur(20px)!important}
+.grid-stack{margin-top:12px}
+.grid-stack-item-content{padding:20px!important}
+.section-head{margin-bottom:13px}
+.title{font-family:Manrope,sans-serif;font-size:10px!important;letter-spacing:.02em!important;text-transform:none!important}
+.subtle{font-size:8px!important}
+.btn{border-radius:9px!important;min-height:32px;padding:7px 11px;font-size:8px;font-weight:800}
+.btn-sec{background:rgba(255,255,255,.45)!important;color:var(--v7-text)!important;border:1px solid var(--v7-line)!important}
+body.theme-all-dark .btn-sec{background:rgba(255,255,255,.05)!important}
+.btn-green{background:linear-gradient(135deg,#126d34,#20a354)!important}
+.btn-red{background:linear-gradient(135deg,#c93131,#ed4b4b)!important}
+.btn-orange{background:linear-gradient(135deg,#b86e09,#e79b28)!important}
+
+/* hide old top modules because new shell replaces them */
+#app>.v7-sidebar{display:flex}
+#app>.v7-main{display:block}
+.v7-main>.toolbar{display:none!important}
+.v7-main>header{display:none!important}
+
+/* V5/V6 panels restyled */
+.v5-focus-strip{grid-template-columns:minmax(240px,1.7fr) repeat(3,minmax(100px,.65fr)) auto!important;padding:12px 16px!important;border-radius:16px!important}
+.v6-intel{border-radius:20px!important}
+.v6-intel-grid{gap:10px!important}
+.v6-recommend{border-radius:17px!important}
+.v6-card{border-radius:15px!important}
+
+/* subject cards */
+.subjects{grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.subject-card{border:1px solid var(--v7-line)!important;border-left:3px solid var(--accent)!important;border-radius:15px!important;background:rgba(255,255,255,.30)!important;min-height:138px!important;box-shadow:none!important}
+body.theme-all-dark .subject-card{background:rgba(255,255,255,.035)!important}
+.subject-card:hover{transform:translateY(-2px);box-shadow:var(--v7-shadow-sm)!important}
+.subject-name{font-family:Manrope,sans-serif!important;font-size:11px!important}
+.teacher{font-size:8px!important}.subject-time{font-size:8px!important}.chip{font-size:7px!important}.mini-btn{font-size:7px!important}
+
+/* schedule */
+.schedule{gap:8px}
+.day{border:1px solid var(--v7-line)!important;border-radius:14px!important;background:rgba(255,255,255,.20)!important}
+body.theme-all-dark .day{background:rgba(255,255,255,.035)!important}
+.class-mini{border-radius:9px!important;background:rgba(255,255,255,.30)!important}
+body.theme-all-dark .class-mini{background:rgba(255,255,255,.05)!important}
+
+/* calendar */
+.dark-glass-card{background:linear-gradient(145deg,#121b17,#17251e)!important}
+.cal-cell-dark{border-radius:8px!important}
+.cal-cell-dark.today-dark{background:linear-gradient(145deg,#17783a,#27ad5b)!important}
+
+/* v7 views */
+.v7-view{display:none}.v7-view.active{display:block}
+.v7-dashboard-tools{display:flex;justify-content:flex-end;gap:7px;margin:10px 0}
+.v7-section-title{margin:20px 0 9px;font-family:Manrope,sans-serif;font-size:12px;letter-spacing:-.025em}
+.v7-focus-card{min-height:120px;padding:17px;border:1px solid var(--v7-line);border-radius:17px;background:var(--v7-panel);box-shadow:var(--v7-shadow-sm)}
+.v7-focus-card h3{font-family:Manrope,sans-serif;font-size:11px}.v7-focus-card p{margin-top:5px;color:var(--v7-muted);font-size:8px;line-height:1.5}
+.v7-progress{height:6px;margin-top:10px;border-radius:99px;background:rgba(15,23,42,.07);overflow:hidden}.v7-progress span{display:block;height:100%;background:linear-gradient(90deg,#126d34,#20a354);border-radius:inherit}
+.v7-page-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.v7-page-grid .grid-stack-item{position:relative!important;height:auto!important;left:auto!important;top:auto!important;width:auto!important;transform:none!important}
+.v7-page-grid .grid-stack-item-content{height:auto!important;min-height:420px}
+.v7-hidden-on-page{display:none!important}
+
+/* top nav active behavior */
+.v7-nav-item[data-view="dashboard"]{}
+body.theme-all-dark .v7-user-card{background:rgba(34,197,94,.08);border-color:rgba(34,197,94,.12)}
+
+/* responsive */
+@media(max-width:1100px){
+  :root{--v7-sidebar:220px}.v7-main{padding:18px}.v7-hero{grid-template-columns:1fr}.v7-metrics{grid-template-columns:repeat(2,1fr)}.v7-command{width:330px}
+}
+@media(max-width:760px){
+  :root{--v7-sidebar:240px}
+  .v7-sidebar{transform:translateX(-100%);transition:.22s ease;box-shadow:20px 0 50px rgba(0,0,0,.16)}
+  body.v7-sidebar-open .v7-sidebar{transform:translateX(0)}
+  .v7-main{width:100%;margin-left:0;padding:14px}
+  .v7-mobile-menu{display:flex;width:36px;height:36px;border:1px solid var(--v7-line);border-radius:10px;background:var(--v7-panel);align-items:center;justify-content:center;cursor:pointer}
+  .v7-topbar{height:auto;align-items:flex-start}.v7-top-actions{margin-left:auto}.v7-command{display:none}
+  .v7-page-title{font-size:17px}.v7-hero{padding:20px}.v7-hero h2{font-size:22px}
+  .v7-metrics{grid-template-columns:1fr 1fr}
+  .v5-focus-strip{grid-template-columns:1fr 1fr!important}.v5-focus-title{grid-column:1/-1}.v5-focus-strip>.btn{grid-column:1/-1}
+  .v7-page-grid{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .v7-metrics{grid-template-columns:1fr}.v7-hero{border-radius:18px}.v7-top-actions .v7-icon-btn:nth-child(1){display:none}
+  .grid-stack-item-content{padding:15px!important}
+}
+
+/* modal/toast remain polished */
+.modal-wrap{background:rgba(5,10,8,.62)!important;backdrop-filter:blur(8px)!important}
+.modal{border:1px solid rgba(255,255,255,.65)!important;border-radius:20px!important;box-shadow:0 30px 90px rgba(0,0,0,.30)!important}
+.toast{border-radius:10px!important;box-shadow:0 12px 35px rgba(0,0,0,.22)!important}
+</style>
+
 </head>
+
 <body>
 <div id="loginScreen" class="login">
-  <h2>🔒 Central de Estudos</h2>
-  <p>Digite a senha de acesso para liberar seu painel.</p>
-  <input id="passInput" type="password" placeholder="Digite a senha..." onkeydown="if(event.key==='Enter')checkPassword()">
-  <button class="btn" onclick="checkPassword()">Acessar Painel</button>
+  <h2>Central de Estudos</h2>
+  <p>Seu ambiente acadêmico pessoal para organizar aulas, avaliações, tarefas e sessões de foco.</p>
+  <input id="passInput" type="password" placeholder="Digite sua senha..." onkeydown="if(event.key==='Enter')checkPassword()">
+  <button class="btn btn-green" onclick="checkPassword()">Acessar painel</button>
 </div>
 
 <div id="app" class="app">
-  <header class="glass">
-    <div class="brand"><div>📚</div><div><h1>Central de Estudos</h1><p>Todas as matérias da faculdade em uma única tela</p></div></div>
-    <div class="clock"><strong id="digitalClock">00:00:00</strong><span id="currentDate"></span></div>
-  </header>
-
-  <div class="glass toolbar">
-    <div class="ai-bar">
-      <input id="aiInput" type="text" placeholder="⚡ Comando rápido (Ex: iniciar timer, apagar provas, apagar horarios)..." onkeydown="if(event.key==='Enter')runAICommand()">
-      <button class="btn btn-green" onclick="runAICommand()" id="aiBtn">Executar Comando</button>
+  <aside class="v7-sidebar">
+    <div class="v7-brand">
+      <div class="v7-brand-mark">◈</div>
+      <div><strong>Central de Estudos</strong><small>Farmácia • 2026/2</small></div>
     </div>
-    <div class="toolbar-right">
-      <button class="btn btn-sec" onclick="cycleTheme()" id="themeBtn">🌙 Tema: Híbrido</button>
-      <button class="btn btn-orange" id="editLayoutBtn" onclick="toggleEditMode()">🔓 Mover & Redimensionar</button>
-      <button class="btn btn-green" onclick="openClassModal()">＋ Aula</button>
-      <button class="btn btn-red" onclick="openAssessmentModal()">＋ Prova</button>
-      <button class="btn btn-sec" onclick="openSubjectModal()">＋ Disciplina</button>
-      <button class="btn btn-sec" onclick="openTasksCenter()">✓ Tarefas</button>
-      <button class="btn btn-sec" onclick="refreshAll()">↻ Atualizar</button>
+
+    <div class="v7-nav-label">Principal</div>
+    <nav class="v7-nav">
+      <button class="v7-nav-item active" data-view="dashboard" onclick="v7SetView('dashboard')"><span class="v7-nav-icon">⌂</span>Visão geral</button>
+      <button class="v7-nav-item" data-view="subjects" onclick="v7SetView('subjects')"><span class="v7-nav-icon">▦</span>Disciplinas</button>
+      <button class="v7-nav-item" data-view="tasks" onclick="v7SetView('tasks')"><span class="v7-nav-icon">✓</span>Tarefas</button>
+      <button class="v7-nav-item" data-view="focus" onclick="v7SetView('focus')"><span class="v7-nav-icon">◷</span>Foco e desempenho</button>
+      <button class="v7-nav-item" data-view="calendar" onclick="v7SetView('calendar')"><span class="v7-nav-icon">□</span>Calendário</button>
+    </nav>
+
+    <div class="v7-nav-label">Organização</div>
+    <nav class="v7-nav">
+      <button class="v7-nav-item" onclick="openTasksCenter()"><span class="v7-nav-icon">☑</span>Central de tarefas</button>
+      <button class="v7-nav-item" onclick="openV6Plan()"><span class="v7-nav-icon">⌁</span>Plano sugerido</button>
+      <button class="v7-nav-item" onclick="openV6Settings()"><span class="v7-nav-icon">⚙</span>Meta semanal</button>
+    </nav>
+
+    <div class="v7-sidebar-footer">
+      <div class="v7-user-card">
+        <strong><span class="v7-user-dot"></span>Daniel</strong>
+        <small>Acadêmico de Farmácia</small>
+      </div>
     </div>
-  </div>
+  </aside>
 
-  <!-- V5.0 — CENTRAL DE TAREFAS E FOCO -->
-  <div class="glass v5-focus-strip">
-    <div class="v5-focus-title"><span>✓</span><div><strong>Organização de estudos</strong><small>Seu progresso local neste navegador</small></div></div>
-    <div class="v5-focus-stat"><span id="v5PendingTasks">0</span><small>tarefas pendentes</small></div>
-    <div class="v5-focus-stat"><span id="v5TodayFocus">0m</span><small>foco hoje</small></div>
-    <div class="v5-focus-stat"><span id="v5WeekFocus">0h</span><small>foco na semana</small></div>
-    <button class="btn btn-green" onclick="openTasksCenter()">Abrir tarefas</button>
-  </div>
+  <main class="v7-main">
+    <div class="v7-topbar">
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="v7-mobile-menu" onclick="v7ToggleSidebar()">☰</button>
+        <div><div class="v7-page-title" id="v7PageTitle">Visão geral</div><div class="v7-page-subtitle" id="v7PageSubtitle">Sua rotina acadêmica em um só lugar.</div></div>
+      </div>
+      <div class="v7-top-actions">
+        <div class="v7-command">
+          <span>⌕</span>
+          <input id="aiInput" placeholder="Comando rápido..." onkeydown="if(event.key==='Enter')runAICommand()">
+          <button id="aiBtn" onclick="runAICommand()">Executar</button>
+        </div>
+        <button class="v7-icon-btn" onclick="cycleTheme()" id="themeBtn" title="Alterar tema">◐</button>
+        <button class="v7-icon-btn" onclick="toggleEditMode()" id="editLayoutBtn" title="Personalizar layout">⠿</button>
+        <div class="v7-avatar">DR</div>
+      </div>
+    </div>
 
-
-
-  <!-- V6.0 — INTELIGÊNCIA ACADÊMICA -->
-  <div class="glass v6-intel">
-    <div class="v6-intel-grid">
-      <div class="v6-recommend">
-        <div class="v6-kicker">Seu foco recomendado</div>
-        <h3 id="v6RecommendationTitle">Analisando sua rotina...</h3>
-        <p id="v6RecommendationDetail">O painel vai considerar provas, tarefas e seu histórico de foco.</p>
-        <div class="v6-recommend-actions">
-          <button class="btn" onclick="v6StartRecommendation()">▶ Começar foco</button>
-          <button class="btn" onclick="openV6Plan()">Ver plano</button>
+    <section class="v7-view active" data-view="dashboard">
+      <div class="v7-hero">
+        <div>
+          <div class="v7-eyebrow">Visão geral acadêmica</div>
+          <h2 id="dashGreeting">Olá, Daniel.</h2>
+          <p id="dashDate">Carregando sua agenda...</p>
+          <p style="margin-top:14px">A Central reúne sua grade, avaliações, foco e organização acadêmica em um único ambiente.</p>
+        </div>
+        <div class="v7-next">
+          <div class="v7-next-label">Próximo compromisso</div>
+          <strong id="dashNextTitle">Calculando próxima atividade...</strong>
+          <span id="dashNextDetail">Aguarde os dados da sua agenda.</span>
+          <button class="btn btn-green" onclick="v6StartRecommendation()">▶ Estudar agora</button>
         </div>
       </div>
-      <div class="v6-card">
-        <div class="v6-card-head"><span class="v6-label">Meta semanal</span><span>🎯</span></div>
-        <div class="v6-value" id="v6GoalValue">0h</div>
-        <div class="v6-detail" id="v6GoalDetail">0% da meta</div>
-        <div class="v6-progress"><span id="v6GoalBar" style="width:0%"></span></div>
-      </div>
-      <div class="v6-card">
-        <div class="v6-card-head"><span class="v6-label">Sequência</span><span>🔥</span></div>
-        <div class="v6-value" id="v6StreakValue">0 dias</div>
-        <div class="v6-detail" id="v6StreakDetail">Comece uma sessão hoje.</div>
-        <div class="v6-streak" id="v6StreakDays"></div>
-      </div>
-      <div class="v6-card">
-        <div class="v6-card-head"><span class="v6-label">Prioridade</span><span>⚠️</span></div>
-        <div class="v6-value" id="v6PriorityValue">—</div>
-        <div class="v6-detail" id="v6PriorityDetail">Calculando suas disciplinas.</div>
-      </div>
-    </div>
-  </div>
 
-
-  <div class="grid-stack">
-  <div class="grid-stack-item" gs-w="12" gs-h="3" gs-id="box-inteligencia">
-    <div class="grid-stack-item-content glass">
-      <div class="section-head">
-        <div><span class="drag-handle">⠿</span><span class="title">🧠 Inteligência acadêmica</span></div>
-        <button class="btn btn-sec" onclick="openV6Settings()">⚙️ Meta</button>
+      <div class="v7-metrics">
+        <div class="v7-metric"><div class="v7-metric-label">Aulas hoje</div><div class="v7-metric-value" id="dashTodayCount">0</div><div class="v7-metric-detail" id="dashTodayDetail">Nenhuma aula hoje</div></div>
+        <div class="v7-metric"><div class="v7-metric-label">Carga semanal</div><div class="v7-metric-value" id="dashWeekHours">0h</div><div class="v7-metric-detail" id="dashWeekDetail">0 aulas programadas</div></div>
+        <div class="v7-metric"><div class="v7-metric-label">Próxima avaliação</div><div class="v7-metric-value" id="dashExamDays">—</div><div class="v7-metric-detail" id="dashExamDetail">Nenhuma avaliação cadastrada</div></div>
+        <div class="v7-metric"><div class="v7-metric-label">Foco esta semana</div><div class="v7-metric-value" id="v5WeekFocus">0h</div><div class="v7-metric-detail"><span id="v5PendingTasks">0</span> tarefas pendentes</div></div>
       </div>
-      <div class="v6-priority-panel">
-        <div class="v6-priority-list">
-          <div class="v6-panel-title">🔴 Disciplinas por prioridade</div>
-          <div id="v6PriorityList"></div>
-        </div>
-        <div class="v6-week-plan">
-          <div class="v6-panel-title">📈 Foco dos últimos 7 dias</div>
-          <div id="v6FocusChart" class="v6-chart"></div>
+
+      <div class="glass v5-focus-strip">
+        <div class="v5-focus-title"><span>✓</span><div><strong>Organização de estudos</strong><small>Seu progresso local neste navegador</small></div></div>
+        <div class="v5-focus-stat"><span id="v5PendingTasks2">0</span><small>tarefas pendentes</small></div>
+        <div class="v5-focus-stat"><span id="v5TodayFocus">0m</span><small>foco hoje</small></div>
+        <div class="v5-focus-stat"><span id="v5WeekFocus2">0h</span><small>foco na semana</small></div>
+        <button class="btn btn-green" onclick="openTasksCenter()">Abrir tarefas</button>
+      </div>
+
+      <div class="glass v6-intel" style="margin-top:12px">
+        <div class="v6-intel-grid">
+          <div class="v6-recommend">
+            <div class="v6-kicker">Seu foco recomendado</div>
+            <h3 id="v6RecommendationTitle">Analisando sua rotina...</h3>
+            <p id="v6RecommendationDetail">O painel vai considerar provas, tarefas e seu histórico de foco.</p>
+            <div class="v6-recommend-actions"><button class="btn" onclick="v6StartRecommendation()">▶ Começar foco</button><button class="btn" onclick="openV6Plan()">Ver plano</button></div>
+          </div>
+          <div class="v6-card"><div class="v6-card-head"><span class="v6-label">Meta semanal</span><span>🎯</span></div><div class="v6-value" id="v6GoalValue">0h</div><div class="v6-detail" id="v6GoalDetail">0% da meta</div><div class="v6-progress"><span id="v6GoalBar" style="width:0%"></span></div></div>
+          <div class="v6-card"><div class="v6-card-head"><span class="v6-label">Sequência</span><span>🔥</span></div><div class="v6-value" id="v6StreakValue">0 dias</div><div class="v6-detail" id="v6StreakDetail">Comece uma sessão hoje.</div><div class="v6-streak" id="v6StreakDays"></div></div>
+          <div class="v6-card"><div class="v6-card-head"><span class="v6-label">Prioridade</span><span>⚠️</span></div><div class="v6-value" id="v6PriorityValue">—</div><div class="v6-detail" id="v6PriorityDetail">Calculando suas disciplinas.</div></div>
         </div>
       </div>
-    </div>
-  </div>
 
+      <div class="grid-stack">
+        <div class="grid-stack-item" gs-w="12" gs-h="3" gs-id="box-inteligencia">
+          <div class="grid-stack-item-content glass">
+            <div class="section-head"><div><span class="drag-handle">⠿</span><span class="title">Inteligência acadêmica</span></div><button class="btn btn-sec" onclick="openV6Settings()">⚙ Meta</button></div>
+            <div class="v6-priority-panel"><div class="v6-priority-list"><div class="v6-panel-title">🔴 Disciplinas por prioridade</div><div id="v6PriorityList"></div></div><div class="v6-week-plan"><div class="v6-panel-title">📈 Foco dos últimos 7 dias</div><div id="v6FocusChart" class="v6-chart"></div></div></div>
+          </div>
+        </div>
 
-    <!-- V4.0 — VISÃO GERAL INTELIGENTE -->
-    <div class="grid-stack-item" gs-w="12" gs-h="2" gs-id="box-dashboard">
-      <div class="grid-stack-item-content glass">
-        <div class="dashboard-panel">
-          <div class="dashboard-hero">
-            <div class="dashboard-kicker">Visão geral acadêmica</div>
-            <h2 id="dashGreeting">Seu painel está pronto.</h2>
-            <p id="dashDate">Carregando sua agenda...</p>
-            <div class="dashboard-next">
-              <div class="dashboard-next-icon" id="dashNextIcon">📚</div>
-              <div><strong id="dashNextTitle">Calculando próxima atividade...</strong><span id="dashNextDetail">Aguarde os dados da sua agenda.</span></div>
+        <div class="grid-stack-item" gs-w="4" gs-h="4" gs-id="box-pomodoro">
+          <div class="grid-stack-item-content glass">
+            <div class="section-head"><div><span class="drag-handle">⠿</span><span class="title">Foco</span></div><select id="studySubject" style="max-width:120px;padding:6px;border-radius:8px;border:1px solid var(--v7-line);background:transparent;color:inherit;font-size:8px;font-weight:700"><option value="">Disciplina</option></select></div>
+            <div class="pomodoro-wrap">
+              <div class="pomodoro-modes" id="pomodoroModes"><button type="button" class="pomodoro-mode active" data-mode="focus" onclick="setPomodoroMode('focus')">Foco · 25m</button><button type="button" class="pomodoro-mode" data-mode="short" onclick="setPomodoroMode('short')">Pausa · 5m</button><button type="button" class="pomodoro-mode" data-mode="long" onclick="setPomodoroMode('long')">Longa · 15m</button></div>
+              <div class="custom-timer-input"><span style="font-size:8px;font-weight:700">Definir:</span><input type="number" id="customMinutesInput" min="1" max="180" placeholder="25" onchange="applyCustomMinutes(this.value)"><span style="font-size:8px;font-weight:700">min</span></div>
+              <div class="timer-wrap mode-focus" id="timerWrap"><div class="timer-label focus" id="timerLabel">Tempo de foco</div><div class="timer" id="timer">25:00</div><div id="pomodoroStatus" style="font-size:8px;font-weight:700;margin-top:3px">Pronto para iniciar</div></div>
+              <div class="pomodoro-actions"><button class="btn btn-green" id="startBtn" onclick="toggleTimer()">Iniciar</button><button class="btn btn-sec" id="pauseBtn" onclick="pauseTimer()" disabled>Pausar</button><button class="btn btn-sec" onclick="resetTimer()">Reiniciar</button></div>
             </div>
           </div>
-          <div class="dashboard-stat">
-            <div><div class="dashboard-stat-top"><span class="dashboard-stat-label">Hoje</span><span class="dashboard-stat-icon">🕐</span></div><div class="dashboard-stat-value" id="dashTodayCount">0</div><div class="dashboard-stat-detail" id="dashTodayDetail">Nenhuma aula hoje</div><div class="dashboard-today" id="dashTodayList"></div></div>
+        </div>
+
+        <div class="grid-stack-item" gs-w="4" gs-h="4" gs-id="box-calendario">
+          <div class="grid-stack-item-content glass dark-glass-card">
+            <div class="section-head"><span id="calendarMonth" style="font-size:12px;font-weight:800;color:#fff"></span><div style="display:flex;gap:5px"><button class="cal-nav-btn" onclick="prevMonth()">‹</button><button class="cal-nav-btn" onclick="nextMonth()">›</button></div></div>
+            <div id="calendar" class="calendar-dark"></div>
           </div>
-          <div class="dashboard-stat">
-            <div><div class="dashboard-stat-top"><span class="dashboard-stat-label">Esta semana</span><span class="dashboard-stat-icon">📊</span></div><div class="dashboard-stat-value" id="dashWeekHours">0h</div><div class="dashboard-stat-detail" id="dashWeekDetail">0 aulas programadas</div><div class="dashboard-mini-bar"><span id="dashWeekBar" style="width:0%"></span></div></div>
-          </div>
-          <div class="dashboard-stat">
-            <div><div class="dashboard-stat-top"><span class="dashboard-stat-label">Próxima prova</span><span class="dashboard-stat-icon">🔴</span></div><div class="dashboard-stat-value" id="dashExamDays">—</div><div class="dashboard-stat-detail" id="dashExamDetail">Nenhuma avaliação cadastrada</div><div class="dashboard-attention" id="dashAttention" style="display:none"></div></div>
-          </div>
+        </div>
+
+        <div class="grid-stack-item" gs-w="4" gs-h="4" gs-id="box-disciplinas">
+          <div class="grid-stack-item-content glass"><div class="section-head"><div><span class="drag-handle">⠿</span><span class="title">Disciplinas</span></div><button class="btn btn-sec" onclick="openSubjectModal()">＋ Nova</button></div><div id="subjectsGrid" class="subjects"></div></div>
+        </div>
+
+        <div class="grid-stack-item" gs-w="12" gs-h="3" gs-id="box-horarios">
+          <div class="grid-stack-item-content glass"><div class="section-head"><div><span class="drag-handle">⠿</span><span class="title">Horários da semana</span></div><button class="btn btn-sec" onclick="openClassModal()">＋ Horário</button></div><div id="schedule" class="schedule"></div></div>
+        </div>
+
+        <div class="grid-stack-item" gs-w="12" gs-h="3" gs-id="box-provas">
+          <div class="grid-stack-item-content glass"><div class="section-head"><div><span class="drag-handle">⠿</span><span class="title">Próximas avaliações</span></div><button class="btn btn-red" onclick="openAssessmentModal()">＋ Prova</button></div><div id="assessmentsList"></div></div>
         </div>
       </div>
-    </div>
-    
-    <!-- CRONÔMETRO -->
-    <div class="grid-stack-item" gs-w="4" gs-h="4" gs-id="box-pomodoro">
-      <div class="grid-stack-item-content glass">
-        <div class="section-head">
-          <div><span class="drag-handle">⠿</span><span class="title">⏱️ Cronômetro</span></div>
-          <select id="studySubject" style="max-width:110px;padding:4px;border-radius:6px;border:1px solid rgba(0,0,0,.22);background:rgba(255,255,255,.55);font-size:.65rem;font-weight:700"><option value="">Disciplina</option></select>
-        </div>
-        <div class="pomodoro-wrap">
-          <div class="pomodoro-modes" id="pomodoroModes">
-            <button type="button" class="pomodoro-mode active" data-mode="focus" onclick="setPomodoroMode('focus')">🎯 25m</button>
-            <button type="button" class="pomodoro-mode" data-mode="short" onclick="setPomodoroMode('short')">☕ 5m</button>
-            <button type="button" class="pomodoro-mode" data-mode="long" onclick="setPomodoroMode('long')">🌿 15m</button>
-          </div>
-          
-          <div class="custom-timer-input">
-            <span style="font-size:0.7rem;font-weight:700;">Definir tempo:</span>
-            <input type="number" id="customMinutesInput" min="1" max="180" placeholder="Min" onchange="applyCustomMinutes(this.value)">
-            <span style="font-size:0.7rem;font-weight:700;">min</span>
-          </div>
+    </section>
 
-          <div class="timer-wrap mode-focus" id="timerWrap">
-            <div class="timer-label focus" id="timerLabel">Tempo de foco</div>
-            <div class="timer" id="timer">25:00</div>
-            <div id="pomodoroStatus" style="font-size:.65rem;font-weight:700;margin-top:2px">Pronto para iniciar</div>
-          </div>
-          <div class="pomodoro-actions">
-            <button class="btn btn-green" id="startBtn" onclick="toggleTimer()">Iniciar</button>
-            <button class="btn btn-sec" id="pauseBtn" onclick="pauseTimer()" disabled>Pausar</button>
-            <button class="btn btn-sec" onclick="resetTimer()">Reiniciar</button>
-          </div>
-        </div>
+    <section class="v7-view" data-view="subjects">
+      <div class="v7-section-title">Suas disciplinas</div>
+      <div class="v7-page-grid">
+        <div class="grid-stack-item"><div class="grid-stack-item-content glass"><div class="section-head"><div><span class="title">Todas as disciplinas</span></div><button class="btn btn-green" onclick="openSubjectModal()">＋ Nova disciplina</button></div><div id="subjectsGridV7" class="subjects"></div></div></div>
+        <div class="grid-stack-item"><div class="grid-stack-item-content glass"><div class="section-head"><span class="title">Agenda semanal</span></div><div id="scheduleV7" class="schedule"></div></div></div>
       </div>
-    </div>
+    </section>
 
-    <!-- CALENDÁRIO -->
-    <div class="grid-stack-item" gs-w="4" gs-h="4" gs-id="box-calendario">
-      <div class="grid-stack-item-content glass dark-glass-card">
-        <div class="section-head" style="margin-bottom:16px;">
-          <span id="calendarMonth" style="font-size:0.9rem;font-weight:800;color:#fff;"></span>
-          <div style="display:flex;gap:6px;">
-            <button class="cal-nav-btn" onclick="prevMonth()">‹</button>
-            <button class="cal-nav-btn" onclick="nextMonth()">›</button>
-          </div>
-        </div>
-        <div id="calendar" class="calendar-dark"></div>
+    <section class="v7-view" data-view="focus">
+      <div class="v7-section-title">Foco e desempenho</div>
+      <div class="v7-page-grid">
+        <div class="grid-stack-item"><div class="grid-stack-item-content glass"><div class="section-head"><span class="title">Sessão de foco</span></div><div class="timer-wrap mode-focus"><div class="timer-label">Tempo de foco</div><div class="timer" id="timerV7">25:00</div><div class="pomodoro-actions"><button class="btn btn-green" onclick="toggleTimer()">Iniciar</button><button class="btn btn-sec" onclick="resetTimer()">Reiniciar</button></div></div></div></div>
+        <div class="grid-stack-item"><div class="grid-stack-item-content glass"><div class="section-head"><span class="title">Histórico</span></div><div id="v6FocusChartV7" class="v6-chart"></div><div class="subtle" style="margin-top:12px">Os dados são calculados a partir das sessões registradas.</div></div></div>
       </div>
-    </div>
+    </section>
 
-    <!-- DISCIPLINAS -->
-    <div class="grid-stack-item" gs-w="4" gs-h="4" gs-id="box-disciplinas">
-      <div class="grid-stack-item-content glass">
-        <div class="section-head">
-          <div><span class="drag-handle">⠿</span><span class="title">📚 Disciplinas</span></div>
-          <button class="btn btn-sec" onclick="openSubjectModal()">＋ Nova</button>
-        </div>
-        <div id="subjectsGrid" class="subjects"></div>
+    <section class="v7-view" data-view="calendar">
+      <div class="v7-section-title">Calendário acadêmico</div>
+      <div class="v7-page-grid">
+        <div class="grid-stack-item"><div class="grid-stack-item-content glass dark-glass-card"><div class="section-head"><span id="calendarMonthV7" style="font-size:12px;font-weight:800;color:#fff"></span><div style="display:flex;gap:5px"><button class="cal-nav-btn" onclick="prevMonth()">‹</button><button class="cal-nav-btn" onclick="nextMonth()">›</button></div></div><div id="calendarV7" class="calendar-dark"></div></div></div>
+        <div class="grid-stack-item"><div class="grid-stack-item-content glass"><div class="section-head"><span class="title">Próximas avaliações</span></div><div id="assessmentsListV7"></div></div></div>
       </div>
-    </div>
+    </section>
 
-    <!-- HORÁRIOS DA SEMANA -->
-    <div class="grid-stack-item" gs-w="12" gs-h="3" gs-id="box-horarios">
-      <div class="grid-stack-item-content glass">
-        <div class="section-head">
-          <div><span class="drag-handle">⠿</span><span class="title">🕐 Horários da semana</span></div>
-          <button class="btn btn-sec" onclick="openClassModal()">＋ Horário</button>
-        </div>
-        <div id="schedule" class="schedule"></div>
-      </div>
-    </div>
+    <section class="v7-view" data-view="tasks">
+      <div class="v7-section-title">Tarefas acadêmicas</div>
+      <div class="v7-focus-card"><h3>Central de tarefas</h3><p>Use a organização existente da V5 para acompanhar suas pendências.</p><button class="btn btn-green" style="margin-top:10px" onclick="openTasksCenter()">Abrir central de tarefas</button></div>
+    </section>
 
-    <!-- PRÓXIMAS PROVAS -->
-    <div class="grid-stack-item" gs-w="12" gs-h="3" gs-id="box-provas">
-      <div class="grid-stack-item-content glass">
-        <div class="section-head">
-          <div><span class="drag-handle">⠿</span><span class="title">🔴 Próximas provas</span></div>
-          <button class="btn btn-red" onclick="openAssessmentModal()">＋ Prova</button>
-        </div>
-        <div id="assessmentsList"></div>
-      </div>
+    <div style="margin-top:22px;display:flex;justify-content:space-between;align-items:center;color:var(--v7-muted);font-size:8px;font-weight:700">
+      <span>Central de Estudos • Farmácia • 2026/2</span><span id="digitalClock">00:00:00</span><span id="currentDate"></span>
     </div>
-
-  </div>
+  </main>
 </div>
 
 <button class="back-to-top" id="backToTopBtn" onclick="scrollToTop()" title="Voltar ao topo">↑</button>
-
 <div id="modalWrap" class="modal-wrap" onclick="if(event.target===this)closeModal()"><div class="modal"><div class="modal-head"><h3 id="modalTitle">Detalhes</h3><button class="close" onclick="closeModal()">✕</button></div><div id="modalBody"></div></div></div>
 <div id="toast" class="toast"></div>
 
@@ -1082,6 +1298,46 @@ window.addEventListener('load',()=>{
   if(localStorage.getItem('ueg_access_granted')==='true')window.showApp();
   loadAll();
 });
+/* =========================================================
+   V7 — PREMIUM UI NAVIGATION
+   ========================================================= */
+window.v7SetView = function(view){
+  document.querySelectorAll('.v7-nav-item').forEach(b=>b.classList.toggle('active', b.dataset.view===view));
+  document.querySelectorAll('.v7-view').forEach(v=>v.classList.toggle('active', v.dataset.view===view));
+  const titles={
+    dashboard:['Visão geral','Sua rotina acadêmica em um só lugar.'],
+    subjects:['Disciplinas','Acompanhe cada matéria do semestre.'],
+    focus:['Foco e desempenho','Transforme tempo de estudo em progresso.'],
+    calendar:['Calendário','Aulas e avaliações organizadas.'],
+    tasks:['Tarefas','Tudo o que precisa ser concluído.']
+  };
+  const t=titles[view]||titles.dashboard;
+  const title=$('v7PageTitle'), sub=$('v7PageSubtitle');
+  if(title) title.textContent=t[0];
+  if(sub) sub.textContent=t[1];
+  if(view==='subjects') $('box-disciplinas')?.scrollIntoView({behavior:'smooth',block:'start'});
+  if(view==='calendar') $('box-calendario')?.scrollIntoView({behavior:'smooth',block:'start'});
+  if(view==='tasks') window.openTasksCenter?.();
+  if(view==='focus') $('box-inteligencia')?.scrollIntoView({behavior:'smooth',block:'start'});
+};
+window.v7OpenSubject = function(id){
+  if(window.renderV5Workspace) window.renderV5Workspace(id);
+};
+window.v7ToggleSidebar = function(){
+  document.body.classList.toggle('v7-sidebar-open');
+};
+window.addEventListener('keydown',e=>{
+  if(e.key==='Escape') document.body.classList.remove('v7-sidebar-open');
+});
+
+window.v7SyncMirrors=function(){
+  const pairs=[['subjectsGrid','subjectsGridV7'],['schedule','scheduleV7'],['calendar','calendarV7'],['assessmentsList','assessmentsListV7'],['v6FocusChart','v6FocusChartV7']];
+  pairs.forEach(([a,b])=>{const x=$(a),y=$(b);if(x&&y)y.innerHTML=x.innerHTML;});
+  const cm=$('calendarMonth'),cm2=$('calendarMonthV7');if(cm&&cm2)cm2.textContent=cm.textContent;
+  const timer=$('timer'),timer2=$('timerV7');if(timer&&timer2)timer2.textContent=timer.textContent;
+};
+setInterval(()=>window.v7SyncMirrors&&window.v7SyncMirrors(),1000);
+
 </script>
 </body>
 </html>
