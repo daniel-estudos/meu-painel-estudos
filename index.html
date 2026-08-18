@@ -159,13 +159,19 @@
         .task-card-item.completed h4 { text-decoration: line-through; }
 
         /* FORMULÁRIOS E INPUTS */
-        .form-grid-disc, .form-grid-task { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+        .form-grid-disc, .form-grid-task, .form-grid-event { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
         .form-group { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1rem; }
         .form-group label { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
         select.select-disc, input.input-field, textarea.input-field { width: 100%; padding: 0.6rem; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 0.8rem; color: var(--text-main); background: var(--bg-card); outline: none; }
 
-        /* CALENDÁRIO WIDGET */
+        /* CALENDÁRIO WIDGET E FULL CALENDAR */
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.25rem; text-align: center; font-size: 0.75rem; }
+        .cal-day-name { font-weight: 700; color: var(--text-muted); padding-bottom: 0.5rem; }
+        .cal-day { padding: 0.4rem 0; border-radius: 50%; cursor: pointer; color: var(--text-main); font-weight: 500; position: relative; }
+        .cal-day.active { background: var(--primary); color: white; font-weight: 700; }
+        .cal-day.has-event::after { content: ''; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; background: #EF4444; border-radius: 50%; }
+        .cal-day.active.has-event::after { background: white; }
+        .cal-day.muted { color: var(--text-muted); opacity: 0.4; }
 
         /* FOCO RÁPIDO */
         .foco-box { text-align: center; display: flex; flex-direction: column; align-items: center; }
@@ -181,6 +187,11 @@
         .badge-prio-alta { background: #FEE2E2; color: #991B1B; }
         .badge-prio-media { background: #FEF3C7; color: #92400E; }
         .badge-prio-baixa { background: #E0E7FF; color: #3730A3; }
+        .badge-tipo-prova { background: #FEE2E2; color: #991B1B; }
+        .badge-tipo-seminario { background: #F5F3FF; color: #6D28D9; }
+        .badge-tipo-trabalho { background: #FEF3C7; color: #92400E; }
+        .badge-tipo-apresentacao { background: #E0E7FF; color: #3730A3; }
+        .badge-tipo-outro { background: var(--border); color: var(--text-main); }
     </style>
 </head>
 <body>
@@ -354,7 +365,7 @@
                             <h3>CALENDÁRIO</h3>
                             <a href="#" style="font-size: 0.75rem; color: var(--primary); font-weight: 600; text-decoration: none;" onclick="switchPage('calendario', document.querySelectorAll('.nav-item')[4])">Ver agenda</a>
                         </div>
-                        <div style="font-weight: 700; margin-bottom: 0.75rem;">Agosto 2026</div>
+                        <div style="font-weight: 700; margin-bottom: 0.75rem;" id="dash-cal-month-title">Agosto 2026</div>
                         <div class="calendar-grid" id="calendar-days-container"></div>
                     </div>
                 </div>
@@ -477,9 +488,8 @@
             </div>
         </div>
 
-        <!-- PAGE TAREFAS (ETAPA 2) -->
+        <!-- PAGE TAREFAS -->
         <div id="view-tarefas" class="page-view">
-            <!-- FORMULÁRIO DE TAREFAS -->
             <div class="card" style="margin-bottom: 1.5rem;">
                 <div class="card-header">
                     <h3 id="form-task-title">Cadastrar Nova Tarefa</h3>
@@ -523,7 +533,6 @@
                 </div>
             </div>
 
-            <!-- FILTROS E LISTA DE TAREFAS -->
             <div class="card">
                 <div class="card-header" style="flex-wrap: wrap; gap: 0.75rem;">
                     <h3>Gerenciador de Tarefas</h3>
@@ -551,8 +560,83 @@
             </div>
         </div>
 
+        <!-- PAGE CALENDÁRIO ACADÊMICO (ETAPA 3) -->
+        <div id="view-calendario" class="page-view">
+            <!-- FORMULÁRIO DE EVENTO -->
+            <div class="card" style="margin-bottom: 1.5rem;">
+                <div class="card-header">
+                    <h3 id="form-event-title">Novo Evento Acadêmico</h3>
+                    <button id="btn-cancel-event-edit" class="btn-secondary" style="display:none;" onclick="resetEventForm()">Cancelar Edição</button>
+                </div>
+
+                <input type="hidden" id="edit-event-id">
+
+                <div class="form-grid-event">
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label>Título do Evento *</label>
+                        <input type="text" id="event-titulo" class="input-field" placeholder="Ex: Prova Regimental N1">
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo de Evento</label>
+                        <select id="event-tipo" class="select-disc">
+                            <option value="Prova" selected>Prova</option>
+                            <option value="Seminário">Seminário</option>
+                            <option value="Trabalho">Trabalho</option>
+                            <option value="Apresentação">Apresentação</option>
+                            <option value="Outro">Outro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Disciplina Associada</label>
+                        <select id="event-disciplina-id" class="select-disc">
+                            <option value="">Nenhuma / Evento Geral</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Data do Evento *</label>
+                        <input type="date" id="event-data" class="input-field">
+                    </div>
+                    <div class="form-group">
+                        <label>Horário</label>
+                        <input type="time" id="event-horario" class="input-field" value="08:00">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Descrição / Conteúdo Programático</label>
+                    <input type="text" id="event-descricao" class="input-field" placeholder="Ex: Capítulos 1 ao 5 do livro-texto">
+                </div>
+
+                <div style="margin-top: 1rem; display: flex; justify-content: flex-end;">
+                    <button class="btn-primary" onclick="saveEvento()"><i data-lucide="save" size="16"></i> Salvar Evento</button>
+                </div>
+            </div>
+
+            <!-- GRADE DO CALENDÁRIO MENSAL E EVENTOS -->
+            <div class="dashboard-grid">
+                <div class="left-column">
+                    <div class="card">
+                        <div class="card-header">
+                            <button class="btn-secondary" onclick="changeCalMonth(-1)"><i data-lucide="chevron-left" size="16"></i> Anterior</button>
+                            <h3 id="full-cal-month-title">Agosto 2026</h3>
+                            <button class="btn-secondary" onclick="changeCalMonth(1)">Próximo <i data-lucide="chevron-right" size="16"></i></button>
+                        </div>
+                        <div class="calendar-grid" id="full-calendar-grid"></div>
+                    </div>
+                </div>
+
+                <div class="right-column">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 id="selected-day-events-title">Eventos do Dia</h3>
+                        </div>
+                        <div id="selected-day-events-list" style="display: flex; flex-direction: column; gap: 0.75rem;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="view-foco" class="page-view"><div class="card"><h3>Foco Pomodoro</h3><p>Módulo aguardando próxima etapa.</p></div></div>
-        <div id="view-calendario" class="page-view"><div class="card"><h3>Calendário Acadêmico</h3><p>Módulo aguardando próxima etapa.</p></div></div>
         <div id="view-anotacoes" class="page-view"><div class="card"><h3>Anotações</h3><p>Módulo aguardando próxima etapa.</p></div></div>
         <div id="view-configuracoes" class="page-view"><div class="card"><h3>Configurações</h3><p>Módulo aguardando próxima etapa.</p></div></div>
     </main>
@@ -602,17 +686,20 @@
         let currentUser = null;
         let unsubscribeDisciplinas = null;
         let unsubscribeTarefas = null;
+        let unsubscribeEventos = null;
+
         let isMigrating = false;
         let isMigratingTasks = false;
+        let isMigratingEvents = false;
 
         // AUTHENTICATION LISTENER
         onAuthStateChanged(auth, async (user) => {
             const overlay = document.getElementById('auth-overlay');
             if (user) {
-                currentUser = user; // Instância do usuário logado
+                currentUser = user;
                 overlay.style.display = 'none';
 
-                // Perfil em /users/{user.uid}
+                // Perfil /users/{user.uid}
                 const userDocRef = doc(db, 'users', user.uid);
                 let profileData = { nome: user.displayName || 'Estudante', email: user.email };
 
@@ -637,13 +724,12 @@
                 document.getElementById('user-avatar-initial').innerText = (profileData.nome || 'E').charAt(0).toUpperCase();
                 document.getElementById('page-title').innerText = `Boa noite, ${(profileData.nome || 'Estudante').split(' ')[0]} 👋`;
 
-                // 1. ESCUTA DE DISCIPLINAS (/users/{user.uid}/disciplinas)
+                // 1. ESCUTA DE DISCIPLINAS
                 const discColRef = collection(db, 'users', user.uid, 'disciplinas');
                 if (unsubscribeDisciplinas) unsubscribeDisciplinas();
 
                 unsubscribeDisciplinas = onSnapshot(discColRef, async (snapshot) => {
                     if (isMigrating) return;
-
                     const localDataRaw = localStorage.getItem('academic_disciplinas');
                     const localData = localDataRaw ? JSON.parse(localDataRaw) : null;
 
@@ -660,9 +746,7 @@
                                     periodo: item.periodo || '5º Período',
                                     cor: item.cor || '#10B981',
                                     observacoes: item.observacoes || '',
-                                    horarios: Array.isArray(item.horarios) ? item.horarios : [
-                                        { dia: item.dia || 'Segunda', inicio: item.inicio || '13:00', fim: item.fim || '16:30', sala: item.sala || 'A definir' }
-                                    ],
+                                    horarios: Array.isArray(item.horarios) ? item.horarios : [],
                                     criadaEm: serverTimestamp(),
                                     atualizadaEm: serverTimestamp()
                                 });
@@ -680,15 +764,15 @@
                     window.disciplinas = snapshot.docs.map(dDoc => ({ id: dDoc.id, ...dDoc.data() }));
                     window.renderDisciplinasUI();
                     window.renderTarefasUI();
+                    window.renderCalendarioUI();
                 });
 
-                // 2. ESCUTA DE TAREFAS (/users/{user.uid}/tarefas)
+                // 2. ESCUTA DE TAREFAS
                 const taskColRef = collection(db, 'users', user.uid, 'tarefas');
                 if (unsubscribeTarefas) unsubscribeTarefas();
 
                 unsubscribeTarefas = onSnapshot(taskColRef, async (snapshot) => {
                     if (isMigratingTasks) return;
-
                     const localTasksRaw = localStorage.getItem('academic_tarefas_v2');
                     const localTasks = localTasksRaw ? JSON.parse(localTasksRaw) : null;
 
@@ -728,17 +812,127 @@
                     window.renderTarefasUI();
                 });
 
+                // 3. ESCUTA DE EVENTOS (/users/{user.uid}/eventos)
+                const eventColRef = collection(db, 'users', user.uid, 'eventos');
+                if (unsubscribeEventos) unsubscribeEventos();
+
+                unsubscribeEventos = onSnapshot(eventColRef, async (snapshot) => {
+                    if (isMigratingEvents) return;
+                    const localEventsRaw = localStorage.getItem('academic_eventos');
+                    const localEvents = localEventsRaw ? JSON.parse(localEventsRaw) : null;
+
+                    if (snapshot.empty && Array.isArray(localEvents) && localEvents.length > 0) {
+                        isMigratingEvents = true;
+                        try {
+                            const batch = writeBatch(db);
+                            localEvents.forEach(item => {
+                                const newRef = doc(eventColRef);
+                                let dtVal = item.data || new Date().toISOString().split('T')[0];
+                                let dtParts = dtVal.split('-');
+                                let tsData = Timestamp.fromDate(new Date(parseInt(dtParts[0]), parseInt(dtParts[1]) - 1, parseInt(dtParts[2])));
+
+                                batch.set(newRef, {
+                                    titulo: item.titulo || item.nome || 'Evento sem título',
+                                    tipo: item.tipo || 'Prova',
+                                    disciplinaId: item.disciplinaId || null,
+                                    dataEvento: tsData,
+                                    horario: item.horario || '08:00',
+                                    descricao: item.descricao || item.observacoes || '',
+                                    criadaEm: serverTimestamp(),
+                                    atualizadaEm: serverTimestamp()
+                                });
+                            });
+                            await batch.commit();
+                            localStorage.removeItem('academic_eventos');
+                        } catch (eErr) {
+                            console.error("Erro na migração de eventos:", eErr);
+                        } finally {
+                            isMigratingEvents = false;
+                        }
+                        return;
+                    }
+
+                    window.eventos = snapshot.docs.map(eDoc => ({ id: eDoc.id, ...eDoc.data() }));
+                    window.renderCalendarioUI();
+                });
+
             } else {
                 currentUser = null;
                 if (unsubscribeDisciplinas) unsubscribeDisciplinas();
                 if (unsubscribeTarefas) unsubscribeTarefas();
+                if (unsubscribeEventos) unsubscribeEventos();
                 window.disciplinas = [];
                 window.tarefas = [];
+                window.eventos = [];
                 window.renderDisciplinasUI();
                 window.renderTarefasUI();
+                window.renderCalendarioUI();
                 overlay.style.display = 'grid';
             }
         });
+
+        // CRUD EVENTOS (FIRESTORE)
+        window.saveEvento = async () => {
+            if (!currentUser) return;
+
+            const idVal = document.getElementById('edit-event-id').value;
+            const titulo = document.getElementById('event-titulo').value.trim();
+            const tipo = document.getElementById('event-tipo').value;
+            const disciplinaIdVal = document.getElementById('event-disciplina-id').value;
+            const dataVal = document.getElementById('event-data').value;
+            const horario = document.getElementById('event-horario').value || '08:00';
+            const descricao = document.getElementById('event-descricao').value.trim();
+
+            if (!titulo) {
+                alert('Por favor, informe o título do evento.');
+                return;
+            }
+            if (!dataVal) {
+                alert('Por favor, selecione a data do evento.');
+                return;
+            }
+
+            const dtParts = dataVal.split('-');
+            const tsEvento = Timestamp.fromDate(new Date(parseInt(dtParts[0]), parseInt(dtParts[1]) - 1, parseInt(dtParts[2])));
+
+            const eventData = {
+                titulo,
+                tipo,
+                disciplinaId: disciplinaIdVal ? disciplinaIdVal : null,
+                dataEvento: tsEvento,
+                horario,
+                descricao,
+                atualizadaEm: serverTimestamp()
+            };
+
+            try {
+                if (idVal) {
+                    const docRef = doc(db, 'users', currentUser.uid, 'eventos', idVal);
+                    await updateDoc(docRef, eventData);
+                } else {
+                    eventData.criadaEm = serverTimestamp();
+                    const colRef = collection(db, 'users', currentUser.uid, 'eventos');
+                    await addDoc(colRef, eventData);
+                }
+                window.resetEventForm();
+            } catch (err) {
+                console.error("Erro ao salvar evento no Firestore:", err);
+                alert("Erro ao salvar evento.");
+            }
+        };
+
+        window.deleteEvento = async (id) => {
+            if (!currentUser) return;
+            if (confirm("Deseja realmente excluir este evento acadêmico?")) {
+                try {
+                    const docRef = doc(db, 'users', currentUser.uid, 'eventos', id);
+                    await deleteDoc(docRef);
+                } catch (err) {
+                    console.error("Erro ao excluir evento do Firestore:", err);
+                    alert("Erro ao excluir evento.");
+                }
+            }
+        };
 
         // CRUD TAREFAS (FIRESTORE)
         window.saveTarefa = async () => {
@@ -751,12 +945,8 @@
             const prioridade = document.getElementById('task-prioridade').value;
             const observacoes = document.getElementById('task-observacoes').value.trim();
 
-            if (!titulo) {
-                alert('Por favor, informe o título da tarefa.');
-                return;
-            }
-            if (!dataVal) {
-                alert('Por favor, selecione a data de entrega.');
+            if (!titulo || !dataVal) {
+                alert('Por favor, preencha o título e a data de entrega.');
                 return;
             }
 
@@ -785,8 +975,7 @@
                 }
                 window.resetTaskForm();
             } catch (err) {
-                console.error("Erro ao salvar tarefa no Firestore:", err);
-                alert("Erro ao salvar tarefa.");
+                console.error("Erro ao salvar tarefa:", err);
             }
         };
 
@@ -801,7 +990,7 @@
                     atualizadaEm: serverTimestamp()
                 });
             } catch (err) {
-                console.error("Erro ao alternar conclusão da tarefa:", err);
+                console.error("Erro ao alternar tarefa:", err);
             }
         };
 
@@ -812,8 +1001,7 @@
                     const docRef = doc(db, 'users', currentUser.uid, 'tarefas', id);
                     await deleteDoc(docRef);
                 } catch (err) {
-                    console.error("Erro ao excluir tarefa do Firestore:", err);
-                    alert("Erro ao excluir tarefa.");
+                    console.error("Erro ao excluir tarefa:", err);
                 }
             }
         };
@@ -858,8 +1046,7 @@
                 }
                 window.resetDiscForm();
             } catch (err) {
-                console.error("Erro ao gravar disciplina no Firestore:", err);
-                alert("Erro ao gravar disciplina.");
+                console.error("Erro ao gravar disciplina:", err);
             }
         };
 
@@ -870,8 +1057,7 @@
                     const docRef = doc(db, 'users', currentUser.uid, 'disciplinas', id);
                     await deleteDoc(docRef);
                 } catch (err) {
-                    console.error("Erro ao excluir disciplina do Firestore:", err);
-                    alert("Erro ao excluir disciplina.");
+                    console.error("Erro ao excluir disciplina:", err);
                 }
             }
         };
@@ -962,8 +1148,14 @@
         lucide.createIcons();
 
         const DIAS_SEMANA = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
+        const MESES_NOME = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+
         window.disciplinas = [];
         window.tarefas = [];
+        window.eventos = [];
+
+        let currentCalDate = new Date();
+        let selectedCalDayStr = new Date().toISOString().split('T')[0];
 
         function getHojeNome() {
             const index = new Date().getDay();
@@ -1045,7 +1237,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // TAREFAS HELPERS E RENDERIZAÇÃO
+        // TAREFAS HELPERS
         window.resetTaskForm = function() {
             document.getElementById('edit-task-id').value = '';
             document.getElementById('task-titulo').value = '';
@@ -1082,6 +1274,175 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        // CALENDÁRIO HELPERS E RENDERIZAÇÃO
+        window.resetEventForm = function() {
+            document.getElementById('edit-event-id').value = '';
+            document.getElementById('event-titulo').value = '';
+            document.getElementById('event-tipo').value = 'Prova';
+            document.getElementById('event-disciplina-id').value = '';
+            document.getElementById('event-data').value = '';
+            document.getElementById('event-horario').value = '08:00';
+            document.getElementById('event-descricao').value = '';
+
+            document.getElementById('form-event-title').innerText = 'Novo Evento Acadêmico';
+            document.getElementById('btn-cancel-event-edit').style.display = 'none';
+        };
+
+        function editEvento(id) {
+            const ev = window.eventos.find(e => e.id === id);
+            if (!ev) return;
+
+            document.getElementById('edit-event-id').value = ev.id;
+            document.getElementById('event-titulo').value = ev.titulo;
+            document.getElementById('event-tipo').value = ev.tipo || 'Prova';
+            document.getElementById('event-disciplina-id').value = ev.disciplinaId || '';
+
+            if (ev.dataEvento && ev.dataEvento.toDate) {
+                const dObj = ev.dataEvento.toDate();
+                const yyyy = dObj.getFullYear();
+                const mm = String(dObj.getMonth() + 1).padStart(2, '0');
+                const dd = String(dObj.getDate()).padStart(2, '0');
+                document.getElementById('event-data').value = `${yyyy}-${mm}-${dd}`;
+            }
+
+            document.getElementById('event-horario').value = ev.horario || '08:00';
+            document.getElementById('event-descricao').value = ev.descricao || '';
+
+            document.getElementById('form-event-title').innerText = `Editar Evento: ${ev.titulo}`;
+            document.getElementById('btn-cancel-event-edit').style.display = 'inline-block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function changeCalMonth(offset) {
+            currentCalDate.setMonth(currentCalDate.getMonth() + offset);
+            renderCalendarioUI();
+        }
+
+        window.renderCalendarioUI = function() {
+            // Atualiza select de disciplinas no formulário de eventos
+            const selectEventDisc = document.getElementById('event-disciplina-id');
+            if (selectEventDisc) {
+                const cVal = selectEventDisc.value;
+                selectEventDisc.innerHTML = `<option value="">Nenhuma / Evento Geral</option>` + 
+                    window.disciplinas.map(d => `<option value="${d.id}">${d.nome}</option>`).join('');
+                selectEventDisc.value = cVal;
+            }
+
+            const yyyy = currentCalDate.getFullYear();
+            const mm = currentCalDate.getMonth();
+
+            const monthTitleStr = `${MESES_NOME[mm]} ${yyyy}`;
+            if (document.getElementById('full-cal-month-title')) document.getElementById('full-cal-month-title').innerText = monthTitleStr;
+            if (document.getElementById('dash-cal-month-title')) document.getElementById('dash-cal-month-title').innerText = monthTitleStr;
+
+            renderCalendarGrid('full-calendar-grid', true);
+            renderCalendarGrid('calendar-days-container', false);
+
+            renderSelectedDayEvents();
+            lucide.createIcons();
+        };
+
+        function renderCalendarGrid(containerId, isFullPage) {
+            const gridContainer = document.getElementById(containerId);
+            if (!gridContainer) return;
+
+            gridContainer.innerHTML = '';
+            const dayNamesHTML = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'].map(n => `<div class="cal-day-name">${n}</div>`).join('');
+            gridContainer.innerHTML = dayNamesHTML;
+
+            const yyyy = currentCalDate.getFullYear();
+            const mm = currentCalDate.getMonth();
+
+            const firstDayIndex = new Date(yyyy, mm, 1).getDay();
+            const totalDaysInMonth = new Date(yyyy, mm + 1, 0).getDate();
+            const prevMonthDays = new Date(yyyy, mm, 0).getDate();
+
+            // Dias do mês anterior
+            for (let x = firstDayIndex; x > 0; x--) {
+                gridContainer.innerHTML += `<div class="cal-day muted">${prevMonthDays - x + 1}</div>`;
+            }
+
+            // Dias do mês atual
+            for (let day = 1; day <= totalDaysInMonth; day++) {
+                const dStr = `${yyyy}-${String(mm + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                
+                const hasEvents = window.eventos.some(e => {
+                    if (e.dataEvento && e.dataEvento.toDate) {
+                        const ed = e.dataEvento.toDate();
+                        return ed.getFullYear() === yyyy && ed.getMonth() === mm && ed.getDate() === day;
+                    }
+                    return false;
+                });
+
+                const isSelected = dStr === selectedCalDayStr;
+                gridContainer.innerHTML += `
+                    <div class="cal-day ${isSelected ? 'active' : ''} ${hasEvents ? 'has-event' : ''}" onclick="selectCalendarDay('${dStr}')">
+                        ${day}
+                    </div>
+                `;
+            }
+        }
+
+        function selectCalendarDay(dateStr) {
+            selectedCalDayStr = dateStr;
+            renderCalendarioUI();
+        }
+
+        function renderSelectedDayEvents() {
+            const listContainer = document.getElementById('selected-day-events-list');
+            const titleEl = document.getElementById('selected-day-events-title');
+            if (!listContainer) return;
+
+            listContainer.innerHTML = '';
+
+            const parts = selectedCalDayStr.split('-');
+            const dateObj = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+            if (titleEl) titleEl.innerText = `Eventos em ${dateObj.toLocaleDateString('pt-BR')}`;
+
+            const eventsOfToday = window.eventos.filter(e => {
+                if (e.dataEvento && e.dataEvento.toDate) {
+                    const ed = e.dataEvento.toDate();
+                    return ed.getFullYear() === dateObj.getFullYear() && 
+                           ed.getMonth() === dateObj.getMonth() && 
+                           ed.getDate() === dateObj.getDate();
+                }
+                return false;
+            });
+
+            if (eventsOfToday.length === 0) {
+                listContainer.innerHTML = `<p style="color:var(--text-muted); font-size:0.8rem;">Nenhum evento registrado para este dia.</p>`;
+                return;
+            }
+
+            eventsOfToday.forEach(ev => {
+                const discObj = window.disciplinas.find(d => d.id === ev.disciplinaId);
+                const discNome = discObj ? discObj.nome : 'Evento Geral';
+                const discCor = discObj ? discObj.cor : 'var(--primary)';
+
+                let badgeClass = 'badge-tipo-outro';
+                if (ev.tipo === 'Prova') badgeClass = 'badge-tipo-prova';
+                else if (ev.tipo === 'Seminário') badgeClass = 'badge-tipo-seminario';
+                else if (ev.tipo === 'Trabalho') badgeClass = 'badge-tipo-trabalho';
+                else if (ev.tipo === 'Apresentação') badgeClass = 'badge-tipo-apresentacao';
+
+                listContainer.innerHTML += `
+                    <div class="dash-weekly-card" style="border-left-color: ${discCor}; padding: 0.75rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.25rem;">
+                            <span class="badge-info ${badgeClass}">${ev.tipo}</span>
+                            <div style="display:flex; gap:0.25rem;">
+                                <button class="btn-secondary" onclick="editEvento('${ev.id}')" title="Editar"><i data-lucide="edit-2" size="12"></i></button>
+                                <button class="btn-danger" onclick="deleteEvento('${ev.id}')" title="Excluir"><i data-lucide="trash-2" size="12"></i></button>
+                            </div>
+                        </div>
+                        <div style="font-weight: 800; font-size: 0.9rem; color: var(--text-main);">${ev.titulo}</div>
+                        <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">📚 ${discNome} • ⏰ ${ev.horario || '08:00'}</div>
+                        ${ev.descricao ? `<div style="font-size: 0.72rem; color: var(--text-muted); font-style: italic; margin-top:0.4rem; background:var(--bg-body); padding:0.35rem; border-radius:4px;">💡 ${ev.descricao}</div>` : ''}
+                    </div>
+                `;
+            });
+            lucide.createIcons();
+        }
+
         window.renderTarefasUI = function() {
             const grid = document.getElementById('full-tarefas-grid');
             if (!grid) return;
@@ -1091,7 +1452,6 @@
             const prioFilter = document.getElementById('filter-task-prio')?.value || '';
             const discFilter = document.getElementById('filter-task-disc')?.value || '';
 
-            // Atualizar Selects de Disciplina nos formulários e filtros de tarefas
             const selectTaskForm = document.getElementById('task-disciplina-id');
             const selectTaskFilter = document.getElementById('filter-task-disc');
 
@@ -1110,7 +1470,6 @@
             }
 
             grid.innerHTML = '';
-
             const hoje = new Date();
             hoje.setHours(0,0,0,0);
 
@@ -1193,7 +1552,6 @@
             lucide.createIcons();
         };
 
-        // RENDERIZAÇÃO CENTRALIZADA DE DISCIPLINAS E DASHBOARD
         window.renderDisciplinasUI = function() {
             const fullGrid = document.getElementById('full-disciplinas-grid');
             const searchVal = (document.getElementById('search-disc')?.value || '').toLowerCase();
@@ -1486,6 +1844,7 @@
 
         resetDiscForm();
         resetTaskForm();
+        resetEventForm();
         const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
         document.getElementById('current-date').innerText = new Date().toLocaleDateString('pt-BR', options);
     </script>
