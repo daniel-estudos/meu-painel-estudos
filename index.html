@@ -125,14 +125,30 @@
         .chart-wrapper { position: relative; height: 140px; width: 100%; }
 
         /* DISCIPLINAS LIST & CARD */
-        .disc-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .disc-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem; padding-bottom: 0.85rem; border-bottom: 1px dashed var(--border); }
+        .disc-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
         .disc-info { display: flex; align-items: center; gap: 0.75rem; }
-        .disc-icon { width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; font-size: 0.8rem; }
-        .progress-bar { width: 80px; height: 6px; background: var(--border); border-radius: 10px; overflow: hidden; }
-        .progress-fill { height: 100%; border-radius: 10px; }
+        .disc-icon { width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; font-size: 0.8rem; flex-shrink: 0; }
 
-        .disc-grid-advanced { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-top: 1rem; }
-        .disc-card-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.25rem; position: relative; }
+        .disc-grid-advanced { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .disc-card-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.25rem; position: relative; border-left: 5px solid var(--primary); }
+
+        /* FORMULARIO DE CADASTRO REORGANIZADO */
+        .form-grid-disc { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+        .form-group { display: flex; flex-direction: column; gap: 0.35rem; }
+        .form-group label { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+        
+        .time-slots-container { margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 1rem; }
+        .slot-row { display: grid; grid-template-columns: 2fr 1.5fr 1.5fr 2fr auto; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem; }
+        @media (max-width: 768px) {
+            .slot-row { grid-template-columns: 1fr 1fr; }
+        }
+
+        /* GRADE SEMANAL */
+        .weekly-grid-container { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.75rem; overflow-x: auto; min-width: 850px; }
+        .weekly-day-col { background: var(--bg-body); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 0.75rem; min-height: 220px; display: flex; flex-direction: column; gap: 0.5rem; }
+        .weekly-day-title { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); text-align: center; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+        .weekly-slot-card { background: var(--bg-card); border-radius: var(--radius-sm); padding: 0.6rem; border-left: 4px solid var(--primary); font-size: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
 
         /* CALENDÁRIO */
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.25rem; text-align: center; font-size: 0.75rem; }
@@ -173,6 +189,8 @@
         /* PAGES CONTROL */
         .page-view { display: none; }
         .page-view.active { display: block; }
+
+        .badge-info { display: inline-block; font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.4rem; border-radius: 4px; background: var(--border); color: var(--text-main); }
     </style>
 </head>
 <body>
@@ -268,7 +286,7 @@
                             <div class="chart-wrapper"><canvas id="chartFocoSemanal"></canvas></div>
                         </div>
                         <div class="card">
-                            <div class="card-header"><h3>DISCIPLINAS QUE MERECEM ATENÇÃO</h3></div>
+                            <div class="card-header"><h3>PRÓXIMAS AULAS</h3></div>
                             <div id="list-disciplinas-dashboard"></div>
                         </div>
                     </div>
@@ -317,35 +335,108 @@
                     </div>
                 </div>
                 <div class="metric-card">
-                    <div class="metric-icon" style="background: #D1FAE5; color: #059669;"><i data-lucide="trending-up" size="18"></i></div>
+                    <div class="metric-icon" style="background: #D1FAE5; color: #059669;"><i data-lucide="calendar" size="18"></i></div>
                     <div>
-                        <div class="metric-lbl">Média de Progresso</div>
-                        <div class="metric-val" id="stat-avg-disc">0%</div>
+                        <div class="metric-lbl">Aulas na Semana</div>
+                        <div class="metric-val" id="stat-aulas-semana">0</div>
                     </div>
                 </div>
                 <div class="metric-card">
-                    <div class="metric-icon" style="background: #FEF2F2; color: #EF4444;"><i data-lucide="alert-circle" size="18"></i></div>
+                    <div class="metric-icon" style="background: #FEF3C7; color: #D97706;"><i data-lucide="clock" size="18"></i></div>
                     <div>
-                        <div class="metric-lbl">Matérias Críticas (<50%)</div>
-                        <div class="metric-val" id="stat-critical-disc">0</div>
+                        <div class="metric-lbl">Próxima Aula</div>
+                        <div class="metric-val" id="stat-proxima-aula" style="font-size: 0.85rem;">--</div>
                     </div>
                 </div>
             </div>
 
             <div class="card" style="margin-bottom: 1.5rem;">
-                <div class="card-header"><h3>Adicionar Nova Disciplina</h3></div>
-                <div style="display: grid; grid-template-columns: 2fr 2fr 1fr auto; gap: 0.75rem; align-items: center;">
-                    <input type="text" id="new-disc-name" class="input-field" placeholder="Nome da Matéria...">
-                    <input type="text" id="new-disc-teacher" class="input-field" placeholder="Nome do Professor...">
-                    <input type="number" id="new-disc-prog" class="input-field" placeholder="Progresso %" min="0" max="100">
-                    <button class="btn-primary" onclick="addDisciplina()"><i data-lucide="plus" size="16"></i> Adicionar</button>
+                <div class="card-header">
+                    <h3 id="form-disc-title">Adicionar Nova Disciplina</h3>
+                    <button id="btn-cancel-edit" class="btn-secondary" style="display:none;" onclick="resetDiscForm()">Cancelar Edição</button>
+                </div>
+
+                <input type="hidden" id="edit-disc-id">
+
+                <div class="form-grid-disc">
+                    <div class="form-group">
+                        <label>Nome da Disciplina *</label>
+                        <input type="text" id="disc-nome" class="input-field" placeholder="Ex: Farmacologia Aplicada">
+                    </div>
+                    <div class="form-group">
+                        <label>Professor(a)</label>
+                        <input type="text" id="disc-professor" class="input-field" placeholder="Ex: Dra. Juliana Costa">
+                    </div>
+                    <div class="form-group">
+                        <label>Turno</label>
+                        <select id="disc-turno" class="select-disc">
+                            <option value="Matutino">Matutino</option>
+                            <option value="Vespertino" selected>Vespertino</option>
+                            <option value="Noturno">Noturno</option>
+                            <option value="Integral">Integral</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Período / Semestre</label>
+                        <input type="text" id="disc-periodo" class="input-field" placeholder="Ex: 5º Período">
+                    </div>
+                    <div class="form-group">
+                        <label>Cor de Identificação</label>
+                        <input type="color" id="disc-cor" class="input-field" value="#10B981" style="height:38px; padding:2px; cursor:pointer;">
+                    </div>
+                </div>
+
+                <div class="time-slots-container">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.75rem;">
+                        <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Horários de Aula</span>
+                        <button type="button" class="btn-secondary" onclick="addSlotRow()"><i data-lucide="plus" size="14"></i> Adicionar Horário</button>
+                    </div>
+                    
+                    <div id="slots-rows-container">
+                        </div>
+                </div>
+
+                <div class="form-group" style="margin-top: 1rem;">
+                    <label>Observações / Notas</label>
+                    <input type="text" id="disc-observacoes" class="input-field" placeholder="Ex: Aulas de laboratório quinzenais, trazer jaleco...">
+                </div>
+
+                <div style="margin-top: 1.25rem; display: flex; justify-content: flex-end;">
+                    <button class="btn-primary" id="btn-save-disc" onclick="saveDisciplina()"><i data-lucide="save" size="16"></i> Salvar Disciplina</button>
                 </div>
             </div>
 
-            <div class="card">
+            <div class="card" style="margin-bottom: 1.5rem;">
                 <div class="card-header">
-                    <h3>Minhas Matérias Cadastradas</h3>
-                    <input type="text" id="search-disc" class="input-field" placeholder="Buscar matéria..." oninput="renderDisciplinas()" style="width: 200px; padding: 0.4rem 0.6rem;">
+                    <h3>Minha Grade Semanal</h3>
+                </div>
+                <div class="weekly-grid-container" id="weekly-schedule-grid">
+                    </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header" style="flex-wrap: wrap; gap: 0.75rem;">
+                    <h3>Matérias Cadastradas</h3>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <input type="text" id="search-disc" class="input-field" placeholder="Buscar matéria ou professor..." oninput="renderDisciplinas()" style="width: 220px; padding: 0.4rem 0.6rem;">
+                        <select id="filter-dia" class="select-disc" onchange="renderDisciplinas()" style="width: 140px; padding: 0.4rem 0.6rem;">
+                            <option value="">Todos os Dias</option>
+                            <option value="Segunda">Segunda</option>
+                            <option value="Terça">Terça</option>
+                            <option value="Quarta">Quarta</option>
+                            <option value="Quinta">Quinta</option>
+                            <option value="Sexta">Sexta</option>
+                            <option value="Sábado">Sábado</option>
+                            <option value="Domingo">Domingo</option>
+                        </select>
+                        <select id="filter-turno" class="select-disc" onchange="renderDisciplinas()" style="width: 130px; padding: 0.4rem 0.6rem;">
+                            <option value="">Todos Turnos</option>
+                            <option value="Matutino">Matutino</option>
+                            <option value="Vespertino">Vespertino</option>
+                            <option value="Noturno">Noturno</option>
+                            <option value="Integral">Integral</option>
+                        </select>
+                    </div>
                 </div>
                 <div id="full-disciplinas-grid" class="disc-grid-advanced"></div>
             </div>
@@ -440,12 +531,76 @@
     <script>
         lucide.createIcons();
 
-        // VALORES PADRÃO COM LOCALSTORAGE
-        let disciplinas = JSON.parse(localStorage.getItem('academic_disciplinas')) || [
-            { id: 1, nome: 'Controle de Qualidade de Alimentos', professor: 'Pamela Cristina', progresso: 72 },
-            { id: 2, nome: 'Bioestatística', professor: 'Marcos Silva', progresso: 61 },
-            { id: 3, nome: 'Farmacologia Aplicada', professor: 'Juliana Costa', progresso: 48 }
-        ];
+        const DIAS_SEMANA = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
+
+        // NORMALIZAÇÃO E MIGRAÇÃO SEGURA DE DADOS ANTIGOS
+        function normalizeDisciplina(d) {
+            return {
+                id: d.id || Date.now(),
+                nome: d.nome || 'Sem nome',
+                professor: d.professor || '',
+                cor: d.cor || '#10B981',
+                turno: d.turno || 'Vespertino',
+                periodo: d.periodo || '5º Período',
+                observacoes: d.observacoes || '',
+                horarios: Array.isArray(d.horarios) && d.horarios.length > 0 ? d.horarios : [
+                    {
+                        dia: d.dia || 'Segunda',
+                        inicio: d.inicio || '13:00',
+                        fim: d.fim || '16:30',
+                        sala: d.sala || 'Lab 01'
+                    }
+                ]
+            };
+        }
+
+        // CARREGAMENTO SEGURO
+        let rawDisciplinas = JSON.parse(localStorage.getItem('academic_disciplinas'));
+        let disciplinas = [];
+
+        if (Array.isArray(rawDisciplinas) && rawDisciplinas.length > 0) {
+            disciplinas = rawDisciplinas.map(normalizeDisciplina);
+        } else {
+            disciplinas = [
+                {
+                    id: 1,
+                    nome: 'Controle de Qualidade de Alimentos',
+                    professor: 'Pamela Cristina',
+                    cor: '#10B981',
+                    turno: 'Vespertino',
+                    periodo: '5º Período',
+                    observacoes: 'Trazer jaleco para as aulas práticas',
+                    horarios: [
+                        { dia: 'Terça', inicio: '13:00', fim: '16:30', sala: 'Lab Alimentos' }
+                    ]
+                },
+                {
+                    id: 2,
+                    nome: 'Bioestatística',
+                    professor: 'Marcos Silva',
+                    cor: '#2563EB',
+                    turno: 'Matutino',
+                    periodo: '5º Período',
+                    observacoes: 'Uso de calculadora científica',
+                    horarios: [
+                        { dia: 'Quarta', inicio: '08:00', fim: '10:30', sala: 'Sala 204' }
+                    ]
+                },
+                {
+                    id: 3,
+                    nome: 'Farmacologia Aplicada',
+                    professor: 'Juliana Costa',
+                    cor: '#8B5CF6',
+                    turno: 'Vespertino',
+                    periodo: '5º Período',
+                    observacoes: 'Aulas teóricas e seminários',
+                    horarios: [
+                        { dia: 'Segunda', inicio: '13:00', fim: '15:30', sala: 'Auditório B' },
+                        { dia: 'Quinta', inicio: '15:40', fim: '18:00', sala: 'Sala 102' }
+                    ]
+                }
+            ];
+        }
 
         let tarefas = JSON.parse(localStorage.getItem('academic_tarefas')) || [
             { id: 1, titulo: 'Relatório de Microbiologia', feita: false }
@@ -456,7 +611,7 @@
             { usuario: 'Mariana', texto: 'Estou revisando Bioestatística! Dúvida na questão 3.', hora: '20:18', disciplina: 'Bioestatística' }
         ];
 
-        // RESTAURAR TEMA SALVO
+        // RESTAURAR TEMA
         const savedTheme = localStorage.getItem('academic_theme') || 'light';
         document.documentElement.setAttribute('data-theme', savedTheme);
 
@@ -481,7 +636,7 @@
 
             const pageTitles = {
                 'dashboard': 'Boa noite, Daniel 👋',
-                'disciplinas': 'Gerenciar Disciplinas',
+                'disciplinas': 'Gerenciador Acadêmico de Disciplinas',
                 'tarefas': 'Lista de Tarefas',
                 'foco': 'Ambiente de Foco & Chat Tira-Dúvidas',
                 'calendario': 'Calendário Acadêmico',
@@ -491,111 +646,303 @@
             document.getElementById('page-title').innerText = pageTitles[pageId] || 'Central de Estudos';
         }
 
-        // GERENCIADOR DE DISCIPLINAS (PERSISTENTE)
-        function renderDisciplinas() {
-            const dashList = document.getElementById('list-disciplinas-dashboard');
-            const fullGrid = document.getElementById('full-disciplinas-grid');
-            const searchVal = document.getElementById('search-disc').value.toLowerCase();
-            const dashSelect = document.getElementById('dash-materia-select');
-            const fullSelect = document.getElementById('full-materia-select');
+        // MONTAGEM DE LINHAS DE HORÁRIO NO FORMULÁRIO
+        function createSlotRowHTML(dia = 'Segunda', inicio = '13:00', fim = '16:30', sala = '') {
+            const optionsDia = DIAS_SEMANA.map(d => `<option value="${d}" ${d === dia ? 'selected' : ''}>${d}</option>`).join('');
+            return `
+                <div class="slot-row">
+                    <select class="select-disc slot-dia">${optionsDia}</select>
+                    <input type="time" class="input-field slot-inicio" value="${inicio}">
+                    <input type="time" class="input-field slot-fim" value="${fim}">
+                    <input type="text" class="input-field slot-sala" placeholder="Sala/Lab (ex: Sala 12)" value="${sala}">
+                    <button type="button" class="btn-danger" onclick="this.parentElement.remove()"><i data-lucide="trash-2" size="14"></i></button>
+                </div>
+            `;
+        }
 
-            dashList.innerHTML = '';
-            fullGrid.innerHTML = '';
-            dashSelect.innerHTML = '';
-            fullSelect.innerHTML = '';
-
-            let totalProgresso = 0;
-            let criticalCount = 0;
-
-            const filtered = disciplinas.filter(d => d.nome.toLowerCase().includes(searchVal));
-
-            disciplinas.forEach(d => {
-                totalProgresso += Number(d.progresso);
-                if (d.progresso < 50) criticalCount++;
-
-                dashSelect.innerHTML += `<option value="${d.id}">${d.nome}</option>`;
-                fullSelect.innerHTML += `<option value="${d.id}">${d.nome}</option>`;
-
-                dashList.innerHTML += `
-                    <div class="disc-item">
-                        <div class="disc-info">
-                            <div class="disc-icon" style="background: rgba(16, 185, 129, 0.15); color: #059669;"><i data-lucide="book" size="14"></i></div>
-                            <div>
-                                <div style="font-weight: 600; font-size: 0.85rem;">${d.nome}</div>
-                                <div style="font-size: 0.7rem; color: var(--text-muted);">${d.professor || 'Sem professor'}</div>
-                            </div>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 0.5rem;">
-                            <div class="progress-bar"><div class="progress-fill" style="width: ${d.progresso}%; background: ${d.progresso < 50 ? '#EF4444' : '#10B981'};"></div></div>
-                            <span style="font-size: 0.75rem; font-weight: 700;">${d.progresso}%</span>
-                        </div>
-                    </div>`;
-            });
-
-            filtered.forEach(d => {
-                fullGrid.innerHTML += `
-                    <div class="disc-card-item">
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
-                            <div class="disc-icon" style="background: rgba(16, 185, 129, 0.15); color: #059669;"><i data-lucide="book-open" size="16"></i></div>
-                            <div style="display: flex; gap: 0.25rem;">
-                                <button class="btn-secondary" onclick="editDisciplina(${d.id})" title="Editar"><i data-lucide="edit-2" size="12"></i></button>
-                                <button class="btn-danger" onclick="deleteDisciplina(${d.id})" title="Excluir"><i data-lucide="trash-2" size="12"></i></button>
-                            </div>
-                        </div>
-                        <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 0.25rem;">${d.nome}</h4>
-                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">${d.professor || 'Professor não informado'}</p>
-                        
-                        <div style="display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 700; margin-bottom: 0.25rem;">
-                            <span>Progresso</span>
-                            <span style="color: ${d.progresso < 50 ? '#EF4444' : '#10B981'};">${d.progresso}%</span>
-                        </div>
-                        <div class="progress-bar" style="width: 100%; height: 8px;"><div class="progress-fill" style="width: ${d.progresso}%; background: ${d.progresso < 50 ? '#EF4444' : '#10B981'};"></div></div>
-                    </div>`;
-            });
-
-            document.getElementById('stat-total-disc').innerText = disciplinas.length;
-            document.getElementById('stat-avg-disc').innerText = disciplinas.length ? Math.round(totalProgresso / disciplinas.length) + '%' : '0%';
-            document.getElementById('stat-critical-disc').innerText = criticalCount;
-
-            localStorage.setItem('academic_disciplinas', JSON.stringify(disciplinas));
+        function addSlotRow(dia, inicio, fim, sala) {
+            const container = document.getElementById('slots-rows-container');
+            container.insertAdjacentHTML('beforeend', createSlotRowHTML(dia, inicio, fim, sala));
             lucide.createIcons();
         }
 
-        function addDisciplina() {
-            const name = document.getElementById('new-disc-name').value;
-            const teacher = document.getElementById('new-disc-teacher').value;
-            const prog = document.getElementById('new-disc-prog').value || 0;
+        function getSlotsFromForm() {
+            const rows = document.querySelectorAll('#slots-rows-container .slot-row');
+            const slots = [];
+            rows.forEach(row => {
+                const dia = row.querySelector('.slot-dia').value;
+                const inicio = row.querySelector('.slot-inicio').value || '08:00';
+                const fim = row.querySelector('.slot-fim').value || '10:00';
+                const sala = row.querySelector('.slot-sala').value.trim() || 'A definir';
+                slots.push({ dia, inicio, fim, sala });
+            });
+            return slots.length > 0 ? slots : [{ dia: 'Segunda', inicio: '13:00', fim: '16:30', sala: 'A definir' }];
+        }
 
-            if (name.trim() !== '') {
-                disciplinas.push({ id: Date.now(), nome: name, professor: teacher, progresso: Number(prog) });
-                document.getElementById('new-disc-name').value = '';
-                document.getElementById('new-disc-teacher').value = '';
-                document.getElementById('new-disc-prog').value = '';
-                renderDisciplinas();
+        function resetDiscForm() {
+            document.getElementById('edit-disc-id').value = '';
+            document.getElementById('disc-nome').value = '';
+            document.getElementById('disc-professor').value = '';
+            document.getElementById('disc-turno').value = 'Vespertino';
+            document.getElementById('disc-periodo').value = '';
+            document.getElementById('disc-cor').value = '#10B981';
+            document.getElementById('disc-observacoes').value = '';
+            document.getElementById('slots-rows-container').innerHTML = '';
+            addSlotRow();
+            
+            document.getElementById('form-disc-title').innerText = 'Adicionar Nova Disciplina';
+            document.getElementById('btn-cancel-edit').style.display = 'none';
+        }
+
+        function saveDisciplina() {
+            const idVal = document.getElementById('edit-disc-id').value;
+            const nome = document.getElementById('disc-nome').value.trim();
+            const professor = document.getElementById('disc-professor').value.trim();
+            const turno = document.getElementById('disc-turno').value;
+            const periodo = document.getElementById('disc-periodo').value.trim();
+            const cor = document.getElementById('disc-cor').value;
+            const observacoes = document.getElementById('disc-observacoes').value.trim();
+            const horarios = getSlotsFromForm();
+
+            if (!nome) {
+                alert('Por favor, informe o nome da disciplina.');
+                return;
             }
+
+            if (idVal) {
+                // Modo Edição
+                const index = disciplinas.findIndex(d => d.id == idVal);
+                if (index !== -1) {
+                    disciplinas[index] = { id: Number(idVal), nome, professor, turno, periodo, cor, observacoes, horarios };
+                }
+            } else {
+                // Nova Disciplina
+                disciplinas.push({ id: Date.now(), nome, professor, turno, periodo, cor, observacoes, horarios });
+            }
+
+            resetDiscForm();
+            renderDisciplinas();
+        }
+
+        function editDisciplina(id) {
+            const disc = disciplinas.find(d => d.id === id);
+            if (!disc) return;
+
+            document.getElementById('edit-disc-id').value = disc.id;
+            document.getElementById('disc-nome').value = disc.nome;
+            document.getElementById('disc-professor').value = disc.professor;
+            document.getElementById('disc-turno').value = disc.turno;
+            document.getElementById('disc-periodo').value = disc.periodo;
+            document.getElementById('disc-cor').value = disc.cor || '#10B981';
+            document.getElementById('disc-observacoes').value = disc.observacoes || '';
+
+            const container = document.getElementById('slots-rows-container');
+            container.innerHTML = '';
+            if (disc.horarios && disc.horarios.length > 0) {
+                disc.horarios.forEach(s => addSlotRow(s.dia, s.inicio, s.fim, s.sala));
+            } else {
+                addSlotRow();
+            }
+
+            document.getElementById('form-disc-title').innerText = `Editar Disciplina: ${disc.nome}`;
+            document.getElementById('btn-cancel-edit').style.display = 'inline-block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function deleteDisciplina(id) {
-            if (confirm("Deseja realmente remover esta disciplina?")) {
+            if (confirm("Deseja realmente remover esta disciplina da sua grade?")) {
                 disciplinas = disciplinas.filter(d => d.id !== id);
                 renderDisciplinas();
             }
         }
 
-        function editDisciplina(id) {
-            const disc = disciplinas.find(d => d.id === id);
-            if (disc) {
-                const newProg = prompt(`Atualize o progresso em % para ${disc.nome}:`, disc.progresso);
-                if (newProg !== null && !isNaN(newProg)) {
-                    disc.progresso = Math.min(100, Math.max(0, Number(newProg)));
-                    renderDisciplinas();
+        // RENDERIZAR GRADE SEMANAL
+        function renderWeeklyGrid() {
+            const gridContainer = document.getElementById('weekly-schedule-grid');
+            if (!gridContainer) return;
+
+            gridContainer.innerHTML = '';
+
+            DIAS_SEMANA.forEach(dia => {
+                let slotsDoDia = [];
+                
+                disciplinas.forEach(disc => {
+                    (disc.horarios || []).forEach(slot => {
+                        if (slot.dia === dia) {
+                            slotsDoDia.push({
+                                disciplina: disc.nome,
+                                professor: disc.professor,
+                                cor: disc.cor,
+                                inicio: slot.inicio,
+                                fim: slot.fim,
+                                sala: slot.sala
+                            });
+                        }
+                    });
+                });
+
+                // Ordenar por horário de início
+                slotsDoDia.sort((a,b) => a.inicio.localeCompare(b.inicio));
+
+                let cardsHTML = '';
+                if (slotsDoDia.length === 0) {
+                    cardsHTML = `<div style="font-size: 0.7rem; color: var(--text-muted); text-align: center; padding: 1rem 0;">Sem aulas</div>`;
+                } else {
+                    slotsDoDia.forEach(s => {
+                        cardsHTML += `
+                            <div class="weekly-slot-card" style="border-left-color: ${s.cor};">
+                                <div style="font-weight: 700; font-size: 0.8rem;">${s.disciplina}</div>
+                                <div style="color: var(--text-muted); font-size: 0.7rem; margin-top: 0.15rem;">${s.professor ? '👨‍🏫 ' + s.professor : ''}</div>
+                                <div style="display:flex; justify-content:space-between; margin-top: 0.4rem; font-weight: 600; font-size: 0.68rem;">
+                                    <span>⏰ ${s.inicio} - ${s.fim}</span>
+                                    <span class="badge-info">${s.sala || 'Sala'}</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+
+                gridContainer.innerHTML += `
+                    <div class="weekly-day-col">
+                        <div class="weekly-day-title">${dia}</div>
+                        ${cardsHTML}
+                    </div>
+                `;
+            });
+        }
+
+        // GERENCIADOR DE DISCIPLINAS COMPLETO (SISTEMA ATUALIZADO)
+        function renderDisciplinas() {
+            const dashList = document.getElementById('list-disciplinas-dashboard');
+            const fullGrid = document.getElementById('full-disciplinas-grid');
+            const searchVal = (document.getElementById('search-disc')?.value || '').toLowerCase();
+            const filterDia = document.getElementById('filter-dia')?.value || '';
+            const filterTurno = document.getElementById('filter-turno')?.value || '';
+
+            const dashSelect = document.getElementById('dash-materia-select');
+            const fullSelect = document.getElementById('full-materia-select');
+
+            if (dashList) dashList.innerHTML = '';
+            if (fullGrid) fullGrid.innerHTML = '';
+            if (dashSelect) dashSelect.innerHTML = '';
+            if (fullSelect) fullSelect.innerHTML = '';
+
+            let totalAulasSemana = 0;
+            let todasAulas = [];
+
+            // Atualiza Dropdowns Pomodoro
+            disciplinas.forEach(d => {
+                if (dashSelect) dashSelect.innerHTML += `<option value="${d.id}">${d.nome}</option>`;
+                if (fullSelect) fullSelect.innerHTML += `<option value="${d.id}">${d.nome}</option>`;
+
+                (d.horarios || []).forEach(slot => {
+                    totalAulasSemana++;
+                    todasAulas.push({
+                        disciplina: d.nome,
+                        professor: d.professor,
+                        cor: d.cor,
+                        dia: slot.dia,
+                        inicio: slot.inicio,
+                        fim: slot.fim,
+                        sala: slot.sala
+                    });
+                });
+            });
+
+            // DASHBOARD: PRÓXIMAS AULAS
+            if (dashList) {
+                if (todasAulas.length === 0) {
+                    dashList.innerHTML = `<p style="color:var(--text-muted); font-size:0.8rem;">Nenhuma aula cadastrada.</p>`;
+                } else {
+                    // Exibir até 4 próximas aulas
+                    todasAulas.slice(0, 4).forEach(aula => {
+                        dashList.innerHTML += `
+                            <div class="disc-item">
+                                <div class="disc-info">
+                                    <div class="disc-icon" style="background: ${aula.cor}22; color: ${aula.cor}; border: 1px solid ${aula.cor};"><i data-lucide="book-open" size="14"></i></div>
+                                    <div>
+                                        <div style="font-weight: 700; font-size: 0.85rem;">${aula.disciplina}</div>
+                                        <div style="font-size: 0.72rem; color: var(--text-muted);">${aula.professor || 'Prof. não informado'}</div>
+                                    </div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <span class="badge-info" style="background:${aula.cor}22; color:${aula.cor};">${aula.dia}</span>
+                                    <div style="font-size: 0.7rem; font-weight: 700; margin-top:0.2rem;">${aula.inicio} - ${aula.fim} (${aula.sala})</div>
+                                </div>
+                            </div>
+                        `;
+                    });
                 }
             }
+
+            // FILTRAGEM DE DISCIPLINAS
+            const filtered = disciplinas.filter(d => {
+                const matchesText = d.nome.toLowerCase().includes(searchVal) || d.professor.toLowerCase().includes(searchVal);
+                const matchesTurno = !filterTurno || d.turno === filterTurno;
+                const matchesDia = !filterDia || (d.horarios || []).some(s => s.dia === filterDia);
+                return matchesText && matchesTurno && matchesDia;
+            });
+
+            // CARDS NA PÁGINA DE DISCIPLINAS
+            if (fullGrid) {
+                if (filtered.length === 0) {
+                    fullGrid.innerHTML = `<p style="color:var(--text-muted); grid-column: 1/-1;">Nenhuma disciplina encontrada com os filtros selecionados.</p>`;
+                } else {
+                    filtered.forEach(d => {
+                        const slotsBadge = (d.horarios || []).map(s => 
+                            `<div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.25rem;">
+                                📅 <strong>${s.dia}</strong>: ${s.inicio} às ${s.fim} <span class="badge-info">${s.sala}</span>
+                             </div>`
+                        ).join('');
+
+                        fullGrid.innerHTML += `
+                            <div class="disc-card-item" style="border-left-color: ${d.cor};">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                                    <span class="badge-info" style="background:${d.cor}22; color:${d.cor};">${d.turno} • ${d.periodo || 'Geral'}</span>
+                                    <div style="display: flex; gap: 0.25rem;">
+                                        <button class="btn-secondary" onclick="editDisciplina(${d.id})" title="Editar"><i data-lucide="edit-2" size="12"></i></button>
+                                        <button class="btn-danger" onclick="deleteDisciplina(${d.id})" title="Excluir"><i data-lucide="trash-2" size="12"></i></button>
+                                    </div>
+                                </div>
+                                <h4 style="font-size: 1rem; font-weight: 800; margin-bottom: 0.2rem;">${d.nome}</h4>
+                                <p style="font-size: 0.78rem; color: var(--text-muted); font-weight: 600; margin-bottom: 0.75rem;">👨‍🏫 ${d.professor || 'Professor não informado'}</p>
+                                
+                                <div style="border-top: 1px solid var(--border); padding-top: 0.5rem; margin-top: 0.5rem;">
+                                    <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; color:var(--text-muted);">Horários de Aula:</div>
+                                    ${slotsBadge}
+                                </div>
+
+                                ${d.observacoes ? `<div style="font-size: 0.72rem; color: var(--text-muted); font-style: italic; margin-top: 0.75rem; background: var(--bg-body); padding: 0.4rem 0.6rem; border-radius: 4px;">💡 ${d.observacoes}</div>` : ''}
+                            </div>
+                        `;
+                    });
+                }
+            }
+
+            // ATUALIZA MÉTRICAS DA PÁGINA
+            const statTotal = document.getElementById('stat-total-disc');
+            const statAulas = document.getElementById('stat-aulas-semana');
+            const statProxima = document.getElementById('stat-proxima-aula');
+
+            if (statTotal) statTotal.innerText = disciplinas.length;
+            if (statAulas) statAulas.innerText = totalAulasSemana;
+            if (statProxima) {
+                if (todasAulas.length > 0) {
+                    statProxima.innerText = `${todasAulas[0].disciplina} (${todasAulas[0].dia})`;
+                } else {
+                    statProxima.innerText = 'Nenhuma aula';
+                }
+            }
+
+            renderWeeklyGrid();
+            localStorage.setItem('academic_disciplinas', JSON.stringify(disciplinas));
+            lucide.createIcons();
         }
 
         // TAREFAS (PERSISTENTE)
         function renderTarefas() {
             const container = document.getElementById('tasks-list-container');
+            if(!container) return;
             container.innerHTML = '';
             tarefas.forEach(t => {
                 container.innerHTML += `
@@ -604,13 +951,14 @@
                         <span style="${t.feita ? 'text-decoration: line-through; color: var(--text-muted);' : ''}">${t.titulo}</span>
                     </div>`;
             });
-            document.getElementById('count-tarefas').innerText = tarefas.filter(t => !t.feita).length;
+            const countEl = document.getElementById('count-tarefas');
+            if(countEl) countEl.innerText = tarefas.filter(t => !t.feita).length;
             localStorage.setItem('academic_tarefas', JSON.stringify(tarefas));
         }
 
         function addTarefa() {
             const input = document.getElementById('new-task-title');
-            if (input.value.trim() !== '') {
+            if (input && input.value.trim() !== '') {
                 tarefas.push({ id: Date.now(), titulo: input.value, feita: false });
                 input.value = '';
                 renderTarefas();
@@ -625,15 +973,18 @@
 
         // ANOTAÇÕES
         const notesArea = document.getElementById('notes-text');
-        notesArea.value = localStorage.getItem('academic_notes') || '';
+        if(notesArea) notesArea.value = localStorage.getItem('academic_notes') || '';
         function saveNotes() {
-            localStorage.setItem('academic_notes', notesArea.value);
-            alert('Anotações salvas com sucesso!');
+            if(notesArea) {
+                localStorage.setItem('academic_notes', notesArea.value);
+                alert('Anotações salvas com sucesso!');
+            }
         }
 
         // CALENDÁRIO
         function renderCalendar() {
             const container = document.getElementById('calendar-days-container');
+            if(!container) return;
             const daysNames = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
             container.innerHTML = '';
             daysNames.forEach(d => container.innerHTML += `<div class="cal-day-name">${d}</div>`);
@@ -655,8 +1006,10 @@
             maxSeconds = mins * 60;
             seconds = maxSeconds;
             currentModeName = modeLabel;
-            document.getElementById('timer-mode-lbl').innerText = modeLabel;
-            document.getElementById('btn-toggle-timer').innerHTML = `<i data-lucide="play" size="16"></i> Iniciar`;
+            const lbl = document.getElementById('timer-mode-lbl');
+            if(lbl) lbl.innerText = modeLabel;
+            const btn = document.getElementById('btn-toggle-timer');
+            if(btn) btn.innerHTML = `<i data-lucide="play" size="16"></i> Iniciar`;
             updateDisplays();
             lucide.createIcons();
         }
@@ -750,22 +1103,26 @@
             }
         }
 
-        // CHART
-        const ctx = document.getElementById('chartFocoSemanal').getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
-                datasets: [{ data: [2, 3, 1.5, 3, 2, 4, 1], backgroundColor: '#10B981', borderRadius: 4 }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-        });
-
-        // INIT
+        // INITIALIZATION
+        resetDiscForm();
         renderDisciplinas();
         renderTarefas();
         renderCalendar();
         renderChat();
+
+        // CHART FOCO SEMANAL
+        const chartEl = document.getElementById('chartFocoSemanal');
+        if (chartEl) {
+            const ctx = chartEl.getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                    datasets: [{ data: [2, 3, 1.5, 3, 2, 4, 1], backgroundColor: '#10B981', borderRadius: 4 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+        }
     </script>
 </body>
 </html>
