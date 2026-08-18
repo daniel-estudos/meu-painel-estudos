@@ -173,8 +173,52 @@
         .progress-bar { width: 80px; height: 6px; background: var(--border); border-radius: 10px; overflow: hidden; flex-shrink: 0; }
         .progress-fill { height: 100%; border-radius: 10px; }
 
-        .disc-grid-advanced { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; margin-top: 1rem; }
-        .disc-card-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.25rem; position: relative; }
+        .disc-grid-advanced { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .disc-card-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.1rem; position: relative; }
+        .disc-card-item.expanded { border-color: var(--primary); }
+
+        .disc-card-header { display: flex; align-items: flex-start; gap: 0.75rem; cursor: pointer; }
+        .disc-card-header .disc-info-main { flex: 1; min-width: 0; }
+        .disc-card-header .disc-icon { width: 38px; height: 38px; }
+        .disc-card-actions { display: flex; gap: 0.25rem; flex-shrink: 0; }
+        .disc-chevron { width: 26px; height: 26px; display: grid; place-items: center; color: var(--text-muted); flex-shrink: 0; transition: transform 0.2s; }
+        .disc-card-item.expanded .disc-chevron { transform: rotate(180deg); }
+
+        .disc-schedule-summary { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.35rem; display: flex; align-items: center; gap: 0.3rem; }
+
+        .disc-card-body { display: none; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+        .disc-card-item.expanded .disc-card-body { display: block; animation: fadeIn 0.2s ease; }
+        .disc-body-section { margin-bottom: 1rem; }
+        .disc-body-section:last-child { margin-bottom: 0; }
+        .disc-body-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.03em; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.3rem; }
+
+        .horario-chip-list { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.6rem; }
+        .horario-chip {
+            display: inline-flex; align-items: center; gap: 0.4rem; background: var(--bg-body); border: 1px solid var(--border);
+            border-radius: 999px; padding: 0.25rem 0.4rem 0.25rem 0.65rem; font-size: 0.72rem; font-weight: 600;
+        }
+        .horario-chip button { width: 16px; height: 16px; border-radius: 50%; display: grid; place-items: center; color: var(--text-muted); }
+        .horario-chip button:hover { background: var(--danger-light); color: var(--danger); }
+        .horario-add-row { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 0.4rem; }
+        .horario-add-row select, .horario-add-row input { padding: 0.4rem; font-size: 0.72rem; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg-card); color: var(--text-main); }
+        .horario-add-row button { background: var(--primary-light); color: var(--primary-dark); border-radius: var(--radius-sm); padding: 0 0.5rem; font-weight: 700; }
+        .horario-add-row button:hover { background: var(--primary); color: white; }
+
+        .disc-note-textarea { width: 100%; min-height: 70px; resize: vertical; padding: 0.5rem 0.6rem; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg-body); color: var(--text-main); font-size: 0.78rem; outline: none; }
+        .disc-note-textarea:focus { border-color: var(--primary); }
+
+        /* COLOR & ICON PICKERS */
+        .color-swatches { display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center; }
+        .color-swatch { width: 24px; height: 24px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; flex-shrink: 0; }
+        .color-swatch.selected { border-color: var(--text-main); box-shadow: 0 0 0 2px var(--bg-card); }
+        .color-swatch-custom { width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--border); padding: 0; overflow: hidden; cursor: pointer; }
+        .color-swatch-custom::-webkit-color-swatch-wrapper { padding: 0; }
+        .color-swatch-custom::-webkit-color-swatch { border: none; border-radius: 50%; }
+
+        .icon-picker { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.4rem; }
+        .icon-picker-btn { width: 100%; aspect-ratio: 1/1; border-radius: var(--radius-sm); border: 1px solid var(--border); display: grid; place-items: center; color: var(--text-muted); }
+        .icon-picker-btn:hover { background: var(--border); }
+        .icon-picker-btn.selected { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
 
         /* CALENDÁRIO */
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.25rem; text-align: center; font-size: 0.75rem; }
@@ -291,11 +335,13 @@
             .header-title h1 { font-size: 1.2rem; }
             .metrics-grid { grid-template-columns: 1fr; }
             .disc-grid-advanced { grid-template-columns: 1fr; }
+            .horario-add-row { grid-template-columns: 1fr 1fr; }
         }
 
         @media (max-width: 480px) {
             .foco-config { flex-wrap: wrap; }
             .modal-box { padding: 1.1rem; }
+            .icon-picker { grid-template-columns: repeat(5, 1fr); }
         }
     </style>
 </head>
@@ -459,12 +505,22 @@
                 <div class="card-header">
                     <h3>Adicionar Nova Disciplina</h3>
                 </div>
-                <div style="display: grid; grid-template-columns: 2fr 2fr 1fr auto; gap: 0.75rem; align-items: center;">
+                <div style="display: grid; grid-template-columns: 2fr 2fr 1fr; gap: 0.75rem; margin-bottom: 0.85rem;">
                     <input type="text" id="new-disc-name" class="input-field" placeholder="Nome da Matéria (Ex: Microbiologia)...">
                     <input type="text" id="new-disc-teacher" class="input-field" placeholder="Nome do Professor...">
                     <input type="number" id="new-disc-prog" class="input-field" placeholder="Progresso %" min="0" max="100">
-                    <button class="btn-primary" onclick="addDisciplina()"><i data-lucide="plus" size="16"></i> Adicionar</button>
                 </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center; margin-bottom: 1rem;">
+                    <div>
+                        <div class="disc-body-label" style="margin-bottom:0.4rem;">Cor</div>
+                        <div class="color-swatches" id="new-disc-color-swatches"></div>
+                    </div>
+                    <div style="flex: 1; min-width: 220px;">
+                        <div class="disc-body-label" style="margin-bottom:0.4rem;">Ícone</div>
+                        <div class="icon-picker" id="new-disc-icon-picker"></div>
+                    </div>
+                </div>
+                <button class="btn-primary" style="width: 100%;" onclick="addDisciplina()"><i data-lucide="plus" size="16"></i> Adicionar Disciplina</button>
             </div>
 
             <!-- CONTROLE DE BUSCA E LISTAGEM DE MATÉRIAS -->
@@ -581,6 +637,14 @@
                 <label>Progresso (%)</label>
                 <input type="number" id="edit-disc-prog" class="input-field" min="0" max="100">
             </div>
+            <div class="modal-field">
+                <label>Cor</label>
+                <div class="color-swatches" id="edit-disc-color-swatches"></div>
+            </div>
+            <div class="modal-field">
+                <label>Ícone</label>
+                <div class="icon-picker" id="edit-disc-icon-picker"></div>
+            </div>
             <div class="modal-actions">
                 <button class="btn-ghost" onclick="closeModal('modal-disciplina')">Cancelar</button>
                 <button class="btn-primary" onclick="saveDisciplinaEdit()">Salvar</button>
@@ -664,10 +728,64 @@
            ESTADO GLOBAL
         ========================================================= */
         let disciplinas = loadData(STORAGE_KEYS.disciplinas, [
-            { id: 1, nome: 'Controle de Qualidade de Alimentos', professor: 'Pamela Cristina', progresso: 72 },
-            { id: 2, nome: 'Bioestatística', professor: 'Marcos Silva', progresso: 61 },
-            { id: 3, nome: 'Farmacologia Aplicada', professor: 'Juliana Costa', progresso: 48 }
-        ]);
+            { id: 1, nome: 'Controle de Qualidade de Alimentos', professor: 'Pamela Cristina', progresso: 72, cor: '#10B981', icone: 'flask-conical', horarios: [{ dia: 'Seg', inicio: '13:00', fim: '16:30' }], anotacoes: '' },
+            { id: 2, nome: 'Bioestatística', professor: 'Marcos Silva', progresso: 61, cor: '#2563EB', icone: 'calculator', horarios: [], anotacoes: '' },
+            { id: 3, nome: 'Farmacologia Aplicada', professor: 'Juliana Costa', progresso: 48, cor: '#DB2777', icone: 'pill', horarios: [], anotacoes: '' }
+        ]).map(d => ({
+            cor: '#10B981', icone: 'book-open', horarios: [], anotacoes: '', ...d
+        }));
+
+        // Estado de UI (não persistido): quais cards de disciplina estão expandidos
+        let expandedDiscIds = new Set();
+
+        const DISC_COLORS = ['#10B981', '#2563EB', '#DB2777', '#F59E0B', '#7C3AED', '#0EA5E9', '#EF4444', '#059669'];
+        const DISC_ICONS = ['book-open', 'flask-conical', 'microscope', 'pill', 'dna', 'heart-pulse', 'brain', 'calculator', 'leaf', 'atom', 'stethoscope', 'clipboard-list'];
+        const DIAS_SEMANA = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+
+        let newDiscCor = DISC_COLORS[0];
+        let newDiscIcone = DISC_ICONS[0];
+        let editDiscCor = DISC_COLORS[0];
+        let editDiscIcone = DISC_ICONS[0];
+
+        function hexToRgba(hex, alpha) {
+            const h = hex.replace('#', '');
+            const bigint = parseInt(h.length === 3 ? h.split('').map(c => c + c).join('') : h, 16);
+            const r = (bigint >> 16) & 255, g = (bigint >> 8) & 255, b = bigint & 255;
+            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        }
+
+        function renderColorSwatches(containerId, selectedColor, onSelect) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = DISC_COLORS.map(c =>
+                `<button type="button" class="color-swatch ${c === selectedColor ? 'selected' : ''}" style="background:${c};" data-color="${c}" title="${c}"></button>`
+            ).join('') + `<input type="color" class="color-swatch-custom" value="${selectedColor}" title="Cor personalizada">`;
+
+            container.querySelectorAll('.color-swatch').forEach(btn => {
+                btn.addEventListener('click', () => onSelect(btn.dataset.color));
+            });
+            container.querySelector('.color-swatch-custom').addEventListener('input', (e) => onSelect(e.target.value));
+        }
+
+        function renderIconPicker(containerId, selectedIcon, onSelect) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = DISC_ICONS.map(icon =>
+                `<button type="button" class="icon-picker-btn ${icon === selectedIcon ? 'selected' : ''}" data-icon="${icon}" title="${icon}"><i data-lucide="${icon}" size="16"></i></button>`
+            ).join('');
+            container.querySelectorAll('.icon-picker-btn').forEach(btn => {
+                btn.addEventListener('click', () => onSelect(btn.dataset.icon));
+            });
+            lucide.createIcons();
+        }
+
+        function initNewDiscPickers() {
+            renderColorSwatches('new-disc-color-swatches', newDiscCor, (c) => { newDiscCor = c; initNewDiscPickers(); });
+            renderIconPicker('new-disc-icon-picker', newDiscIcone, (i) => { newDiscIcone = i; initNewDiscPickers(); });
+        }
+
+        function initEditDiscPickers() {
+            renderColorSwatches('edit-disc-color-swatches', editDiscCor, (c) => { editDiscCor = c; initEditDiscPickers(); });
+            renderIconPicker('edit-disc-icon-picker', editDiscIcone, (i) => { editDiscIcone = i; initEditDiscPickers(); });
+        }
 
         let tarefas = loadData(STORAGE_KEYS.tarefas, [
             { id: 1, titulo: 'Relatório de Microbiologia', feita: false, data: null, prioridade: 'alta' }
@@ -812,7 +930,7 @@
                 dashList.innerHTML += `
                     <div class="disc-item">
                         <div class="disc-info">
-                            <div class="disc-icon" style="background: rgba(16, 185, 129, 0.15); color: #059669;"><i data-lucide="book" size="14"></i></div>
+                            <div class="disc-icon" style="background: ${hexToRgba(d.cor, 0.15)}; color: ${d.cor};"><i data-lucide="${d.icone}" size="14"></i></div>
                             <div style="min-width:0;">
                                 <div style="font-weight: 600; font-size: 0.85rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escapeHtml(d.nome)}</div>
                                 <div style="font-size: 0.7rem; color: var(--text-muted);">${escapeHtml(d.professor || 'Sem professor')}</div>
@@ -830,23 +948,54 @@
             }
 
             filtered.forEach(d => {
-                fullGrid.innerHTML += `
-                    <div class="disc-card-item">
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
-                            <div class="disc-icon" style="background: rgba(16, 185, 129, 0.15); color: #059669;"><i data-lucide="book-open" size="16"></i></div>
-                            <div style="display: flex; gap: 0.25rem;">
-                                <button class="btn-secondary" onclick="editDisciplina(${d.id})" title="Editar"><i data-lucide="edit-2" size="12"></i></button>
-                                <button class="btn-danger" onclick="deleteDisciplina(${d.id})" title="Excluir"><i data-lucide="trash-2" size="12"></i></button>
-                            </div>
-                        </div>
-                        <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 0.25rem;">${escapeHtml(d.nome)}</h4>
-                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">${escapeHtml(d.professor || 'Professor não informado')}</p>
+                const isExpanded = expandedDiscIds.has(d.id);
+                const horarioResumo = d.horarios && d.horarios.length
+                    ? `${d.horarios[0].dia} ${d.horarios[0].inicio}${d.horarios.length > 1 ? ` +${d.horarios.length - 1}` : ''}`
+                    : 'Sem horário definido';
 
-                        <div style="display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 700; margin-bottom: 0.25rem;">
+                fullGrid.innerHTML += `
+                    <div class="disc-card-item ${isExpanded ? 'expanded' : ''}" id="disc-card-${d.id}">
+                        <div class="disc-card-header" onclick="toggleDiscCard(${d.id})">
+                            <div class="disc-icon" style="background: ${hexToRgba(d.cor, 0.15)}; color: ${d.cor};"><i data-lucide="${d.icone}" size="18"></i></div>
+                            <div class="disc-info-main">
+                                <h4 style="font-size: 0.95rem; font-weight: 700;">${escapeHtml(d.nome)}</h4>
+                                <p style="font-size: 0.75rem; color: var(--text-muted);">${escapeHtml(d.professor || 'Professor não informado')}</p>
+                                <div class="disc-schedule-summary"><i data-lucide="clock" size="11"></i> ${escapeHtml(horarioResumo)}</div>
+                            </div>
+                            <div class="disc-card-actions">
+                                <button class="btn-secondary" onclick="event.stopPropagation(); editDisciplina(${d.id})" title="Editar"><i data-lucide="edit-2" size="12"></i></button>
+                                <button class="btn-danger" onclick="event.stopPropagation(); deleteDisciplina(${d.id})" title="Excluir"><i data-lucide="trash-2" size="12"></i></button>
+                            </div>
+                            <div class="disc-chevron"><i data-lucide="chevron-down" size="16"></i></div>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 700; margin: 0.85rem 0 0.25rem;">
                             <span>Progresso</span>
                             <span style="color: ${d.progresso < 50 ? 'var(--danger)' : 'var(--primary)'};">${d.progresso}%</span>
                         </div>
                         <div class="progress-bar" style="width: 100%; height: 8px;"><div class="progress-fill" style="width: ${d.progresso}%; background: ${d.progresso < 50 ? 'var(--danger)' : 'var(--primary)'};"></div></div>
+
+                        <div class="disc-card-body">
+                            <div class="disc-body-section">
+                                <div class="disc-body-label"><i data-lucide="calendar-clock" size="12"></i> Horário de aulas</div>
+                                <div class="horario-chip-list">
+                                    ${(d.horarios && d.horarios.length) ? d.horarios.map((h, i) => `
+                                        <span class="horario-chip">${h.dia} ${h.inicio}–${h.fim}<button onclick="removeHorario(${d.id}, ${i})" title="Remover"><i data-lucide="x" size="10"></i></button></span>
+                                    `).join('') : '<span style="font-size:0.72rem; color: var(--text-muted);">Nenhum horário adicionado.</span>'}
+                                </div>
+                                <div class="horario-add-row">
+                                    <select id="horario-dia-${d.id}">${DIAS_SEMANA.map(dia => `<option value="${dia}">${dia}</option>`).join('')}</select>
+                                    <input type="time" id="horario-inicio-${d.id}" value="08:00">
+                                    <input type="time" id="horario-fim-${d.id}" value="10:00">
+                                    <button onclick="addHorario(${d.id})" title="Adicionar horário"><i data-lucide="plus" size="14"></i></button>
+                                </div>
+                            </div>
+                            <div class="disc-body-section">
+                                <div class="disc-body-label"><i data-lucide="edit-3" size="12"></i> Anotações</div>
+                                <textarea class="disc-note-textarea" id="disc-note-${d.id}" placeholder="Anotações rápidas sobre essa disciplina..." oninput="scheduleDiscNoteSave(${d.id})">${escapeHtml(d.anotacoes || '')}</textarea>
+                                <div class="save-indicator" id="disc-note-indicator-${d.id}"></div>
+                            </div>
+                        </div>
                     </div>`;
             });
 
@@ -856,6 +1005,55 @@
 
             saveData(STORAGE_KEYS.disciplinas, disciplinas);
             lucide.createIcons();
+            initNewDiscPickers();
+        }
+
+        function toggleDiscCard(id) {
+            if (expandedDiscIds.has(id)) expandedDiscIds.delete(id);
+            else expandedDiscIds.add(id);
+            const card = document.getElementById(`disc-card-${id}`);
+            if (card) { card.classList.toggle('expanded'); lucide.createIcons(); }
+        }
+
+        function addHorario(discId) {
+            const disc = disciplinas.find(d => d.id === discId);
+            if (!disc) return;
+            const dia = document.getElementById(`horario-dia-${discId}`).value;
+            const inicio = document.getElementById(`horario-inicio-${discId}`).value;
+            const fim = document.getElementById(`horario-fim-${discId}`).value;
+            if (!inicio || !fim) { showToast('Defina o horário de início e fim.', 'error'); return; }
+            if (!disc.horarios) disc.horarios = [];
+            disc.horarios.push({ dia, inicio, fim });
+            expandedDiscIds.add(discId);
+            renderDisciplinas();
+            showToast('Horário adicionado!');
+        }
+
+        function removeHorario(discId, index) {
+            const disc = disciplinas.find(d => d.id === discId);
+            if (!disc || !disc.horarios) return;
+            disc.horarios.splice(index, 1);
+            expandedDiscIds.add(discId);
+            renderDisciplinas();
+        }
+
+        let discNoteTimeouts = {};
+        function scheduleDiscNoteSave(discId) {
+            const indicator = document.getElementById(`disc-note-indicator-${discId}`);
+            indicator.classList.remove('saved');
+            indicator.innerHTML = `<i data-lucide="loader" size="12"></i> <span>Salvando...</span>`;
+            lucide.createIcons();
+            clearTimeout(discNoteTimeouts[discId]);
+            discNoteTimeouts[discId] = setTimeout(() => {
+                const disc = disciplinas.find(d => d.id === discId);
+                if (!disc) return;
+                disc.anotacoes = document.getElementById(`disc-note-${discId}`).value;
+                saveData(STORAGE_KEYS.disciplinas, disciplinas);
+                const now = new Date();
+                indicator.classList.add('saved');
+                indicator.innerHTML = `<i data-lucide="check-circle" size="12"></i> <span>Salvo às ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}</span>`;
+                lucide.createIcons();
+            }, 600);
         }
 
         function addDisciplina() {
@@ -871,10 +1069,16 @@
                 return;
             }
 
-            disciplinas.push({ id: Date.now(), nome: name.trim(), professor: teacher.trim(), progresso: Math.min(100, Math.max(0, Number(prog))) });
+            disciplinas.push({
+                id: Date.now(), nome: name.trim(), professor: teacher.trim(),
+                progresso: Math.min(100, Math.max(0, Number(prog))),
+                cor: newDiscCor, icone: newDiscIcone, horarios: [], anotacoes: ''
+            });
             nameInput.value = '';
             teacherInput.value = '';
             progInput.value = '';
+            newDiscCor = DISC_COLORS[0];
+            newDiscIcone = DISC_ICONS[0];
             renderDisciplinas();
             renderEventos();
             showToast('Disciplina adicionada com sucesso!');
@@ -883,6 +1087,7 @@
         function deleteDisciplina(id) {
             if (confirm('Deseja realmente remover esta disciplina?')) {
                 disciplinas = disciplinas.filter(d => d.id !== id);
+                expandedDiscIds.delete(id);
                 renderDisciplinas();
                 showToast('Disciplina removida.');
             }
@@ -895,6 +1100,9 @@
             document.getElementById('edit-disc-name').value = disc.nome;
             document.getElementById('edit-disc-teacher').value = disc.professor || '';
             document.getElementById('edit-disc-prog').value = disc.progresso;
+            editDiscCor = disc.cor || DISC_COLORS[0];
+            editDiscIcone = disc.icone || DISC_ICONS[0];
+            initEditDiscPickers();
             openModal('modal-disciplina');
         }
 
@@ -907,6 +1115,8 @@
             disc.nome = name;
             disc.professor = document.getElementById('edit-disc-teacher').value.trim();
             disc.progresso = Math.min(100, Math.max(0, Number(document.getElementById('edit-disc-prog').value) || 0));
+            disc.cor = editDiscCor;
+            disc.icone = editDiscIcone;
             closeModal('modal-disciplina');
             renderDisciplinas();
             renderEventos();
