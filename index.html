@@ -150,8 +150,16 @@
         .weekly-day-title { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); text-align: center; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
         .weekly-slot-card { background: var(--bg-card); border-radius: var(--radius-sm); padding: 0.6rem; border-left: 4px solid var(--primary); font-size: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
 
+        /* TAREFAS CARD & LIST */
+        .task-card-item {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md);
+            padding: 1rem; position: relative; border-left: 5px solid var(--primary); display: flex; flex-direction: column; gap: 0.5rem;
+        }
+        .task-card-item.completed { opacity: 0.6; }
+        .task-card-item.completed h4 { text-decoration: line-through; }
+
         /* FORMULÁRIOS E INPUTS */
-        .form-grid-disc { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+        .form-grid-disc, .form-grid-task { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
         .form-group { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1rem; }
         .form-group label { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
         select.select-disc, input.input-field, textarea.input-field { width: 100%; padding: 0.6rem; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 0.8rem; color: var(--text-main); background: var(--bg-card); outline: none; }
@@ -169,6 +177,10 @@
         .page-view.active { display: block; }
 
         .badge-info { display: inline-block; font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.4rem; border-radius: 4px; background: var(--border); color: var(--text-main); }
+        .badge-danger { display: inline-block; font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.4rem; border-radius: 4px; background: #FEE2E2; color: #991B1B; }
+        .badge-prio-alta { background: #FEE2E2; color: #991B1B; }
+        .badge-prio-media { background: #FEF3C7; color: #92400E; }
+        .badge-prio-baixa { background: #E0E7FF; color: #3730A3; }
     </style>
 </head>
 <body>
@@ -351,7 +363,6 @@
 
         <!-- PAGE DISCIPLINAS -->
         <div id="view-disciplinas" class="page-view">
-            <!-- METRICS -->
             <div class="metrics-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 1.5rem; display: grid; gap: 1rem;">
                 <div class="metric-card" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem; display: flex; align-items: center; gap: 0.85rem;">
                     <div class="metric-icon" style="background: #E0E7FF; color: #4338CA; width: 36px; height: 36px; border-radius: 8px; display: grid; place-items: center;"><i data-lucide="book-open" size="18"></i></div>
@@ -466,7 +477,80 @@
             </div>
         </div>
 
-        <div id="view-tarefas" class="page-view"><div class="card"><h3>Tarefas</h3><p>Módulo aguardando próxima etapa.</p></div></div>
+        <!-- PAGE TAREFAS (ETAPA 2) -->
+        <div id="view-tarefas" class="page-view">
+            <!-- FORMULÁRIO DE TAREFAS -->
+            <div class="card" style="margin-bottom: 1.5rem;">
+                <div class="card-header">
+                    <h3 id="form-task-title">Cadastrar Nova Tarefa</h3>
+                    <button id="btn-cancel-task-edit" class="btn-secondary" style="display:none;" onclick="resetTaskForm()">Cancelar Edição</button>
+                </div>
+
+                <input type="hidden" id="edit-task-id">
+
+                <div class="form-grid-task">
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label>Título da Tarefa *</label>
+                        <input type="text" id="task-titulo" class="input-field" placeholder="Ex: Relatório Prático de Microbiologia">
+                    </div>
+                    <div class="form-group">
+                        <label>Disciplina Associada</label>
+                        <select id="task-disciplina-id" class="select-disc">
+                            <option value="">Nenhuma / Geral</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Data de Entrega / Prazo *</label>
+                        <input type="date" id="task-data" class="input-field">
+                    </div>
+                    <div class="form-group">
+                        <label>Prioridade</label>
+                        <select id="task-prioridade" class="select-disc">
+                            <option value="Baixa">Baixa</option>
+                            <option value="Média" selected>Média</option>
+                            <option value="Alta">Alta</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Observações / Instruções</label>
+                    <input type="text" id="task-observacoes" class="input-field" placeholder="Ex: Enviar em formato PDF pelo portal acadêmico até 23:59">
+                </div>
+
+                <div style="margin-top: 1rem; display: flex; justify-content: flex-end;">
+                    <button class="btn-primary" onclick="saveTarefa()"><i data-lucide="save" size="16"></i> Salvar Tarefa</button>
+                </div>
+            </div>
+
+            <!-- FILTROS E LISTA DE TAREFAS -->
+            <div class="card">
+                <div class="card-header" style="flex-wrap: wrap; gap: 0.75rem;">
+                    <h3>Gerenciador de Tarefas</h3>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <input type="text" id="search-task" class="input-field" placeholder="Buscar tarefa..." oninput="renderTarefasUI()" style="width: 200px; padding: 0.4rem 0.6rem;">
+                        <select id="filter-task-status" class="select-disc" onchange="renderTarefasUI()" style="width: 130px; padding: 0.4rem 0.6rem;">
+                            <option value="todas">Todas</option>
+                            <option value="pendentes" selected>Pendentes</option>
+                            <option value="concluidas">Concluídas</option>
+                            <option value="atrasadas">Atrasadas</option>
+                        </select>
+                        <select id="filter-task-prio" class="select-disc" onchange="renderTarefasUI()" style="width: 130px; padding: 0.4rem 0.6rem;">
+                            <option value="">Todas Prioridades</option>
+                            <option value="Alta">Alta</option>
+                            <option value="Média">Média</option>
+                            <option value="Baixa">Baixa</option>
+                        </select>
+                        <select id="filter-task-disc" class="select-disc" onchange="renderTarefasUI()" style="width: 160px; padding: 0.4rem 0.6rem;">
+                            <option value="">Todas Disciplinas</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="full-tarefas-grid" class="disc-grid-advanced"></div>
+            </div>
+        </div>
+
         <div id="view-foco" class="page-view"><div class="card"><h3>Foco Pomodoro</h3><p>Módulo aguardando próxima etapa.</p></div></div>
         <div id="view-calendario" class="page-view"><div class="card"><h3>Calendário Acadêmico</h3><p>Módulo aguardando próxima etapa.</p></div></div>
         <div id="view-anotacoes" class="page-view"><div class="card"><h3>Anotações</h3><p>Módulo aguardando próxima etapa.</p></div></div>
@@ -495,7 +579,8 @@
             collection, 
             onSnapshot, 
             writeBatch, 
-            serverTimestamp 
+            serverTimestamp,
+            Timestamp 
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -516,16 +601,18 @@
 
         let currentUser = null;
         let unsubscribeDisciplinas = null;
+        let unsubscribeTarefas = null;
         let isMigrating = false;
+        let isMigratingTasks = false;
 
         // AUTHENTICATION LISTENER
         onAuthStateChanged(auth, async (user) => {
             const overlay = document.getElementById('auth-overlay');
             if (user) {
-                currentUser = user; // O objeto contendo o user.uid
+                currentUser = user; // Instância do usuário logado
                 overlay.style.display = 'none';
 
-                // Atualizar/Criar Perfil do usuário em /users/{user.uid}
+                // Perfil em /users/{user.uid}
                 const userDocRef = doc(db, 'users', user.uid);
                 let profileData = { nome: user.displayName || 'Estudante', email: user.email };
 
@@ -550,9 +637,8 @@
                 document.getElementById('user-avatar-initial').innerText = (profileData.nome || 'E').charAt(0).toUpperCase();
                 document.getElementById('page-title').innerText = `Boa noite, ${(profileData.nome || 'Estudante').split(' ')[0]} 👋`;
 
-                // ESCUTA EM TEMPO REAL DAS DISCIPLINAS DO USUÁRIO EM /users/{user.uid}/disciplinas
+                // 1. ESCUTA DE DISCIPLINAS (/users/{user.uid}/disciplinas)
                 const discColRef = collection(db, 'users', user.uid, 'disciplinas');
-                
                 if (unsubscribeDisciplinas) unsubscribeDisciplinas();
 
                 unsubscribeDisciplinas = onSnapshot(discColRef, async (snapshot) => {
@@ -561,11 +647,8 @@
                     const localDataRaw = localStorage.getItem('academic_disciplinas');
                     const localData = localDataRaw ? JSON.parse(localDataRaw) : null;
 
-                    // MIGRAÇÃO SEGURA: Se o Firestore estiver vazio e houver localData
                     if (snapshot.empty && Array.isArray(localData) && localData.length > 0) {
                         isMigrating = true;
-                        console.log("Iniciando migração segura do localStorage para o Cloud Firestore...");
-                        
                         try {
                             const batch = writeBatch(db);
                             localData.forEach(item => {
@@ -584,44 +667,158 @@
                                     atualizadaEm: serverTimestamp()
                                 });
                             });
-                            
                             await batch.commit();
-                            console.log("Migração concluída com sucesso no Firestore.");
                             localStorage.removeItem('academic_disciplinas');
                         } catch (migErr) {
-                            console.error("Erro durante a migração dos dados:", migErr);
+                            console.error("Erro durante a migração de disciplinas:", migErr);
                         } finally {
                             isMigrating = false;
                         }
                         return;
                     }
 
-                    // Se existirem dados no Firestore E no localStorage, preserva ambos sem sobrescrever
-                    if (!snapshot.empty && Array.isArray(localData) && localData.length > 0) {
-                        console.warn("Atenção: Existem dados locais e remotos no Firestore. Os dados locais foram preservados no localStorage.");
+                    window.disciplinas = snapshot.docs.map(dDoc => ({ id: dDoc.id, ...dDoc.data() }));
+                    window.renderDisciplinasUI();
+                    window.renderTarefasUI();
+                });
+
+                // 2. ESCUTA DE TAREFAS (/users/{user.uid}/tarefas)
+                const taskColRef = collection(db, 'users', user.uid, 'tarefas');
+                if (unsubscribeTarefas) unsubscribeTarefas();
+
+                unsubscribeTarefas = onSnapshot(taskColRef, async (snapshot) => {
+                    if (isMigratingTasks) return;
+
+                    const localTasksRaw = localStorage.getItem('academic_tarefas_v2');
+                    const localTasks = localTasksRaw ? JSON.parse(localTasksRaw) : null;
+
+                    if (snapshot.empty && Array.isArray(localTasks) && localTasks.length > 0) {
+                        isMigratingTasks = true;
+                        try {
+                            const batch = writeBatch(db);
+                            localTasks.forEach(item => {
+                                const newRef = doc(taskColRef);
+                                let dtVal = item.dataEntrega || item.data || new Date().toISOString().split('T')[0];
+                                let dtParts = dtVal.split('-');
+                                let tsData = Timestamp.fromDate(new Date(parseInt(dtParts[0]), parseInt(dtParts[1]) - 1, parseInt(dtParts[2])));
+
+                                batch.set(newRef, {
+                                    titulo: item.titulo || item.nome || 'Tarefa sem título',
+                                    disciplinaId: item.disciplinaId || '',
+                                    dataEntrega: tsData,
+                                    prioridade: item.prioridade || 'Média',
+                                    observacoes: item.observacoes || '',
+                                    concluida: !!item.concluida,
+                                    concluidaEm: item.concluida ? serverTimestamp() : null,
+                                    criadaEm: serverTimestamp(),
+                                    atualizadaEm: serverTimestamp()
+                                });
+                            });
+                            await batch.commit();
+                            localStorage.removeItem('academic_tarefas_v2');
+                        } catch (mErr) {
+                            console.error("Erro na migração de tarefas:", mErr);
+                        } finally {
+                            isMigratingTasks = false;
+                        }
+                        return;
                     }
 
-                    // Atualizar estado em memória
-                    window.disciplinas = snapshot.docs.map(dDoc => ({
-                        id: dDoc.id,
-                        ...dDoc.data()
-                    }));
-
-                    window.renderDisciplinasUI();
-                }, (error) => {
-                    console.error("Erro no listener onSnapshot das disciplinas:", error);
+                    window.tarefas = snapshot.docs.map(tDoc => ({ id: tDoc.id, ...tDoc.data() }));
+                    window.renderTarefasUI();
                 });
 
             } else {
                 currentUser = null;
                 if (unsubscribeDisciplinas) unsubscribeDisciplinas();
+                if (unsubscribeTarefas) unsubscribeTarefas();
                 window.disciplinas = [];
+                window.tarefas = [];
                 window.renderDisciplinasUI();
+                window.renderTarefasUI();
                 overlay.style.display = 'grid';
             }
         });
 
-        // SALVAR DISCIPLINA
+        // CRUD TAREFAS (FIRESTORE)
+        window.saveTarefa = async () => {
+            if (!currentUser) return;
+
+            const idVal = document.getElementById('edit-task-id').value;
+            const titulo = document.getElementById('task-titulo').value.trim();
+            const disciplinaId = document.getElementById('task-disciplina-id').value;
+            const dataVal = document.getElementById('task-data').value;
+            const prioridade = document.getElementById('task-prioridade').value;
+            const observacoes = document.getElementById('task-observacoes').value.trim();
+
+            if (!titulo) {
+                alert('Por favor, informe o título da tarefa.');
+                return;
+            }
+            if (!dataVal) {
+                alert('Por favor, selecione a data de entrega.');
+                return;
+            }
+
+            const dtParts = dataVal.split('-');
+            const tsEntrega = Timestamp.fromDate(new Date(parseInt(dtParts[0]), parseInt(dtParts[1]) - 1, parseInt(dtParts[2])));
+
+            const taskData = {
+                titulo,
+                disciplinaId,
+                dataEntrega: tsEntrega,
+                prioridade,
+                observacoes,
+                atualizadaEm: serverTimestamp()
+            };
+
+            try {
+                if (idVal) {
+                    const docRef = doc(db, 'users', currentUser.uid, 'tarefas', idVal);
+                    await updateDoc(docRef, taskData);
+                } else {
+                    taskData.concluida = false;
+                    taskData.concluidaEm = null;
+                    taskData.criadaEm = serverTimestamp();
+                    const colRef = collection(db, 'users', currentUser.uid, 'tarefas');
+                    await addDoc(colRef, taskData);
+                }
+                window.resetTaskForm();
+            } catch (err) {
+                console.error("Erro ao salvar tarefa no Firestore:", err);
+                alert("Erro ao salvar tarefa.");
+            }
+        };
+
+        window.toggleTarefaConcluida = async (id, statusAtual) => {
+            if (!currentUser) return;
+            const novoStatus = !statusAtual;
+            try {
+                const docRef = doc(db, 'users', currentUser.uid, 'tarefas', id);
+                await updateDoc(docRef, {
+                    concluida: novoStatus,
+                    concluidaEm: novoStatus ? serverTimestamp() : null,
+                    atualizadaEm: serverTimestamp()
+                });
+            } catch (err) {
+                console.error("Erro ao alternar conclusão da tarefa:", err);
+            }
+        };
+
+        window.deleteTarefa = async (id) => {
+            if (!currentUser) return;
+            if (confirm("Deseja realmente excluir esta tarefa?")) {
+                try {
+                    const docRef = doc(db, 'users', currentUser.uid, 'tarefas', id);
+                    await deleteDoc(docRef);
+                } catch (err) {
+                    console.error("Erro ao excluir tarefa do Firestore:", err);
+                    alert("Erro ao excluir tarefa.");
+                }
+            }
+        };
+
+        // CRUD DISCIPLINAS (FIRESTORE)
         window.saveDisciplina = async () => {
             if (!currentUser) return;
 
@@ -666,7 +863,6 @@
             }
         };
 
-        // EXCLUIR DISCIPLINA
         window.deleteDisciplina = async (id) => {
             if (!currentUser) return;
             if (confirm("Deseja realmente remover esta disciplina?")) {
@@ -680,7 +876,7 @@
             }
         };
 
-        // CONTROLE DE AUTENTICAÇÃO
+        // CONTROLE AUTH
         window.handleLogin = async (e) => {
             e.preventDefault();
             showAuthError('');
@@ -767,6 +963,7 @@
 
         const DIAS_SEMANA = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
         window.disciplinas = [];
+        window.tarefas = [];
 
         function getHojeNome() {
             const index = new Date().getDay();
@@ -848,7 +1045,155 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // RENDERIZAÇÃO CENTRALIZADA
+        // TAREFAS HELPERS E RENDERIZAÇÃO
+        window.resetTaskForm = function() {
+            document.getElementById('edit-task-id').value = '';
+            document.getElementById('task-titulo').value = '';
+            document.getElementById('task-disciplina-id').value = '';
+            document.getElementById('task-data').value = '';
+            document.getElementById('task-prioridade').value = 'Média';
+            document.getElementById('task-observacoes').value = '';
+
+            document.getElementById('form-task-title').innerText = 'Cadastrar Nova Tarefa';
+            document.getElementById('btn-cancel-task-edit').style.display = 'none';
+        };
+
+        function editTarefa(id) {
+            const t = window.tarefas.find(item => item.id === id);
+            if (!t) return;
+
+            document.getElementById('edit-task-id').value = t.id;
+            document.getElementById('task-titulo').value = t.titulo;
+            document.getElementById('task-disciplina-id').value = t.disciplinaId || '';
+            
+            if (t.dataEntrega && t.dataEntrega.toDate) {
+                const dObj = t.dataEntrega.toDate();
+                const yyyy = dObj.getFullYear();
+                const mm = String(dObj.getMonth() + 1).padStart(2, '0');
+                const dd = String(dObj.getDate()).padStart(2, '0');
+                document.getElementById('task-data').value = `${yyyy}-${mm}-${dd}`;
+            }
+
+            document.getElementById('task-prioridade').value = t.prioridade || 'Média';
+            document.getElementById('task-observacoes').value = t.observacoes || '';
+
+            document.getElementById('form-task-title').innerText = `Editar Tarefa: ${t.titulo}`;
+            document.getElementById('btn-cancel-task-edit').style.display = 'inline-block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.renderTarefasUI = function() {
+            const grid = document.getElementById('full-tarefas-grid');
+            if (!grid) return;
+
+            const searchVal = (document.getElementById('search-task')?.value || '').toLowerCase();
+            const statusFilter = document.getElementById('filter-task-status')?.value || 'todas';
+            const prioFilter = document.getElementById('filter-task-prio')?.value || '';
+            const discFilter = document.getElementById('filter-task-disc')?.value || '';
+
+            // Atualizar Selects de Disciplina nos formulários e filtros de tarefas
+            const selectTaskForm = document.getElementById('task-disciplina-id');
+            const selectTaskFilter = document.getElementById('filter-task-disc');
+
+            if (selectTaskForm) {
+                const currentVal = selectTaskForm.value;
+                selectTaskForm.innerHTML = `<option value="">Nenhuma / Geral</option>` + 
+                    window.disciplinas.map(d => `<option value="${d.id}">${d.nome}</option>`).join('');
+                selectTaskForm.value = currentVal;
+            }
+
+            if (selectTaskFilter) {
+                const currentFilterVal = selectTaskFilter.value;
+                selectTaskFilter.innerHTML = `<option value="">Todas Disciplinas</option>` + 
+                    window.disciplinas.map(d => `<option value="${d.id}">${d.nome}</option>`).join('');
+                selectTaskFilter.value = currentFilterVal;
+            }
+
+            grid.innerHTML = '';
+
+            const hoje = new Date();
+            hoje.setHours(0,0,0,0);
+
+            const filteredTasks = window.tarefas.filter(t => {
+                const matchesText = t.titulo.toLowerCase().includes(searchVal) || (t.observacoes && t.observacoes.toLowerCase().includes(searchVal));
+                const matchesPrio = !prioFilter || t.prioridade === prioFilter;
+                const matchesDisc = !discFilter || t.disciplinaId === discFilter;
+
+                let matchesStatus = true;
+                let dData = null;
+                if (t.dataEntrega && t.dataEntrega.toDate) {
+                    dData = t.dataEntrega.toDate();
+                    dData.setHours(0,0,0,0);
+                }
+
+                const isAtrasada = !t.concluida && dData && dData < hoje;
+
+                if (statusFilter === 'pendentes') matchesStatus = !t.concluida;
+                else if (statusFilter === 'concluidas') matchesStatus = t.concluida;
+                else if (statusFilter === 'atrasadas') matchesStatus = isAtrasada;
+
+                return matchesText && matchesPrio && matchesDisc && matchesStatus;
+            });
+
+            if (filteredTasks.length === 0) {
+                grid.innerHTML = `<p style="color:var(--text-muted); grid-column: 1/-1;">Nenhuma tarefa encontrada.</p>`;
+                return;
+            }
+
+            filteredTasks.forEach(t => {
+                const discAssoc = window.disciplinas.find(d => d.id === t.disciplinaId);
+                const corBorder = discAssoc ? discAssoc.cor : 'var(--primary)';
+                const nomeDisc = discAssoc ? discAssoc.nome : 'Geral';
+
+                let dateStr = '--/--/----';
+                let isAtrasada = false;
+
+                if (t.dataEntrega && t.dataEntrega.toDate) {
+                    const dObj = t.dataEntrega.toDate();
+                    dateStr = dObj.toLocaleDateString('pt-BR');
+                    const dCheck = new Date(dObj);
+                    dCheck.setHours(0,0,0,0);
+                    if (!t.concluida && dCheck < hoje) isAtrasada = true;
+                }
+
+                let prioBadgeClass = 'badge-prio-media';
+                if (t.prioridade === 'Alta') prioBadgeClass = 'badge-prio-alta';
+                else if (t.prioridade === 'Baixa') prioBadgeClass = 'badge-prio-baixa';
+
+                grid.innerHTML += `
+                    <div class="task-card-item ${t.concluida ? 'completed' : ''}" style="border-left-color: ${corBorder};">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <span class="badge-info" style="background:${corBorder}22; color:${corBorder};">${nomeDisc}</span>
+                            <div style="display: flex; gap: 0.25rem;">
+                                <button class="btn-secondary" onclick="editTarefa('${t.id}')" title="Editar"><i data-lucide="edit-2" size="12"></i></button>
+                                <button class="btn-danger" onclick="deleteTarefa('${t.id}')" title="Excluir"><i data-lucide="trash-2" size="12"></i></button>
+                            </div>
+                        </div>
+
+                        <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text-main); margin-top:0.2rem;">${t.titulo}</h4>
+
+                        <div style="display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap; margin-top: 0.2rem;">
+                            <span class="badge-info ${prioBadgeClass}">${t.prioridade}</span>
+                            <span class="badge-info">📅 Entrega: ${dateStr}</span>
+                            ${isAtrasada ? `<span class="badge-danger">⚠️ Atrasada</span>` : ''}
+                        </div>
+
+                        ${t.observacoes ? `<div style="font-size: 0.72rem; color: var(--text-muted); font-style: italic; margin-top: 0.3rem; background: var(--bg-body); padding: 0.35rem 0.5rem; border-radius: 4px;">💡 ${t.observacoes}</div>` : ''}
+
+                        <div style="margin-top: 0.5rem; border-top: 1px solid var(--border); padding-top: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: 600;">Status: <strong>${t.concluida ? 'Concluída' : 'Pendente'}</strong></span>
+                            <button class="${t.concluida ? 'btn-secondary' : 'btn-primary'}" style="width: auto; padding: 0.3rem 0.6rem; font-size: 0.72rem;" onclick="toggleTarefaConcluida('${t.id}', ${t.concluida})">
+                                ${t.concluida ? 'Reabrir Tarefa' : 'Concluir Tarefa'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            lucide.createIcons();
+        };
+
+        // RENDERIZAÇÃO CENTRALIZADA DE DISCIPLINAS E DASHBOARD
         window.renderDisciplinasUI = function() {
             const fullGrid = document.getElementById('full-disciplinas-grid');
             const searchVal = (document.getElementById('search-disc')?.value || '').toLowerCase();
@@ -1105,7 +1450,7 @@
             });
         }
 
-        // HELPERS DA INTERFACE
+        // HELPERS UI
         function switchAuthTab(tab) {
             document.getElementById('form-login').style.display = tab === 'login' ? 'block' : 'none';
             document.getElementById('form-register').style.display = tab === 'register' ? 'block' : 'none';
@@ -1140,6 +1485,7 @@
         }
 
         resetDiscForm();
+        resetTaskForm();
         const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
         document.getElementById('current-date').innerText = new Date().toLocaleDateString('pt-BR', options);
     </script>
