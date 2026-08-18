@@ -112,7 +112,7 @@
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
         .card-header h3 { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--text-main); letter-spacing: 0.02em; }
 
-        /* HERO CARD COM WALLPAPER */
+        /* HERO CARD */
         .hero-card-wallpaper {
             background: linear-gradient(180deg, rgba(244, 246, 248, 0.82) 0%, rgba(244, 246, 248, 0.95) 100%), 
                         url('https://images8.alphacoders.com/135/thumb-1920-1354012.png') center/cover no-repeat;
@@ -138,21 +138,19 @@
         .dash-weekly-card { background: var(--bg-card); border-radius: var(--radius-sm); padding: 0.55rem; border-left: 4px solid var(--primary); font-size: 0.72rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
 
         /* DISCIPLINAS LIST & CARD */
-        .disc-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem; padding-bottom: 0.85rem; border-bottom: 1px dashed var(--border); }
-        .disc-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
         .disc-grid-advanced { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; margin-top: 1rem; }
         .disc-card-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.25rem; position: relative; border-left: 5px solid var(--primary); }
 
         .time-slots-container { margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 1rem; }
         .slot-row { display: grid; grid-template-columns: 2fr 1.5fr 1.5fr 2fr auto; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem; }
 
-        /* GRADE SEMANAL (PÁGINA DISCIPLINAS) */
+        /* GRADE SEMANAL */
         .weekly-grid-container { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.75rem; overflow-x: auto; min-width: 850px; }
         .weekly-day-col { background: var(--bg-body); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 0.75rem; min-height: 220px; display: flex; flex-direction: column; gap: 0.5rem; }
         .weekly-day-title { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); text-align: center; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
         .weekly-slot-card { background: var(--bg-card); border-radius: var(--radius-sm); padding: 0.6rem; border-left: 4px solid var(--primary); font-size: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
 
-        /* FORMULÁRIOS E INPUTS GENERICS */
+        /* FORMULÁRIOS E INPUTS */
         .form-grid-disc { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
         .form-group { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1rem; }
         .form-group label { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
@@ -160,32 +158,11 @@
 
         /* CALENDÁRIO WIDGET */
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.25rem; text-align: center; font-size: 0.75rem; }
-        .cal-day-name { font-weight: 700; color: var(--text-muted); padding-bottom: 0.5rem; }
-        .cal-day { padding: 0.4rem 0; border-radius: 50%; cursor: pointer; color: var(--text-main); font-weight: 500; }
-        .cal-day.active { background: var(--primary); color: white; font-weight: 700; }
-        .cal-day.muted { color: var(--text-muted); opacity: 0.5; }
 
-        /* FOCO RÁPIDO & SALA DE FOCO */
+        /* FOCO RÁPIDO */
         .foco-box { text-align: center; display: flex; flex-direction: column; align-items: center; }
         .timer-circle { width: 110px; height: 110px; border-radius: 50%; border: 6px solid var(--primary); display: grid; place-items: center; margin: 1rem 0; font-family: 'JetBrains Mono', monospace; }
         .timer-time { font-size: 1.5rem; font-weight: 800; }
-
-        .foco-container { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
-        @media (max-width: 900px) { .foco-container { grid-template-columns: 1fr; } }
-
-        .timer-svg-container { position: relative; width: 180px; height: 180px; margin: 1rem auto; display: grid; place-items: center; }
-        .timer-svg { transform: rotate(-90deg); width: 100%; height: 100%; }
-        .timer-bg-circle { fill: none; stroke: var(--border); stroke-width: 8; }
-        .timer-progress-circle { fill: none; stroke: var(--primary); stroke-width: 8; stroke-linecap: round; stroke-dasharray: 502; stroke-dashoffset: 0; transition: stroke-dashoffset 1s linear; }
-        .timer-overlay-text { position: absolute; text-align: center; }
-
-        /* CHAT TIRA-DÚVIDAS */
-        .chat-card { display: flex; flex-direction: column; height: 480px; }
-        .chat-messages { flex: 1; overflow-y: auto; padding: 0.75rem; display: flex; flex-direction: column; gap: 0.75rem; border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 0.75rem; background: rgba(0,0,0,0.03); }
-        .chat-msg { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.6rem 0.8rem; font-size: 0.8rem; }
-        .chat-msg-header { display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 0.25rem; font-size: 0.72rem; color: var(--primary); }
-        .chat-msg-time { font-weight: 400; color: var(--text-muted); }
-        .chat-input-box { display: flex; gap: 0.5rem; }
 
         /* PAGES CONTROL */
         .page-view { display: none; }
@@ -330,7 +307,7 @@
                     <!-- PRÓXIMO COMPROMISSO -->
                     <div class="hero-card-wallpaper" id="card-proximo-compromisso"></div>
 
-                    <!-- QUADRO PRINCIPAL: MINHA SEMANA -->
+                    <!-- QUADRO PRINCIPAL: MINHA SEMANA ACADÊMICA -->
                     <div class="card">
                         <div class="card-header">
                             <h3>MINHA SEMANA ACADÊMICA</h3>
@@ -356,7 +333,7 @@
                             <div><div class="timer-time" id="dash-timer">25:00</div></div>
                         </div>
                         <select class="select-disc" id="dash-materia-select"></select>
-                        <button class="btn-primary" style="width: 100%; margin-top: 0.75rem;" onclick="toggleTimer()"><i data-lucide="play" size="16"></i> Iniciar foco</button>
+                        <button class="btn-primary" style="width: 100%; margin-top: 0.75rem;" onclick="switchPage('foco', document.querySelectorAll('.nav-item')[3])"><i data-lucide="play" size="16"></i> Iniciar foco</button>
                     </div>
 
                     <!-- CALENDÁRIO WIDGET -->
@@ -539,15 +516,16 @@
 
         let currentUser = null;
         let unsubscribeDisciplinas = null;
+        let isMigrating = false;
 
-        // AUTHENTICATION LISTENER & LISTENER FIRESTORE DE DISCIPLINAS
+        // AUTHENTICATION LISTENER
         onAuthStateChanged(auth, async (user) => {
             const overlay = document.getElementById('auth-overlay');
             if (user) {
-                currentUser = user;
+                currentUser = user; // O objeto contendo o user.uid
                 overlay.style.display = 'none';
 
-                // Perfil do usuário
+                // Atualizar/Criar Perfil do usuário em /users/{user.uid}
                 const userDocRef = doc(db, 'users', user.uid);
                 let profileData = { nome: user.displayName || 'Estudante', email: user.email };
 
@@ -564,7 +542,7 @@
                         });
                     }
                 } catch (err) {
-                    console.error("Erro no perfil do usuário:", err);
+                    console.error("Erro no documento de perfil:", err);
                 }
 
                 document.getElementById('user-display-name').innerText = profileData.nome || 'Estudante';
@@ -572,17 +550,23 @@
                 document.getElementById('user-avatar-initial').innerText = (profileData.nome || 'E').charAt(0).toUpperCase();
                 document.getElementById('page-title').innerText = `Boa noite, ${(profileData.nome || 'Estudante').split(' ')[0]} 👋`;
 
-                // ESCUTA EM TEMPO REAL DAS DISCIPLINAS DO USUÁRIO
+                // ESCUTA EM TEMPO REAL DAS DISCIPLINAS DO USUÁRIO EM /users/{user.uid}/disciplinas
                 const discColRef = collection(db, 'users', user.uid, 'disciplinas');
                 
                 if (unsubscribeDisciplinas) unsubscribeDisciplinas();
 
                 unsubscribeDisciplinas = onSnapshot(discColRef, async (snapshot) => {
-                    // VERIFICAR E EXECUTAR MIGRAÇÃO DO LOCALSTORAGE SE FIRESTORE ESTIVER VAZIO
-                    if (snapshot.empty) {
-                        const localData = JSON.parse(localStorage.getItem('academic_disciplinas'));
-                        if (Array.isArray(localData) && localData.length > 0) {
-                            console.log("Migrando dados do localStorage para o Firestore...");
+                    if (isMigrating) return;
+
+                    const localDataRaw = localStorage.getItem('academic_disciplinas');
+                    const localData = localDataRaw ? JSON.parse(localDataRaw) : null;
+
+                    // MIGRAÇÃO SEGURA: Se o Firestore estiver vazio e houver localData
+                    if (snapshot.empty && Array.isArray(localData) && localData.length > 0) {
+                        isMigrating = true;
+                        console.log("Iniciando migração segura do localStorage para o Cloud Firestore...");
+                        
+                        try {
                             const batch = writeBatch(db);
                             localData.forEach(item => {
                                 const newRef = doc(discColRef);
@@ -594,19 +578,30 @@
                                     cor: item.cor || '#10B981',
                                     observacoes: item.observacoes || '',
                                     horarios: Array.isArray(item.horarios) ? item.horarios : [
-                                        { dia: item.dia || 'Segunda', inicio: item.inicio || '13:00', fim: item.fim || '16:30', sala: item.sala || 'Lab 01' }
+                                        { dia: item.dia || 'Segunda', inicio: item.inicio || '13:00', fim: item.fim || '16:30', sala: item.sala || 'A definir' }
                                     ],
                                     criadaEm: serverTimestamp(),
                                     atualizadaEm: serverTimestamp()
                                 });
                             });
+                            
                             await batch.commit();
+                            console.log("Migração concluída com sucesso no Firestore.");
                             localStorage.removeItem('academic_disciplinas');
-                            return; // Retorna pois o commit disparará novo snapshot
+                        } catch (migErr) {
+                            console.error("Erro durante a migração dos dados:", migErr);
+                        } finally {
+                            isMigrating = false;
                         }
+                        return;
                     }
 
-                    // ATUALIZAR ARRAY EM MEMÓRIA
+                    // Se existirem dados no Firestore E no localStorage, preserva ambos sem sobrescrever
+                    if (!snapshot.empty && Array.isArray(localData) && localData.length > 0) {
+                        console.warn("Atenção: Existem dados locais e remotos no Firestore. Os dados locais foram preservados no localStorage.");
+                    }
+
+                    // Atualizar estado em memória
                     window.disciplinas = snapshot.docs.map(dDoc => ({
                         id: dDoc.id,
                         ...dDoc.data()
@@ -614,7 +609,7 @@
 
                     window.renderDisciplinasUI();
                 }, (error) => {
-                    console.error("Erro na escuta das disciplinas:", error);
+                    console.error("Erro no listener onSnapshot das disciplinas:", error);
                 });
 
             } else {
@@ -626,7 +621,7 @@
             }
         });
 
-        // HANDLERS CRUD DISCIPLINAS NO FIRESTORE
+        // SALVAR DISCIPLINA
         window.saveDisciplina = async () => {
             if (!currentUser) return;
 
@@ -666,25 +661,26 @@
                 }
                 window.resetDiscForm();
             } catch (err) {
-                console.error("Erro ao salvar disciplina:", err);
-                alert("Erro ao salvar disciplina no Firestore.");
+                console.error("Erro ao gravar disciplina no Firestore:", err);
+                alert("Erro ao gravar disciplina.");
             }
         };
 
+        // EXCLUIR DISCIPLINA
         window.deleteDisciplina = async (id) => {
             if (!currentUser) return;
-            if (confirm("Deseja realmente remover esta disciplina da sua conta?")) {
+            if (confirm("Deseja realmente remover esta disciplina?")) {
                 try {
                     const docRef = doc(db, 'users', currentUser.uid, 'disciplinas', id);
                     await deleteDoc(docRef);
                 } catch (err) {
-                    console.error("Erro ao excluir disciplina:", err);
-                    alert("Erro ao excluir disciplina do Firestore.");
+                    console.error("Erro ao excluir disciplina do Firestore:", err);
+                    alert("Erro ao excluir disciplina.");
                 }
             }
         };
 
-        // HANDLERS AUTH
+        // CONTROLE DE AUTENTICAÇÃO
         window.handleLogin = async (e) => {
             e.preventDefault();
             showAuthError('');
@@ -778,7 +774,6 @@
             return mapa[index] || 'Segunda';
         }
 
-        // MONTAGEM DE HORÁRIOS DO FORMULÁRIO
         function createSlotRowHTML(dia = 'Segunda', inicio = '13:00', fim = '16:30', sala = '') {
             const optionsDia = DIAS_SEMANA.map(d => `<option value="${d}" ${d === dia ? 'selected' : ''}>${d}</option>`).join('');
             return `
@@ -853,10 +848,9 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // RENDERIZAÇÃO DA INTERFACE VISUAL
+        // RENDERIZAÇÃO CENTRALIZADA
         window.renderDisciplinasUI = function() {
             const fullGrid = document.getElementById('full-disciplinas-grid');
-            const dashList = document.getElementById('dash-weekly-schedule');
             const searchVal = (document.getElementById('search-disc')?.value || '').toLowerCase();
             const filterDia = document.getElementById('filter-dia')?.value || '';
             const filterTurno = document.getElementById('filter-turno')?.value || '';
@@ -961,8 +955,8 @@
                 heroCard.innerHTML = `
                     <div>
                         <span style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--primary-dark);">PRÓXIMA AULA</span>
-                        <h2 class="hero-title">Nenhuma próxima aula cadastrada</h2>
-                        <p style="font-size: 0.85rem; color: var(--text-muted);">Cadastre disciplinas com horários para visualizar sua grade aqui.</p>
+                        <h2 class="hero-title">Nenhuma aula cadastrada</h2>
+                        <p style="font-size: 0.85rem; color: var(--text-muted);">Cadastre disciplinas com horários para visualizar seu compromisso aqui.</p>
                         <button class="btn-primary" style="margin-top: 1rem; width:auto;" onclick="switchPage('disciplinas', document.querySelectorAll('.nav-item')[1])"><i data-lucide="plus" size="16"></i> Organizar Disciplinas</button>
                     </div>
                 `;
@@ -1145,7 +1139,6 @@
             if(target) target.classList.add('active');
         }
 
-        // INIT UI FORM
         resetDiscForm();
         const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
         document.getElementById('current-date').innerText = new Date().toLocaleDateString('pt-BR', options);
