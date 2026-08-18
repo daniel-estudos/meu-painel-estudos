@@ -185,7 +185,7 @@
                 <button type="button" class="btn-secondary" style="width:100%;" onclick="switchAuthTab('login')">Voltar ao Login</button>
             </form>
 
-            <div id="auth-error-msg" style="color:#EF4444; font-size:0.75rem; font-weight:700; margin-top:1rem; text-align:center; display:none;"></div>
+            <div id="auth-error-msg" style="color:#EF4444; font-size:0.75rem; font-weight:700; margin-top:1rem; text-align:center; display:none; word-break: break-word;"></div>
         </div>
     </div>
 
@@ -252,7 +252,7 @@
         <div id="view-dashboard" class="page-view active">
             <div class="card">
                 <div class="card-header"><h3>Status da Sessão & Cloud Firestore</h3></div>
-                <p style="color:var(--text-muted); margin-bottom:1rem;">Infraestrutura de autenticação e comunicação remota com o Cloud Firestore do projeto <strong>painel-estudos-54958</strong> ativa com sucesso.</p>
+                <p style="color:var(--text-muted); margin-bottom:1rem;">Infraestrutura de autenticação e comunicação remota com o Cloud Firestore do projeto <strong>painel-estudos-54958</strong> ativa.</p>
                 <div id="session-info-debug" style="background:var(--bg-body); padding:1rem; border-radius:var(--radius-sm); font-family:'JetBrains Mono', monospace; font-size:0.8rem;"></div>
             </div>
         </div>
@@ -265,7 +265,7 @@
         <div id="view-configuracoes" class="page-view"><div class="card"><h3>Configurações</h3><p>Módulo aguardando próxima etapa.</p></div></div>
     </main>
 
-    <!-- FIREBASE SDK v10 (MODULAR / CDN) -->
+    <!-- FIREBASE SDK v10 -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { 
@@ -284,7 +284,7 @@
             serverTimestamp 
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // CREDENCIAIS REAIS DO PROJETO PAINEL-ESTUDOS
+        // CREDENCIAIS DO PROJETO PAINEL-ESTUDOS
         const firebaseConfig = {
             apiKey: "AIzaSyC09EhGx9GSo4IUxjgWJxqkbsnKgOU4khQ",
             authDomain: "painel-estudos-54958.firebaseapp.com",
@@ -294,9 +294,13 @@
             appId: "1:491796500394:web:f6d85850484df33b8de5d3"
         };
 
+        // ETAPA 1
+        console.log("=== DIAGNÓSTICO CADASTRO ===");
+        console.log("ETAPA 1: Inicializando Firebase...");
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+        console.log("ETAPA 1: Firebase e Firestore inicializados com sucesso.", { projectId: firebaseConfig.projectId });
 
         window.firebaseAuth = auth;
         window.firebaseDb = db;
@@ -306,8 +310,6 @@
             const overlay = document.getElementById('auth-overlay');
             if (user) {
                 overlay.style.display = 'none';
-                
-                // Carregar/criar perfil no Firestore (/users/{uid})
                 const userDocRef = doc(db, 'users', user.uid);
                 let profileData = { nome: user.displayName || 'Estudante', email: user.email };
 
@@ -324,10 +326,14 @@
                         });
                     }
                 } catch (err) {
-                    console.error("Erro ao acessar Firestore:", err);
+                    console.error("Erro no AuthStateChanged ao acessar Firestore:", {
+                        code: err.code,
+                        message: err.message,
+                        name: err.name,
+                        fullError: err
+                    });
                 }
 
-                // Atualizar UI com dados do usuário
                 document.getElementById('user-display-name').innerText = profileData.nome || 'Estudante';
                 document.getElementById('user-display-email').innerText = profileData.email || user.email;
                 document.getElementById('user-avatar-initial').innerText = (profileData.nome || 'E').charAt(0).toUpperCase();
@@ -345,7 +351,7 @@
             }
         });
 
-        // HANDLERS DE AUTENTICAÇÃO
+        // HANDLERS
         window.handleLogin = async (e) => {
             e.preventDefault();
             showAuthError('');
@@ -355,16 +361,23 @@
             try {
                 await signInWithEmailAndPassword(auth, email, pass);
             } catch (err) {
-                console.error("Erro no Login:", err);
-                showAuthError(translateAuthError(err.code));
+                console.error("Erro no Login:", {
+                    code: err.code,
+                    message: err.message,
+                    name: err.name,
+                    fullError: err
+                });
+                showAuthError(translateDetailedAuthError(err, 'login'));
             }
         };
 
+        // FLUXO DE DIAGNÓSTICO EM 5 ETAPAS NO CADASTRO
         window.handleRegister = async (e) => {
             e.preventDefault();
             showAuthError('');
+            
             const name = document.getElementById('reg-name').value.trim();
-            const email = document.getElementById('reg-email').value;
+            const email = document.getElementById('reg-email').value.trim();
             const pass = document.getElementById('reg-password').value;
             const confirmPass = document.getElementById('reg-confirm-password').value;
 
@@ -373,17 +386,55 @@
                 return;
             }
 
+            console.log("=== INÍCIO DO PROCESSO DE CADASTRO ===");
+            console.log("ETAPA 1: Dados validados no formulário local. E-mail:", email);
+
+            let createdUser = null;
+
+            // ETAPA 2
+            console.log("ETAPA 2: Tentativa de criação do usuário com createUserWithEmailAndPassword...");
             try {
                 const creds = await createUserWithEmailAndPassword(auth, email, pass);
-                await setDoc(doc(db, 'users', creds.user.uid), {
+                createdUser = creds.user;
+                
+                // ETAPA 3
+                console.log("ETAPA 3: Usuário criado no Firebase Authentication com sucesso!");
+                console.log("ETAPA 3: UID retornado:", createdUser.uid);
+            } catch (authError) {
+                console.error("FALHA NA ETAPA 2 / ETAPA 3 (Firebase Authentication):", {
+                    code: authError.code,
+                    message: authError.message,
+                    name: authError.name,
+                    stack: authError.stack,
+                    fullError: authError
+                });
+                showAuthError(translateDetailedAuthError(authError, 'auth_register'));
+                return;
+            }
+
+            // ETAPA 4
+            console.log(`ETAPA 4: Tentativa de criação do documento no Firestore em: users/${createdUser.uid}`);
+            try {
+                const userDocRef = doc(db, 'users', createdUser.uid);
+                await setDoc(userDocRef, {
                     nome: name,
                     email: email,
                     criadaEm: serverTimestamp(),
                     atualizadaEm: serverTimestamp()
                 });
-            } catch (err) {
-                console.error("Erro no Cadastro:", err);
-                showAuthError(translateAuthError(err.code));
+
+                // ETAPA 5
+                console.log("ETAPA 5: Perfil criado no Firestore com sucesso!");
+                console.log("=== CADASTRO CONCLUÍDO COM SUCESSO ===");
+            } catch (firestoreError) {
+                console.error("FALHA NA ETAPA 4 / ETAPA 5 (Cloud Firestore):", {
+                    code: firestoreError.code,
+                    message: firestoreError.message,
+                    name: firestoreError.name,
+                    stack: firestoreError.stack,
+                    fullError: firestoreError
+                });
+                showAuthError(translateDetailedAuthError(firestoreError, 'firestore_register'));
             }
         };
 
@@ -397,8 +448,13 @@
                 alert('E-mail de redefinição enviado! Verifique sua caixa de entrada.');
                 switchAuthTab('login');
             } catch (err) {
-                console.error("Erro na Recuperação:", err);
-                showAuthError(translateAuthError(err.code));
+                console.error("Erro na Recuperação:", {
+                    code: err.code,
+                    message: err.message,
+                    name: err.name,
+                    fullError: err
+                });
+                showAuthError(translateDetailedAuthError(err, 'recover'));
             }
         };
 
@@ -422,16 +478,43 @@
             }
         }
 
-        function translateAuthError(code) {
-            switch(code) {
-                case 'auth/invalid-credential': return 'E-mail ou senha incorretos.';
-                case 'auth/user-not-found': return 'Usuário não encontrado.';
-                case 'auth/wrong-password': return 'Senha incorreta.';
-                case 'auth/email-already-in-use': return 'Este e-mail já está cadastrado.';
-                case 'auth/weak-password': return 'A senha deve ter pelo menos 6 caracteres.';
-                case 'auth/invalid-email': return 'E-mail inválido.';
-                default: return 'Ocorreu um erro ao processar. Tente novamente.';
+        function translateDetailedAuthError(err, context) {
+            const code = err.code || 'sem-codigo';
+            const msg = err.message || '';
+
+            if (code === 'auth/email-already-in-use') {
+                return '[Authentication] Este e-mail já está cadastrado em outra conta.';
             }
+            if (code === 'auth/invalid-email') {
+                return '[Authentication] O formato do e-mail informado é inválido.';
+            }
+            if (code === 'auth/weak-password') {
+                return '[Authentication] A senha fornecida é muito fraca (mínimo 6 caracteres).';
+            }
+            if (code === 'auth/operation-not-allowed') {
+                return '[Configuração Firebase] O provedor E-mail/Senha NÃO está ativado no Console do Firebase em Authentication > Sign-in method.';
+            }
+            if (code === 'auth/invalid-api-key' || code === 'auth/api-key-not-valid') {
+                return '[Configuração Firebase] A API Key informada no firebaseConfig é inválida.';
+            }
+            if (code === 'auth/network-request-failed') {
+                return '[Rede] Falha na conexão com os servidores do Firebase. Verifique sua conexão com a internet.';
+            }
+            if (code === 'permission-denied') {
+                return '[Firestore] Erro de Permissão ao criar o documento users/{uid}. Verifique as Firestore Security Rules.';
+            }
+            if (code === 'unavailable') {
+                return '[Firestore] O serviço do Firestore está temporariamente indisponível ou desconectado da rede.';
+            }
+
+            if (context === 'auth_register') {
+                return `[Erro no Authentication] Código: ${code} | Detalhe: ${msg}`;
+            }
+            if (context === 'firestore_register') {
+                return `[Erro no Firestore] Falha na gravação do perfil em users/{uid}. Código: ${code} | Detalhe: ${msg}`;
+            }
+
+            return `[Erro do Firebase] Código: ${code} | Detalhe: ${msg}`;
         }
     </script>
 
