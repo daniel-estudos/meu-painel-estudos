@@ -10,6 +10,95 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Firebase: chat em tempo real -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+        import { getDatabase, ref, push, onChildAdded, query, limitToLast } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
+
+        // ============================================================
+        // CONFIGURAÇÃO DO FIREBASE
+        // Substitua os valores abaixo pelos dados do seu projeto Firebase.
+        // ============================================================
+        const firebaseConfig = {
+            apiKey: "COLOQUE_SUA_API_KEY",
+            authDomain: "SEU_PROJETO.firebaseapp.com",
+            databaseURL: "https://SEU_PROJETO-default-rtdb.firebaseio.com",
+            projectId: "SEU_PROJETO",
+            storageBucket: "SEU_PROJETO.firebasestorage.app",
+            messagingSenderId: "SEU_MESSAGING_SENDER_ID",
+            appId: "SEU_APP_ID"
+        };
+
+        window.focusChatFirebase = {
+            ready: false,
+            user: null,
+            db: null,
+            chatRef: null,
+            messagesListener: null
+        };
+
+        const configReady =
+            firebaseConfig.apiKey !== "COLOQUE_SUA_API_KEY" &&
+            firebaseConfig.projectId !== "SEU_PROJETO" &&
+            firebaseConfig.appId !== "SEU_APP_ID";
+
+        async function initializeRealtimeChat() {
+            if (!configReady) {
+                window.dispatchEvent(new CustomEvent("focus-chat-status", {
+                    detail: { ready: false, message: "Firebase ainda não configurado." }
+                }));
+                return;
+            }
+
+            try {
+                const app = initializeApp(firebaseConfig);
+                const auth = getAuth(app);
+                const db = getDatabase(app);
+
+                const credential = await signInAnonymously(auth);
+
+                window.focusChatFirebase.user = credential.user;
+                window.focusChatFirebase.db = db;
+                window.focusChatFirebase.chatRef = query(
+                    ref(db, "studyRoom/general/messages"),
+                    limitToLast(100)
+                );
+                window.focusChatFirebase.ready = true;
+
+                window.dispatchEvent(new CustomEvent("focus-chat-status", {
+                    detail: { ready: true, message: "Conectado em tempo real." }
+                }));
+
+                onChildAdded(window.focusChatFirebase.chatRef, snapshot => {
+                    const message = { id: snapshot.key, ...snapshot.val() };
+                    window.dispatchEvent(new CustomEvent("focus-chat-message", { detail: message }));
+                });
+            } catch (error) {
+                console.error("Firebase Chat:", error);
+                window.dispatchEvent(new CustomEvent("focus-chat-status", {
+                    detail: { ready: false, message: "Não foi possível conectar ao chat." }
+                }));
+            }
+        }
+
+        window.sendRealtimeFocusMessage = async function(text, author) {
+            if (!window.focusChatFirebase.ready) {
+                throw new Error("CHAT_NOT_CONNECTED");
+            }
+
+            const messagesRef = ref(window.focusChatFirebase.db, "studyRoom/general/messages");
+            await push(messagesRef, {
+                author: author,
+                text: text,
+                uid: window.focusChatFirebase.user.uid,
+                time: Date.now()
+            });
+        };
+
+        initializeRealtimeChat();
+    </script>
+
 
     <style>
         :root {
@@ -245,6 +334,177 @@
         .timer-time { font-size: 1.5rem; font-weight: 800; }
         select.select-disc, input.input-field { width: 100%; padding: 0.6rem; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 0.8rem; color: var(--text-main); background: var(--bg-card); outline: none; }
 
+
+        /* AMBIENTE DE FOCO / SALA DE ESTUDOS */
+        .focus-room {
+            display:grid;
+            grid-template-columns:minmax(0, 1.55fr) minmax(320px, .75fr);
+            gap:1.25rem;
+            align-items:start;
+        }
+        .focus-main-card { padding:1.5rem; }
+        .focus-room-header {
+            display:flex; justify-content:space-between; align-items:flex-start; gap:1rem;
+            margin-bottom:1.25rem;
+        }
+        .focus-room-kicker {
+            display:inline-flex; align-items:center; gap:.35rem;
+            font-size:.68rem; font-weight:800; color:var(--primary);
+            text-transform:uppercase; letter-spacing:.04em;
+        }
+        .focus-room-title { font-size:1.25rem; font-weight:800; margin-top:.35rem; }
+        .focus-room-subtitle { color:var(--text-muted); font-size:.74rem; margin-top:.35rem; }
+        .focus-live {
+            display:inline-flex; align-items:center; gap:.4rem; padding:.35rem .55rem;
+            border-radius:999px; background:var(--primary-light); color:var(--primary);
+            font-size:.65rem; font-weight:800; white-space:nowrap;
+        }
+        .focus-live-dot { width:7px; height:7px; border-radius:50%; background:var(--primary); animation:focusPulse 1.5s infinite; }
+        @keyframes focusPulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+
+        .focus-timer-panel {
+            background:linear-gradient(145deg, var(--bg-body), var(--bg-card));
+            border:1px solid var(--border); border-radius:18px; padding:1.5rem;
+            text-align:center;
+        }
+        .focus-timer-circle {
+            width:220px; height:220px; border-radius:50%; margin:1rem auto 1.15rem;
+            border:9px solid var(--primary); display:grid; place-items:center;
+            box-shadow:0 0 0 10px var(--primary-light);
+            position:relative;
+        }
+        .focus-timer-time { font-family:'JetBrains Mono',monospace; font-size:3.1rem; font-weight:800; letter-spacing:-.05em; }
+        .focus-timer-label { color:var(--text-muted); font-size:.68rem; font-weight:700; margin-top:.2rem; }
+        .focus-timer-controls { display:flex; justify-content:center; gap:.6rem; flex-wrap:wrap; }
+        .focus-mode-row { display:flex; justify-content:center; gap:.45rem; margin-bottom:.8rem; flex-wrap:wrap; }
+        .focus-mode-btn {
+            border:1px solid var(--border); background:var(--bg-card); color:var(--text-muted);
+            padding:.45rem .7rem; border-radius:999px; font-size:.68rem; font-weight:800; cursor:pointer;
+        }
+        .focus-mode-btn.active { background:var(--primary-light); color:var(--primary); border-color:rgba(16,185,129,.35); }
+        .focus-study-info {
+            display:grid; grid-template-columns:1fr 1fr; gap:.65rem; margin-top:1rem;
+        }
+        .focus-info-box {
+            border:1px solid var(--border); border-radius:var(--radius-md); padding:.75rem; text-align:left;
+        }
+        .focus-info-box span { display:block; color:var(--text-muted); font-size:.63rem; font-weight:700; }
+        .focus-info-box strong { display:block; font-size:.8rem; margin-top:.2rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+        .focus-chat-card {
+            display:flex; flex-direction:column; height:620px; min-height:500px;
+            padding:0; overflow:hidden;
+        }
+        .focus-chat-header {
+            padding:1rem 1.1rem; border-bottom:1px solid var(--border);
+            display:flex; justify-content:space-between; align-items:center; gap:.75rem;
+        }
+        .focus-chat-title { display:flex; align-items:center; gap:.6rem; }
+        .focus-chat-avatar {
+            width:34px; height:34px; border-radius:10px; background:var(--primary-light);
+            color:var(--primary); display:grid; place-items:center;
+        }
+        .focus-chat-title h3 { font-size:.82rem; font-weight:800; }
+        .focus-chat-title span { display:block; color:var(--text-muted); font-size:.62rem; margin-top:.15rem; }
+        .focus-online-count { font-size:.62rem; color:var(--text-muted); white-space:nowrap; }
+        .focus-chat-messages {
+            flex:1; overflow-y:auto; padding:1rem; display:flex; flex-direction:column; gap:.7rem;
+            background:var(--bg-body);
+        }
+        .focus-chat-empty { margin:auto; text-align:center; color:var(--text-muted); max-width:220px; }
+        .focus-chat-empty-icon {
+            width:42px; height:42px; border-radius:50%; background:var(--bg-card);
+            border:1px solid var(--border); display:grid; place-items:center; margin:0 auto .6rem; color:var(--primary);
+        }
+        .focus-message { display:flex; gap:.55rem; align-items:flex-end; max-width:92%; }
+        .focus-message.mine { align-self:flex-end; flex-direction:row-reverse; }
+        .focus-msg-avatar {
+            width:28px; height:28px; flex:0 0 28px; border-radius:50%; background:#065F46;
+            color:#fff; display:grid; place-items:center; font-size:.62rem; font-weight:800;
+        }
+        .focus-msg-body { min-width:0; }
+        .focus-msg-author { font-size:.62rem; font-weight:800; color:var(--text-muted); margin:0 .35rem .2rem; }
+        .focus-message.mine .focus-msg-author { text-align:right; }
+        .focus-msg-bubble {
+            background:var(--bg-card); border:1px solid var(--border); border-radius:12px 12px 12px 4px;
+            padding:.55rem .7rem; font-size:.72rem; line-height:1.4; word-break:break-word;
+        }
+        .focus-message.mine .focus-msg-bubble {
+            background:var(--primary); border-color:var(--primary); color:#fff; border-radius:12px 12px 4px 12px;
+        }
+        .focus-msg-time { color:var(--text-muted); font-size:.55rem; margin:.2rem .35rem 0; }
+        .focus-message.mine .focus-msg-time { text-align:right; }
+        .focus-chat-compose {
+            border-top:1px solid var(--border); padding:.75rem; background:var(--bg-card);
+        }
+        .focus-chat-compose-row { display:flex; gap:.45rem; align-items:flex-end; }
+        .focus-chat-input {
+            flex:1; min-height:40px; max-height:100px; resize:none;
+            border:1px solid var(--border); border-radius:10px; background:var(--bg-card);
+            color:var(--text-main); padding:.65rem .7rem; outline:none; font-size:.72rem;
+        }
+        .focus-chat-input:focus { border-color:var(--primary); box-shadow:0 0 0 3px var(--primary-light); }
+        .focus-chat-send {
+            width:40px; height:40px; border:0; border-radius:10px; background:var(--primary); color:#fff;
+            display:grid; place-items:center; cursor:pointer;
+        }
+        .focus-chat-hint { color:var(--text-muted); font-size:.58rem; margin-top:.4rem; text-align:center; }
+        .focus-room-bottom {
+            margin-top:1.25rem; display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;
+        }
+        .focus-feature {
+            display:flex; align-items:flex-start; gap:.7rem;
+        }
+        .focus-feature-icon {
+            width:34px; height:34px; border-radius:9px; background:var(--primary-light); color:var(--primary);
+            display:grid; place-items:center; flex:0 0 34px;
+        }
+        .focus-feature h4 { font-size:.75rem; margin-bottom:.2rem; }
+        .focus-feature p { font-size:.66rem; color:var(--text-muted); line-height:1.45; }
+        @media (max-width: 900px) {
+            .focus-room { grid-template-columns:1fr; }
+            .focus-chat-card { height:540px; }
+        }
+        @media (max-width: 560px) {
+            .focus-timer-circle { width:180px; height:180px; }
+            .focus-timer-time { font-size:2.5rem; }
+            .focus-study-info, .focus-room-bottom { grid-template-columns:1fr; }
+        }
+
+
+        /* IDENTIDADE DO ALUNO NO CHAT */
+        .focus-name-modal {
+            position:fixed; inset:0; background:rgba(15,23,42,.55); backdrop-filter:blur(4px);
+            display:none; align-items:center; justify-content:center; z-index:200; padding:1rem;
+        }
+        .focus-name-modal.open { display:flex; }
+        .focus-name-box {
+            width:min(430px,100%); background:var(--bg-card); border:1px solid var(--border);
+            border-radius:18px; padding:1.4rem; box-shadow:0 24px 70px rgba(0,0,0,.22);
+        }
+        .focus-name-icon {
+            width:46px; height:46px; border-radius:12px; background:var(--primary-light);
+            color:var(--primary); display:grid; place-items:center; margin-bottom:.85rem;
+        }
+        .focus-name-box h2 { font-size:1.05rem; font-weight:800; }
+        .focus-name-box p { color:var(--text-muted); font-size:.7rem; line-height:1.45; margin:.35rem 0 1rem; }
+        .focus-name-input {
+            width:100%; padding:.7rem .75rem; border:1px solid var(--border); border-radius:var(--radius-sm);
+            background:var(--bg-card); color:var(--text-main); outline:none; font-size:.78rem;
+        }
+        .focus-name-input:focus { border-color:var(--primary); box-shadow:0 0 0 3px var(--primary-light); }
+        .focus-name-footer { display:flex; justify-content:flex-end; gap:.5rem; margin-top:.9rem; }
+        .focus-chat-connection { display:flex; align-items:center; gap:.35rem; font-size:.58rem; font-weight:800; white-space:nowrap; }
+        .focus-chat-connection-dot { width:7px; height:7px; border-radius:50%; background:#F59E0B; }
+        .focus-chat-connection.connected { color:#059669; }
+        .focus-chat-connection.connected .focus-chat-connection-dot { background:#10B981; }
+        .focus-chat-connection.offline { color:#DC2626; }
+        .focus-chat-connection.offline .focus-chat-connection-dot { background:#EF4444; }
+        .focus-chat-config-note {
+            margin:.65rem 1rem 0; padding:.55rem .65rem; border-radius:var(--radius-sm);
+            background:#FFFBEB; border:1px solid #FDE68A; color:#92400E; font-size:.61rem; line-height:1.4;
+        }
+        [data-theme="dark"] .focus-chat-config-note { background:rgba(245,158,11,.08); border-color:rgba(245,158,11,.25); color:#FCD34D; }
         /* PAGES CONTROL */
         .page-view { display: none; }
         .page-view.active { display: block; }
@@ -529,15 +789,119 @@
         </div>
 
         <div id="view-foco" class="page-view">
-            <div class="card foco-box" style="max-width: 500px; margin: 0 auto; padding: 2.5rem;">
-                <h2>Modo Foco Pomodoro</h2>
-                <div class="timer-circle" style="width: 160px; height: 160px;">
-                    <div class="timer-time" id="full-timer" style="font-size: 2.5rem;">25:00</div>
+            <div class="focus-room">
+                <div class="card focus-main-card">
+                    <div class="focus-room-header">
+                        <div>
+                            <div class="focus-room-kicker"><i data-lucide="graduation-cap" size="14"></i> Ambiente de estudos</div>
+                            <div class="focus-room-title">Sala de Foco</div>
+                            <div class="focus-room-subtitle">Estude com o Pomodoro e converse com outros estudantes sem sair da área de foco.</div>
+                        </div>
+                        <div class="focus-live"><span class="focus-live-dot"></span> Sala ativa</div>
+                    </div>
+
+                    <div class="focus-timer-panel">
+                        <div class="focus-mode-row">
+                            <button class="focus-mode-btn active" id="focus-mode-study" onclick="setFocusMode('study')">Foco · 25 min</button>
+                            <button class="focus-mode-btn" id="focus-mode-short" onclick="setFocusMode('short')">Pausa · 5 min</button>
+                            <button class="focus-mode-btn" id="focus-mode-long" onclick="setFocusMode('long')">Pausa longa · 15 min</button>
+                        </div>
+
+                        <div class="focus-timer-circle">
+                            <div>
+                                <div class="focus-timer-time" id="full-timer">25:00</div>
+                                <div class="focus-timer-label" id="focus-timer-label">Hora de estudar</div>
+                            </div>
+                        </div>
+
+                        <select class="select-disc" id="full-materia-select" style="max-width:420px; margin:0 auto 1rem;"></select>
+
+                        <div class="focus-timer-controls">
+                            <button class="btn-primary" id="focus-main-button" onclick="toggleTimer()">
+                                <i data-lucide="play" size="16"></i> Iniciar foco
+                            </button>
+                            <button class="btn-secondary" onclick="resetTimer()">
+                                <i data-lucide="rotate-ccw" size="15"></i> Resetar
+                            </button>
+                        </div>
+
+                        <div class="focus-study-info">
+                            <div class="focus-info-box">
+                                <span>Disciplina atual</span>
+                                <strong id="focus-current-disc">Selecione uma disciplina</strong>
+                            </div>
+                            <div class="focus-info-box">
+                                <span>Sessões concluídas</span>
+                                <strong id="focus-session-count">0 sessões</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="focus-room-bottom">
+                        <div class="focus-feature">
+                            <div class="focus-feature-icon"><i data-lucide="timer" size="16"></i></div>
+                            <div>
+                                <h4>Pomodoro integrado</h4>
+                                <p>Escolha a disciplina, inicie o foco e alterne entre foco, pausa curta e pausa longa.</p>
+                            </div>
+                        </div>
+                        <div class="focus-feature">
+                            <div class="focus-feature-icon"><i data-lucide="message-circle" size="16"></i></div>
+                            <div>
+                                <h4>Convivência acadêmica</h4>
+                                <p>Use o bate-papo da sala para tirar dúvidas, compartilhar ideias e conversar durante os estudos.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <select class="select-disc" id="full-materia-select" style="margin-bottom: 1rem;"></select>
-                <div style="display: flex; gap: 1rem; width: 100%;">
-                    <button class="btn-primary" style="flex:1;" onclick="toggleTimer()">Iniciar / Pausar</button>
-                    <button class="btn-primary" style="background:#EF4444;" onclick="resetTimer()">Resetar</button>
+
+                <div class="card focus-chat-card">
+                    <div class="focus-chat-header">
+                        <div class="focus-chat-title">
+                            <div class="focus-chat-avatar"><i data-lucide="messages-square" size="17"></i></div>
+                            <div>
+                                <h3>Bate-papo da sala</h3>
+                                <span>Conversa entre estudantes</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; flex-direction:column; align-items:flex-end; gap:.25rem;">
+                            <div class="focus-chat-connection" id="focus-chat-connection">
+                                <span class="focus-chat-connection-dot"></span>
+                                <span id="focus-chat-connection-label">Conectando...</span>
+                            </div>
+                            <button class="disc-mini-btn" style="padding:.28rem .45rem; font-size:.62rem;" onclick="openFocusNameModal()" title="Alterar seu nome">
+                                <i data-lucide="user-round" size="12"></i> <span id="focus-chat-my-name">Definir nome</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="focus-chat-messages" id="focus-chat-messages"></div>
+
+                    <div class="focus-chat-compose">
+                        <div class="focus-chat-compose-row">
+                            <textarea id="focus-chat-input" class="focus-chat-input" rows="1" maxlength="500" placeholder="Digite uma mensagem..." onkeydown="handleFocusChatKeydown(event)"></textarea>
+                            <button class="focus-chat-send" onclick="sendFocusMessage()" title="Enviar mensagem">
+                                <i data-lucide="send" size="16"></i>
+                            </button>
+                        </div>
+                        <div class="focus-chat-hint">Enter envia · Shift + Enter quebra a linha</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="focus-name-modal" class="focus-name-modal" onclick="closeFocusNameModal(event)">
+            <div class="focus-name-box" onclick="event.stopPropagation()">
+                <div class="focus-name-icon"><i data-lucide="user-round" size="21"></i></div>
+                <h2>Como você quer aparecer na sala?</h2>
+                <p>Escolha o nome que será exibido para os outros estudantes no bate-papo. Você pode alterar depois.</p>
+                <input id="focus-name-input" class="focus-name-input" maxlength="30" placeholder="Digite seu nome..." autocomplete="name">
+                <div class="focus-name-footer">
+                    <button class="btn-secondary" onclick="closeFocusNameModal()">Cancelar</button>
+                    <button class="btn-primary" onclick="saveFocusStudentName()">
+                        <i data-lucide="check" size="15"></i> Entrar na sala
+                    </button>
                 </div>
             </div>
         </div>
@@ -1005,29 +1369,312 @@
             }
         }
 
-        // TIMER DE FOCO
+        // AMBIENTE DE FOCO / POMODORO + BATE-PAPO
         let seconds = 25 * 60;
         let timer = null;
+        let focusMode = 'study';
+        let focusSessions = Number(localStorage.getItem('academic_focus_sessions') || 0);
+
+        const focusDurations = {
+            study: 25 * 60,
+            short: 5 * 60,
+            long: 15 * 60
+        };
 
         function updateDisplays() {
             const min = Math.floor(seconds / 60).toString().padStart(2, '0');
             const sec = (seconds % 60).toString().padStart(2, '0');
             const str = `${min}:${sec}`;
-            document.getElementById('dash-timer').innerText = str;
-            document.getElementById('full-timer').innerText = str;
+            const dash = document.getElementById('dash-timer');
+            const full = document.getElementById('full-timer');
+            if (dash) dash.innerText = str;
+            if (full) full.innerText = str;
+
+            const discSelect = document.getElementById('full-materia-select');
+            const currentDisc = document.getElementById('focus-current-disc');
+            if (currentDisc && discSelect?.selectedOptions?.length) {
+                currentDisc.innerText = discSelect.selectedOptions[0].textContent;
+            }
+
+            const count = document.getElementById('focus-session-count');
+            if (count) count.innerText = `${focusSessions} ${focusSessions === 1 ? 'sessão' : 'sessões'}`;
+        }
+
+        function setFocusMode(mode) {
+            if (timer) {
+                clearInterval(timer);
+                timer = null;
+            }
+            focusMode = mode;
+            seconds = focusDurations[mode];
+
+            document.querySelectorAll('.focus-mode-btn').forEach(btn => btn.classList.remove('active'));
+            const buttonId = mode === 'study' ? 'focus-mode-study' : mode === 'short' ? 'focus-mode-short' : 'focus-mode-long';
+            document.getElementById(buttonId)?.classList.add('active');
+
+            const label = document.getElementById('focus-timer-label');
+            if (label) {
+                label.innerText = mode === 'study' ? 'Hora de estudar' : mode === 'short' ? 'Pausa curta' : 'Pausa longa';
+            }
+
+            updateFocusMainButton();
+            updateDisplays();
+        }
+
+        function updateFocusMainButton() {
+            const button = document.getElementById('focus-main-button');
+            if (!button) return;
+            button.innerHTML = timer
+                ? '<i data-lucide="pause" size="16"></i> Pausar foco'
+                : '<i data-lucide="play" size="16"></i> Iniciar foco';
+            lucide.createIcons();
         }
 
         function toggleTimer() {
-            if (timer) { clearInterval(timer); timer = null; } 
-            else {
-                timer = setInterval(() => {
-                    if (seconds > 0) { seconds--; updateDisplays(); } 
-                    else { clearInterval(timer); alert("Sessão Finalizada!"); }
-                }, 1000);
+            if (timer) {
+                clearInterval(timer);
+                timer = null;
+                updateFocusMainButton();
+                return;
+            }
+
+            timer = setInterval(() => {
+                if (seconds > 0) {
+                    seconds--;
+                    updateDisplays();
+                } else {
+                    clearInterval(timer);
+                    timer = null;
+
+                    if (focusMode === 'study') {
+                        focusSessions++;
+                        localStorage.setItem('academic_focus_sessions', String(focusSessions));
+                        alert('Sessão de foco concluída. Hora de fazer uma pausa.');
+                        setFocusMode('short');
+                    } else {
+                        alert('Pausa finalizada. Você pode voltar ao foco.');
+                        setFocusMode('study');
+                    }
+                }
+            }, 1000);
+
+            updateFocusMainButton();
+        }
+
+        function resetTimer() {
+            clearInterval(timer);
+            timer = null;
+            seconds = focusDurations[focusMode];
+            updateFocusMainButton();
+            updateDisplays();
+        }
+
+        document.getElementById('full-materia-select')?.addEventListener('change', updateDisplays);
+
+        // BATE-PAPO EM TEMPO REAL DA SALA DE ESTUDOS
+        let focusMessages = [];
+        let focusStudentName = localStorage.getItem('academic_focus_student_name') || '';
+        let realtimeChatReady = false;
+        let pendingRealtimeMessages = new Set();
+
+        function getChatInitial(name) {
+            return String(name || 'A').trim().charAt(0).toUpperCase() || 'A';
+        }
+
+        function updateFocusStudentNameUI() {
+            const nameEl = document.getElementById('focus-chat-my-name');
+            if (nameEl) nameEl.innerText = focusStudentName || 'Definir nome';
+        }
+
+        function openFocusNameModal() {
+            const modal = document.getElementById('focus-name-modal');
+            const input = document.getElementById('focus-name-input');
+            if (!modal || !input) return;
+            input.value = focusStudentName;
+            modal.classList.add('open');
+            setTimeout(() => input.focus(), 50);
+        }
+
+        function closeFocusNameModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            document.getElementById('focus-name-modal')?.classList.remove('open');
+        }
+
+        function saveFocusStudentName() {
+            const input = document.getElementById('focus-name-input');
+            const name = input?.value.trim() || '';
+
+            if (!name) {
+                alert('Digite seu nome para entrar na sala.');
+                input?.focus();
+                return;
+            }
+
+            focusStudentName = name.substring(0, 30);
+            localStorage.setItem('academic_focus_student_name', focusStudentName);
+            updateFocusStudentNameUI();
+            closeFocusNameModal();
+
+            if (realtimeChatReady) {
+                renderFocusChat();
             }
         }
 
-        function resetTimer() { clearInterval(timer); timer = null; seconds = 25 * 60; updateDisplays(); }
+        function renderFocusChat() {
+            const container = document.getElementById('focus-chat-messages');
+            if (!container) return;
+
+            container.innerHTML = '';
+
+            if (!focusMessages.length) {
+                container.innerHTML = `
+                    <div class="focus-chat-empty">
+                        <div class="focus-chat-empty-icon"><i data-lucide="message-circle" size="20"></i></div>
+                        <div style="font-weight:800; color:var(--text-main); margin-bottom:.25rem;">A sala está tranquila</div>
+                        <div style="font-size:.67rem; line-height:1.45;">Entre com seu nome e envie a primeira mensagem. Ela aparecerá para os outros estudantes conectados.</div>
+                    </div>`;
+                lucide.createIcons();
+                return;
+            }
+
+            focusMessages.forEach(msg => {
+                const mine = window.focusChatFirebase?.user?.uid && msg.uid === window.focusChatFirebase.user.uid;
+                const safeAuthor = escapeHtml(msg.author || 'Estudante');
+                const safeText = escapeHtml(msg.text || '').replace(/\n/g, '<br>');
+                const date = new Date(Number(msg.time) || Date.now());
+                const time = date.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+
+                container.innerHTML += `
+                    <div class="focus-message ${mine ? 'mine' : ''}">
+                        <div class="focus-msg-avatar">${getChatInitial(msg.author)}</div>
+                        <div class="focus-msg-body">
+                            <div class="focus-msg-author">${safeAuthor}</div>
+                            <div class="focus-msg-bubble">${safeText}</div>
+                            <div class="focus-msg-time">${time}</div>
+                        </div>
+                    </div>`;
+            });
+
+            container.scrollTop = container.scrollHeight;
+            lucide.createIcons();
+        }
+
+        function addRealtimeMessage(message) {
+            if (!message?.id || pendingRealtimeMessages.has(message.id)) return;
+            pendingRealtimeMessages.add(message.id);
+
+            if (focusMessages.some(msg => msg.id === message.id)) return;
+            focusMessages.push(message);
+
+            // Mantém no máximo as 100 mensagens recebidas na sessão.
+            if (focusMessages.length > 100) focusMessages = focusMessages.slice(-100);
+            renderFocusChat();
+        }
+
+        async function sendFocusMessage() {
+            const input = document.getElementById('focus-chat-input');
+            if (!input) return;
+
+            if (!focusStudentName) {
+                openFocusNameModal();
+                return;
+            }
+
+            const text = input.value.trim();
+            if (!text) return;
+
+            if (!realtimeChatReady || typeof window.sendRealtimeFocusMessage !== 'function') {
+                alert('O chat em tempo real ainda não está conectado. Configure o Firebase para liberar a sala.');
+                return;
+            }
+
+            const sendButton = document.querySelector('.focus-chat-send');
+            if (sendButton) sendButton.disabled = true;
+
+            try {
+                await window.sendRealtimeFocusMessage(text.substring(0, 500), focusStudentName);
+                input.value = '';
+                input.style.height = '40px';
+            } catch (error) {
+                console.error(error);
+                alert('Não foi possível enviar a mensagem. Verifique sua conexão.');
+            } finally {
+                if (sendButton) sendButton.disabled = false;
+            }
+        }
+
+        function handleFocusChatKeydown(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendFocusMessage();
+            }
+        }
+
+        document.getElementById('focus-chat-input')?.addEventListener('input', function() {
+            this.style.height = '40px';
+            this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+        });
+
+        window.addEventListener('focus-chat-message', event => {
+            addRealtimeMessage(event.detail);
+        });
+
+        window.addEventListener('focus-chat-status', event => {
+            realtimeChatReady = Boolean(event.detail?.ready);
+
+            const connection = document.getElementById('focus-chat-connection');
+            const label = document.getElementById('focus-chat-connection-label');
+
+            if (connection) {
+                connection.classList.toggle('connected', realtimeChatReady);
+                connection.classList.toggle('offline', !realtimeChatReady);
+            }
+
+            if (label) {
+                label.innerText = realtimeChatReady ? 'Tempo real conectado' : 'Firebase não configurado';
+            }
+
+            if (!realtimeChatReady) {
+                const container = document.getElementById('focus-chat-messages');
+                if (container && !document.getElementById('focus-chat-config-note')) {
+                    const note = document.createElement('div');
+                    note.id = 'focus-chat-config-note';
+                    note.className = 'focus-chat-config-note';
+                    note.innerHTML = '<strong>Chat pronto para tempo real.</strong><br>Falta apenas conectar este site ao seu projeto Firebase.';
+                    container.parentNode.insertBefore(note, container);
+                }
+            } else {
+                document.getElementById('focus-chat-config-note')?.remove();
+            }
+        });
+
+        updateFocusStudentNameUI();
+        if (!focusStudentName) {
+            setTimeout(openFocusNameModal, 500);
+        }
+
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape') closeFocusNameModal();
+        });
+
+        renderFocusChat();
+
+        }
+
+        function handleFocusChatKeydown(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendFocusMessage();
+            }
+        }
+
+        document.getElementById('focus-chat-input')?.addEventListener('input', function() {
+            this.style.height = '40px';
+            this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+        });
+
+        renderFocusChat();
+        updateDisplays();
 
         // CHART
         const ctx = document.getElementById('chartFocoSemanal').getContext('2d');
