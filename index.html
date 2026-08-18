@@ -9,7 +9,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         :root {
@@ -88,7 +87,7 @@
         .icon-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-card); display: grid; place-items: center; color: var(--text-main); cursor: pointer; }
 
         /* DASHBOARD GRID */
-        .dashboard-grid { display: grid; grid-template-columns: 1fr 300px; gap: 1.5rem; }
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 320px; gap: 1.5rem; }
         .left-column { display: flex; flex-direction: column; gap: 1.25rem; }
         .right-column { display: flex; flex-direction: column; gap: 1.25rem; }
 
@@ -114,15 +113,56 @@
         .btn-danger { background: #EF4444; color: white; border: none; padding: 0.4rem 0.75rem; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 600; cursor: pointer; }
         .btn-secondary { background: var(--border); color: var(--text-main); border: none; padding: 0.4rem 0.75rem; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 600; cursor: pointer; }
 
-        /* METRICS */
-        .metrics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
-        .metric-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem; display: flex; align-items: center; gap: 0.85rem; }
-        .metric-icon { width: 36px; height: 36px; border-radius: var(--radius-sm); display: grid; place-items: center; flex-shrink: 0; }
-        .metric-val { font-size: 1.1rem; font-weight: 700; }
-        .metric-lbl { font-size: 0.72rem; color: var(--text-muted); font-weight: 600; }
-
-        .middle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
-        .chart-wrapper { position: relative; height: 140px; width: 100%; }
+        /* QUADRO MINHA SEMANA NO DASHBOARD */
+        .dash-weekly-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.6rem;
+            overflow-x: auto;
+        }
+        .dash-weekly-col {
+            background: var(--bg-body);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 0.6rem;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .dash-weekly-col.today-active {
+            border: 2px solid var(--primary);
+            background: var(--primary-light);
+        }
+        .dash-weekly-header {
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            text-align: center;
+            padding-bottom: 0.4rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+        .today-badge {
+            font-size: 0.6rem;
+            background: var(--primary);
+            color: white;
+            padding: 1px 4px;
+            border-radius: 4px;
+            font-weight: 700;
+        }
+        .dash-weekly-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-sm);
+            padding: 0.55rem;
+            border-left: 4px solid var(--primary);
+            font-size: 0.72rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
 
         /* DISCIPLINAS LIST & CARD */
         .disc-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem; padding-bottom: 0.85rem; border-bottom: 1px dashed var(--border); }
@@ -144,7 +184,7 @@
             .slot-row { grid-template-columns: 1fr 1fr; }
         }
 
-        /* GRADE SEMANAL */
+        /* GRADE SEMANAL (PÁGINA DISCIPLINAS) */
         .weekly-grid-container { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.75rem; overflow-x: auto; min-width: 850px; }
         .weekly-day-col { background: var(--bg-body); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 0.75rem; min-height: 220px; display: flex; flex-direction: column; gap: 0.5rem; }
         .weekly-day-title { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); text-align: center; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
@@ -253,41 +293,23 @@
         <div id="view-dashboard" class="page-view active">
             <div class="dashboard-grid">
                 <div class="left-column">
-                    <div class="hero-card-wallpaper">
-                        <div>
-                            <span style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: #059669;">PRÓXIMO COMPROMISSO</span>
-                            <span class="badge-tag">Amanhã</span>
-                            <h2 class="hero-title">Controle de Qualidade<br>Microbiológico</h2>
-                            <div class="hero-info" style="display:flex; gap:0.5rem; color: var(--text-muted); font-weight: 600;"><i data-lucide="clock" size="16"></i> 13:00 – 16:30</div>
-                            <button class="btn-primary" style="margin-top: 1rem;" onclick="switchPage('foco', document.querySelectorAll('.nav-item')[3])"><i data-lucide="play" size="16"></i> Começar foco</button>
+                    <div class="hero-card-wallpaper" id="card-proximo-compromisso">
                         </div>
-                    </div>
 
-                    <div class="metrics-grid">
-                        <div class="metric-card">
-                            <div class="metric-icon" style="background: #D1FAE5; color: #059669;"><i data-lucide="clock" size="18"></i></div>
-                            <div>
-                                <div class="metric-lbl">Foco esta semana</div>
-                                <div class="metric-val">6h 40m</div>
-                            </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>MINHA SEMANA ACADÊMICA</h3>
+                            <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600;">Grade de Horários</span>
                         </div>
-                        <div class="metric-card">
-                            <div class="metric-icon" style="background: #EFF6FF; color: #2563EB;"><i data-lucide="check-square" size="18"></i></div>
-                            <div>
-                                <div class="metric-lbl">Tarefas pendentes</div>
-                                <div class="metric-val" id="count-tarefas">0</div>
+                        
+                        <div class="dash-weekly-grid" id="dash-weekly-schedule">
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="middle-grid">
-                        <div class="card">
-                            <div class="card-header"><h3>TEMPO DE FOCO</h3></div>
-                            <div class="chart-wrapper"><canvas id="chartFocoSemanal"></canvas></div>
-                        </div>
-                        <div class="card">
-                            <div class="card-header"><h3>PRÓXIMAS AULAS</h3></div>
-                            <div id="list-disciplinas-dashboard"></div>
+                        <div id="dash-unassigned-disciplines" style="margin-top: 1rem; border-top: 1px dashed var(--border); padding-top: 0.75rem; display: none;">
+                            <div style="font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.4rem;">
+                                ⚠️ Disciplinas sem horário definido:
+                            </div>
+                            <div id="dash-unassigned-list" style="display: flex; gap: 0.5rem; flex-wrap: wrap;"></div>
                         </div>
                     </div>
                 </div>
@@ -326,7 +348,7 @@
         </div>
 
         <div id="view-disciplinas" class="page-view">
-            <div class="metrics-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 1.5rem;">
+            <div class="metrics-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 1.5rem; display: grid; gap: 1rem;">
                 <div class="metric-card">
                     <div class="metric-icon" style="background: #E0E7FF; color: #4338CA;"><i data-lucide="book-open" size="18"></i></div>
                     <div>
@@ -533,6 +555,13 @@
 
         const DIAS_SEMANA = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
 
+        // DIA ATUAL EM PORTUGUÊS
+        function getHojeNome() {
+            const index = new Date().getDay(); // 0 = Domingo, 1 = Segunda...
+            const mapa = { 1: 'Segunda', 2: 'Terça', 3: 'Quarta', 4: 'Quinta', 5: 'Sexta', 6: 'Sábado', 0: 'Domingo' };
+            return mapa[index] || 'Segunda';
+        }
+
         // NORMALIZAÇÃO E MIGRAÇÃO SEGURA DE DADOS ANTIGOS
         function normalizeDisciplina(d) {
             return {
@@ -543,7 +572,7 @@
                 turno: d.turno || 'Vespertino',
                 periodo: d.periodo || '5º Período',
                 observacoes: d.observacoes || '',
-                horarios: Array.isArray(d.horarios) && d.horarios.length > 0 ? d.horarios : [
+                horarios: Array.isArray(d.horarios) ? d.horarios : [
                     {
                         dia: d.dia || 'Segunda',
                         inicio: d.inicio || '13:00',
@@ -676,7 +705,7 @@
                 const sala = row.querySelector('.slot-sala').value.trim() || 'A definir';
                 slots.push({ dia, inicio, fim, sala });
             });
-            return slots.length > 0 ? slots : [{ dia: 'Segunda', inicio: '13:00', fim: '16:30', sala: 'A definir' }];
+            return slots;
         }
 
         function resetDiscForm() {
@@ -710,13 +739,11 @@
             }
 
             if (idVal) {
-                // Modo Edição
                 const index = disciplinas.findIndex(d => d.id == idVal);
                 if (index !== -1) {
                     disciplinas[index] = { id: Number(idVal), nome, professor, turno, periodo, cor, observacoes, horarios };
                 }
             } else {
-                // Nova Disciplina
                 disciplinas.push({ id: Date.now(), nome, professor, turno, periodo, cor, observacoes, horarios });
             }
 
@@ -756,7 +783,116 @@
             }
         }
 
-        // RENDERIZAR GRADE SEMANAL
+        // CÁLCULO INTELIGENTE DO PRÓXIMO COMPROMISSO
+        function renderProximoCompromisso(todasAulas) {
+            const heroCard = document.getElementById('card-proximo-compromisso');
+            if (!heroCard) return;
+
+            if (todasAulas.length === 0) {
+                heroCard.innerHTML = `
+                    <div>
+                        <span style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--primary-dark);">PRÓXIMA AULA</span>
+                        <h2 class="hero-title">Nenhuma próxima aula cadastrada</h2>
+                        <p style="font-size: 0.85rem; color: var(--text-muted);">Cadastre disciplinas com horários no gerenciador para visualizar sua grade aqui.</p>
+                        <button class="btn-primary" style="margin-top: 1rem;" onclick="switchPage('disciplinas', document.querySelectorAll('.nav-item')[1])"><i data-lucide="plus" size="16"></i> Organizar Disciplinas</button>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            const diaHoje = getHojeNome();
+            const ordemDias = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
+            const idxHoje = ordemDias.indexOf(diaHoje);
+
+            // Ordenar aulas por proximidade de dia e horário
+            let aulasOrdenadas = [...todasAulas].sort((a, b) => {
+                let distA = (ordemDias.indexOf(a.dia) - idxHoje + 7) % 7;
+                let distB = (ordemDias.indexOf(b.dia) - idxHoje + 7) % 7;
+                if (distA !== distB) return distA - distB;
+                return a.inicio.localeCompare(b.inicio);
+            });
+
+            const proxima = aulasOrdenadas[0];
+            const dist = (ordemDias.indexOf(proxima.dia) - idxHoje + 7) % 7;
+            
+            let tagTexto = proxima.dia;
+            if (dist === 0) tagTexto = 'Hoje';
+            else if (dist === 1) tagTexto = 'Amanhã';
+
+            heroCard.innerHTML = `
+                <div>
+                    <span style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--primary-dark);">PRÓXIMO COMPROMISSO</span>
+                    <span class="badge-tag">${tagTexto}</span>
+                    <h2 class="hero-title" style="color: ${proxima.cor};">${proxima.disciplina}</h2>
+                    <div style="display:flex; flex-direction:column; gap:0.25rem; color: var(--text-muted); font-weight: 600; font-size: 0.85rem;">
+                        <div><i data-lucide="user" size="14" style="vertical-align:middle;"></i> ${proxima.professor || 'Professor não informado'}</div>
+                        <div><i data-lucide="clock" size="14" style="vertical-align:middle;"></i> ${proxima.dia} • ${proxima.inicio} – ${proxima.fim} (${proxima.sala || 'Sala a definir'})</div>
+                    </div>
+                    <button class="btn-primary" style="margin-top: 1.25rem;" onclick="switchPage('foco', document.querySelectorAll('.nav-item')[3])"><i data-lucide="play" size="16"></i> Iniciar foco</button>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        // RENDERIZAR QUADRO "MINHA SEMANA" NO DASHBOARD
+        function renderDashWeekly(todasAulas, semHorario) {
+            const container = document.getElementById('dash-weekly-schedule');
+            if (!container) return;
+
+            container.innerHTML = '';
+            const diaHoje = getHojeNome();
+
+            DIAS_SEMANA.forEach(dia => {
+                const isHoje = dia === diaHoje;
+                const aulasDoDia = todasAulas.filter(a => a.dia === dia).sort((a,b) => a.inicio.localeCompare(b.inicio));
+
+                let cardsHTML = '';
+                if (aulasDoDia.length === 0) {
+                    cardsHTML = `<div style="font-size: 0.68rem; color: var(--text-muted); text-align: center; padding: 1.5rem 0;">Sem aulas</div>`;
+                } else {
+                    aulasDoDia.forEach(aula => {
+                        cardsHTML += `
+                            <div class="dash-weekly-card" style="border-left-color: ${aula.cor};">
+                                <div style="font-weight: 800; color: var(--text-main); line-height: 1.2;">${aula.disciplina}</div>
+                                <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 0.2rem;">${aula.professor ? '👨‍🏫 ' + aula.professor : ''}</div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-top: 0.35rem; font-weight: 700; font-size: 0.65rem;">
+                                    <span>⏰ ${aula.inicio} – ${aula.fim}</span>
+                                    <span class="badge-info">${aula.sala}</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+
+                container.innerHTML += `
+                    <div class="dash-weekly-col ${isHoje ? 'today-active' : ''}">
+                        <div class="dash-weekly-header">
+                            <span>${dia}</span>
+                            ${isHoje ? '<span class="today-badge">HOJE</span>' : ''}
+                        </div>
+                        ${cardsHTML}
+                    </div>
+                `;
+            });
+
+            // DISCIPLINAS SEM HORÁRIO DEFINIDO
+            const unassignedBox = document.getElementById('dash-unassigned-disciplines');
+            const unassignedList = document.getElementById('dash-unassigned-list');
+
+            if (unassignedBox && unassignedList) {
+                if (semHorario.length > 0) {
+                    unassignedBox.style.display = 'block';
+                    unassignedList.innerHTML = semHorario.map(d => 
+                        `<span class="badge-info" style="border-left: 3px solid ${d.cor}; padding: 0.3rem 0.5rem;">${d.nome} (Horário não definido)</span>`
+                    ).join('');
+                } else {
+                    unassignedBox.style.display = 'none';
+                }
+            }
+        }
+
+        // RENDERIZAR GRADE SEMANAL NA PÁGINA DISCIPLINAS
         function renderWeeklyGrid() {
             const gridContainer = document.getElementById('weekly-schedule-grid');
             if (!gridContainer) return;
@@ -781,7 +917,6 @@
                     });
                 });
 
-                // Ordenar por horário de início
                 slotsDoDia.sort((a,b) => a.inicio.localeCompare(b.inicio));
 
                 let cardsHTML = '';
@@ -811,9 +946,8 @@
             });
         }
 
-        // GERENCIADOR DE DISCIPLINAS COMPLETO (SISTEMA ATUALIZADO)
+        // GERENCIADOR DE DISCIPLINAS COMPLETO (SISTEMA INTEGRADO)
         function renderDisciplinas() {
-            const dashList = document.getElementById('list-disciplinas-dashboard');
             const fullGrid = document.getElementById('full-disciplinas-grid');
             const searchVal = (document.getElementById('search-disc')?.value || '').toLowerCase();
             const filterDia = document.getElementById('filter-dia')?.value || '';
@@ -822,62 +956,44 @@
             const dashSelect = document.getElementById('dash-materia-select');
             const fullSelect = document.getElementById('full-materia-select');
 
-            if (dashList) dashList.innerHTML = '';
             if (fullGrid) fullGrid.innerHTML = '';
             if (dashSelect) dashSelect.innerHTML = '';
             if (fullSelect) fullSelect.innerHTML = '';
 
             let totalAulasSemana = 0;
             let todasAulas = [];
+            let disciplinasSemHorario = [];
 
-            // Atualiza Dropdowns Pomodoro
+            // Compilar disciplinas e aulas
             disciplinas.forEach(d => {
                 if (dashSelect) dashSelect.innerHTML += `<option value="${d.id}">${d.nome}</option>`;
                 if (fullSelect) fullSelect.innerHTML += `<option value="${d.id}">${d.nome}</option>`;
 
-                (d.horarios || []).forEach(slot => {
-                    totalAulasSemana++;
-                    todasAulas.push({
-                        disciplina: d.nome,
-                        professor: d.professor,
-                        cor: d.cor,
-                        dia: slot.dia,
-                        inicio: slot.inicio,
-                        fim: slot.fim,
-                        sala: slot.sala
-                    });
-                });
-            });
-
-            // DASHBOARD: PRÓXIMAS AULAS
-            if (dashList) {
-                if (todasAulas.length === 0) {
-                    dashList.innerHTML = `<p style="color:var(--text-muted); font-size:0.8rem;">Nenhuma aula cadastrada.</p>`;
+                if (!d.horarios || d.horarios.length === 0) {
+                    disciplinasSemHorario.push(d);
                 } else {
-                    // Exibir até 4 próximas aulas
-                    todasAulas.slice(0, 4).forEach(aula => {
-                        dashList.innerHTML += `
-                            <div class="disc-item">
-                                <div class="disc-info">
-                                    <div class="disc-icon" style="background: ${aula.cor}22; color: ${aula.cor}; border: 1px solid ${aula.cor};"><i data-lucide="book-open" size="14"></i></div>
-                                    <div>
-                                        <div style="font-weight: 700; font-size: 0.85rem;">${aula.disciplina}</div>
-                                        <div style="font-size: 0.72rem; color: var(--text-muted);">${aula.professor || 'Prof. não informado'}</div>
-                                    </div>
-                                </div>
-                                <div style="text-align: right;">
-                                    <span class="badge-info" style="background:${aula.cor}22; color:${aula.cor};">${aula.dia}</span>
-                                    <div style="font-size: 0.7rem; font-weight: 700; margin-top:0.2rem;">${aula.inicio} - ${aula.fim} (${aula.sala})</div>
-                                </div>
-                            </div>
-                        `;
+                    d.horarios.forEach(slot => {
+                        totalAulasSemana++;
+                        todasAulas.push({
+                            disciplina: d.nome,
+                            professor: d.professor,
+                            cor: d.cor,
+                            dia: slot.dia,
+                            inicio: slot.inicio,
+                            fim: slot.fim,
+                            sala: slot.sala || 'A definir'
+                        });
                     });
                 }
-            }
+            });
 
-            // FILTRAGEM DE DISCIPLINAS
+            // Atualiza Dashboard
+            renderProximoCompromisso(todasAulas);
+            renderDashWeekly(todasAulas, disciplinasSemHorario);
+
+            // FILTRAGEM DE DISCIPLINAS NA PÁGINA "DISCIPLINAS"
             const filtered = disciplinas.filter(d => {
-                const matchesText = d.nome.toLowerCase().includes(searchVal) || d.professor.toLowerCase().includes(searchVal);
+                const matchesText = d.nome.toLowerCase().includes(searchVal) || (d.professor && d.professor.toLowerCase().includes(searchVal));
                 const matchesTurno = !filterTurno || d.turno === filterTurno;
                 const matchesDia = !filterDia || (d.horarios || []).some(s => s.dia === filterDia);
                 return matchesText && matchesTurno && matchesDia;
@@ -889,11 +1005,13 @@
                     fullGrid.innerHTML = `<p style="color:var(--text-muted); grid-column: 1/-1;">Nenhuma disciplina encontrada com os filtros selecionados.</p>`;
                 } else {
                     filtered.forEach(d => {
-                        const slotsBadge = (d.horarios || []).map(s => 
-                            `<div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.25rem;">
-                                📅 <strong>${s.dia}</strong>: ${s.inicio} às ${s.fim} <span class="badge-info">${s.sala}</span>
-                             </div>`
-                        ).join('');
+                        const slotsBadge = (d.horarios && d.horarios.length > 0) 
+                            ? d.horarios.map(s => 
+                                `<div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.25rem;">
+                                    📅 <strong>${s.dia}</strong>: ${s.inicio} às ${s.fim} <span class="badge-info">${s.sala || 'A definir'}</span>
+                                 </div>`
+                              ).join('')
+                            : `<div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.25rem; font-style:italic;">⚠️ Horário não definido</div>`;
 
                         fullGrid.innerHTML += `
                             <div class="disc-card-item" style="border-left-color: ${d.cor};">
@@ -919,7 +1037,7 @@
                 }
             }
 
-            // ATUALIZA MÉTRICAS DA PÁGINA
+            // ATUALIZA MÉTRICAS DA PÁGINA DISCIPLINAS
             const statTotal = document.getElementById('stat-total-disc');
             const statAulas = document.getElementById('stat-aulas-semana');
             const statProxima = document.getElementById('stat-proxima-aula');
@@ -951,8 +1069,6 @@
                         <span style="${t.feita ? 'text-decoration: line-through; color: var(--text-muted);' : ''}">${t.titulo}</span>
                     </div>`;
             });
-            const countEl = document.getElementById('count-tarefas');
-            if(countEl) countEl.innerText = tarefas.filter(t => !t.feita).length;
             localStorage.setItem('academic_tarefas', JSON.stringify(tarefas));
         }
 
@@ -994,7 +1110,7 @@
             }
         }
 
-        // TIMER DE FOCO AVANÇADO
+        // TIMER DE FOCO SEM COBRANÇA
         let maxSeconds = 25 * 60;
         let seconds = maxSeconds;
         let timer = null;
@@ -1109,20 +1225,6 @@
         renderTarefas();
         renderCalendar();
         renderChat();
-
-        // CHART FOCO SEMANAL
-        const chartEl = document.getElementById('chartFocoSemanal');
-        if (chartEl) {
-            const ctx = chartEl.getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
-                    datasets: [{ data: [2, 3, 1.5, 3, 2, 4, 1], backgroundColor: '#10B981', borderRadius: 4 }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-            });
-        }
     </script>
 </body>
 </html>
