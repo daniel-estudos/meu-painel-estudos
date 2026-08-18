@@ -134,6 +134,98 @@
         .disc-grid-advanced { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-top: 1rem; }
         .disc-card-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.25rem; position: relative; }
 
+        /* GERENCIADOR DE DISCIPLINAS — MELHORIAS EXCLUSIVAS */
+        .disc-manager-toolbar {
+            display: grid;
+            grid-template-columns: minmax(220px, 1.7fr) minmax(150px, .8fr) minmax(150px, .8fr) auto;
+            gap: .65rem;
+            align-items: center;
+        }
+        .disc-search-wrap { position: relative; }
+        .disc-search-wrap i { position: absolute; left: .7rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
+        .disc-search-wrap input { padding-left: 2.1rem !important; }
+        .disc-manager-actions { display:flex; gap:.5rem; align-items:center; flex-wrap:wrap; }
+        .disc-mini-btn {
+            border:1px solid var(--border); background:var(--bg-card); color:var(--text-main);
+            border-radius:var(--radius-sm); padding:.5rem .65rem; cursor:pointer;
+            display:inline-flex; align-items:center; justify-content:center; gap:.35rem; font-size:.75rem; font-weight:700;
+        }
+        .disc-mini-btn:hover { border-color:var(--primary); color:var(--primary); background:var(--primary-light); }
+        .disc-empty {
+            padding:2.5rem 1rem; text-align:center; color:var(--text-muted);
+            border:1px dashed var(--border); border-radius:var(--radius-md);
+        }
+        .disc-empty-icon { width:46px; height:46px; margin:0 auto .75rem; border-radius:50%; background:var(--primary-light); color:var(--primary); display:grid; place-items:center; }
+        .disc-card-item { transition: transform .15s, box-shadow .15s, border-color .15s; }
+        .disc-card-item:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(15,23,42,.07); border-color:rgba(16,185,129,.35); }
+        [data-theme="dark"] .disc-card-item:hover { box-shadow:0 8px 24px rgba(0,0,0,.2); }
+        .disc-card-top { display:flex; justify-content:space-between; align-items:flex-start; gap:.75rem; }
+        .disc-title-row { display:flex; align-items:center; gap:.65rem; min-width:0; }
+        .disc-title-row h4 { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .disc-status {
+            display:inline-flex; align-items:center; gap:.3rem; border-radius:999px; padding:.22rem .5rem;
+            font-size:.65rem; font-weight:800; white-space:nowrap;
+        }
+        .disc-status.good { background:#D1FAE5; color:#047857; }
+        .disc-status.mid { background:#FEF3C7; color:#B45309; }
+        .disc-status.critical { background:#FEE2E2; color:#B91C1C; }
+        [data-theme="dark"] .disc-status.good { background:rgba(16,185,129,.15); color:#6EE7B7; }
+        [data-theme="dark"] .disc-status.mid { background:rgba(245,158,11,.15); color:#FCD34D; }
+        [data-theme="dark"] .disc-status.critical { background:rgba(239,68,68,.15); color:#FCA5A5; }
+        .disc-progress-meta { display:flex; justify-content:space-between; align-items:center; margin:.9rem 0 .35rem; font-size:.72rem; font-weight:700; }
+        .disc-progress-track { width:100%; height:9px; background:var(--border); border-radius:999px; overflow:hidden; }
+        .disc-progress-fill { height:100%; border-radius:999px; transition:width .2s; }
+        .disc-card-footer { display:flex; justify-content:space-between; align-items:center; gap:.75rem; margin-top:1rem; padding-top:.8rem; border-top:1px solid var(--border); }
+        .disc-meta { display:flex; align-items:center; gap:.35rem; color:var(--text-muted); font-size:.7rem; min-width:0; }
+        .disc-meta span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .disc-stat-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:.5rem; margin-top:.8rem; }
+        .disc-stat-chip { background:var(--bg-body); border:1px solid var(--border); border-radius:var(--radius-sm); padding:.55rem .6rem; }
+        .disc-stat-chip b { display:block; font-size:.82rem; }
+        .disc-stat-chip span { font-size:.62rem; color:var(--text-muted); }
+        .disc-modal-backdrop {
+            position:fixed; inset:0; background:rgba(15,23,42,.48); backdrop-filter:blur(3px);
+            display:none; align-items:center; justify-content:center; z-index:100; padding:1rem;
+        }
+        .disc-modal-backdrop.open { display:flex; }
+        .disc-modal {
+            width:min(680px, 100%); max-height:90vh; overflow:auto; background:var(--bg-card);
+            border:1px solid var(--border); border-radius:18px; box-shadow:0 24px 70px rgba(0,0,0,.2); padding:1.35rem;
+        }
+        .disc-modal-header { display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; margin-bottom:1.15rem; }
+        .disc-modal-header h2 { font-size:1.05rem; }
+        .disc-modal-header p { color:var(--text-muted); font-size:.72rem; margin-top:.25rem; }
+        .disc-form-grid { display:grid; grid-template-columns:1fr 1fr; gap:.8rem; }
+        .disc-form-group { display:flex; flex-direction:column; gap:.35rem; }
+        .disc-form-group.full { grid-column:1/-1; }
+        .disc-form-group label { font-size:.7rem; font-weight:800; color:var(--text-muted); }
+        .disc-form-group input, .disc-form-group select {
+            width:100%; padding:.68rem .75rem; border:1px solid var(--border); border-radius:var(--radius-sm);
+            background:var(--bg-card); color:var(--text-main); outline:none;
+        }
+        .disc-form-group input:focus, .disc-form-group select:focus { border-color:var(--primary); box-shadow:0 0 0 3px var(--primary-light); }
+        .disc-range-row { display:flex; align-items:center; gap:.75rem; }
+        .disc-range-row input { padding:0; accent-color:var(--primary); }
+        .disc-range-value { min-width:48px; text-align:center; font-weight:800; color:var(--primary); }
+        .disc-modal-footer { display:flex; justify-content:flex-end; gap:.6rem; margin-top:1.2rem; padding-top:1rem; border-top:1px solid var(--border); }
+        .disc-favorite { border:0; background:transparent; color:var(--text-muted); cursor:pointer; padding:.2rem; }
+        .disc-favorite.active { color:#F59E0B; }
+        .disc-favorite:hover { color:#F59E0B; }
+        .disc-card-item.is-favorite { border-color:rgba(245,158,11,.4); }
+        .disc-quick-add {
+            display:flex; align-items:center; gap:.65rem; padding:.65rem .75rem; margin-top:.75rem;
+            border:1px dashed var(--border); border-radius:var(--radius-md); color:var(--text-muted); cursor:pointer;
+            font-size:.72rem; font-weight:700;
+        }
+        .disc-quick-add:hover { color:var(--primary); border-color:var(--primary); background:var(--primary-light); }
+        @media (max-width: 900px) {
+            .disc-manager-toolbar { grid-template-columns:1fr 1fr; }
+        }
+        @media (max-width: 620px) {
+            .disc-manager-toolbar, .disc-form-grid { grid-template-columns:1fr; }
+            .disc-form-group.full { grid-column:auto; }
+            .disc-manager-actions { width:100%; }
+        }
+
         /* CALENDÁRIO */
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.25rem; text-align: center; font-size: 0.75rem; }
         .cal-day-name { font-weight: 700; color: var(--text-muted); padding-bottom: 0.5rem; }
@@ -309,28 +401,116 @@
                 <div class="metric-card">
                     <div class="metric-icon" style="background: #FEF2F2; color: #EF4444;"><i data-lucide="alert-circle" size="18"></i></div>
                     <div>
-                        <div class="metric-lbl">Matérias Críticas (<50%)</div>
+                        <div class="metric-lbl">Matérias Críticas (&lt;50%)</div>
                         <div class="metric-val" id="stat-critical-disc">0</div>
                     </div>
                 </div>
             </div>
 
             <div class="card" style="margin-bottom: 1.5rem;">
-                <div class="card-header"><h3>Adicionar Nova Disciplina</h3></div>
-                <div style="display: grid; grid-template-columns: 2fr 2fr 1fr auto; gap: 0.75rem; align-items: center;">
-                    <input type="text" id="new-disc-name" class="input-field" placeholder="Nome da Matéria...">
-                    <input type="text" id="new-disc-teacher" class="input-field" placeholder="Nome do Professor...">
-                    <input type="number" id="new-disc-prog" class="input-field" placeholder="Progresso %" min="0" max="100">
-                    <button class="btn-primary" onclick="addDisciplina()"><i data-lucide="plus" size="16"></i> Adicionar</button>
+                <div class="card-header">
+                    <div>
+                        <h3>Gerenciar Disciplinas</h3>
+                        <div style="font-size:.7rem; color:var(--text-muted); margin-top:.25rem;">Cadastre, acompanhe e organize suas matérias em um só lugar.</div>
+                    </div>
+                    <button class="btn-primary" onclick="openDisciplinaModal()">
+                        <i data-lucide="plus" size="16"></i> Nova disciplina
+                    </button>
+                </div>
+
+                <div class="disc-manager-toolbar">
+                    <div class="disc-search-wrap">
+                        <i data-lucide="search" size="15"></i>
+                        <input type="text" id="search-disc" class="input-field" placeholder="Buscar por matéria ou professor..." oninput="renderDisciplinas()">
+                    </div>
+                    <select id="filter-disc-status" class="select-disc" onchange="renderDisciplinas()" title="Filtrar por situação">
+                        <option value="todas">Todas as situações</option>
+                        <option value="critica">Críticas (&lt;50%)</option>
+                        <option value="andamento">Em andamento (50–79%)</option>
+                        <option value="boa">Bom progresso (80–100%)</option>
+                        <option value="favoritas">Favoritas</option>
+                    </select>
+                    <select id="sort-disc" class="select-disc" onchange="renderDisciplinas()" title="Ordenar disciplinas">
+                        <option value="nome">Ordenar: Nome</option>
+                        <option value="progresso-desc">Maior progresso</option>
+                        <option value="progresso-asc">Menor progresso</option>
+                        <option value="recentes">Mais recentes</option>
+                    </select>
+                    <div class="disc-manager-actions">
+                        <button class="disc-mini-btn" onclick="openDisciplinaModal()" title="Adicionar disciplina">
+                            <i data-lucide="plus" size="15"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
 
             <div class="card">
                 <div class="card-header">
-                    <h3>Minhas Matérias Cadastradas</h3>
-                    <input type="text" id="search-disc" class="input-field" placeholder="Buscar matéria..." oninput="renderDisciplinas()" style="width: 200px; padding: 0.4rem 0.6rem;">
+                    <div>
+                        <h3>Minhas Matérias Cadastradas</h3>
+                        <div id="disc-results-info" style="font-size:.7rem; color:var(--text-muted); margin-top:.25rem;">0 disciplinas</div>
+                    </div>
+                    <button class="disc-mini-btn" onclick="clearDisciplinaFilters()">
+                        <i data-lucide="rotate-ccw" size="14"></i> Limpar filtros
+                    </button>
                 </div>
                 <div id="full-disciplinas-grid" class="disc-grid-advanced"></div>
+                <div class="disc-quick-add" onclick="openDisciplinaModal()">
+                    <i data-lucide="plus-circle" size="16"></i>
+                    Adicionar outra disciplina
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal exclusivo do gerenciamento de disciplinas -->
+        <div id="disciplina-modal-backdrop" class="disc-modal-backdrop" onclick="closeDisciplinaModal(event)">
+            <div class="disc-modal" onclick="event.stopPropagation()">
+                <div class="disc-modal-header">
+                    <div>
+                        <h2 id="disc-modal-title">Nova disciplina</h2>
+                        <p>Preencha apenas o que for útil para sua organização.</p>
+                    </div>
+                    <button class="disc-mini-btn" onclick="closeDisciplinaModal()" title="Fechar">
+                        <i data-lucide="x" size="16"></i>
+                    </button>
+                </div>
+
+                <div class="disc-form-grid">
+                    <div class="disc-form-group full">
+                        <label for="modal-disc-name">Nome da disciplina *</label>
+                        <input type="text" id="modal-disc-name" placeholder="Ex.: Farmacologia Clínica" autocomplete="off">
+                    </div>
+                    <div class="disc-form-group">
+                        <label for="modal-disc-teacher">Professor</label>
+                        <input type="text" id="modal-disc-teacher" placeholder="Nome do professor" autocomplete="off">
+                    </div>
+                    <div class="disc-form-group">
+                        <label for="modal-disc-semester">Semestre</label>
+                        <input type="text" id="modal-disc-semester" placeholder="Ex.: 2026/2">
+                    </div>
+                    <div class="disc-form-group">
+                        <label for="modal-disc-progress">Progresso</label>
+                        <div class="disc-range-row">
+                            <input type="range" id="modal-disc-progress" min="0" max="100" value="0" oninput="updateDiscProgressLabel()">
+                            <span class="disc-range-value" id="modal-disc-progress-label">0%</span>
+                        </div>
+                    </div>
+                    <div class="disc-form-group">
+                        <label for="modal-disc-status">Situação</label>
+                        <select id="modal-disc-status">
+                            <option value="andamento">Em andamento</option>
+                            <option value="pendente">Pendente / revisar</option>
+                            <option value="concluida">Concluída</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="disc-modal-footer">
+                    <button class="btn-secondary" onclick="closeDisciplinaModal()">Cancelar</button>
+                    <button class="btn-primary" onclick="saveDisciplinaModal()">
+                        <i data-lucide="save" size="15"></i> Salvar disciplina
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -436,66 +616,196 @@
         }
 
         // GERENCIADOR DE DISCIPLINAS (PERSISTENTE)
+        let disciplinaEditandoId = null;
+
+        function getDiscStatus(d) {
+            const p = Number(d.progresso) || 0;
+            if (d.situacao === 'concluida' || p >= 100) return { key: 'boa', label: 'Concluída', icon: 'check-circle-2' };
+            if (d.situacao === 'pendente') return { key: 'critica', label: 'Revisar', icon: 'alert-circle' };
+            if (p < 50) return { key: 'critica', label: 'Atenção', icon: 'alert-triangle' };
+            if (p < 80) return { key: 'mid', label: 'Em andamento', icon: 'clock-3' };
+            return { key: 'good', label: 'Bom progresso', icon: 'trending-up' };
+        }
+
+        function normalizeDisciplina(d) {
+            return {
+                id: d.id || Date.now(),
+                nome: String(d.nome || '').trim(),
+                professor: String(d.professor || '').trim(),
+                progresso: Math.min(100, Math.max(0, Number(d.progresso) || 0)),
+                semestre: d.semestre || '2026/2',
+                situacao: d.situacao || ((Number(d.progresso) || 0) >= 100 ? 'concluida' : 'andamento'),
+                favorita: Boolean(d.favorita),
+                criadaEm: d.criadaEm || Date.now()
+            };
+        }
+
+        // Compatibilidade: os dados antigos continuam funcionando e ganham apenas campos opcionais.
+        disciplinas = disciplinas.map(normalizeDisciplina);
+
         function renderDisciplinas() {
             const dashList = document.getElementById('list-disciplinas-dashboard');
             const fullGrid = document.getElementById('full-disciplinas-grid');
-            const searchVal = document.getElementById('search-disc').value.toLowerCase();
+            const searchEl = document.getElementById('search-disc');
             const dashSelect = document.getElementById('dash-materia-select');
             const fullSelect = document.getElementById('full-materia-select');
 
-            dashList.innerHTML = '';
-            fullGrid.innerHTML = '';
-            dashSelect.innerHTML = '';
-            fullSelect.innerHTML = '';
+            const searchVal = (searchEl ? searchEl.value : '').trim().toLowerCase();
+            const statusFilter = document.getElementById('filter-disc-status')?.value || 'todas';
+            const sortValue = document.getElementById('sort-disc')?.value || 'nome';
+
+            if (dashList) dashList.innerHTML = '';
+            if (fullGrid) fullGrid.innerHTML = '';
+            if (dashSelect) dashSelect.innerHTML = '';
+            if (fullSelect) fullSelect.innerHTML = '';
 
             let totalProgresso = 0;
             let criticalCount = 0;
 
-            const filtered = disciplinas.filter(d => d.nome.toLowerCase().includes(searchVal));
-
             disciplinas.forEach(d => {
-                totalProgresso += Number(d.progresso);
-                if (d.progresso < 50) criticalCount++;
-
-                dashSelect.innerHTML += `<option value="${d.id}">${d.nome}</option>`;
-                fullSelect.innerHTML += `<option value="${d.id}">${d.nome}</option>`;
-
-                dashList.innerHTML += `
-                    <div class="disc-item">
-                        <div class="disc-info">
-                            <div class="disc-icon" style="background: rgba(16, 185, 129, 0.15); color: #059669;"><i data-lucide="book" size="14"></i></div>
-                            <div>
-                                <div style="font-weight: 600; font-size: 0.85rem;">${d.nome}</div>
-                                <div style="font-size: 0.7rem; color: var(--text-muted);">${d.professor || 'Sem professor'}</div>
-                            </div>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 0.5rem;">
-                            <div class="progress-bar"><div class="progress-fill" style="width: ${d.progresso}%; background: ${d.progresso < 50 ? '#EF4444' : '#10B981'};"></div></div>
-                            <span style="font-size: 0.75rem; font-weight: 700;">${d.progresso}%</span>
-                        </div>
-                    </div>`;
+                totalProgresso += Number(d.progresso) || 0;
+                if (Number(d.progresso) < 50) criticalCount++;
             });
 
-            filtered.forEach(d => {
-                fullGrid.innerHTML += `
-                    <div class="disc-card-item">
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
-                            <div class="disc-icon" style="background: rgba(16, 185, 129, 0.15); color: #059669;"><i data-lucide="book-open" size="16"></i></div>
-                            <div style="display: flex; gap: 0.25rem;">
-                                <button class="btn-secondary" onclick="editDisciplina(${d.id})" title="Editar"><i data-lucide="edit-2" size="12"></i></button>
-                                <button class="btn-danger" onclick="deleteDisciplina(${d.id})" title="Excluir"><i data-lucide="trash-2" size="12"></i></button>
-                            </div>
-                        </div>
-                        <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 0.25rem;">${d.nome}</h4>
-                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">${d.professor || 'Professor não informado'}</p>
-                        
-                        <div style="display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 700; margin-bottom: 0.25rem;">
-                            <span>Progresso</span>
-                            <span style="color: ${d.progresso < 50 ? '#EF4444' : '#10B981'};">${d.progresso}%</span>
-                        </div>
-                        <div class="progress-bar" style="width: 100%; height: 8px;"><div class="progress-fill" style="width: ${d.progresso}%; background: ${d.progresso < 50 ? '#EF4444' : '#10B981'};"></div></div>
-                    </div>`;
+            let filtered = disciplinas.filter(d => {
+                const searchable = `${d.nome} ${d.professor} ${d.semestre}`.toLowerCase();
+                const matchesSearch = !searchVal || searchable.includes(searchVal);
+                const p = Number(d.progresso) || 0;
+                const status = getDiscStatus(d);
+
+                let matchesStatus = true;
+                if (statusFilter === 'critica') matchesStatus = p < 50 || d.situacao === 'pendente';
+                if (statusFilter === 'andamento') matchesStatus = p >= 50 && p < 80 && d.situacao !== 'concluida';
+                if (statusFilter === 'boa') matchesStatus = p >= 80 || d.situacao === 'concluida';
+                if (statusFilter === 'favoritas') matchesStatus = d.favorita;
+
+                return matchesSearch && matchesStatus;
             });
+
+            filtered.sort((a, b) => {
+                if (sortValue === 'progresso-desc') return Number(b.progresso) - Number(a.progresso);
+                if (sortValue === 'progresso-asc') return Number(a.progresso) - Number(b.progresso);
+                if (sortValue === 'recentes') return Number(b.criadaEm || 0) - Number(a.criadaEm || 0);
+                return a.nome.localeCompare(b.nome, 'pt-BR');
+            });
+
+            // Selects usados pelo foco continuam refletindo todas as disciplinas.
+            disciplinas.forEach(d => {
+                const option = `<option value="${d.id}">${escapeHtml(d.nome)}</option>`;
+                if (dashSelect) dashSelect.innerHTML += option;
+                if (fullSelect) fullSelect.innerHTML += option;
+            });
+
+            // Lista resumida do dashboard permanece intacta em sua função.
+            disciplinas
+                .slice()
+                .sort((a, b) => Number(a.progresso) - Number(b.progresso))
+                .slice(0, 4)
+                .forEach(d => {
+                    const status = getDiscStatus(d);
+                    if (dashList) {
+                        dashList.innerHTML += `
+                            <div class="disc-item">
+                                <div class="disc-info">
+                                    <div class="disc-icon" style="background: rgba(16, 185, 129, 0.15); color: #059669;"><i data-lucide="book" size="14"></i></div>
+                                    <div>
+                                        <div style="font-weight: 600; font-size: 0.85rem;">${escapeHtml(d.nome)}</div>
+                                        <div style="font-size: 0.7rem; color: var(--text-muted);">${escapeHtml(d.professor || 'Sem professor')}</div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <div class="progress-bar"><div class="progress-fill" style="width: ${d.progresso}%; background: ${d.progresso < 50 ? '#EF4444' : '#10B981'};"></div></div>
+                                    <span style="font-size: 0.75rem; font-weight: 700;">${d.progresso}%</span>
+                                </div>
+                            </div>`;
+                    }
+                });
+
+            if (fullGrid) {
+                if (!filtered.length) {
+                    fullGrid.innerHTML = `
+                        <div class="disc-empty" style="grid-column:1/-1;">
+                            <div class="disc-empty-icon"><i data-lucide="search-x" size="21"></i></div>
+                            <div style="font-weight:800; color:var(--text-main); margin-bottom:.25rem;">Nenhuma disciplina encontrada</div>
+                            <div style="font-size:.72rem;">Tente mudar os filtros ou cadastre uma nova disciplina.</div>
+                        </div>`;
+                } else {
+                    filtered.forEach(d => {
+                        const status = getDiscStatus(d);
+                        const progressColor = Number(d.progresso) < 50 ? '#EF4444' : '#10B981';
+
+                        fullGrid.innerHTML += `
+                            <div class="disc-card-item ${d.favorita ? 'is-favorite' : ''}">
+                                <div class="disc-card-top">
+                                    <div class="disc-title-row">
+                                        <div class="disc-icon" style="background: rgba(16, 185, 129, 0.15); color: #059669; flex-shrink:0;">
+                                            <i data-lucide="book-open" size="16"></i>
+                                        </div>
+                                        <div style="min-width:0;">
+                                            <h4 style="font-size: 0.95rem; font-weight: 700;">${escapeHtml(d.nome)}</h4>
+                                            <div style="font-size:.68rem; color:var(--text-muted); margin-top:.18rem;">
+                                                ${escapeHtml(d.professor || 'Professor não informado')}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="disc-favorite ${d.favorita ? 'active' : ''}" onclick="toggleFavoriteDisciplina(${d.id})" title="${d.favorita ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}">
+                                        <i data-lucide="${d.favorita ? 'star' : 'star'}" size="17"></i>
+                                    </button>
+                                </div>
+
+                                <div style="margin-top:.8rem;">
+                                    <span class="disc-status ${status.key}">
+                                        <i data-lucide="${status.icon}" size="11"></i> ${status.label}
+                                    </span>
+                                </div>
+
+                                <div class="disc-progress-meta">
+                                    <span>Progresso</span>
+                                    <span style="color:${progressColor}; font-size:.82rem;">${d.progresso}%</span>
+                                </div>
+                                <div class="disc-progress-track">
+                                    <div class="disc-progress-fill" style="width:${d.progresso}%; background:${progressColor};"></div>
+                                </div>
+
+                                <div class="disc-stat-grid">
+                                    <div class="disc-stat-chip">
+                                        <b>${escapeHtml(d.semestre || '—')}</b>
+                                        <span>Semestre</span>
+                                    </div>
+                                    <div class="disc-stat-chip">
+                                        <b>${d.progresso < 50 ? 'Alta' : d.progresso < 80 ? 'Média' : 'Baixa'}</b>
+                                        <span>Prioridade</span>
+                                    </div>
+                                    <div class="disc-stat-chip">
+                                        <b>${d.progresso}%</b>
+                                        <span>Concluído</span>
+                                    </div>
+                                </div>
+
+                                <div class="disc-card-footer">
+                                    <div class="disc-meta" title="${escapeHtml(d.professor || 'Professor não informado')}">
+                                        <i data-lucide="user-round" size="13"></i>
+                                        <span>${escapeHtml(d.professor || 'Sem professor')}</span>
+                                    </div>
+                                    <div style="display:flex; gap:.3rem;">
+                                        <button class="disc-mini-btn" onclick="quickProgress(${d.id}, 10)" title="Adicionar 10% de progresso">
+                                            <i data-lucide="plus" size="13"></i> 10%
+                                        </button>
+                                        <button class="disc-mini-btn" onclick="editDisciplina(${d.id})" title="Editar disciplina">
+                                            <i data-lucide="pencil" size="13"></i>
+                                        </button>
+                                        <button class="disc-mini-btn" onclick="deleteDisciplina(${d.id})" title="Excluir disciplina" style="color:#EF4444;">
+                                            <i data-lucide="trash-2" size="13"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>`;
+                    });
+                }
+            }
+
+            const info = document.getElementById('disc-results-info');
+            if (info) info.innerText = `${filtered.length} de ${disciplinas.length} ${disciplinas.length === 1 ? 'disciplina' : 'disciplinas'}`;
 
             document.getElementById('stat-total-disc').innerText = disciplinas.length;
             document.getElementById('stat-avg-disc').innerText = disciplinas.length ? Math.round(totalProgresso / disciplinas.length) + '%' : '0%';
@@ -505,37 +815,145 @@
             lucide.createIcons();
         }
 
-        function addDisciplina() {
-            const name = document.getElementById('new-disc-name').value;
-            const teacher = document.getElementById('new-disc-teacher').value;
-            const prog = document.getElementById('new-disc-prog').value || 0;
+        function escapeHtml(value) {
+            return String(value ?? '').replace(/[&<>"']/g, char => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+            }[char]));
+        }
 
-            if (name.trim() !== '') {
-                disciplinas.push({ id: Date.now(), nome: name, professor: teacher, progresso: Number(prog) });
-                document.getElementById('new-disc-name').value = '';
-                document.getElementById('new-disc-teacher').value = '';
-                document.getElementById('new-disc-prog').value = '';
-                renderDisciplinas();
+        function openDisciplinaModal(id = null) {
+            disciplinaEditandoId = id;
+            const modal = document.getElementById('disciplina-modal-backdrop');
+            const title = document.getElementById('disc-modal-title');
+            const name = document.getElementById('modal-disc-name');
+            const teacher = document.getElementById('modal-disc-teacher');
+            const semester = document.getElementById('modal-disc-semester');
+            const progress = document.getElementById('modal-disc-progress');
+            const situation = document.getElementById('modal-disc-status');
+
+            const disc = id ? disciplinas.find(d => d.id === id) : null;
+
+            title.innerText = disc ? 'Editar disciplina' : 'Nova disciplina';
+            name.value = disc?.nome || '';
+            teacher.value = disc?.professor || '';
+            semester.value = disc?.semestre || '2026/2';
+            progress.value = disc?.progresso ?? 0;
+            situation.value = disc?.situacao || ((disc?.progresso ?? 0) >= 100 ? 'concluida' : 'andamento');
+            updateDiscProgressLabel();
+
+            modal.classList.add('open');
+            setTimeout(() => name.focus(), 50);
+        }
+
+        function closeDisciplinaModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            document.getElementById('disciplina-modal-backdrop').classList.remove('open');
+            disciplinaEditandoId = null;
+        }
+
+        function updateDiscProgressLabel() {
+            const value = document.getElementById('modal-disc-progress').value;
+            document.getElementById('modal-disc-progress-label').innerText = `${value}%`;
+        }
+
+        function saveDisciplinaModal() {
+            const name = document.getElementById('modal-disc-name').value.trim();
+            const teacher = document.getElementById('modal-disc-teacher').value.trim();
+            const semester = document.getElementById('modal-disc-semester').value.trim() || '2026/2';
+            let progress = Number(document.getElementById('modal-disc-progress').value);
+            let situation = document.getElementById('modal-disc-status').value;
+
+            if (!name) {
+                alert('Informe o nome da disciplina.');
+                document.getElementById('modal-disc-name').focus();
+                return;
             }
+
+            progress = Math.min(100, Math.max(0, progress));
+            if (progress >= 100) situation = 'concluida';
+
+            if (disciplinaEditandoId) {
+                const disc = disciplinas.find(d => d.id === disciplinaEditandoId);
+                if (disc) {
+                    disc.nome = name;
+                    disc.professor = teacher;
+                    disc.semestre = semester;
+                    disc.progresso = progress;
+                    disc.situacao = situation;
+                }
+            } else {
+                disciplinas.push({
+                    id: Date.now(),
+                    nome: name,
+                    professor: teacher,
+                    progresso: progress,
+                    semestre: semester,
+                    situacao: situation,
+                    favorita: false,
+                    criadaEm: Date.now()
+                });
+            }
+
+            localStorage.setItem('academic_disciplinas', JSON.stringify(disciplinas));
+            closeDisciplinaModal();
+            renderDisciplinas();
+        }
+
+        function addDisciplina() {
+            // Mantido como compatibilidade para qualquer chamada existente.
+            openDisciplinaModal();
+        }
+
+        function editDisciplina(id) {
+            openDisciplinaModal(id);
+        }
+
+        function quickProgress(id, amount) {
+            const disc = disciplinas.find(d => d.id === id);
+            if (!disc) return;
+            disc.progresso = Math.min(100, (Number(disc.progresso) || 0) + amount);
+            if (disc.progresso >= 100) disc.situacao = 'concluida';
+            localStorage.setItem('academic_disciplinas', JSON.stringify(disciplinas));
+            renderDisciplinas();
+        }
+
+        function toggleFavoriteDisciplina(id) {
+            const disc = disciplinas.find(d => d.id === id);
+            if (!disc) return;
+            disc.favorita = !disc.favorita;
+            localStorage.setItem('academic_disciplinas', JSON.stringify(disciplinas));
+            renderDisciplinas();
+        }
+
+        function clearDisciplinaFilters() {
+            const search = document.getElementById('search-disc');
+            const filter = document.getElementById('filter-disc-status');
+            const sort = document.getElementById('sort-disc');
+            if (search) search.value = '';
+            if (filter) filter.value = 'todas';
+            if (sort) sort.value = 'nome';
+            renderDisciplinas();
         }
 
         function deleteDisciplina(id) {
-            if (confirm("Deseja realmente remover esta disciplina?")) {
+            const disc = disciplinas.find(d => d.id === id);
+            if (!disc) return;
+            if (confirm(`Deseja realmente remover "${disc.nome}"?`)) {
                 disciplinas = disciplinas.filter(d => d.id !== id);
                 renderDisciplinas();
             }
         }
 
-        function editDisciplina(id) {
-            const disc = disciplinas.find(d => d.id === id);
-            if (disc) {
-                const newProg = prompt(`Atualize o progresso em % para ${disc.nome}:`, disc.progresso);
-                if (newProg !== null && !isNaN(newProg)) {
-                    disc.progresso = Math.min(100, Math.max(0, Number(newProg)));
-                    renderDisciplinas();
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape') closeDisciplinaModal();
+            if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+                const page = document.getElementById('view-disciplinas');
+                if (page?.classList.contains('active')) {
+                    event.preventDefault();
+                    document.getElementById('search-disc')?.focus();
                 }
             }
-        }
+        });
 
         // TAREFAS (PERSISTENTE)
         function renderTarefas() {
