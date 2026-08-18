@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Central de Estudos - Academic OS</title>
     
-    <!-- Fonts, Icons & Chart.js -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
@@ -98,7 +97,7 @@
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
         .card-header h3 { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--text-main); letter-spacing: 0.02em; }
 
-        /* HERO CARD */
+        /* HERO CARD COM WALLPAPER */
         .hero-card-wallpaper {
             background: linear-gradient(180deg, rgba(244, 246, 248, 0.82) 0%, rgba(244, 246, 248, 0.95) 100%), 
                         url('https://images8.alphacoders.com/135/thumb-1920-1354012.png') center/cover no-repeat;
@@ -161,7 +160,6 @@
 </head>
 <body>
 
-    <!-- SIDEBAR -->
     <aside id="sidebar">
         <div>
             <div class="brand">
@@ -206,7 +204,6 @@
         </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
     <main id="main-content">
         <header class="header">
             <div class="header-title">
@@ -218,7 +215,6 @@
             </div>
         </header>
 
-        <!-- DASHBOARD (INÍCIO) -->
         <div id="view-dashboard" class="page-view active">
             <div class="dashboard-grid">
                 <div class="left-column">
@@ -244,7 +240,7 @@
                             <div class="metric-icon" style="background: #EFF6FF; color: #2563EB;"><i data-lucide="check-square" size="18"></i></div>
                             <div>
                                 <div class="metric-lbl">Tarefas pendentes</div>
-                                <div class="metric-val" id="count-tarefas">1</div>
+                                <div class="metric-val" id="count-tarefas">0</div>
                             </div>
                         </div>
                     </div>
@@ -294,9 +290,7 @@
             </div>
         </div>
 
-        <!-- DISCIPLINAS (SOFISTICADO & FUNCIONAL) -->
         <div id="view-disciplinas" class="page-view">
-            <!-- CARDS DE RESUMO DAS MATÉRIAS -->
             <div class="metrics-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 1.5rem;">
                 <div class="metric-card">
                     <div class="metric-icon" style="background: #E0E7FF; color: #4338CA;"><i data-lucide="book-open" size="18"></i></div>
@@ -321,20 +315,16 @@
                 </div>
             </div>
 
-            <!-- PAINEL DE ADICIONAR E FILTRAR -->
             <div class="card" style="margin-bottom: 1.5rem;">
-                <div class="card-header">
-                    <h3>Adicionar Nova Disciplina</h3>
-                </div>
+                <div class="card-header"><h3>Adicionar Nova Disciplina</h3></div>
                 <div style="display: grid; grid-template-columns: 2fr 2fr 1fr auto; gap: 0.75rem; align-items: center;">
-                    <input type="text" id="new-disc-name" class="input-field" placeholder="Nome da Matéria (Ex: Microbiologia)...">
+                    <input type="text" id="new-disc-name" class="input-field" placeholder="Nome da Matéria...">
                     <input type="text" id="new-disc-teacher" class="input-field" placeholder="Nome do Professor...">
                     <input type="number" id="new-disc-prog" class="input-field" placeholder="Progresso %" min="0" max="100">
                     <button class="btn-primary" onclick="addDisciplina()"><i data-lucide="plus" size="16"></i> Adicionar</button>
                 </div>
             </div>
 
-            <!-- CONTROLE DE BUSCA E LISTAGEM DE MATÉRIAS -->
             <div class="card">
                 <div class="card-header">
                     <h3>Minhas Matérias Cadastradas</h3>
@@ -344,7 +334,6 @@
             </div>
         </div>
 
-        <!-- TAREFAS -->
         <div id="view-tarefas" class="page-view">
             <div class="card" style="margin-bottom: 1.5rem;">
                 <div class="card-header"><h3>Nova Tarefa</h3></div>
@@ -359,7 +348,6 @@
             </div>
         </div>
 
-        <!-- FOCO COMPLETO -->
         <div id="view-foco" class="page-view">
             <div class="card foco-box" style="max-width: 500px; margin: 0 auto; padding: 2.5rem;">
                 <h2>Modo Foco Pomodoro</h2>
@@ -374,7 +362,6 @@
             </div>
         </div>
 
-        <!-- CALENDÁRIO VISÃO GERAL -->
         <div id="view-calendario" class="page-view">
             <div class="card">
                 <div class="card-header"><h3>Agenda Geral - Agosto 2026</h3></div>
@@ -382,16 +369,14 @@
             </div>
         </div>
 
-        <!-- ANOTAÇÕES -->
         <div id="view-anotacoes" class="page-view">
             <div class="card">
                 <div class="card-header"><h3>Bloco de Notas</h3></div>
                 <textarea class="input-field" id="notes-text" style="height: 200px; resize: none;" placeholder="Escreva suas anotações aqui..."></textarea>
-                <button class="btn-primary" style="margin-top:0.75rem;" onclick="alert('Anotações salvas!')">Salvar Anotação</button>
+                <button class="btn-primary" style="margin-top:0.75rem;" onclick="saveNotes()">Salvar Anotação</button>
             </div>
         </div>
 
-        <!-- CONFIGURAÇÕES -->
         <div id="view-configuracoes" class="page-view">
             <div class="card">
                 <div class="card-header"><h3>Configurações de Tema e Preferências</h3></div>
@@ -404,14 +389,20 @@
     <script>
         lucide.createIcons();
 
-        // ESTADO GLOBAL DE DISCIPLINAS
-        let disciplinas = [
+        // VALORES PADRÃO COM LOCALSTORAGE
+        let disciplinas = JSON.parse(localStorage.getItem('academic_disciplinas')) || [
             { id: 1, nome: 'Controle de Qualidade de Alimentos', professor: 'Pamela Cristina', progresso: 72 },
             { id: 2, nome: 'Bioestatística', professor: 'Marcos Silva', progresso: 61 },
             { id: 3, nome: 'Farmacologia Aplicada', professor: 'Juliana Costa', progresso: 48 }
         ];
 
-        let tarefas = [{ id: 1, titulo: 'Relatório de Microbiologia', feita: false }];
+        let tarefas = JSON.parse(localStorage.getItem('academic_tarefas')) || [
+            { id: 1, titulo: 'Relatório de Microbiologia', feita: false }
+        ];
+
+        // RESTAURAR TEMA SALVO
+        const savedTheme = localStorage.getItem('academic_theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
 
         // DATA ATUAL
         const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
@@ -419,7 +410,9 @@
 
         function toggleTheme() {
             const currentTheme = document.documentElement.getAttribute('data-theme');
-            document.documentElement.setAttribute('data-theme', currentTheme === 'dark' ? 'light' : 'dark');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('academic_theme', newTheme);
         }
 
         function switchPage(pageId, element) {
@@ -442,7 +435,7 @@
             document.getElementById('page-title').innerText = pageTitles[pageId] || 'Central de Estudos';
         }
 
-        // GERENCIADOR COMPLETO DE DISCIPLINAS
+        // GERENCIADOR DE DISCIPLINAS (PERSISTENTE)
         function renderDisciplinas() {
             const dashList = document.getElementById('list-disciplinas-dashboard');
             const fullGrid = document.getElementById('full-disciplinas-grid');
@@ -464,11 +457,9 @@
                 totalProgresso += Number(d.progresso);
                 if (d.progresso < 50) criticalCount++;
 
-                // Popular selects do pomodoro
                 dashSelect.innerHTML += `<option value="${d.id}">${d.nome}</option>`;
                 fullSelect.innerHTML += `<option value="${d.id}">${d.nome}</option>`;
 
-                // Lista reduzida para o Dashboard
                 dashList.innerHTML += `
                     <div class="disc-item">
                         <div class="disc-info">
@@ -485,7 +476,6 @@
                     </div>`;
             });
 
-            // Grid completo da tela de Disciplinas
             filtered.forEach(d => {
                 fullGrid.innerHTML += `
                     <div class="disc-card-item">
@@ -507,11 +497,11 @@
                     </div>`;
             });
 
-            // Atualizar métricas do topo
             document.getElementById('stat-total-disc').innerText = disciplinas.length;
             document.getElementById('stat-avg-disc').innerText = disciplinas.length ? Math.round(totalProgresso / disciplinas.length) + '%' : '0%';
             document.getElementById('stat-critical-disc').innerText = criticalCount;
 
+            localStorage.setItem('academic_disciplinas', JSON.stringify(disciplinas));
             lucide.createIcons();
         }
 
@@ -547,7 +537,7 @@
             }
         }
 
-        // TAREFAS
+        // TAREFAS (PERSISTENTE)
         function renderTarefas() {
             const container = document.getElementById('tasks-list-container');
             container.innerHTML = '';
@@ -559,6 +549,7 @@
                     </div>`;
             });
             document.getElementById('count-tarefas').innerText = tarefas.filter(t => !t.feita).length;
+            localStorage.setItem('academic_tarefas', JSON.stringify(tarefas));
         }
 
         function addTarefa() {
@@ -574,6 +565,14 @@
             const task = tarefas.find(t => t.id === id);
             if (task) task.feita = !task.feita;
             renderTarefas();
+        }
+
+        // ANOTAÇÕES
+        const notesArea = document.getElementById('notes-text');
+        notesArea.value = localStorage.getItem('academic_notes') || '';
+        function saveNotes() {
+            localStorage.setItem('academic_notes', notesArea.value);
+            alert('Anotações salvas com sucesso!');
         }
 
         // CALENDÁRIO
