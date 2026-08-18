@@ -48,6 +48,21 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; transition: background-color 0.2s, color 0.2s, border-color 0.2s; }
         body { background-color: var(--bg-body); color: var(--text-main); display: flex; min-height: 100vh; font-size: 14px; }
 
+        /* MODAL E TELA DE AUTHENTICATION */
+        #auth-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px);
+            display: grid; place-items: center; z-index: 9999;
+        }
+        .auth-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius-lg); padding: 2rem; width: 100%; max-width: 420px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .auth-tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
+        .auth-tab { flex: 1; text-align: center; padding: 0.6rem; font-weight: 700; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; }
+        .auth-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+
         /* SIDEBAR */
         #sidebar {
             width: 240px; background: var(--bg-sidebar); border-right: 1px solid var(--border);
@@ -72,9 +87,10 @@
         .nav-item.active { background: var(--primary-light); color: var(--primary); font-weight: 600; }
 
         .user-profile {
-            display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem;
-            border-top: 1px solid var(--border); padding-top: 1rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: space-between; padding: 0.5rem;
+            border-top: 1px solid var(--border); padding-top: 1rem;
         }
+        .user-info { display: flex; align-items: center; gap: 0.75rem; }
         .avatar { width: 36px; height: 36px; background: #065F46; color: white; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 0.85rem; }
 
         /* MAIN CONTENT */
@@ -86,146 +102,95 @@
         .header-actions { display: flex; gap: 0.75rem; }
         .icon-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-card); display: grid; place-items: center; color: var(--text-main); cursor: pointer; }
 
-        /* DASHBOARD GRID */
-        .dashboard-grid { display: grid; grid-template-columns: 1fr 320px; gap: 1.5rem; }
-        .left-column { display: flex; flex-direction: column; gap: 1.25rem; }
-        .right-column { display: flex; flex-direction: column; gap: 1.25rem; }
-
-        /* CARDS */
+        /* CARDS & FORMULÁRIOS */
         .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; }
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
         .card-header h3 { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--text-main); letter-spacing: 0.02em; }
 
-        /* HERO CARD COM WALLPAPER */
-        .hero-card-wallpaper {
-            background: linear-gradient(180deg, rgba(244, 246, 248, 0.82) 0%, rgba(244, 246, 248, 0.95) 100%), 
-                        url('https://images8.alphacoders.com/135/thumb-1920-1354012.png') center/cover no-repeat;
-            border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.75rem;
-            position: relative; overflow: hidden;
-        }
-        [data-theme="dark"] .hero-card-wallpaper {
-            background: linear-gradient(180deg, rgba(15, 23, 42, 0.75) 0%, rgba(15, 23, 42, 0.92) 100%), 
-                        url('https://images8.alphacoders.com/135/thumb-1920-1354012.png') center/cover no-repeat;
-        }
-        .badge-tag { background: #D1FAE5; color: #065F46; font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 4px; display: inline-block; margin-left: 0.5rem; }
-        .hero-title { font-size: 1.35rem; font-weight: 800; margin: 0.5rem 0 0.75rem 0; color: var(--text-main); }
-        .btn-primary { background: var(--primary); color: white; border: none; padding: 0.65rem 1.25rem; border-radius: var(--radius-md); font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; }
-        .btn-danger { background: #EF4444; color: white; border: none; padding: 0.4rem 0.75rem; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 600; cursor: pointer; }
+        .btn-primary { background: var(--primary); color: white; border: none; padding: 0.65rem 1.25rem; border-radius: var(--radius-md); font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; }
         .btn-secondary { background: var(--border); color: var(--text-main); border: none; padding: 0.4rem 0.75rem; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 600; cursor: pointer; }
+        .btn-danger { background: #EF4444; color: white; border: none; padding: 0.4rem 0.75rem; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 600; cursor: pointer; }
 
-        /* QUADRO MINHA SEMANA NO DASHBOARD */
-        .dash-weekly-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.6rem; overflow-x: auto; }
-        .dash-weekly-col { background: var(--bg-body); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 0.6rem; min-height: 250px; display: flex; flex-direction: column; gap: 0.5rem; }
-        .dash-weekly-col.today-active { border: 2px solid var(--primary); background: var(--primary-light); }
-        .dash-weekly-header { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); text-align: center; padding-bottom: 0.4rem; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; gap: 2px; }
-        .today-badge { font-size: 0.6rem; background: var(--primary); color: white; padding: 1px 4px; border-radius: 4px; font-weight: 700; }
-        .dash-weekly-card { background: var(--bg-card); border-radius: var(--radius-sm); padding: 0.55rem; border-left: 4px solid var(--primary); font-size: 0.72rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
-
-        /* FORMULÁRIOS E INPUTS GENERICS */
-        .form-grid-disc { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
-        .form-group { display: flex; flex-direction: column; gap: 0.35rem; }
+        .form-group { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1rem; }
         .form-group label { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
         select.select-disc, input.input-field, textarea.input-field { width: 100%; padding: 0.6rem; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 0.8rem; color: var(--text-main); background: var(--bg-card); outline: none; }
-        textarea.input-field { resize: vertical; }
-
-        /* DISCIPLINAS LIST & CARD */
-        .disc-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem; padding-bottom: 0.85rem; border-bottom: 1px dashed var(--border); }
-        .disc-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-        .disc-grid-advanced { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; margin-top: 1rem; }
-        .disc-card-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.25rem; position: relative; border-left: 5px solid var(--primary); }
-
-        .time-slots-container { margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 1rem; }
-        .slot-row { display: grid; grid-template-columns: 2fr 1.5fr 1.5fr 2fr auto; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem; }
-
-        /* GRADE SEMANAL (PÁGINA DISCIPLINAS) */
-        .weekly-grid-container { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.75rem; overflow-x: auto; min-width: 850px; }
-        .weekly-day-col { background: var(--bg-body); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 0.75rem; min-height: 220px; display: flex; flex-direction: column; gap: 0.5rem; }
-        .weekly-day-title { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); text-align: center; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
-        .weekly-slot-card { background: var(--bg-card); border-radius: var(--radius-sm); padding: 0.6rem; border-left: 4px solid var(--primary); font-size: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-
-        /* CALENDÁRIO ACADÊMICO */
-        .cal-header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-        .calendar-full-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; }
-        .cal-full-day-head { font-weight: 700; font-size: 0.75rem; color: var(--text-muted); text-align: center; padding-bottom: 0.5rem; text-transform: uppercase; }
-        .cal-full-day-cell { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); min-height: 90px; padding: 0.4rem; display: flex; flex-direction: column; gap: 0.3rem; }
-        .cal-full-day-cell.other-month { opacity: 0.4; background: var(--bg-body); }
-        .cal-full-day-cell.today-cell { border: 2px solid var(--primary); }
-        .cal-day-number { font-weight: 800; font-size: 0.75rem; margin-bottom: 0.2rem; }
-        .cal-event-pill { font-size: 0.65rem; font-weight: 700; padding: 0.2rem 0.4rem; border-radius: 4px; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
-
-        .calendar-sidebar-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; }
-        @media (max-width: 900px) { .calendar-sidebar-grid { grid-template-columns: 1fr; } }
-
-        /* TAREFAS ACADÊMICAS */
-        .task-card-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; border-left: 4px solid var(--border); }
-        .task-card-item.prio-alta { border-left-color: #EF4444; }
-        .task-card-item.prio-media { border-left-color: #F59E0B; }
-        .task-card-item.prio-baixa { border-left-color: #10B981; }
-        .task-card-item.completed { opacity: 0.6; }
-        .task-card-item.completed .task-title { text-decoration: line-through; }
-
-        /* CADERNO DIGITAL / ANOTAÇÕES */
-        .notes-layout { display: grid; grid-template-columns: 220px 280px 1fr; gap: 1rem; height: 620px; }
-        @media (max-width: 1000px) { .notes-layout { grid-template-columns: 1fr; height: auto; } }
-        
-        .notebooks-sidebar { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem; display: flex; flex-direction: column; gap: 0.5rem; overflow-y: auto; }
-        .notebook-item { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0.75rem; border-radius: var(--radius-sm); cursor: pointer; font-weight: 600; font-size: 0.8rem; color: var(--text-muted); }
-        .notebook-item:hover { background: var(--bg-body); color: var(--text-main); }
-        .notebook-item.active { background: var(--primary-light); color: var(--primary); font-weight: 700; }
-
-        .notes-list-panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem; overflow-y: auto; }
-        .note-card-item { padding: 0.75rem; border-radius: var(--radius-sm); border: 1px solid var(--border); cursor: pointer; display: flex; flex-direction: column; gap: 0.3rem; border-left: 4px solid var(--primary); }
-        .note-card-item:hover { background: var(--bg-body); }
-        .note-card-item.active { background: var(--primary-light); border-color: var(--primary); }
-
-        .note-editor-panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.25rem; display: flex; flex-direction: column; gap: 0.85rem; overflow-y: auto; }
-        .toolbar-notes { display: flex; gap: 0.3rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; flex-wrap: wrap; }
-        .toolbar-btn { padding: 0.3rem 0.6rem; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-body); cursor: pointer; font-size: 0.75rem; font-weight: 700; color: var(--text-main); }
-
-        /* CALENDÁRIO MINI (WIDGET DASHBOARD) */
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.25rem; text-align: center; font-size: 0.75rem; }
-        .cal-day-name { font-weight: 700; color: var(--text-muted); padding-bottom: 0.5rem; }
-        .cal-day { padding: 0.4rem 0; border-radius: 50%; cursor: pointer; color: var(--text-main); font-weight: 500; }
-        .cal-day.active { background: var(--primary); color: white; font-weight: 700; }
-        .cal-day.muted { color: var(--text-muted); opacity: 0.5; }
-
-        /* EVENTOS MINI */
-        .event-item { display: flex; gap: 0.85rem; margin-bottom: 0.85rem; align-items: flex-start; }
-        .event-date { text-align: center; line-height: 1.1; min-width: 32px; }
-        .event-date .day { font-size: 0.9rem; font-weight: 800; color: #EF4444; }
-        .event-date .month { font-size: 0.65rem; font-weight: 700; color: #EF4444; text-transform: uppercase; }
-
-        /* FOCO RÁPIDO & SALA DE FOCO */
-        .foco-box { text-align: center; display: flex; flex-direction: column; align-items: center; }
-        .timer-circle { width: 110px; height: 110px; border-radius: 50%; border: 6px solid var(--primary); display: grid; place-items: center; margin: 1rem 0; font-family: 'JetBrains Mono', monospace; }
-        .timer-time { font-size: 1.5rem; font-weight: 800; }
-
-        .foco-container { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
-        @media (max-width: 900px) { .foco-container { grid-template-columns: 1fr; } }
-
-        .timer-svg-container { position: relative; width: 180px; height: 180px; margin: 1rem auto; display: grid; place-items: center; }
-        .timer-svg { transform: rotate(-90deg); width: 100%; height: 100%; }
-        .timer-bg-circle { fill: none; stroke: var(--border); stroke-width: 8; }
-        .timer-progress-circle { fill: none; stroke: var(--primary); stroke-width: 8; stroke-linecap: round; stroke-dasharray: 502; stroke-dashoffset: 0; transition: stroke-dashoffset 1s linear; }
-        .timer-overlay-text { position: absolute; text-align: center; }
-
-        /* CHAT TIRA-DÚVIDAS */
-        .chat-card { display: flex; flex-direction: column; height: 480px; }
-        .chat-messages { flex: 1; overflow-y: auto; padding: 0.75rem; display: flex; flex-direction: column; gap: 0.75rem; border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 0.75rem; background: rgba(0,0,0,0.03); }
-        .chat-msg { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.6rem 0.8rem; font-size: 0.8rem; }
-        .chat-msg-header { display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 0.25rem; font-size: 0.72rem; color: var(--primary); }
-        .chat-msg-time { font-weight: 400; color: var(--text-muted); }
-        .chat-input-box { display: flex; gap: 0.5rem; }
 
         /* PAGES CONTROL */
         .page-view { display: none; }
         .page-view.active { display: block; }
-
-        .badge-info { display: inline-block; font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.4rem; border-radius: 4px; background: var(--border); color: var(--text-main); }
     </style>
 </head>
 <body>
 
+    <!-- OVERLAY DE AUTENTICAÇÃO (LOGIN / CADASTRO / RECUPERAÇÃO) -->
+    <div id="auth-overlay">
+        <div class="auth-card">
+            <div class="brand" style="justify-content: center; margin-bottom: 1.5rem;">
+                <div class="brand-icon"><i data-lucide="box"></i></div>
+                <div class="brand-text">
+                    <h2>CENTRAL DE ESTUDOS</h2>
+                    <span>Academic OS</span>
+                </div>
+            </div>
+
+            <div class="auth-tabs" id="auth-tabs-container">
+                <div class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Entrar</div>
+                <div class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">Criar Conta</div>
+            </div>
+
+            <!-- FORMULÁRIO DE LOGIN -->
+            <form id="form-login" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>E-mail</label>
+                    <input type="email" id="login-email" class="input-field" placeholder="seu@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" id="login-password" class="input-field" placeholder="••••••••" required>
+                </div>
+                <div style="text-align: right; margin-bottom: 1rem;">
+                    <a href="#" onclick="showRecoverForm()" style="font-size:0.75rem; color:var(--primary); font-weight:600; text-decoration:none;">Esqueci minha senha</a>
+                </div>
+                <button type="submit" class="btn-primary">Entrar no Sistema</button>
+            </form>
+
+            <!-- FORMULÁRIO DE CADASTRO -->
+            <form id="form-register" style="display:none;" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label>Nome Completo</label>
+                    <input type="text" id="reg-name" class="input-field" placeholder="Seu nome" required>
+                </div>
+                <div class="form-group">
+                    <label>E-mail</label>
+                    <input type="email" id="reg-email" class="input-field" placeholder="seu@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" id="reg-password" class="input-field" placeholder="Mínimo 6 caracteres" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label>Confirmar Senha</label>
+                    <input type="password" id="reg-confirm-password" class="input-field" placeholder="Repita a senha" required minlength="6">
+                </div>
+                <button type="submit" class="btn-primary">Criar Minha Conta</button>
+            </form>
+
+            <!-- FORMULÁRIO DE RECUPERAÇÃO -->
+            <form id="form-recover" style="display:none;" onsubmit="handleRecoverPassword(event)">
+                <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:1rem;">Informe seu e-mail cadastrado para receber o link de redefinição de senha.</p>
+                <div class="form-group">
+                    <label>E-mail</label>
+                    <input type="email" id="recover-email" class="input-field" placeholder="seu@email.com" required>
+                </div>
+                <button type="submit" class="btn-primary" style="margin-bottom:0.75rem;">Enviar Link</button>
+                <button type="button" class="btn-secondary" style="width:100%;" onclick="switchAuthTab('login')">Voltar ao Login</button>
+            </form>
+
+            <div id="auth-error-msg" style="color:#EF4444; font-size:0.75rem; font-weight:700; margin-top:1rem; text-align:center; display:none;"></div>
+        </div>
+    </div>
+
+    <!-- MAIN APP STRUCTURE -->
     <aside id="sidebar">
         <div>
             <div class="brand">
@@ -261,11 +226,14 @@
         <div>
             <a class="nav-item" onclick="switchPage('configuracoes', this)" style="margin-bottom: 0.5rem;"><i data-lucide="settings" size="18"></i> Configurações</a>
             <div class="user-profile">
-                <div class="avatar">D</div>
-                <div>
-                    <div style="font-weight: 700; font-size: 0.85rem;">Daniel</div>
-                    <div style="font-size: 0.7rem; color: var(--text-muted);">2026/2 • Farmácia</div>
+                <div class="user-info">
+                    <div class="avatar" id="user-avatar-initial">U</div>
+                    <div>
+                        <div style="font-weight: 700; font-size: 0.85rem;" id="user-display-name">Carregando...</div>
+                        <div style="font-size: 0.7rem; color: var(--text-muted);" id="user-display-email">...</div>
+                    </div>
                 </div>
+                <button class="icon-btn" title="Sair da Conta" onclick="handleLogout()"><i data-lucide="log-out" size="16"></i></button>
             </div>
         </div>
     </aside>
@@ -273,7 +241,7 @@
     <main id="main-content">
         <header class="header">
             <div class="header-title">
-                <h1 id="page-title">Boa noite, Daniel 👋</h1>
+                <h1 id="page-title">Boas-vindas 👋</h1>
                 <span id="current-date">--</span>
             </div>
             <div class="header-actions">
@@ -281,608 +249,202 @@
             </div>
         </header>
 
-        <!-- PAGE DASHBOARD -->
+        <!-- PÁGINA INICIAL -->
         <div id="view-dashboard" class="page-view active">
-            <div class="dashboard-grid">
-                <div class="left-column">
-                    <!-- CARD: PRÓXIMO COMPROMISSO DINÂMICO -->
-                    <div class="hero-card-wallpaper" id="card-proximo-compromisso">
-                        <!-- Gerado dinamicamente via JS com base nas disciplinas -->
-                    </div>
-
-                    <!-- QUADRO PRINCIPAL: MINHA SEMANA -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>MINHA SEMANA ACADÊMICA</h3>
-                            <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600;">Grade de Horários</span>
-                        </div>
-                        
-                        <div class="dash-weekly-grid" id="dash-weekly-schedule"></div>
-
-                        <!-- SEÇÃO SECUNDÁRIA: DISCIPLINAS SEM HORÁRIO -->
-                        <div id="dash-unassigned-disciplines" style="margin-top: 1rem; border-top: 1px dashed var(--border); padding-top: 0.75rem; display: none;">
-                            <div style="font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.4rem;">
-                                ⚠️ Disciplinas sem horário definido:
-                            </div>
-                            <div id="dash-unassigned-list" style="display: flex; gap: 0.5rem; flex-wrap: wrap;"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="right-column">
-                    <!-- FOCO RÁPIDO -->
-                    <div class="card foco-box">
-                        <div class="card-header" style="width: 100%;"><h3>FOCO RÁPIDO</h3></div>
-                        <div class="timer-circle">
-                            <div><div class="timer-time" id="dash-timer">25:00</div></div>
-                        </div>
-                        <select class="select-disc" id="dash-materia-select"></select>
-                        <button class="btn-primary" style="width: 100%; margin-top: 0.75rem;" onclick="toggleTimer()"><i data-lucide="play" size="16"></i> Iniciar foco</button>
-                    </div>
-
-                    <!-- CALENDÁRIO WIDGET -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>CALENDÁRIO</h3>
-                            <a href="#" style="font-size: 0.75rem; color: var(--primary); font-weight: 600; text-decoration: none;" onclick="switchPage('calendario', document.querySelectorAll('.nav-item')[4])">Ver agenda</a>
-                        </div>
-                        <div style="font-weight: 700; margin-bottom: 0.75rem;">Agosto 2026</div>
-                        <div class="calendar-grid" id="calendar-days-container"></div>
-                    </div>
-
-                    <!-- PRÓXIMOS EVENTOS COMPACTO -->
-                    <div class="card">
-                        <div class="card-header"><h3>PRÓXIMOS EVENTOS</h3></div>
-                        <div id="dash-upcoming-events-list"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- PAGE DISCIPLINAS -->
-        <div id="view-disciplinas" class="page-view">
-            <div class="metrics-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 1.5rem; display: grid; gap: 1rem;">
-                <div class="metric-card">
-                    <div class="metric-icon" style="background: #E0E7FF; color: #4338CA;"><i data-lucide="book-open" size="18"></i></div>
-                    <div>
-                        <div class="metric-lbl">Total de Disciplinas</div>
-                        <div class="metric-val" id="stat-total-disc">0</div>
-                    </div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-icon" style="background: #D1FAE5; color: #059669;"><i data-lucide="calendar" size="18"></i></div>
-                    <div>
-                        <div class="metric-lbl">Aulas na Semana</div>
-                        <div class="metric-val" id="stat-aulas-semana">0</div>
-                    </div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-icon" style="background: #FEF3C7; color: #D97706;"><i data-lucide="clock" size="18"></i></div>
-                    <div>
-                        <div class="metric-lbl">Próxima Aula</div>
-                        <div class="metric-val" id="stat-proxima-aula" style="font-size: 0.85rem;">--</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CARD ADICIONAR / EDITAR DISCIPLINA -->
-            <div class="card" style="margin-bottom: 1.5rem;">
-                <div class="card-header">
-                    <h3 id="form-disc-title">Adicionar Nova Disciplina</h3>
-                    <button id="btn-cancel-edit" class="btn-secondary" style="display:none;" onclick="resetDiscForm()">Cancelar Edição</button>
-                </div>
-
-                <input type="hidden" id="edit-disc-id">
-
-                <div class="form-grid-disc">
-                    <div class="form-group">
-                        <label>Nome da Disciplina *</label>
-                        <input type="text" id="disc-nome" class="input-field" placeholder="Ex: Farmacologia Aplicada">
-                    </div>
-                    <div class="form-group">
-                        <label>Professor(a)</label>
-                        <input type="text" id="disc-professor" class="input-field" placeholder="Ex: Dra. Juliana Costa">
-                    </div>
-                    <div class="form-group">
-                        <label>Turno</label>
-                        <select id="disc-turno" class="select-disc">
-                            <option value="Matutino">Matutino</option>
-                            <option value="Vespertino" selected>Vespertino</option>
-                            <option value="Noturno">Noturno</option>
-                            <option value="Integral">Integral</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Período / Semestre</label>
-                        <input type="text" id="disc-periodo" class="input-field" placeholder="Ex: 5º Período">
-                    </div>
-                    <div class="form-group">
-                        <label>Cor de Identificação</label>
-                        <input type="color" id="disc-cor" class="input-field" value="#10B981" style="height:38px; padding:2px; cursor:pointer;">
-                    </div>
-                </div>
-
-                <div class="time-slots-container">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.75rem;">
-                        <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Horários de Aula</span>
-                        <button type="button" class="btn-secondary" onclick="addSlotRow()"><i data-lucide="plus" size="14"></i> Adicionar Horário</button>
-                    </div>
-                    
-                    <div id="slots-rows-container"></div>
-                </div>
-
-                <div class="form-group" style="margin-top: 1rem;">
-                    <label>Observações / Notas</label>
-                    <input type="text" id="disc-observacoes" class="input-field" placeholder="Ex: Aulas de laboratório quinzenais, trazer jaleco...">
-                </div>
-
-                <div style="margin-top: 1.25rem; display: flex; justify-content: flex-end;">
-                    <button class="btn-primary" id="btn-save-disc" onclick="saveDisciplina()"><i data-lucide="save" size="16"></i> Salvar Disciplina</button>
-                </div>
-            </div>
-
-            <!-- GRADE SEMANAL DE AULAS -->
-            <div class="card" style="margin-bottom: 1.5rem;">
-                <div class="card-header">
-                    <h3>Minha Grade Semanal</h3>
-                </div>
-                <div class="weekly-grid-container" id="weekly-schedule-grid"></div>
-            </div>
-
-            <!-- LISTA E PESQUISA DE DISCIPLINAS -->
             <div class="card">
-                <div class="card-header" style="flex-wrap: wrap; gap: 0.75rem;">
-                    <h3>Matérias Cadastradas</h3>
-                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                        <input type="text" id="search-disc" class="input-field" placeholder="Buscar matéria ou professor..." oninput="renderDisciplinas()" style="width: 220px; padding: 0.4rem 0.6rem;">
-                        <select id="filter-dia" class="select-disc" onchange="renderDisciplinas()" style="width: 140px; padding: 0.4rem 0.6rem;">
-                            <option value="">Todos os Dias</option>
-                            <option value="Segunda">Segunda</option>
-                            <option value="Terça">Terça</option>
-                            <option value="Quarta">Quarta</option>
-                            <option value="Quinta">Quinta</option>
-                            <option value="Sexta">Sexta</option>
-                            <option value="Sábado">Sábado</option>
-                            <option value="Domingo">Domingo</option>
-                        </select>
-                        <select id="filter-turno" class="select-disc" onchange="renderDisciplinas()" style="width: 130px; padding: 0.4rem 0.6rem;">
-                            <option value="">Todos Turnos</option>
-                            <option value="Matutino">Matutino</option>
-                            <option value="Vespertino">Vespertino</option>
-                            <option value="Noturno">Noturno</option>
-                            <option value="Integral">Integral</option>
-                        </select>
-                    </div>
-                </div>
-                <div id="full-disciplinas-grid" class="disc-grid-advanced"></div>
+                <div class="card-header"><h3>Status da Sessão & Firestore</h3></div>
+                <p style="color:var(--text-muted); margin-bottom:1rem;">Infraestrutura de autenticação e comunicação remota com o Cloud Firestore do projeto <strong>Painel-Estudos</strong> ativa com sucesso.</p>
+                <div id="session-info-debug" style="background:var(--bg-body); padding:1rem; border-radius:var(--radius-sm); font-family:'JetBrains Mono', monospace; font-size:0.8rem;"></div>
             </div>
         </div>
 
-        <!-- PAGE TAREFAS (GERENCIADOR ACADÊMICO REESTRUTURADO) -->
-        <div id="view-tarefas" class="page-view">
-            <div class="metrics-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 1.5rem; display: grid; gap: 1rem;">
-                <div class="metric-card">
-                    <div class="metric-icon" style="background: #E0E7FF; color: #4338CA;"><i data-lucide="check-square" size="18"></i></div>
-                    <div>
-                        <div class="metric-lbl">Total de Tarefas</div>
-                        <div class="metric-val" id="task-stat-total">0</div>
-                    </div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-icon" style="background: #D1FAE5; color: #059669;"><i data-lucide="check-circle-2" size="18"></i></div>
-                    <div>
-                        <div class="metric-lbl">Concluídas</div>
-                        <div class="metric-val" id="task-stat-done">0</div>
-                    </div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-icon" style="background: #FEF3C7; color: #D97706;"><i data-lucide="clock" size="18"></i></div>
-                    <div>
-                        <div class="metric-lbl">Pendentes</div>
-                        <div class="metric-val" id="task-stat-pending">0</div>
-                    </div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-icon" style="background: #FEF2F2; color: #EF4444;"><i data-lucide="alert-triangle" size="18"></i></div>
-                    <div>
-                        <div class="metric-lbl">Atrasadas</div>
-                        <div class="metric-val" id="task-stat-late">0</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- FORMULÁRIO DE TAREFA -->
-            <div class="card" style="margin-bottom: 1.5rem;">
-                <div class="card-header">
-                    <h3 id="form-task-title">Nova Tarefa Acadêmica</h3>
-                    <button id="btn-cancel-task-edit" class="btn-secondary" style="display:none;" onclick="resetTaskForm()">Cancelar Edição</button>
-                </div>
-                <input type="hidden" id="edit-task-id">
-
-                <div class="form-grid-disc">
-                    <div class="form-group" style="grid-column: span 2;">
-                        <label>Descrição / Título da Tarefa *</label>
-                        <input type="text" id="task-titulo" class="input-field" placeholder="Ex: Relatório Prático de Microbiologia">
-                    </div>
-                    <div class="form-group">
-                        <label>Disciplina Relacionada</label>
-                        <select id="task-disciplina" class="select-disc"></select>
-                    </div>
-                    <div class="form-group">
-                        <label>Data de Entrega *</label>
-                        <input type="date" id="task-data" class="input-field">
-                    </div>
-                    <div class="form-group">
-                        <label>Prioridade</label>
-                        <select id="task-prioridade" class="select-disc">
-                            <option value="Baixa">Baixa</option>
-                            <option value="Média" selected>Média</option>
-                            <option value="Alta">Alta</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group" style="margin-top: 1rem;">
-                    <label>Observações / Detalhes</label>
-                    <input type="text" id="task-observacoes" class="input-field" placeholder="Ex: Entregar em formato PDF via Portal...">
-                </div>
-
-                <div style="margin-top: 1.25rem; display: flex; justify-content: flex-end;">
-                    <button class="btn-primary" onclick="saveTarefa()"><i data-lucide="plus" size="16"></i> Salvar Tarefa</button>
-                </div>
-            </div>
-
-            <!-- LISTA DE TAREFAS COM FILTROS -->
-            <div class="card">
-                <div class="card-header" style="flex-wrap: wrap; gap: 0.75rem;">
-                    <h3>Minhas Tarefas</h3>
-                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                        <select id="filter-task-status" class="select-disc" onchange="renderTarefas()" style="width: 130px; padding: 0.4rem 0.6rem;">
-                            <option value="Todas">Todas</option>
-                            <option value="Pendentes" selected>Pendentes</option>
-                            <option value="Concluídas">Concluídas</option>
-                            <option value="Atrasadas">Atrasadas</option>
-                        </select>
-                        <select id="sort-task-by" class="select-disc" onchange="renderTarefas()" style="width: 150px; padding: 0.4rem 0.6rem;">
-                            <option value="data">Ordernar por Data</option>
-                            <option value="prioridade">Ordenar por Prioridade</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div id="tasks-list-container" style="margin-top: 0.5rem;"></div>
-            </div>
-        </div>
-
-        <!-- PAGE CALENDÁRIO ACADÊMICO REESTRUTURADO -->
-        <div id="view-calendario" class="page-view">
-            <div class="calendar-sidebar-grid">
-                <div class="left-column">
-                    <div class="card">
-                        <div class="cal-header-nav">
-                            <button class="btn-secondary" onclick="changeMonth(-1)"><i data-lucide="chevron-left" size="16"></i> Anterior</button>
-                            <h3 id="cal-month-year-label" style="font-size: 1.05rem; font-weight: 800; text-transform: uppercase;">Agosto 2026</h3>
-                            <button class="btn-secondary" onclick="changeMonth(1)">Próximo <i data-lucide="chevron-right" size="16"></i></button>
-                        </div>
-
-                        <div class="calendar-full-grid">
-                            <div class="cal-full-day-head">DOM</div>
-                            <div class="cal-full-day-head">SEG</div>
-                            <div class="cal-full-day-head">TER</div>
-                            <div class="cal-full-day-head">QUA</div>
-                            <div class="cal-full-day-head">QUI</div>
-                            <div class="cal-full-day-head">SEX</div>
-                            <div class="cal-full-day-head">SÁB</div>
-                        </div>
-                        <div class="calendar-full-grid" id="cal-full-month-days"></div>
-                    </div>
-                </div>
-
-                <div class="right-column">
-                    <!-- ADICIONAR / EDITAR EVENTO -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 id="form-event-title">Novo Evento Acadêmico</h3>
-                            <button id="btn-cancel-event-edit" class="btn-secondary" style="display:none;" onclick="resetEventForm()">Cancelar</button>
-                        </div>
-                        <input type="hidden" id="edit-event-id">
-
-                        <div style="display:flex; flex-direction:column; gap:0.75rem;">
-                            <div class="form-group">
-                                label>Título do Evento *</label>
-                                <input type="text" id="event-titulo" class="input-field" placeholder="Ex: Prova Regimental 1">
-                            </div>
-                            <div class="form-group">
-                                <label>Tipo de Evento</label>
-                                <select id="event-tipo" class="select-disc">
-                                    <option value="Prova">Prova</option>
-                                    <option value="Seminário">Seminário</option>
-                                    <option value="Trabalho">Trabalho/Entrega</option>
-                                    <option value="Apresentação">Apresentação</option>
-                                    <option value="Outro">Outro</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Disciplina Relacionada</label>
-                                <select id="event-disciplina" class="select-disc"></select>
-                            </div>
-                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
-                                <div class="form-group">
-                                    <label>Data *</label>
-                                    <input type="date" id="event-data" class="input-field">
-                                </div>
-                                <div class="form-group">
-                                    <label>Horário</label>
-                                    <input type="time" id="event-horario" class="input-field" value="13:00">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Descrição / Anotações</label>
-                                <input type="text" id="event-descricao" class="input-field" placeholder="Ex: Conteúdo dos capítulos 1 a 4">
-                            </div>
-
-                            <button class="btn-primary" style="margin-top:0.5rem;" onclick="saveEvento()"><i data-lucide="calendar-plus" size="16"></i> Salvar Evento</button>
-                        </div>
-                    </div>
-
-                    <!-- PRÓXIMOS EVENTOS EM ORDEM CRONOLÓGICA -->
-                    <div class="card">
-                        <div class="card-header"><h3>PRÓXIMOS COMPROMISSOS</h3></div>
-                        <div id="full-upcoming-events-list"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- PAGE ANOTAÇÕES — CADERNO DIGITAL REESTRUTURADO -->
-        <div id="view-anotacoes" class="page-view">
-            <div class="notes-layout">
-                <!-- COLUNA 1: CADERNOS -->
-                <div class="notebooks-sidebar">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.5rem;">
-                        <span style="font-size:0.75rem; font-weight:800; text-transform:uppercase; color:var(--text-muted);">CADERNOS</span>
-                        <button class="btn-secondary" style="padding:0.2rem 0.5rem;" onclick="addCaderno()"><i data-lucide="plus" size="12"></i></button>
-                    </div>
-                    <div id="notebooks-list-container"></div>
-                </div>
-
-                <!-- COLUNA 2: LISTA DE ANOTAÇÕES -->
-                <div class="notes-list-panel">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <h3 id="current-notebook-title" style="font-size:0.9rem; font-weight:800;">Aulas</h3>
-                        <button class="btn-primary" style="padding:0.35rem 0.65rem; font-size:0.75rem;" onclick="createNewAnotacao()"><i data-lucide="plus" size="14"></i> Nota</button>
-                    </div>
-                    <input type="text" id="search-notes" class="input-field" placeholder="Buscar nas anotações..." oninput="renderAnotacoesList()" style="padding:0.4rem 0.6rem;">
-                    <div id="notes-cards-container" style="display:flex; flex-direction:column; gap:0.5rem;"></div>
-                </div>
-
-                <!-- COLUNA 3: EDITOR CONFORTÁVEL -->
-                <div class="note-editor-panel">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <input type="text" id="note-title-input" class="input-field" placeholder="Título da Anotação..." style="font-size:1.1rem; font-weight:800; border:none; padding:0; background:transparent;" oninput="autoSaveNote()">
-                        <div style="display:flex; gap:0.5rem; align-items:center;">
-                            <span id="auto-save-status" style="font-size:0.68rem; color:var(--text-muted); font-weight:600;">Autosalvo</span>
-                            <button class="btn-danger" style="padding:0.3rem 0.5rem;" onclick="deleteCurrentNote()"><i data-lucide="trash-2" size="14"></i></button>
-                        </div>
-                    </div>
-
-                    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.5rem;">
-                        <select id="note-discipline-select" class="select-disc" onchange="autoSaveNote()"></select>
-                        <input type="text" id="note-tags-input" class="input-field" placeholder="Tags (ex: resumo, p1)" oninput="autoSaveNote()">
-                        <input type="color" id="note-color-input" class="input-field" value="#10B981" style="height:35px; padding:2px; cursor:pointer;" onchange="autoSaveNote()">
-                    </div>
-
-                    <!-- BARRA DE FORMATADAÇÃO RÁPIDA -->
-                    <div class="toolbar-notes">
-                        <button class="toolbar-btn" onclick="formatNoteText('h2')">H2</button>
-                        <button class="toolbar-btn" onclick="formatNoteText('b')"><b>B</b></button>
-                        <button class="toolbar-btn" onclick="formatNoteText('i')"><i>I</i></button>
-                        <button class="toolbar-btn" onclick="formatNoteText('list')">• Lista</button>
-                        <button class="toolbar-btn" onclick="formatNoteText('quote')">“ Citação</button>
-                    </div>
-
-                    <textarea id="note-content-area" class="input-field" style="flex:1; border:none; font-family:'Plus Jakarta Sans', sans-serif; font-size:0.9rem; line-height:1.6; outline:none; background:transparent;" placeholder="Escreva suas anotações da aula aqui..." oninput="autoSaveNote()"></textarea>
-                </div>
-            </div>
-        </div>
-
-        <!-- PAGE FOCO -->
-        <div id="view-foco" class="page-view">
-            <div class="foco-container">
-                <div class="card foco-box">
-                    <div class="card-header" style="width:100%;">
-                        <h3>Modo Foco Pomodoro</h3>
-                    </div>
-                    
-                    <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
-                        <button class="btn-secondary" onclick="setTimerMode(25, 'Foco')">Foco (25m)</button>
-                        <button class="btn-secondary" onclick="setTimerMode(5, 'Pausa Curta')">Pausa (5m)</button>
-                        <button class="btn-secondary" onclick="setTimerMode(15, 'Pausa Longa')">Pausa (15m)</button>
-                    </div>
-
-                    <div class="timer-svg-container">
-                        <svg class="timer-svg" viewBox="0 0 180 180">
-                            <circle class="timer-bg-circle" cx="90" cy="90" r="80"></circle>
-                            <circle class="timer-progress-circle" id="timer-circle-progress" cx="90" cy="90" r="80"></circle>
-                        </svg>
-                        <div class="timer-overlay-text">
-                            <div class="timer-time" id="full-timer" style="font-size: 2.2rem; font-weight: 800;">25:00</div>
-                            <div style="font-size: 0.7rem; color: var(--text-muted);" id="timer-mode-lbl">Modo Foco</div>
-                        </div>
-                    </div>
-
-                    <select class="select-disc" id="full-materia-select" style="margin-bottom: 1rem;"></select>
-                    
-                    <div style="display: flex; gap: 0.75rem; width: 100%;">
-                        <button class="btn-primary" id="btn-toggle-timer" style="flex:1;" onclick="toggleTimer()"><i data-lucide="play" size="16"></i> Iniciar</button>
-                        <button class="btn-danger" onclick="resetTimer()"><i data-lucide="rotate-ccw" size="16"></i></button>
-                    </div>
-                </div>
-
-                <div class="card chat-card">
-                    <div class="card-header">
-                        <h3><i data-lucide="message-square" size="16" style="vertical-align: middle;"></i> Chat Tira-Dúvidas da Sala</h3>
-                        <span style="font-size: 0.7rem; color: var(--primary); font-weight: 700;">● Ao Vivo</span>
-                    </div>
-                    
-                    <div class="chat-messages" id="chat-messages-box"></div>
-
-                    <div class="chat-input-box">
-                        <input type="text" id="chat-input-field" class="input-field" placeholder="Escreva sua dúvida..." style="margin:0;" onkeypress="if(event.key === 'Enter') sendChatMessage()">
-                        <button class="btn-primary" onclick="sendChatMessage()"><i data-lucide="send" size="16"></i></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- CONFIGURAÇÕES -->
-        <div id="view-configuracoes" class="page-view">
-            <div class="card">
-                <div class="card-header"><h3>Configurações de Tema e Preferências</h3></div>
-                <p style="margin-bottom: 1rem;">Alterne as preferências visuais do seu ambiente acadêmico.</p>
-                <button class="btn-primary" onclick="toggleTheme()">Alternar Tema Escuro / Claro</button>
-            </div>
-        </div>
+        <div id="view-disciplinas" class="page-view"><div class="card"><h3>Gerenciador de Disciplinas</h3><p>Módulo aguardando próxima etapa.</p></div></div>
+        <div id="view-tarefas" class="page-view"><div class="card"><h3>Tarefas</h3><p>Módulo aguardando próxima etapa.</p></div></div>
+        <div id="view-foco" class="page-view"><div class="card"><h3>Foco Pomodoro</h3><p>Módulo aguardando próxima etapa.</p></div></div>
+        <div id="view-calendario" class="page-view"><div class="card"><h3>Calendário Acadêmico</h3><p>Módulo aguardando próxima etapa.</p></div></div>
+        <div id="view-anotacoes" class="page-view"><div class="card"><h3>Anotações</h3><p>Módulo aguardando próxima etapa.</p></div></div>
+        <div id="view-configuracoes" class="page-view"><div class="card"><h3>Configurações</h3><p>Módulo aguardando próxima etapa.</p></div></div>
     </main>
+
+    <!-- FIRABASE SDK SDK v10 (MODULAR / CDN) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { 
+            getAuth, 
+            signInWithEmailAndPassword, 
+            createUserWithEmailAndPassword, 
+            sendPasswordResetEmail, 
+            signOut, 
+            onAuthStateChanged 
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { 
+            getFirestore, 
+            doc, 
+            setDoc, 
+            getDoc, 
+            serverTimestamp 
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // CREDENCIAIS DO PROJETO PAINEL-ESTUDOS
+        const firebaseConfig = {
+            apiKey: "AIzaSyYOUR_API_KEY_HERE",
+            authDomain: "painel-estudos.firebaseapp.com",
+            projectId: "painel-estudos",
+            storageBucket: "painel-estudos.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        window.firebaseAuth = auth;
+        window.firebaseDb = db;
+
+        // AUTHENTICATION LISTENER (MONITORA LOGIN / LOGOUT)
+        onAuthStateChanged(auth, async (user) => {
+            const overlay = document.getElementById('auth-overlay');
+            if (user) {
+                overlay.style.display = 'none';
+                
+                // Carregar/criar perfil no Firestore (/users/{uid})
+                const userDocRef = doc(db, 'users', user.uid);
+                const userSnapshot = await getDoc(userDocRef);
+
+                let profileData = { nome: user.displayName || 'Estudante', email: user.email };
+                
+                if (userSnapshot.exists()) {
+                    profileData = userSnapshot.data();
+                } else {
+                    await setDoc(userDocRef, {
+                        nome: profileData.nome,
+                        email: profileData.email,
+                        criadaEm: serverTimestamp(),
+                        atualizadaEm: serverTimestamp()
+                    });
+                }
+
+                // Atualizar UI com dados do usuário
+                document.getElementById('user-display-name').innerText = profileData.nome;
+                document.getElementById('user-display-email').innerText = profileData.email;
+                document.getElementById('user-avatar-initial').innerText = profileData.nome.charAt(0).toUpperCase();
+                document.getElementById('page-title').innerText = `Boa noite, ${profileData.nome.split(' ')[0]} 👋`;
+
+                document.getElementById('session-info-debug').innerHTML = `
+                    <strong>Status:</strong> Autenticado com Sucesso<br>
+                    <strong>UID:</strong> ${user.uid}<br>
+                    <strong>E-mail:</strong> ${user.email}<br>
+                    <strong>Caminho Firestore:</strong> /users/${user.uid}
+                `;
+            } else {
+                overlay.style.display = 'grid';
+                document.getElementById('session-info-debug').innerText = 'Nenhum usuário autenticado no momento.';
+            }
+        });
+
+        // HANDLERS
+        window.handleLogin = async (e) => {
+            e.preventDefault();
+            showAuthError('');
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-password').value;
+
+            try {
+                await signInWithEmailAndPassword(auth, email, pass);
+            } catch (err) {
+                showAuthError(translateAuthError(err.code));
+            }
+        };
+
+        window.handleRegister = async (e) => {
+            e.preventDefault();
+            showAuthError('');
+            const name = document.getElementById('reg-name').value.trim();
+            const email = document.getElementById('reg-email').value;
+            const pass = document.getElementById('reg-password').value;
+            const confirmPass = document.getElementById('reg-confirm-password').value;
+
+            if (pass !== confirmPass) {
+                showAuthError('As senhas não coincidem.');
+                return;
+            }
+
+            try {
+                const creds = await createUserWithEmailAndPassword(auth, email, pass);
+                await setDoc(doc(db, 'users', creds.user.uid), {
+                    nome: name,
+                    email: email,
+                    criadaEm: serverTimestamp(),
+                    atualizadaEm: serverTimestamp()
+                });
+            } catch (err) {
+                showAuthError(translateAuthError(err.code));
+            }
+        };
+
+        window.handleRecoverPassword = async (e) => {
+            e.preventDefault();
+            showAuthError('');
+            const email = document.getElementById('recover-email').value;
+
+            try {
+                await sendPasswordResetEmail(auth, email);
+                alert('E-mail de redefinição enviado! Verifique sua caixa de entrada.');
+                switchAuthTab('login');
+            } catch (err) {
+                showAuthError(translateAuthError(err.code));
+            }
+        };
+
+        window.handleLogout = async () => {
+            if (confirm("Deseja realmente sair da sua conta?")) {
+                await signOut(auth);
+            }
+        };
+
+        function showAuthError(msg) {
+            const el = document.getElementById('auth-error-msg');
+            if (msg) {
+                el.innerText = msg;
+                el.style.display = 'block';
+            } else {
+                el.style.display = 'none';
+            }
+        }
+
+        function translateAuthError(code) {
+            switch(code) {
+                case 'auth/invalid-credential': return 'E-mail ou senha incorretos.';
+                case 'auth/user-not-found': return 'Usuário não encontrado.';
+                case 'auth/wrong-password': return 'Senha incorreta.';
+                case 'auth/email-already-in-use': return 'Este e-mail já está cadastrado.';
+                case 'auth/weak-password': return 'A senha deve ter pelo menos 6 caracteres.';
+                default: return 'Ocorreu um erro ao processar. Tente novamente.';
+            }
+        }
+    </script>
 
     <script>
         lucide.createIcons();
 
-        const DIAS_SEMANA = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
+        // UI HELPERS (TABS & NAVEGAÇÃO)
+        function switchAuthTab(tab) {
+            document.getElementById('form-login').style.display = tab === 'login' ? 'block' : 'none';
+            document.getElementById('form-register').style.display = tab === 'register' ? 'block' : 'none';
+            document.getElementById('form-recover').style.display = 'none';
+            document.getElementById('auth-tabs-container').style.display = 'flex';
 
-        function getHojeNome() {
-            const index = new Date().getDay();
-            const mapa = { 1: 'Segunda', 2: 'Terça', 3: 'Quarta', 4: 'Quinta', 5: 'Sexta', 6: 'Sábado', 0: 'Domingo' };
-            return mapa[index] || 'Segunda';
+            document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+            document.getElementById('tab-register').classList.toggle('active', tab === 'register');
         }
 
-        // DISCIPLINAS (ARMAZENAMENTO E MIGRAÇÃO)
-        function normalizeDisciplina(d) {
-            return {
-                id: d.id || Date.now(),
-                nome: d.nome || 'Sem nome',
-                professor: d.professor || '',
-                cor: d.cor || '#10B981',
-                turno: d.turno || 'Vespertino',
-                periodo: d.periodo || '5º Período',
-                observacoes: d.observacoes || '',
-                horarios: Array.isArray(d.horarios) ? d.horarios : [
-                    {
-                        dia: d.dia || 'Segunda',
-                        inicio: d.inicio || '13:00',
-                        fim: d.fim || '16:30',
-                        sala: d.sala || 'Lab 01'
-                    }
-                ]
-            };
+        function showRecoverForm() {
+            document.getElementById('form-login').style.display = 'none';
+            document.getElementById('form-register').style.display = 'none';
+            document.getElementById('form-recover').style.display = 'block';
+            document.getElementById('auth-tabs-container').style.display = 'none';
         }
-
-        let rawDisciplinas = JSON.parse(localStorage.getItem('academic_disciplinas'));
-        let disciplinas = [];
-
-        if (Array.isArray(rawDisciplinas) && rawDisciplinas.length > 0) {
-            disciplinas = rawDisciplinas.map(normalizeDisciplina);
-        } else {
-            disciplinas = [
-                {
-                    id: 1,
-                    nome: 'Controle de Qualidade de Alimentos',
-                    professor: 'Pamela Cristina',
-                    cor: '#10B981',
-                    turno: 'Vespertino',
-                    periodo: '5º Período',
-                    observacoes: 'Trazer jaleco para as aulas práticas',
-                    horarios: [{ dia: 'Terça', inicio: '13:00', fim: '16:30', sala: 'Lab Alimentos' }]
-                },
-                {
-                    id: 2,
-                    nome: 'Bioestatística',
-                    professor: 'Marcos Silva',
-                    cor: '#2563EB',
-                    turno: 'Matutino',
-                    periodo: '5º Período',
-                    observacoes: 'Uso de calculadora científica',
-                    horarios: [{ dia: 'Quarta', inicio: '08:00', fim: '10:30', sala: 'Sala 204' }]
-                },
-                {
-                    id: 3,
-                    nome: 'Farmacologia Aplicada',
-                    professor: 'Juliana Costa',
-                    cor: '#8B5CF6',
-                    turno: 'Vespertino',
-                    periodo: '5º Período',
-                    observacoes: 'Aulas teóricas e seminários',
-                    horarios: [
-                        { dia: 'Segunda', inicio: '13:00', fim: '15:30', sala: 'Auditório B' },
-                        { dia: 'Quinta', inicio: '15:40', fim: '18:00', sala: 'Sala 102' }
-                    ]
-                }
-            ];
-        }
-
-        // TAREFAS ACADÊMICAS (ESTRUTURA COMPLETA)
-        let tarefas = JSON.parse(localStorage.getItem('academic_tarefas_v2')) || [
-            {
-                id: 1,
-                titulo: 'Relatório Prático de Microbiologia',
-                disciplinaId: 1,
-                data: '2026-08-28',
-                prioridade: 'Alta',
-                observacoes: 'Enviar pelo portal até as 23:59',
-                concluida: false
-            }
-        ];
-
-        // EVENTOS DO CALENDÁRIO ACADÊMICO
-        let eventos = JSON.parse(localStorage.getItem('academic_eventos')) || [
-            {
-                id: 1,
-                titulo: 'Prova Regimental 1',
-                tipo: 'Prova',
-                disciplinaId: 1,
-                data: '2026-08-28',
-                horario: '13:00',
-                descricao: 'Capítulos 1 ao 5 do livro texto'
-            },
-            {
-                id: 2,
-                titulo: 'Apresentação Seminário',
-                tipo: 'Seminário',
-                disciplinaId: 3,
-                data: '2026-09-02',
-                horario: '15:40',
-                descricao: 'Tema: Farmacocinética de idosos'
-            }
-        ];
-
-        // CADERNOS E ANOTAÇÕES
-        let cadernos = JSON.parse(localStorage.getItem('academic_cadernos')) || ['Aulas', 'Resumos', 'Fórmulas e Cálculos', 'Ideias'];
-        let cadernoAtivo = cadernos[0] || 'Aulas';
-
-        let anotacoes = JSON.parse(localStorage.getItem('academic_anotacoes')) || [
-            {
-                id: 1,
-                caderno: 'Aulas',
-                titulo: 'Conceitos de Microbiologia',
-                disciplinaId: 1,
-                conteúdo: 'Anotações da primeira aula teórica sobre esterilização e meios de cultura.',
-                tags: 'microbiologia, aula1',
-                cor: '#10B981',
-                data: '2026-08-18'
-            }
-        ];
-        let anotacaoAtivaId = anotacoes[0]?.id || null;
-
-        let chatMessages = JSON.parse(localStorage.getItem('academic_chat_messages')) || [
-            { usuario: 'Daniel', texto: 'Alguém estudando Controle de Qualidade agora?', hora: '20:15', disciplina: 'Controle de Qualidade' }
-        ];
-
-        // TEMA
-        const savedTheme = localStorage.getItem('academic_theme') || 'light';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-
-        const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
-        document.getElementById('current-date').innerText = new Date().toLocaleDateString('pt-BR', options);
 
         function toggleTheme() {
             const currentTheme = document.documentElement.getAttribute('data-theme');
@@ -898,1022 +460,10 @@
             document.querySelectorAll('.page-view').forEach(view => view.classList.remove('active'));
             const target = document.getElementById(`view-${pageId}`);
             if(target) target.classList.add('active');
-
-            const pageTitles = {
-                'dashboard': 'Boa noite, Daniel 👋',
-                'disciplinas': 'Gerenciador Acadêmico de Disciplinas',
-                'tarefas': 'Gerenciador Acadêmico de Tarefas',
-                'foco': 'Ambiente de Foco & Chat Tira-Dúvidas',
-                'calendario': 'Calendário Acadêmico',
-                'anotacoes': 'Caderno Digital',
-                'configuracoes': 'Configurações do Sistema'
-            };
-            document.getElementById('page-title').innerText = pageTitles[pageId] || 'Central de Estudos';
         }
 
-        // PREENCHER DROPDOWNS DE DISCIPLINAS UNIFICADAS
-        function populateDisciplineDropdowns() {
-            const dropdowns = ['task-disciplina', 'event-disciplina', 'note-discipline-select', 'dash-materia-select', 'full-materia-select'];
-            
-            dropdowns.forEach(id => {
-                const el = document.getElementById(id);
-                if (!el) return;
-
-                const currentVal = el.value;
-                el.innerHTML = '<option value="">Sem disciplina vinculada</option>';
-                disciplinas.forEach(d => {
-                    el.innerHTML += `<option value="${d.id}">${d.nome}</option>`;
-                });
-                if (currentVal) el.value = currentVal;
-            });
-        }
-
-        // DISCIPLINAS - FORMULÁRIO E HORÁRIOS
-        function createSlotRowHTML(dia = 'Segunda', inicio = '13:00', fim = '16:30', sala = '') {
-            const optionsDia = DIAS_SEMANA.map(d => `<option value="${d}" ${d === dia ? 'selected' : ''}>${d}</option>`).join('');
-            return `
-                <div class="slot-row">
-                    <select class="select-disc slot-dia">${optionsDia}</select>
-                    <input type="time" class="input-field slot-inicio" value="${inicio}">
-                    <input type="time" class="input-field slot-fim" value="${fim}">
-                    <input type="text" class="input-field slot-sala" placeholder="Sala/Lab" value="${sala}">
-                    <button type="button" class="btn-danger" onclick="this.parentElement.remove()"><i data-lucide="trash-2" size="14"></i></button>
-                </div>
-            `;
-        }
-
-        function addSlotRow(dia, inicio, fim, sala) {
-            const container = document.getElementById('slots-rows-container');
-            if(container) {
-                container.insertAdjacentHTML('beforeend', createSlotRowHTML(dia, inicio, fim, sala));
-                lucide.createIcons();
-            }
-        }
-
-        function getSlotsFromForm() {
-            const rows = document.querySelectorAll('#slots-rows-container .slot-row');
-            const slots = [];
-            rows.forEach(row => {
-                const dia = row.querySelector('.slot-dia').value;
-                const inicio = row.querySelector('.slot-inicio').value || '08:00';
-                const fim = row.querySelector('.slot-fim').value || '10:00';
-                const sala = row.querySelector('.slot-sala').value.trim() || 'A definir';
-                slots.push({ dia, inicio, fim, sala });
-            });
-            return slots;
-        }
-
-        function resetDiscForm() {
-            if(!document.getElementById('edit-disc-id')) return;
-            document.getElementById('edit-disc-id').value = '';
-            document.getElementById('disc-nome').value = '';
-            document.getElementById('disc-professor').value = '';
-            document.getElementById('disc-turno').value = 'Vespertino';
-            document.getElementById('disc-periodo').value = '';
-            document.getElementById('disc-cor').value = '#10B981';
-            document.getElementById('disc-observacoes').value = '';
-            document.getElementById('slots-rows-container').innerHTML = '';
-            addSlotRow();
-            
-            document.getElementById('form-disc-title').innerText = 'Adicionar Nova Disciplina';
-            document.getElementById('btn-cancel-edit').style.display = 'none';
-        }
-
-        function saveDisciplina() {
-            const idVal = document.getElementById('edit-disc-id').value;
-            const nome = document.getElementById('disc-nome').value.trim();
-            const professor = document.getElementById('disc-professor').value.trim();
-            const turno = document.getElementById('disc-turno').value;
-            const periodo = document.getElementById('disc-periodo').value.trim();
-            const cor = document.getElementById('disc-cor').value;
-            const observacoes = document.getElementById('disc-observacoes').value.trim();
-            const horarios = getSlotsFromForm();
-
-            if (!nome) {
-                alert('Por favor, informe o nome da disciplina.');
-                return;
-            }
-
-            if (idVal) {
-                const index = disciplinas.findIndex(d => d.id == idVal);
-                if (index !== -1) {
-                    disciplinas[index] = { id: Number(idVal), nome, professor, turno, periodo, cor, observacoes, horarios };
-                }
-            } else {
-                disciplinas.push({ id: Date.now(), nome, professor, turno, periodo, cor, observacoes, horarios });
-            }
-
-            resetDiscForm();
-            renderDisciplinas();
-        }
-
-        function editDisciplina(id) {
-            const disc = disciplinas.find(d => d.id === id);
-            if (!disc) return;
-
-            document.getElementById('edit-disc-id').value = disc.id;
-            document.getElementById('disc-nome').value = disc.nome;
-            document.getElementById('disc-professor').value = disc.professor;
-            document.getElementById('disc-turno').value = disc.turno;
-            document.getElementById('disc-periodo').value = disc.periodo;
-            document.getElementById('disc-cor').value = disc.cor || '#10B981';
-            document.getElementById('disc-observacoes').value = disc.observacoes || '';
-
-            const container = document.getElementById('slots-rows-container');
-            container.innerHTML = '';
-            if (disc.horarios && disc.horarios.length > 0) {
-                disc.horarios.forEach(s => addSlotRow(s.dia, s.inicio, s.fim, s.sala));
-            } else {
-                addSlotRow();
-            }
-
-            document.getElementById('form-disc-title').innerText = `Editar Disciplina: ${disc.nome}`;
-            document.getElementById('btn-cancel-edit').style.display = 'inline-block';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function deleteDisciplina(id) {
-            if (confirm("Deseja realmente remover esta disciplina?")) {
-                disciplinas = disciplinas.filter(d => d.id !== id);
-                renderDisciplinas();
-            }
-        }
-
-        // COMPROMISSOS E QUADRO DE SEMANA NO DASHBOARD
-        function renderProximoCompromisso(todasAulas) {
-            const heroCard = document.getElementById('card-proximo-compromisso');
-            if (!heroCard) return;
-
-            if (todasAulas.length === 0) {
-                heroCard.innerHTML = `
-                    <div>
-                        <span style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--primary-dark);">PRÓXIMA AULA</span>
-                        <h2 class="hero-title">Nenhuma próxima aula cadastrada</h2>
-                        <p style="font-size: 0.85rem; color: var(--text-muted);">Cadastre disciplinas com horários no gerenciador para visualizar sua grade aqui.</p>
-                        <button class="btn-primary" style="margin-top: 1rem;" onclick="switchPage('disciplinas', document.querySelectorAll('.nav-item')[1])"><i data-lucide="plus" size="16"></i> Organizar Disciplinas</button>
-                    </div>
-                `;
-                lucide.createIcons();
-                return;
-            }
-
-            const diaHoje = getHojeNome();
-            const ordemDias = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
-            const idxHoje = ordemDias.indexOf(diaHoje);
-
-            let aulasOrdenadas = [...todasAulas].sort((a, b) => {
-                let distA = (ordemDias.indexOf(a.dia) - idxHoje + 7) % 7;
-                let distB = (ordemDias.indexOf(b.dia) - idxHoje + 7) % 7;
-                if (distA !== distB) return distA - distB;
-                return a.inicio.localeCompare(b.inicio);
-            });
-
-            const proxima = aulasOrdenadas[0];
-            const dist = (ordemDias.indexOf(proxima.dia) - idxHoje + 7) % 7;
-            
-            let tagTexto = proxima.dia;
-            if (dist === 0) tagTexto = 'Hoje';
-            else if (dist === 1) tagTexto = 'Amanhã';
-
-            heroCard.innerHTML = `
-                <div>
-                    <span style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--primary-dark);">PRÓXIMO COMPROMISSO</span>
-                    <span class="badge-tag">${tagTexto}</span>
-                    <h2 class="hero-title" style="color: ${proxima.cor};">${proxima.disciplina}</h2>
-                    <div style="display:flex; flex-direction:column; gap:0.25rem; color: var(--text-muted); font-weight: 600; font-size: 0.85rem;">
-                        <div><i data-lucide="user" size="14" style="vertical-align:middle;"></i> ${proxima.professor || 'Professor não informado'}</div>
-                        <div><i data-lucide="clock" size="14" style="vertical-align:middle;"></i> ${proxima.dia} • ${proxima.inicio} – ${proxima.fim} (${proxima.sala || 'Sala a definir'})</div>
-                    </div>
-                    <button class="btn-primary" style="margin-top: 1.25rem;" onclick="switchPage('foco', document.querySelectorAll('.nav-item')[3])"><i data-lucide="play" size="16"></i> Iniciar foco</button>
-                </div>
-            `;
-            lucide.createIcons();
-        }
-
-        function renderDashWeekly(todasAulas, semHorario) {
-            const container = document.getElementById('dash-weekly-schedule');
-            if (!container) return;
-
-            container.innerHTML = '';
-            const diaHoje = getHojeNome();
-
-            DIAS_SEMANA.forEach(dia => {
-                const isHoje = dia === diaHoje;
-                const aulasDoDia = todasAulas.filter(a => a.dia === dia).sort((a,b) => a.inicio.localeCompare(b.inicio));
-
-                let cardsHTML = '';
-                if (aulasDoDia.length === 0) {
-                    cardsHTML = `<div style="font-size: 0.68rem; color: var(--text-muted); text-align: center; padding: 1.5rem 0;">Sem aulas</div>`;
-                } else {
-                    aulasDoDia.forEach(aula => {
-                        cardsHTML += `
-                            <div class="dash-weekly-card" style="border-left-color: ${aula.cor};">
-                                <div style="font-weight: 800; color: var(--text-main); line-height: 1.2;">${aula.disciplina}</div>
-                                <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 0.2rem;">${aula.professor ? '👨‍🏫 ' + aula.professor : ''}</div>
-                                <div style="display:flex; justify-content:space-between; align-items:center; margin-top: 0.35rem; font-weight: 700; font-size: 0.65rem;">
-                                    <span>⏰ ${aula.inicio} – ${aula.fim}</span>
-                                    <span class="badge-info">${aula.sala}</span>
-                                </div>
-                            </div>
-                        `;
-                    });
-                }
-
-                container.innerHTML += `
-                    <div class="dash-weekly-col ${isHoje ? 'today-active' : ''}">
-                        <div class="dash-weekly-header">
-                            <span>${dia}</span>
-                            ${isHoje ? '<span class="today-badge">HOJE</span>' : ''}
-                        </div>
-                        ${cardsHTML}
-                    </div>
-                `;
-            });
-
-            const unassignedBox = document.getElementById('dash-unassigned-disciplines');
-            const unassignedList = document.getElementById('dash-unassigned-list');
-
-            if (unassignedBox && unassignedList) {
-                if (semHorario.length > 0) {
-                    unassignedBox.style.display = 'block';
-                    unassignedList.innerHTML = semHorario.map(d => 
-                        `<span class="badge-info" style="border-left: 3px solid ${d.cor}; padding: 0.3rem 0.5rem;">${d.nome} (Horário não definido)</span>`
-                    ).join('');
-                } else {
-                    unassignedBox.style.display = 'none';
-                }
-            }
-        }
-
-        function renderWeeklyGrid() {
-            const gridContainer = document.getElementById('weekly-schedule-grid');
-            if (!gridContainer) return;
-
-            gridContainer.innerHTML = '';
-
-            DIAS_SEMANA.forEach(dia => {
-                let slotsDoDia = [];
-                
-                disciplinas.forEach(disc => {
-                    (disc.horarios || []).forEach(slot => {
-                        if (slot.dia === dia) {
-                            slotsDoDia.push({
-                                disciplina: disc.nome,
-                                professor: disc.professor,
-                                cor: disc.cor,
-                                inicio: slot.inicio,
-                                fim: slot.fim,
-                                sala: slot.sala
-                            });
-                        }
-                    });
-                });
-
-                slotsDoDia.sort((a,b) => a.inicio.localeCompare(b.inicio));
-
-                let cardsHTML = '';
-                if (slotsDoDia.length === 0) {
-                    cardsHTML = `<div style="font-size: 0.7rem; color: var(--text-muted); text-align: center; padding: 1rem 0;">Sem aulas</div>`;
-                } else {
-                    slotsDoDia.forEach(s => {
-                        cardsHTML += `
-                            <div class="weekly-slot-card" style="border-left-color: ${s.cor};">
-                                <div style="font-weight: 700; font-size: 0.8rem;">${s.disciplina}</div>
-                                <div style="color: var(--text-muted); font-size: 0.7rem; margin-top: 0.15rem;">${s.professor ? '👨‍🏫 ' + s.professor : ''}</div>
-                                <div style="display:flex; justify-content:space-between; margin-top: 0.4rem; font-weight: 600; font-size: 0.68rem;">
-                                    <span>⏰ ${s.inicio} - ${s.fim}</span>
-                                    <span class="badge-info">${s.sala || 'Sala'}</span>
-                                </div>
-                            </div>
-                        `;
-                    });
-                }
-
-                gridContainer.innerHTML += `
-                    <div class="weekly-day-col">
-                        <div class="weekly-day-title">${dia}</div>
-                        ${cardsHTML}
-                    </div>
-                `;
-            });
-        }
-
-        // RENDERIZADOR GERAL DE DISCIPLINAS
-        function renderDisciplinas() {
-            const fullGrid = document.getElementById('full-disciplinas-grid');
-            const searchVal = (document.getElementById('search-disc')?.value || '').toLowerCase();
-            const filterDia = document.getElementById('filter-dia')?.value || '';
-            const filterTurno = document.getElementById('filter-turno')?.value || '';
-
-            if (fullGrid) fullGrid.innerHTML = '';
-
-            let totalAulasSemana = 0;
-            let todasAulas = [];
-            let disciplinasSemHorario = [];
-
-            disciplinas.forEach(d => {
-                if (!d.horarios || d.horarios.length === 0) {
-                    disciplinasSemHorario.push(d);
-                } else {
-                    d.horarios.forEach(slot => {
-                        totalAulasSemana++;
-                        todasAulas.push({
-                            disciplina: d.nome,
-                            professor: d.professor,
-                            cor: d.cor,
-                            dia: slot.dia,
-                            inicio: slot.inicio,
-                            fim: slot.fim,
-                            sala: slot.sala || 'A definir'
-                        });
-                    });
-                }
-            });
-
-            populateDisciplineDropdowns();
-            renderProximoCompromisso(todasAulas);
-            renderDashWeekly(todasAulas, disciplinasSemHorario);
-
-            const filtered = disciplinas.filter(d => {
-                const matchesText = d.nome.toLowerCase().includes(searchVal) || (d.professor && d.professor.toLowerCase().includes(searchVal));
-                const matchesTurno = !filterTurno || d.turno === filterTurno;
-                const matchesDia = !filterDia || (d.horarios || []).some(s => s.dia === filterDia);
-                return matchesText && matchesTurno && matchesDia;
-            });
-
-            if (fullGrid) {
-                if (filtered.length === 0) {
-                    fullGrid.innerHTML = `<p style="color:var(--text-muted); grid-column: 1/-1;">Nenhuma disciplina encontrada.</p>`;
-                } else {
-                    filtered.forEach(d => {
-                        const slotsBadge = (d.horarios && d.horarios.length > 0) 
-                            ? d.horarios.map(s => 
-                                `<div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.25rem;">
-                                    📅 <strong>${s.dia}</strong>: ${s.inicio} às ${s.fim} <span class="badge-info">${s.sala || 'A definir'}</span>
-                                 </div>`
-                              ).join('')
-                            : `<div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.25rem; font-style:italic;">⚠️ Horário não definido</div>`;
-
-                        fullGrid.innerHTML += `
-                            <div class="disc-card-item" style="border-left-color: ${d.cor};">
-                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
-                                    <span class="badge-info" style="background:${d.cor}22; color:${d.cor};">${d.turno} • ${d.periodo || 'Geral'}</span>
-                                    <div style="display: flex; gap: 0.25rem;">
-                                        <button class="btn-secondary" onclick="editDisciplina(${d.id})" title="Editar"><i data-lucide="edit-2" size="12"></i></button>
-                                        <button class="btn-danger" onclick="deleteDisciplina(${d.id})" title="Excluir"><i data-lucide="trash-2" size="12"></i></button>
-                                    </div>
-                                </div>
-                                <h4 style="font-size: 1rem; font-weight: 800; margin-bottom: 0.2rem;">${d.nome}</h4>
-                                <p style="font-size: 0.78rem; color: var(--text-muted); font-weight: 600; margin-bottom: 0.75rem;">👨‍🏫 ${d.professor || 'Professor não informado'}</p>
-                                
-                                <div style="border-top: 1px solid var(--border); padding-top: 0.5rem; margin-top: 0.5rem;">
-                                    <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; color:var(--text-muted);">Horários de Aula:</div>
-                                    ${slotsBadge}
-                                </div>
-
-                                ${d.observacoes ? `<div style="font-size: 0.72rem; color: var(--text-muted); font-style: italic; margin-top: 0.75rem; background: var(--bg-body); padding: 0.4rem 0.6rem; border-radius: 4px;">💡 ${d.observacoes}</div>` : ''}
-                            </div>
-                        `;
-                    });
-                }
-            }
-
-            const statTotal = document.getElementById('stat-total-disc');
-            const statAulas = document.getElementById('stat-aulas-semana');
-            const statProxima = document.getElementById('stat-proxima-aula');
-
-            if (statTotal) statTotal.innerText = disciplinas.length;
-            if (statAulas) statAulas.innerText = totalAulasSemana;
-            if (statProxima) {
-                if (todasAulas.length > 0) statProxima.innerText = `${todasAulas[0].disciplina} (${todasAulas[0].dia})`;
-                else statProxima.innerText = 'Nenhuma aula';
-            }
-
-            renderWeeklyGrid();
-            localStorage.setItem('academic_disciplinas', JSON.stringify(disciplinas));
-            lucide.createIcons();
-        }
-
-        // ================= TAREFAS ACADÊMICAS =================
-        function resetTaskForm() {
-            document.getElementById('edit-task-id').value = '';
-            document.getElementById('task-titulo').value = '';
-            document.getElementById('task-disciplina').value = '';
-            document.getElementById('task-data').value = '';
-            document.getElementById('task-prioridade').value = 'Média';
-            document.getElementById('task-observacoes').value = '';
-            
-            document.getElementById('form-task-title').innerText = 'Nova Tarefa Acadêmica';
-            document.getElementById('btn-cancel-task-edit').style.display = 'none';
-        }
-
-        function saveTarefa() {
-            const idVal = document.getElementById('edit-task-id').value;
-            const titulo = document.getElementById('task-titulo').value.trim();
-            const disciplinaId = document.getElementById('task-disciplina').value;
-            const data = document.getElementById('task-data').value;
-            const prioridade = document.getElementById('task-prioridade').value;
-            const observacoes = document.getElementById('task-observacoes').value.trim();
-
-            if (!titulo || !data) {
-                alert('Preencha pelo menos a descrição e a data de entrega da tarefa.');
-                return;
-            }
-
-            if (idVal) {
-                const idx = tarefas.findIndex(t => t.id == idVal);
-                if (idx !== -1) {
-                    tarefas[idx] = { ...tarefas[idx], titulo, disciplinaId, data, prioridade, observacoes };
-                }
-            } else {
-                tarefas.push({
-                    id: Date.now(),
-                    titulo,
-                    disciplinaId,
-                    data,
-                    prioridade,
-                    observacoes,
-                    concluida: false
-                });
-            }
-
-            resetTaskForm();
-            renderTarefas();
-        }
-
-        function editTarefa(id) {
-            const task = tarefas.find(t => t.id === id);
-            if (!task) return;
-
-            document.getElementById('edit-task-id').value = task.id;
-            document.getElementById('task-titulo').value = task.titulo;
-            document.getElementById('task-disciplina').value = task.disciplinaId || '';
-            document.getElementById('task-data').value = task.data;
-            document.getElementById('task-prioridade').value = task.prioridade;
-            document.getElementById('task-observacoes').value = task.observacoes || '';
-
-            document.getElementById('form-task-title').innerText = 'Editar Tarefa';
-            document.getElementById('btn-cancel-task-edit').style.display = 'inline-block';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function toggleTaskDone(id) {
-            const task = tarefas.find(t => t.id === id);
-            if (task) task.concluida = !task.concluida;
-            renderTarefas();
-        }
-
-        function deleteTarefa(id) {
-            if (confirm("Deseja realmente excluir esta tarefa?")) {
-                tarefas = tarefas.filter(t => t.id !== id);
-                renderTarefas();
-            }
-        }
-
-        function renderTarefas() {
-            const container = document.getElementById('tasks-list-container');
-            if (!container) return;
-
-            const filterStatus = document.getElementById('filter-task-status')?.value || 'Pendentes';
-            const sortBy = document.getElementById('sort-task-by')?.value || 'data';
-            const hojeStr = new Date().toISOString().split('T')[0];
-
-            let countDone = 0;
-            let countPending = 0;
-            let countLate = 0;
-
-            tarefas.forEach(t => {
-                if (t.concluida) countDone++;
-                else {
-                    countPending++;
-                    if (t.data < hojeStr) countLate++;
-                }
-            });
-
-            document.getElementById('task-stat-total').innerText = tarefas.length;
-            document.getElementById('task-stat-done').innerText = countDone;
-            document.getElementById('task-stat-pending').innerText = countPending;
-            document.getElementById('task-stat-late').innerText = countLate;
-
-            let filtered = tarefas.filter(t => {
-                if (filterStatus === 'Pendentes') return !t.concluida;
-                if (filterStatus === 'Concluídas') return t.concluida;
-                if (filterStatus === 'Atrasadas') return !t.concluida && t.data < hojeStr;
-                return true;
-            });
-
-            const prioWeight = { 'Alta': 3, 'Média': 2, 'Baixa': 1 };
-            filtered.sort((a, b) => {
-                if (sortBy === 'prioridade') {
-                    return prioWeight[b.prioridade] - prioWeight[a.prioridade];
-                }
-                return a.data.localeCompare(b.data);
-            });
-
-            container.innerHTML = '';
-            if (filtered.length === 0) {
-                container.innerHTML = `<p style="color:var(--text-muted); font-size:0.85rem; padding:1rem 0;">Nenhuma tarefa encontrada.</p>`;
-            } else {
-                filtered.forEach(t => {
-                    const disc = disciplinas.find(d => d.id == t.disciplinaId);
-                    const prioClass = t.prioridade === 'Alta' ? 'prio-alta' : (t.prioridade === 'Média' ? 'prio-media' : 'prio-baixa');
-                    const isLate = !t.concluida && t.data < hojeStr;
-
-                    container.innerHTML += `
-                        <div class="task-card-item ${prioClass} ${t.concluida ? 'completed' : ''}">
-                            <div style="display:flex; align-items:flex-start; gap:0.75rem;">
-                                <input type="checkbox" ${t.concluida ? 'checked' : ''} onchange="toggleTaskDone(${t.id})" style="margin-top:0.25rem; cursor:pointer;">
-                                <div>
-                                    <div class="task-title" style="font-weight:700; font-size:0.9rem;">${t.titulo}</div>
-                                    <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.2rem; display:flex; gap:0.5rem; flex-wrap:wrap;">
-                                        <span>📅 Entrega: <strong>${t.data}</strong> ${isLate ? '<span style="color:#EF4444; font-weight:800;">(Atrasada)</span>' : ''}</span>
-                                        ${disc ? `• <span style="color:${disc.cor}; font-weight:700;">${disc.nome}</span>` : ''}
-                                        • <span class="badge-info">${t.prioridade}</span>
-                                    </div>
-                                    ${t.observacoes ? `<div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.3rem;">💡 ${t.observacoes}</div>` : ''}
-                                </div>
-                            </div>
-                            <div style="display:flex; gap:0.25rem;">
-                                <button class="btn-secondary" onclick="editTarefa(${t.id})"><i data-lucide="edit-2" size="12"></i></button>
-                                <button class="btn-danger" onclick="deleteTarefa(${t.id})"><i data-lucide="trash-2" size="12"></i></button>
-                            </div>
-                        </div>
-                    `;
-                });
-            }
-
-            localStorage.setItem('academic_tarefas_v2', JSON.stringify(tarefas));
-            lucide.createIcons();
-        }
-
-        // ================= CALENDÁRIO ACADÊMICO =================
-        let currentCalDate = new Date(2026, 7, 1); // Agosto 2026
-
-        function changeMonth(delta) {
-            currentCalDate.setMonth(currentCalDate.getMonth() + delta);
-            renderCalendar();
-        }
-
-        function resetEventForm() {
-            document.getElementById('edit-event-id').value = '';
-            document.getElementById('event-titulo').value = '';
-            document.getElementById('event-tipo').value = 'Prova';
-            document.getElementById('event-disciplina').value = '';
-            document.getElementById('event-data').value = '';
-            document.getElementById('event-horario').value = '13:00';
-            document.getElementById('event-descricao').value = '';
-
-            document.getElementById('form-event-title').innerText = 'Novo Evento Acadêmico';
-            document.getElementById('btn-cancel-event-edit').style.display = 'none';
-        }
-
-        function saveEvento() {
-            const idVal = document.getElementById('edit-event-id').value;
-            const titulo = document.getElementById('event-titulo').value.trim();
-            const tipo = document.getElementById('event-tipo').value;
-            const disciplinaId = document.getElementById('event-disciplina').value;
-            const data = document.getElementById('event-data').value;
-            const horario = document.getElementById('event-horario').value;
-            const descricao = document.getElementById('event-descricao').value.trim();
-
-            if (!titulo || !data) {
-                alert('Preencha pelo menos o título e a data do evento.');
-                return;
-            }
-
-            if (idVal) {
-                const idx = eventos.findIndex(e => e.id == idVal);
-                if (idx !== -1) {
-                    eventos[idx] = { id: Number(idVal), titulo, tipo, disciplinaId, data, horario, descricao };
-                }
-            } else {
-                eventos.push({ id: Date.now(), titulo, tipo, disciplinaId, data, horario, descricao });
-            }
-
-            resetEventForm();
-            renderCalendar();
-        }
-
-        function editEvento(id) {
-            const ev = eventos.find(e => e.id === id);
-            if (!ev) return;
-
-            document.getElementById('edit-event-id').value = ev.id;
-            document.getElementById('event-titulo').value = ev.titulo;
-            document.getElementById('event-tipo').value = ev.tipo;
-            document.getElementById('event-disciplina').value = ev.disciplinaId || '';
-            document.getElementById('event-data').value = ev.data;
-            document.getElementById('event-horario').value = ev.horario || '13:00';
-            document.getElementById('event-descricao').value = ev.descricao || '';
-
-            document.getElementById('form-event-title').innerText = 'Editar Evento';
-            document.getElementById('btn-cancel-event-edit').style.display = 'inline-block';
-        }
-
-        function deleteEvento(id) {
-            if (confirm("Deseja realmente remover este evento?")) {
-                eventos = eventos.filter(e => e.id !== id);
-                renderCalendar();
-            }
-        }
-
-        function renderCalendar() {
-            // RENDERIZAR MINI CALENDÁRIO NO DASHBOARD
-            const miniContainer = document.getElementById('calendar-days-container');
-            if (miniContainer) {
-                const daysNames = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
-                miniContainer.innerHTML = '';
-                daysNames.forEach(d => miniContainer.innerHTML += `<div class="cal-day-name">${d}</div>`);
-                for (let i = 26; i <= 31; i++) miniContainer.innerHTML += `<div class="cal-day muted">${i}</div>`;
-                for (let i = 1; i <= 22; i++) {
-                    miniContainer.innerHTML += `<div class="cal-day ${i === 18 ? 'active' : ''}">${i}</div>`;
-                }
-            }
-
-            // RENDERIZAR CALENDÁRIO COMPLETO
-            const fullContainer = document.getElementById('cal-full-month-days');
-            const labelMonth = document.getElementById('cal-month-year-label');
-            if (!fullContainer) return;
-
-            const year = currentCalDate.getFullYear();
-            const month = currentCalDate.getMonth();
-            const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-            
-            if (labelMonth) labelMonth.innerText = `${monthNames[month]} ${year}`;
-
-            const firstDayIndex = new Date(year, month, 1).getDay();
-            const lastDay = new Date(year, month + 1, 0).getDate();
-            const prevLastDay = new Date(year, month, 0).getDate();
-
-            const tipoColors = {
-                'Prova': '#EF4444',
-                'Seminário': '#8B5CF6',
-                'Trabalho': '#2563EB',
-                'Apresentação': '#10B981',
-                'Outro': '#D97706'
-            };
-
-            fullContainer.innerHTML = '';
-
-            // Dias do mês anterior
-            for (let i = firstDayIndex; i > 0; i--) {
-                fullContainer.innerHTML += `<div class="cal-full-day-cell other-month"><span class="cal-day-number">${prevLastDay - i + 1}</span></div>`;
-            }
-
-            // Dias do mês atual
-            const hojeStr = new Date().toISOString().split('T')[0];
-            for (let day = 1; day <= lastDay; day++) {
-                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                const isToday = dateStr === hojeStr;
-                
-                const evsDoDia = eventos.filter(e => e.data === dateStr);
-                let evsHTML = '';
-
-                evsDoDia.forEach(ev => {
-                    const c = tipoColors[ev.tipo] || '#10B981';
-                    evsHTML += `<div class="cal-event-pill" style="background:${c};" onclick="editEvento(${ev.id})" title="${ev.titulo}">${ev.titulo}</div>`;
-                });
-
-                fullContainer.innerHTML += `
-                    <div class="cal-full-day-cell ${isToday ? 'today-cell' : ''}">
-                        <span class="cal-day-number">${day}</span>
-                        ${evsHTML}
-                    </div>
-                `;
-            }
-
-            // PRÓXIMOS EVENTOS LATERAIS
-            renderUpcomingEventsList();
-            localStorage.setItem('academic_eventos', JSON.stringify(eventos));
-        }
-
-        function renderUpcomingEventsList() {
-            const listFull = document.getElementById('full-upcoming-events-list');
-            const listDash = document.getElementById('dash-upcoming-events-list');
-            const hojeStr = new Date().toISOString().split('T')[0];
-
-            let proximos = eventos.filter(e => e.data >= hojeStr).sort((a,b) => a.data.localeCompare(b.data));
-
-            const tipoColors = {
-                'Prova': '#EF4444',
-                'Seminário': '#8B5CF6',
-                'Trabalho': '#2563EB',
-                'Apresentação': '#10B981',
-                'Outro': '#D97706'
-            };
-
-            const htmlContent = proximos.length === 0 
-                ? `<p style="color:var(--text-muted); font-size:0.8rem;">Nenhum evento agendado.</p>`
-                : proximos.slice(0, 5).map(ev => {
-                    const disc = disciplinas.find(d => d.id == ev.disciplinaId);
-                    const c = tipoColors[ev.tipo] || '#10B981';
-                    return `
-                        <div class="event-item" style="border-left: 3px solid ${c}; padding-left: 0.5rem; margin-bottom:0.75rem;">
-                            <div class="event-date">
-                                <div class="day" style="color:${c};">${ev.data.split('-')[2]}</div>
-                                <div class="month" style="color:${c};">${ev.data.split('-')[1]}</div>
-                            </div>
-                            <div style="flex:1;">
-                                <div style="font-weight:700; font-size:0.85rem;">${ev.titulo}</div>
-                                <div style="font-size:0.72rem; color:var(--text-muted);">
-                                    ⏰ ${ev.horario || 'Dia todo'} ${disc ? `• ${disc.nome}` : ''}
-                                </div>
-                            </div>
-                            <button class="btn-secondary" style="padding:0.2rem 0.4rem;" onclick="editEvento(${ev.id})"><i data-lucide="edit-2" size="10"></i></button>
-                        </div>
-                    `;
-                }).join('');
-
-            if (listFull) listFull.innerHTML = htmlContent;
-            if (listDash) listDash.innerHTML = htmlContent;
-            lucide.createIcons();
-        }
-
-        // ================= CADERNO DIGITAL / ANOTAÇÕES =================
-        function addCaderno() {
-            const nome = prompt("Nome do novo caderno:");
-            if (nome && nome.trim() !== '') {
-                if (!cadernos.includes(nome.trim())) {
-                    cadernos.push(nome.trim());
-                    cadernoAtivo = nome.trim();
-                    renderCadernos();
-                    renderAnotacoesList();
-                }
-            }
-        }
-
-        function renderCadernos() {
-            const container = document.getElementById('notebooks-list-container');
-            if (!container) return;
-
-            container.innerHTML = '';
-            cadernos.forEach(cad => {
-                const count = anotacoes.filter(a => a.caderno === cad).length;
-                const isActive = cad === cadernoAtivo;
-                container.innerHTML += `
-                    <div class="notebook-item ${isActive ? 'active' : ''}" onclick="selectCaderno('${cad}')">
-                        <span>📖 ${cad}</span>
-                        <span class="badge-info">${count}</span>
-                    </div>
-                `;
-            });
-
-            localStorage.setItem('academic_cadernos', JSON.stringify(cadernos));
-        }
-
-        function selectCaderno(cad) {
-            cadernoAtivo = cad;
-            document.getElementById('current-notebook-title').innerText = cad;
-            renderCadernos();
-            renderAnotacoesList();
-        }
-
-        function createNewAnotacao() {
-            const newNote = {
-                id: Date.now(),
-                caderno: cadernoAtivo,
-                titulo: 'Nova Anotação',
-                disciplinaId: disciplinas[0]?.id || '',
-                conteúdo: '',
-                tags: '',
-                cor: '#10B981',
-                data: new Date().toISOString().split('T')[0]
-            };
-            anotacoes.unshift(newNote);
-            anotacaoAtivaId = newNote.id;
-            renderAnotacoesList();
-            loadNoteIntoEditor(newNote);
-        }
-
-        function renderAnotacoesList() {
-            const container = document.getElementById('notes-cards-container');
-            const searchVal = (document.getElementById('search-notes')?.value || '').toLowerCase();
-            if (!container) return;
-
-            const filtered = anotacoes.filter(a => {
-                const matchesCaderno = a.caderno === cadernoAtivo;
-                const matchesSearch = a.titulo.toLowerCase().includes(searchVal) || 
-                                      (a.conteúdo && a.conteúdo.toLowerCase().includes(searchVal)) ||
-                                      (a.tags && a.tags.toLowerCase().includes(searchVal));
-                return matchesCaderno && matchesSearch;
-            });
-
-            container.innerHTML = '';
-            if (filtered.length === 0) {
-                container.innerHTML = `<p style="color:var(--text-muted); font-size:0.8rem; text-align:center; padding:1rem 0;">Nenhuma nota neste caderno.</p>`;
-                clearNoteEditor();
-            } else {
-                if (!anotacaoAtivaId || !filtered.some(a => a.id === anotacaoAtivaId)) {
-                    anotacaoAtivaId = filtered[0].id;
-                }
-
-                filtered.forEach(a => {
-                    const isActive = a.id === anotacaoAtivaId;
-                    const preview = a.conteúdo ? a.conteúdo.substring(0, 45) + '...' : 'Sem conteúdo...';
-                    container.innerHTML += `
-                        <div class="note-card-item ${isActive ? 'active' : ''}" style="border-left-color:${a.cor || '#10B981'};" onclick="selectNote(${a.id})">
-                            <div style="font-weight:700; font-size:0.85rem;">${a.titulo}</div>
-                            <div style="font-size:0.72rem; color:var(--text-muted);">${preview}</div>
-                            <div style="font-size:0.65rem; color:var(--text-muted); margin-top:0.2rem;">📅 ${a.data}</div>
-                        </div>
-                    `;
-                });
-
-                const currentNote = anotacoes.find(a => a.id === anotacaoAtivaId);
-                if (currentNote) loadNoteIntoEditor(currentNote);
-            }
-
-            renderCadernos();
-            localStorage.setItem('academic_anotacoes', JSON.stringify(anotacoes));
-        }
-
-        function selectNote(id) {
-            anotacaoAtivaId = id;
-            renderAnotacoesList();
-        }
-
-        function loadNoteIntoEditor(note) {
-            document.getElementById('note-title-input').value = note.titulo;
-            document.getElementById('note-discipline-select').value = note.disciplinaId || '';
-            document.getElementById('note-tags-input').value = note.tags || '';
-            document.getElementById('note-color-input').value = note.cor || '#10B981';
-            document.getElementById('note-content-area').value = note.conteúdo || '';
-        }
-
-        function clearNoteEditor() {
-            document.getElementById('note-title-input').value = '';
-            document.getElementById('note-discipline-select').value = '';
-            document.getElementById('note-tags-input').value = '';
-            document.getElementById('note-content-area').value = '';
-        }
-
-        function autoSaveNote() {
-            if (!anotacaoAtivaId) return;
-            const note = anotacoes.find(a => a.id === anotacaoAtivaId);
-            if (!note) return;
-
-            note.titulo = document.getElementById('note-title-input').value || 'Sem Título';
-            note.disciplinaId = document.getElementById('note-discipline-select').value;
-            note.tags = document.getElementById('note-tags-input').value;
-            note.cor = document.getElementById('note-color-input').value;
-            note.conteúdo = document.getElementById('note-content-area').value;
-
-            document.getElementById('auto-save-status').innerText = 'Autosalvo ✔';
-            setTimeout(() => {
-                if(document.getElementById('auto-save-status')) document.getElementById('auto-save-status').innerText = 'Autosalvo';
-            }, 1500);
-
-            localStorage.setItem('academic_anotacoes', JSON.stringify(anotacoes));
-        }
-
-        function formatNoteText(type) {
-            const area = document.getElementById('note-content-area');
-            if (!area) return;
-
-            const start = area.selectionStart;
-            const end = area.selectionEnd;
-            const selectedText = area.value.substring(start, end);
-
-            let replacement = '';
-            if (type === 'h2') replacement = `\n## ${selectedText || 'Título'}\n`;
-            if (type === 'b') replacement = `**${selectedText || 'texto em negrito'}**`;
-            if (type === 'i') replacement = `*${selectedText || 'texto em itálico'}*`;
-            if (type === 'list') replacement = `\n• ${selectedText || 'Item da lista'}`;
-            if (type === 'quote') replacement = `\n> ${selectedText || 'Citação importante'}\n`;
-
-            area.value = area.value.substring(0, start) + replacement + area.value.substring(end);
-            autoSaveNote();
-        }
-
-        function deleteCurrentNote() {
-            if (!anotacaoAtivaId) return;
-            if (confirm("Deseja realmente excluir esta anotação?")) {
-                anotacoes = anotacoes.filter(a => a.id !== anotacaoAtivaId);
-                anotacaoAtivaId = null;
-                renderAnotacoesList();
-            }
-        }
-
-        // ================= TIMER POMODORO =================
-        let maxSeconds = 25 * 60;
-        let seconds = maxSeconds;
-        let timer = null;
-        let currentModeName = 'Foco';
-
-        function setTimerMode(mins, modeLabel) {
-            clearInterval(timer);
-            timer = null;
-            maxSeconds = mins * 60;
-            seconds = maxSeconds;
-            currentModeName = modeLabel;
-            const lbl = document.getElementById('timer-mode-lbl');
-            if(lbl) lbl.innerText = modeLabel;
-            const btn = document.getElementById('btn-toggle-timer');
-            if(btn) btn.innerHTML = `<i data-lucide="play" size="16"></i> Iniciar`;
-            updateDisplays();
-            lucide.createIcons();
-        }
-
-        function updateDisplays() {
-            const min = Math.floor(seconds / 60).toString().padStart(2, '0');
-            const sec = (seconds % 60).toString().padStart(2, '0');
-            const str = `${min}:${sec}`;
-
-            if(document.getElementById('dash-timer')) document.getElementById('dash-timer').innerText = str;
-            if(document.getElementById('full-timer')) document.getElementById('full-timer').innerText = str;
-
-            const circle = document.getElementById('timer-circle-progress');
-            if (circle) {
-                const totalDash = 502;
-                const offset = totalDash - (seconds / maxSeconds) * totalDash;
-                circle.style.strokeDashoffset = offset;
-            }
-
-            document.title = timer ? `(${str}) ${currentModeName} - Central de Estudos` : 'Central de Estudos - Academic OS';
-        }
-
-        function toggleTimer() {
-            const btn = document.getElementById('btn-toggle-timer');
-            if (timer) {
-                clearInterval(timer);
-                timer = null;
-                if(btn) btn.innerHTML = `<i data-lucide="play" size="16"></i> Continuar`;
-            } else {
-                if(btn) btn.innerHTML = `<i data-lucide="pause" size="16"></i> Pausar`;
-                timer = setInterval(() => {
-                    if (seconds > 0) {
-                        seconds--;
-                        updateDisplays();
-                    } else {
-                        clearInterval(timer);
-                        timer = null;
-                        alert(`Sessão de ${currentModeName} concluída!`);
-                        resetTimer();
-                    }
-                }, 1000);
-            }
-            lucide.createIcons();
-        }
-
-        function resetTimer() {
-            clearInterval(timer);
-            timer = null;
-            seconds = maxSeconds;
-            const btn = document.getElementById('btn-toggle-timer');
-            if(btn) btn.innerHTML = `<i data-lucide="play" size="16"></i> Iniciar`;
-            updateDisplays();
-            lucide.createIcons();
-        }
-
-        // CHAT TIRA-DÚVIDAS DA SALA
-        function renderChat() {
-            const container = document.getElementById('chat-messages-box');
-            if (!container) return;
-            
-            container.innerHTML = '';
-            chatMessages.forEach(msg => {
-                container.innerHTML += `
-                    <div class="chat-msg">
-                        <div class="chat-msg-header">
-                            <span>${msg.usuario} <small style="color:var(--text-muted); font-weight:400;">(${msg.disciplina})</small></span>
-                            <span class="chat-msg-time">${msg.hora}</span>
-                        </div>
-                        <div>${msg.texto}</div>
-                    </div>`;
-            });
-            container.scrollTop = container.scrollHeight;
-            localStorage.setItem('academic_chat_messages', JSON.stringify(chatMessages));
-        }
-
-        function sendChatMessage() {
-            const input = document.getElementById('chat-input-field');
-            const select = document.getElementById('full-materia-select');
-            const materiaNome = select && select.options[select.selectedIndex] ? select.options[select.selectedIndex].text : 'Geral';
-
-            if (input && input.value.trim() !== '') {
-                const timeStr = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-                chatMessages.push({
-                    usuario: 'Daniel',
-                    texto: input.value.trim(),
-                    hora: timeStr,
-                    disciplina: materiaNome
-                });
-                input.value = '';
-                renderChat();
-            }
-        }
-
-        // INITIALIZATION GERAL
-        resetDiscForm();
-        resetTaskForm();
-        resetEventForm();
-
-        renderDisciplinas();
-        renderTarefas();
-        renderCalendar();
-        renderCadernos();
-        renderAnotacoesList();
-        renderChat();
+        const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+        document.getElementById('current-date').innerText = new Date().toLocaleDateString('pt-BR', options);
     </script>
 </body>
 </html>
