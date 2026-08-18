@@ -109,7 +109,6 @@
 
         .btn-primary { background: var(--primary); color: white; border: none; padding: 0.65rem 1.25rem; border-radius: var(--radius-md); font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; }
         .btn-secondary { background: var(--border); color: var(--text-main); border: none; padding: 0.4rem 0.75rem; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 600; cursor: pointer; }
-        .btn-danger { background: #EF4444; color: white; border: none; padding: 0.4rem 0.75rem; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 600; cursor: pointer; }
 
         .form-group { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1rem; }
         .form-group label { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
@@ -122,7 +121,7 @@
 </head>
 <body>
 
-    <!-- OVERLAY DE AUTENTICAÇÃO (LOGIN / CADASTRO / RECUPERAÇÃO) -->
+    <!-- OVERLAY DE AUTENTICAÇÃO -->
     <div id="auth-overlay">
         <div class="auth-card">
             <div class="brand" style="justify-content: center; margin-bottom: 1.5rem;">
@@ -252,8 +251,8 @@
         <!-- PÁGINA INICIAL -->
         <div id="view-dashboard" class="page-view active">
             <div class="card">
-                <div class="card-header"><h3>Status da Sessão & Firestore</h3></div>
-                <p style="color:var(--text-muted); margin-bottom:1rem;">Infraestrutura de autenticação e comunicação remota com o Cloud Firestore do projeto <strong>Painel-Estudos</strong> ativa com sucesso.</p>
+                <div class="card-header"><h3>Status da Sessão & Cloud Firestore</h3></div>
+                <p style="color:var(--text-muted); margin-bottom:1rem;">Infraestrutura de autenticação e comunicação remota com o Cloud Firestore do projeto <strong>painel-estudos-54958</strong> ativa com sucesso.</p>
                 <div id="session-info-debug" style="background:var(--bg-body); padding:1rem; border-radius:var(--radius-sm); font-family:'JetBrains Mono', monospace; font-size:0.8rem;"></div>
             </div>
         </div>
@@ -266,7 +265,7 @@
         <div id="view-configuracoes" class="page-view"><div class="card"><h3>Configurações</h3><p>Módulo aguardando próxima etapa.</p></div></div>
     </main>
 
-    <!-- FIRABASE SDK SDK v10 (MODULAR / CDN) -->
+    <!-- FIREBASE SDK v10 (MODULAR / CDN) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { 
@@ -285,14 +284,14 @@
             serverTimestamp 
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // CREDENCIAIS DO PROJETO PAINEL-ESTUDOS
+        // CREDENCIAIS REAIS DO PROJETO PAINEL-ESTUDOS
         const firebaseConfig = {
-            apiKey: "AIzaSyYOUR_API_KEY_HERE",
-            authDomain: "painel-estudos.firebaseapp.com",
-            projectId: "painel-estudos",
-            storageBucket: "painel-estudos.appspot.com",
-            messagingSenderId: "YOUR_SENDER_ID",
-            appId: "YOUR_APP_ID"
+            apiKey: "AIzaSyC09EhGx9GSo4IUxjgWJxqkbsnKgOU4khQ",
+            authDomain: "painel-estudos-54958.firebaseapp.com",
+            projectId: "painel-estudos-54958",
+            storageBucket: "painel-estudos-54958.firebasestorage.app",
+            messagingSenderId: "491796500394",
+            appId: "1:491796500394:web:f6d85850484df33b8de5d3"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -302,7 +301,7 @@
         window.firebaseAuth = auth;
         window.firebaseDb = db;
 
-        // AUTHENTICATION LISTENER (MONITORA LOGIN / LOGOUT)
+        // AUTHENTICATION LISTENER
         onAuthStateChanged(auth, async (user) => {
             const overlay = document.getElementById('auth-overlay');
             if (user) {
@@ -310,26 +309,29 @@
                 
                 // Carregar/criar perfil no Firestore (/users/{uid})
                 const userDocRef = doc(db, 'users', user.uid);
-                const userSnapshot = await getDoc(userDocRef);
-
                 let profileData = { nome: user.displayName || 'Estudante', email: user.email };
-                
-                if (userSnapshot.exists()) {
-                    profileData = userSnapshot.data();
-                } else {
-                    await setDoc(userDocRef, {
-                        nome: profileData.nome,
-                        email: profileData.email,
-                        criadaEm: serverTimestamp(),
-                        atualizadaEm: serverTimestamp()
-                    });
+
+                try {
+                    const userSnapshot = await getDoc(userDocRef);
+                    if (userSnapshot.exists()) {
+                        profileData = userSnapshot.data();
+                    } else {
+                        await setDoc(userDocRef, {
+                            nome: profileData.nome,
+                            email: profileData.email,
+                            criadaEm: serverTimestamp(),
+                            atualizadaEm: serverTimestamp()
+                        });
+                    }
+                } catch (err) {
+                    console.error("Erro ao acessar Firestore:", err);
                 }
 
                 // Atualizar UI com dados do usuário
-                document.getElementById('user-display-name').innerText = profileData.nome;
-                document.getElementById('user-display-email').innerText = profileData.email;
-                document.getElementById('user-avatar-initial').innerText = profileData.nome.charAt(0).toUpperCase();
-                document.getElementById('page-title').innerText = `Boa noite, ${profileData.nome.split(' ')[0]} 👋`;
+                document.getElementById('user-display-name').innerText = profileData.nome || 'Estudante';
+                document.getElementById('user-display-email').innerText = profileData.email || user.email;
+                document.getElementById('user-avatar-initial').innerText = (profileData.nome || 'E').charAt(0).toUpperCase();
+                document.getElementById('page-title').innerText = `Boa noite, ${(profileData.nome || 'Estudante').split(' ')[0]} 👋`;
 
                 document.getElementById('session-info-debug').innerHTML = `
                     <strong>Status:</strong> Autenticado com Sucesso<br>
@@ -343,7 +345,7 @@
             }
         });
 
-        // HANDLERS
+        // HANDLERS DE AUTENTICAÇÃO
         window.handleLogin = async (e) => {
             e.preventDefault();
             showAuthError('');
@@ -353,6 +355,7 @@
             try {
                 await signInWithEmailAndPassword(auth, email, pass);
             } catch (err) {
+                console.error("Erro no Login:", err);
                 showAuthError(translateAuthError(err.code));
             }
         };
@@ -379,6 +382,7 @@
                     atualizadaEm: serverTimestamp()
                 });
             } catch (err) {
+                console.error("Erro no Cadastro:", err);
                 showAuthError(translateAuthError(err.code));
             }
         };
@@ -393,13 +397,18 @@
                 alert('E-mail de redefinição enviado! Verifique sua caixa de entrada.');
                 switchAuthTab('login');
             } catch (err) {
+                console.error("Erro na Recuperação:", err);
                 showAuthError(translateAuthError(err.code));
             }
         };
 
         window.handleLogout = async () => {
             if (confirm("Deseja realmente sair da sua conta?")) {
-                await signOut(auth);
+                try {
+                    await signOut(auth);
+                } catch (err) {
+                    console.error("Erro ao deslogar:", err);
+                }
             }
         };
 
@@ -420,6 +429,7 @@
                 case 'auth/wrong-password': return 'Senha incorreta.';
                 case 'auth/email-already-in-use': return 'Este e-mail já está cadastrado.';
                 case 'auth/weak-password': return 'A senha deve ter pelo menos 6 caracteres.';
+                case 'auth/invalid-email': return 'E-mail inválido.';
                 default: return 'Ocorreu um erro ao processar. Tente novamente.';
             }
         }
@@ -428,7 +438,6 @@
     <script>
         lucide.createIcons();
 
-        // UI HELPERS (TABS & NAVEGAÇÃO)
         function switchAuthTab(tab) {
             document.getElementById('form-login').style.display = tab === 'login' ? 'block' : 'none';
             document.getElementById('form-register').style.display = tab === 'register' ? 'block' : 'none';
