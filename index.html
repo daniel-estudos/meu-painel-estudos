@@ -147,11 +147,28 @@
         .event-date .day { font-size: 0.9rem; font-weight: 800; color: #EF4444; }
         .event-date .month { font-size: 0.65rem; font-weight: 700; color: #EF4444; text-transform: uppercase; }
 
-        /* FOCO RÁPIDO */
+        /* FOCO RÁPIDO & SALA DE FOCO */
         .foco-box { text-align: center; display: flex; flex-direction: column; align-items: center; }
         .timer-circle { width: 110px; height: 110px; border-radius: 50%; border: 6px solid var(--primary); display: grid; place-items: center; margin: 1rem 0; font-family: 'JetBrains Mono', monospace; }
         .timer-time { font-size: 1.5rem; font-weight: 800; }
         select.select-disc, input.input-field { width: 100%; padding: 0.6rem; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 0.8rem; color: var(--text-main); background: var(--bg-card); outline: none; }
+
+        .foco-container { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
+        @media (max-width: 900px) { .foco-container { grid-template-columns: 1fr; } }
+
+        .timer-svg-container { position: relative; width: 180px; height: 180px; margin: 1rem auto; display: grid; place-items: center; }
+        .timer-svg { transform: rotate(-90deg); width: 100%; height: 100%; }
+        .timer-bg-circle { fill: none; stroke: var(--border); stroke-width: 8; }
+        .timer-progress-circle { fill: none; stroke: var(--primary); stroke-width: 8; stroke-linecap: round; stroke-dasharray: 502; stroke-dashoffset: 0; transition: stroke-dashoffset 1s linear; }
+        .timer-overlay-text { position: absolute; text-align: center; }
+
+        /* CHAT TIRA-DÚVIDAS */
+        .chat-card { display: flex; flex-direction: column; height: 480px; }
+        .chat-messages { flex: 1; overflow-y: auto; padding: 0.75rem; display: flex; flex-direction: column; gap: 0.75rem; border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 0.75rem; background: rgba(0,0,0,0.03); }
+        .chat-msg { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.6rem 0.8rem; font-size: 0.8rem; }
+        .chat-msg-header { display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 0.25rem; font-size: 0.72rem; color: var(--primary); }
+        .chat-msg-time { font-weight: 400; color: var(--text-muted); }
+        .chat-input-box { display: flex; gap: 0.5rem; }
 
         /* PAGES CONTROL */
         .page-view { display: none; }
@@ -349,15 +366,49 @@
         </div>
 
         <div id="view-foco" class="page-view">
-            <div class="card foco-box" style="max-width: 500px; margin: 0 auto; padding: 2.5rem;">
-                <h2>Modo Foco Pomodoro</h2>
-                <div class="timer-circle" style="width: 160px; height: 160px;">
-                    <div class="timer-time" id="full-timer" style="font-size: 2.5rem;">25:00</div>
+            <div class="foco-container">
+                <div class="card foco-box">
+                    <div class="card-header" style="width:100%;">
+                        <h3>Modo Foco Pomodoro</h3>
+                    </div>
+                    
+                    <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                        <button class="btn-secondary" onclick="setTimerMode(25, 'Foco')">Foco (25m)</button>
+                        <button class="btn-secondary" onclick="setTimerMode(5, 'Pausa Curta')">Pausa (5m)</button>
+                        <button class="btn-secondary" onclick="setTimerMode(15, 'Pausa Longa')">Pausa (15m)</button>
+                    </div>
+
+                    <div class="timer-svg-container">
+                        <svg class="timer-svg" viewBox="0 0 180 180">
+                            <circle class="timer-bg-circle" cx="90" cy="90" r="80"></circle>
+                            <circle class="timer-progress-circle" id="timer-circle-progress" cx="90" cy="90" r="80"></circle>
+                        </svg>
+                        <div class="timer-overlay-text">
+                            <div class="timer-time" id="full-timer" style="font-size: 2.2rem; font-weight: 800;">25:00</div>
+                            <div style="font-size: 0.7rem; color: var(--text-muted);" id="timer-mode-lbl">Modo Foco</div>
+                        </div>
+                    </div>
+
+                    <select class="select-disc" id="full-materia-select" style="margin-bottom: 1rem;"></select>
+                    
+                    <div style="display: flex; gap: 0.75rem; width: 100%;">
+                        <button class="btn-primary" id="btn-toggle-timer" style="flex:1;" onclick="toggleTimer()"><i data-lucide="play" size="16"></i> Iniciar</button>
+                        <button class="btn-danger" onclick="resetTimer()"><i data-lucide="rotate-ccw" size="16"></i></button>
+                    </div>
                 </div>
-                <select class="select-disc" id="full-materia-select" style="margin-bottom: 1rem;"></select>
-                <div style="display: flex; gap: 1rem; width: 100%;">
-                    <button class="btn-primary" style="flex:1;" onclick="toggleTimer()">Iniciar / Pausar</button>
-                    <button class="btn-primary" style="background:#EF4444;" onclick="resetTimer()">Resetar</button>
+
+                <div class="card chat-card">
+                    <div class="card-header">
+                        <h3><i data-lucide="message-square" size="16" style="vertical-align: middle;"></i> Chat Tira-Dúvidas da Sala</h3>
+                        <span style="font-size: 0.7rem; color: var(--primary); font-weight: 700;">● Ao Vivo</span>
+                    </div>
+                    
+                    <div class="chat-messages" id="chat-messages-box"></div>
+
+                    <div class="chat-input-box">
+                        <input type="text" id="chat-input-field" class="input-field" placeholder="Escreva sua dúvida..." style="margin:0;" onkeypress="if(event.key === 'Enter') sendChatMessage()">
+                        <button class="btn-primary" onclick="sendChatMessage()"><i data-lucide="send" size="16"></i></button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -400,6 +451,11 @@
             { id: 1, titulo: 'Relatório de Microbiologia', feita: false }
         ];
 
+        let chatMessages = JSON.parse(localStorage.getItem('academic_chat_messages')) || [
+            { usuario: 'Daniel', texto: 'Alguém estudando Controle de Qualidade agora?', hora: '20:15', disciplina: 'Controle de Qualidade' },
+            { usuario: 'Mariana', texto: 'Estou revisando Bioestatística! Dúvida na questão 3.', hora: '20:18', disciplina: 'Bioestatística' }
+        ];
+
         // RESTAURAR TEMA SALVO
         const savedTheme = localStorage.getItem('academic_theme') || 'light';
         document.documentElement.setAttribute('data-theme', savedTheme);
@@ -427,7 +483,7 @@
                 'dashboard': 'Boa noite, Daniel 👋',
                 'disciplinas': 'Gerenciar Disciplinas',
                 'tarefas': 'Lista de Tarefas',
-                'foco': 'Ambiente de Foco',
+                'foco': 'Ambiente de Foco & Chat Tira-Dúvidas',
                 'calendario': 'Calendário Acadêmico',
                 'anotacoes': 'Minhas Anotações',
                 'configuracoes': 'Configurações do Sistema'
@@ -587,29 +643,112 @@
             }
         }
 
-        // TIMER DE FOCO
-        let seconds = 25 * 60;
+        // TIMER DE FOCO AVANÇADO
+        let maxSeconds = 25 * 60;
+        let seconds = maxSeconds;
         let timer = null;
+        let currentModeName = 'Foco';
+
+        function setTimerMode(mins, modeLabel) {
+            clearInterval(timer);
+            timer = null;
+            maxSeconds = mins * 60;
+            seconds = maxSeconds;
+            currentModeName = modeLabel;
+            document.getElementById('timer-mode-lbl').innerText = modeLabel;
+            document.getElementById('btn-toggle-timer').innerHTML = `<i data-lucide="play" size="16"></i> Iniciar`;
+            updateDisplays();
+            lucide.createIcons();
+        }
 
         function updateDisplays() {
             const min = Math.floor(seconds / 60).toString().padStart(2, '0');
             const sec = (seconds % 60).toString().padStart(2, '0');
             const str = `${min}:${sec}`;
-            document.getElementById('dash-timer').innerText = str;
-            document.getElementById('full-timer').innerText = str;
+
+            if(document.getElementById('dash-timer')) document.getElementById('dash-timer').innerText = str;
+            if(document.getElementById('full-timer')) document.getElementById('full-timer').innerText = str;
+
+            const circle = document.getElementById('timer-circle-progress');
+            if (circle) {
+                const totalDash = 502;
+                const offset = totalDash - (seconds / maxSeconds) * totalDash;
+                circle.style.strokeDashoffset = offset;
+            }
+
+            document.title = timer ? `(${str}) ${currentModeName} - Central de Estudos` : 'Central de Estudos - Academic OS';
         }
 
         function toggleTimer() {
-            if (timer) { clearInterval(timer); timer = null; } 
-            else {
+            const btn = document.getElementById('btn-toggle-timer');
+            if (timer) {
+                clearInterval(timer);
+                timer = null;
+                if(btn) btn.innerHTML = `<i data-lucide="play" size="16"></i> Continuar`;
+            } else {
+                if(btn) btn.innerHTML = `<i data-lucide="pause" size="16"></i> Pausar`;
                 timer = setInterval(() => {
-                    if (seconds > 0) { seconds--; updateDisplays(); } 
-                    else { clearInterval(timer); alert("Sessão Finalizada!"); }
+                    if (seconds > 0) {
+                        seconds--;
+                        updateDisplays();
+                    } else {
+                        clearInterval(timer);
+                        timer = null;
+                        alert(`Sessão de ${currentModeName} concluída!`);
+                        resetTimer();
+                    }
                 }, 1000);
             }
+            lucide.createIcons();
         }
 
-        function resetTimer() { clearInterval(timer); timer = null; seconds = 25 * 60; updateDisplays(); }
+        function resetTimer() {
+            clearInterval(timer);
+            timer = null;
+            seconds = maxSeconds;
+            const btn = document.getElementById('btn-toggle-timer');
+            if(btn) btn.innerHTML = `<i data-lucide="play" size="16"></i> Iniciar`;
+            updateDisplays();
+            lucide.createIcons();
+        }
+
+        // CHAT TIRA-DÚVIDAS DA SALA
+        function renderChat() {
+            const container = document.getElementById('chat-messages-box');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            chatMessages.forEach(msg => {
+                container.innerHTML += `
+                    <div class="chat-msg">
+                        <div class="chat-msg-header">
+                            <span>${msg.usuario} <small style="color:var(--text-muted); font-weight:400;">(${msg.disciplina})</small></span>
+                            <span class="chat-msg-time">${msg.hora}</span>
+                        </div>
+                        <div>${msg.texto}</div>
+                    </div>`;
+            });
+            container.scrollTop = container.scrollHeight;
+            localStorage.setItem('academic_chat_messages', JSON.stringify(chatMessages));
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chat-input-field');
+            const select = document.getElementById('full-materia-select');
+            const materiaNome = select && select.options[select.selectedIndex] ? select.options[select.selectedIndex].text : 'Geral';
+
+            if (input && input.value.trim() !== '') {
+                const timeStr = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                chatMessages.push({
+                    usuario: 'Daniel',
+                    texto: input.value.trim(),
+                    hora: timeStr,
+                    disciplina: materiaNome
+                });
+                input.value = '';
+                renderChat();
+            }
+        }
 
         // CHART
         const ctx = document.getElementById('chartFocoSemanal').getContext('2d');
@@ -626,6 +765,7 @@
         renderDisciplinas();
         renderTarefas();
         renderCalendar();
+        renderChat();
     </script>
 </body>
 </html>
