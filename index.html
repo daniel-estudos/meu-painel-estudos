@@ -7,62 +7,57 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
         :root {
-            --bg-body: #F4F6F8;
+            --bg-body: #F8FAFC;
             --bg-card: #FFFFFF;
             --bg-sidebar: #FFFFFF;
-            --text-main: #111827;
-            --text-muted: #6B7280;
-            --border: #E5E7EB;
+            --bg-hover: #F1F5F9;
+            --text-main: #0F172A;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
             
             --primary: #10B981;
             --primary-dark: #059669;
             --primary-light: #ECFDF5;
             
-            --purple-bg: #F5F3FF;
-            --purple-border: #DDD6FE;
-            --purple-text: #6D28D9;
-            
-            --radius-lg: 16px;
-            --radius-md: 10px;
-            --radius-sm: 8px;
+            --radius-lg: 12px;
+            --radius-md: 8px;
+            --radius-sm: 6px;
 
             --cal-scale: 1;
         }
 
         [data-theme="dark"] {
-            --bg-body: #0F172A;
-            --bg-card: #1E293B;
-            --bg-sidebar: #1E293B;
+            --bg-body: #0B0F17;
+            --bg-card: #111827;
+            --bg-sidebar: #111827;
+            --bg-hover: #1E293B;
             --text-main: #F8FAFC;
             --text-muted: #94A3B8;
-            --border: #334155;
-            --primary-light: rgba(16, 185, 129, 0.15);
-            --purple-bg: #1E1B4B;
-            --purple-border: #4338CA;
-            --purple-text: #C084FC;
+            --border: #1F2937;
+            --primary-light: rgba(16, 185, 129, 0.12);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; transition: background-color 0.2s, color 0.2s, border-color 0.2s; }
-        body { background-color: var(--bg-body); color: var(--text-main); display: flex; min-height: 100vh; font-size: 14px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; transition: background-color 0.15s, color 0.15s, border-color 0.15s; }
+        body { background-color: var(--bg-body); color: var(--text-main); display: flex; min-height: 100vh; font-size: 14px; -webkit-font-smoothing: antialiased; }
 
-        /* MODAL E TELA DE AUTHENTICATION */
+        /* OVERLAY DE AUTENTICAÇÃO */
         #auth-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px);
+            background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(6px);
             display: grid; place-items: center; z-index: 9999;
         }
         .auth-card {
             background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: var(--radius-lg); padding: 2rem; width: 100%; max-width: 420px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            border-radius: var(--radius-lg); padding: 2rem; width: 100%; max-width: 400px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
         }
         .auth-tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
-        .auth-tab { flex: 1; text-align: center; padding: 0.6rem; font-weight: 700; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; }
+        .auth-tab { flex: 1; text-align: center; padding: 0.6rem; font-weight: 600; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; }
         .auth-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
 
         /* SIDEBAR */
@@ -73,142 +68,114 @@
         }
 
         .brand { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2rem; padding: 0 0.5rem; }
-        .brand-icon { width: 32px; height: 32px; background: #059669; border-radius: 8px; display: grid; place-items: center; color: white; }
-        .brand-text h2 { font-size: 0.95rem; font-weight: 800; line-height: 1.1; color: var(--text-main); }
-        .brand-text span { font-size: 0.75rem; color: var(--primary); font-weight: 600; }
+        .brand-icon { width: 32px; height: 32px; background: var(--primary); border-radius: 8px; display: grid; place-items: center; color: white; }
+        .brand-text h2 { font-size: 0.95rem; font-weight: 700; line-height: 1.1; color: var(--text-main); }
+        .brand-text span { font-size: 0.72rem; color: var(--primary); font-weight: 600; }
 
         .nav-group { margin-bottom: 1.25rem; }
         .nav-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em; padding: 0 0.75rem; margin-bottom: 0.5rem; }
         
         .nav-item {
-            display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.75rem;
-            color: var(--text-muted); text-decoration: none; border-radius: var(--radius-sm); font-weight: 500;
+            display: flex; align-items: center; gap: 0.75rem; padding: 0.55rem 0.75rem;
+            color: var(--text-muted); text-decoration: none; border-radius: var(--radius-md); font-weight: 500;
             cursor: pointer;
         }
-        .nav-item:hover { background: var(--border); color: var(--text-main); }
+        .nav-item:hover { background: var(--bg-hover); color: var(--text-main); }
         .nav-item.active { background: var(--primary-light); color: var(--primary); font-weight: 600; }
 
         .user-profile {
-            display: flex; align-items: center; justify-content: space-between; padding: 0.5rem;
-            border-top: 1px solid var(--border); padding-top: 1rem;
+            display: flex; align-items: center; justify-content: space-between; padding-top: 1rem;
+            border-top: 1px solid var(--border);
         }
         .user-info { display: flex; align-items: center; gap: 0.75rem; }
-        .avatar { width: 36px; height: 36px; background: #065F46; color: white; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 0.85rem; }
+        .avatar { width: 34px; height: 34px; background: #047857; color: white; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 0.85rem; }
 
         /* MAIN CONTENT */
-        #main-content { margin-left: 240px; flex: 1; padding: 2rem 2.5rem; max-width: 1400px; }
+        #main-content { margin-left: 240px; flex: 1; padding: 2rem 2.5rem; max-width: 1350px; }
 
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-        .header-title h1 { font-size: 1.5rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.75rem; }
+        .header-title h1 { font-size: 1.35rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; color: var(--text-main); }
         .header-title span { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
         .header-actions { display: flex; gap: 0.75rem; }
         .icon-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-card); display: grid; place-items: center; color: var(--text-main); cursor: pointer; }
+        .icon-btn:hover { background: var(--bg-hover); }
 
-        /* DASHBOARD GRID */
-        .dashboard-grid { display: grid; grid-template-columns: 1fr 320px; gap: 1.5rem; }
-        .left-column { display: flex; flex-direction: column; gap: 1.25rem; }
-        .right-column { display: flex; flex-direction: column; gap: 1.25rem; }
-
-        /* CARDS */
+        /* ESTRUTURA DE SEÇÕES E CARDS */
+        .section-header { margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.6rem; }
+        .section-header h2 { font-size: 1rem; font-weight: 700; color: var(--text-main); }
+        
         .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-        .card-header h3 { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--text-main); letter-spacing: 0.02em; }
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 300px; gap: 1.5rem; }
+        .left-column, .right-column { display: flex; flex-direction: column; gap: 1.5rem; }
 
-        /* HERO CARD */
+        /* HERO BANNER */
         .hero-card-wallpaper {
-            background: linear-gradient(180deg, rgba(244, 246, 248, 0.82) 0%, rgba(244, 246, 248, 0.95) 100%), 
-                        url('https://images8.alphacoders.com/135/thumb-1920-1354012.png') center/cover no-repeat;
-            border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.75rem;
-            position: relative; overflow: hidden;
+            background: linear-gradient(135deg, var(--bg-card) 0%, var(--primary-light) 100%);
+            border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; position: relative;
         }
-        [data-theme="dark"] .hero-card-wallpaper {
-            background: linear-gradient(180deg, rgba(15, 23, 42, 0.75) 0%, rgba(15, 23, 42, 0.92) 100%), 
-                        url('https://images8.alphacoders.com/135/thumb-1920-1354012.png') center/cover no-repeat;
-        }
-        .badge-tag { background: #D1FAE5; color: #065F46; font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 4px; display: inline-block; margin-left: 0.5rem; }
-        .hero-title { font-size: 1.35rem; font-weight: 800; margin: 0.5rem 0 0.75rem 0; color: var(--text-main); }
-        .btn-primary { background: var(--primary); color: white; border: none; padding: 0.65rem 1.25rem; border-radius: var(--radius-md); font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; }
-        .btn-danger { background: #EF4444; color: white; border: none; padding: 0.4rem 0.75rem; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 600; cursor: pointer; }
-        .btn-secondary { background: var(--border); color: var(--text-main); border: none; padding: 0.4rem 0.75rem; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 600; cursor: pointer; }
+        .badge-tag { background: var(--primary-light); color: var(--primary-dark); font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 4px; display: inline-block; }
+        .hero-title { font-size: 1.25rem; font-weight: 700; margin: 0.4rem 0 0.6rem 0; color: var(--text-main); }
 
-        /* QUADRO MINHA SEMANA NO DASHBOARD */
-        .dash-weekly-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.6rem; overflow-x: auto; }
-        .dash-weekly-col { background: var(--bg-body); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 0.6rem; min-height: 250px; display: flex; flex-direction: column; gap: 0.5rem; }
-        .dash-weekly-col.today-active { border: 2px solid var(--primary); background: var(--primary-light); }
-        .dash-weekly-header { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); text-align: center; padding-bottom: 0.4rem; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; gap: 2px; }
-        .today-badge { font-size: 0.6rem; background: var(--primary); color: white; padding: 1px 4px; border-radius: 4px; font-weight: 700; }
-        .dash-weekly-card { background: var(--bg-card); border-radius: var(--radius-sm); padding: 0.55rem; border-left: 4px solid var(--primary); font-size: 0.72rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+        /* BOTOES E INPUTS */
+        .btn-primary { background: var(--primary); color: white; border: none; padding: 0.55rem 1rem; border-radius: var(--radius-md); font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.825rem; width: auto; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-secondary { background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border); padding: 0.45rem 0.8rem; border-radius: var(--radius-md); font-size: 0.8rem; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; }
+        .btn-secondary:hover { background: var(--bg-hover); }
+        .btn-danger { background: rgba(239, 68, 68, 0.1); color: #EF4444; border: none; padding: 0.35rem 0.6rem; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 600; cursor: pointer; }
+        .btn-danger:hover { background: #EF4444; color: white; }
 
-        /* DISCIPLINAS LIST & CARD */
-        .disc-grid-advanced { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; margin-top: 1rem; }
-        .disc-card-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.25rem; position: relative; border-left: 5px solid var(--primary); }
-
-        .time-slots-container { margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 1rem; }
-        .slot-row { display: grid; grid-template-columns: 2fr 1.5fr 1.5fr 2fr auto; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem; }
-
-        /* GRADE SEMANAL */
-        .weekly-grid-container { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.75rem; overflow-x: auto; min-width: 850px; }
-        .weekly-day-col { background: var(--bg-body); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 0.75rem; min-height: 220px; display: flex; flex-direction: column; gap: 0.5rem; }
-        .weekly-day-title { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); text-align: center; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
-        .weekly-slot-card { background: var(--bg-card); border-radius: var(--radius-sm); padding: 0.6rem; border-left: 4px solid var(--primary); font-size: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-
-        /* TAREFAS CARD & LIST */
-        .task-card-item {
-            background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md);
-            padding: 1rem; position: relative; border-left: 5px solid var(--primary); display: flex; flex-direction: column; gap: 0.5rem;
-        }
-        .task-card-item.completed { opacity: 0.6; }
-        .task-card-item.completed h4 { text-decoration: line-through; }
-
-        /* FORMULÁRIOS E INPUTS */
         .form-grid-disc, .form-grid-task, .form-grid-event { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
-        .form-group { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1rem; }
-        .form-group label { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
-        select.select-disc, input.input-field, textarea.input-field { width: 100%; padding: 0.6rem; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 0.8rem; color: var(--text-main); background: var(--bg-card); outline: none; }
+        .form-group { display: flex; flex-direction: column; gap: 0.3rem; margin-bottom: 0.85rem; }
+        .form-group label { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); }
+        select.select-disc, input.input-field, textarea.input-field { width: 100%; padding: 0.55rem 0.75rem; border: 1px solid var(--border); border-radius: var(--radius-md); font-size: 0.825rem; color: var(--text-main); background: var(--bg-card); outline: none; }
+        select.select-disc:focus, input.input-field:focus { border-color: var(--primary); }
 
-        /* CALENDÁRIO WIDGET E FULL CALENDAR RESPONSIVO COM ESCALA */
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.25rem; text-align: center; font-size: calc(0.75rem * var(--cal-scale)); }
-        .cal-day-name { font-weight: 700; color: var(--text-muted); padding-bottom: 0.5rem; }
-        .cal-day { padding: calc(0.4rem * var(--cal-scale)) 0; border-radius: 50%; cursor: pointer; color: var(--text-main); font-weight: 500; position: relative; min-height: calc(32px * var(--cal-scale)); display: grid; place-items: center; }
+        /* GRADE SEMANAL DASHBOARD & DISCIPLINAS */
+        .dash-weekly-grid { display: grid; grid-template-columns: repeat(7, 1fr); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; background: var(--border); gap: 1px; }
+        .dash-weekly-col { background: var(--bg-card); padding: 0.6rem; min-height: 220px; display: flex; flex-direction: column; gap: 0.5rem; }
+        .dash-weekly-col.today-active { background: var(--primary-light); }
+        .dash-weekly-header { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-align: center; padding-bottom: 0.4rem; border-bottom: 1px solid var(--border); }
+        .today-badge { font-size: 0.6rem; background: var(--primary); color: white; padding: 1px 4px; border-radius: 3px; margin-left: 3px; }
+        .dash-weekly-card { background: var(--bg-body); border-radius: var(--radius-sm); padding: 0.5rem; border-left: 3px solid var(--primary); font-size: 0.72rem; }
+
+        /* LISTAS DE DISCIPLINAS E TAREFAS */
+        .disc-grid-advanced { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .disc-card-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.1rem; border-left: 4px solid var(--primary); }
+        
+        .task-list-container { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; }
+        .task-row-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--primary); }
+        .task-row-item.completed { opacity: 0.55; }
+        .task-row-item.completed .task-title { text-decoration: line-through; }
+
+        /* CALENDÁRIO */
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.2rem; text-align: center; font-size: calc(0.75rem * var(--cal-scale)); }
+        .cal-day-name { font-weight: 600; color: var(--text-muted); padding-bottom: 0.4rem; font-size: 0.7rem; }
+        .cal-day { padding: calc(0.35rem * var(--cal-scale)) 0; border-radius: 50%; cursor: pointer; color: var(--text-main); font-weight: 500; position: relative; min-height: calc(30px * var(--cal-scale)); display: grid; place-items: center; }
         .cal-day.active { background: var(--primary); color: white; font-weight: 700; }
         .cal-day.has-event::after { content: ''; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; background: #EF4444; border-radius: 50%; }
         .cal-day.active.has-event::after { background: white; }
-        .cal-day.muted { color: var(--text-muted); opacity: 0.4; }
+        .cal-day.muted { color: var(--text-muted); opacity: 0.3; }
 
-        /* SEÇÃO PRÓXIMAS DATAS */
-        .next-dates-container { display: flex; flex-direction: column; gap: 0.75rem; }
-        .next-date-card {
-            background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md);
-            padding: 0.85rem 1rem; border-left: 5px solid var(--primary); display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-        }
-        .next-date-badge { text-align: center; min-width: 60px; padding: 0.35rem 0.5rem; background: var(--bg-body); border-radius: var(--radius-sm); border: 1px solid var(--border); }
-        .next-date-day { font-size: 1rem; font-weight: 800; color: var(--text-main); line-height: 1; }
-        .next-date-month { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; color: var(--primary); margin-top: 2px; }
+        .next-dates-list { display: flex; flex-direction: column; gap: 0.6rem; }
+        .next-date-row { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 0.75rem 1rem; display: flex; align-items: center; gap: 1rem; border-left: 4px solid var(--primary); }
 
         /* FOCO RÁPIDO */
         .foco-box { text-align: center; display: flex; flex-direction: column; align-items: center; }
-        .timer-circle { width: 110px; height: 110px; border-radius: 50%; border: 6px solid var(--primary); display: grid; place-items: center; margin: 1rem 0; font-family: 'JetBrains Mono', monospace; }
-        .timer-time { font-size: 1.5rem; font-weight: 800; }
+        .timer-circle { width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--primary); display: grid; place-items: center; margin: 0.8rem 0; font-family: 'JetBrains Mono', monospace; }
+        .timer-time { font-size: 1.35rem; font-weight: 700; }
 
-        /* PAGES CONTROL */
+        /* BADGES */
+        .badge-info { display: inline-block; font-size: 0.7rem; font-weight: 600; padding: 0.15rem 0.45rem; border-radius: 4px; background: var(--bg-hover); color: var(--text-main); }
+        .badge-danger { display: inline-block; font-size: 0.7rem; font-weight: 600; padding: 0.15rem 0.45rem; border-radius: 4px; background: rgba(239, 68, 68, 0.12); color: #EF4444; }
+
         .page-view { display: none; }
         .page-view.active { display: block; }
-
-        .badge-info { display: inline-block; font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.4rem; border-radius: 4px; background: var(--border); color: var(--text-main); }
-        .badge-danger { display: inline-block; font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.4rem; border-radius: 4px; background: #FEE2E2; color: #991B1B; }
-        .badge-prio-alta { background: #FEE2E2; color: #991B1B; }
-        .badge-prio-media { background: #FEF3C7; color: #92400E; }
-        .badge-prio-baixa { background: #E0E7FF; color: #3730A3; }
-        .badge-tipo-prova { background: #FEE2E2; color: #991B1B; }
-        .badge-tipo-seminario { background: #F5F3FF; color: #6D28D9; }
-        .badge-tipo-trabalho { background: #FEF3C7; color: #92400E; }
-        .badge-tipo-apresentacao { background: #E0E7FF; color: #3730A3; }
-        .badge-tipo-outro { background: var(--border); color: var(--text-main); }
 
         @media (max-width: 768px) {
             :root { --cal-scale: 1 !important; }
             #main-content { margin-left: 0; padding: 1.25rem; }
             .dashboard-grid { grid-template-columns: 1fr; }
+            .dash-weekly-grid { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
@@ -220,14 +187,14 @@
             <div class="brand" style="justify-content: center; margin-bottom: 1.5rem;">
                 <div class="brand-icon"><i data-lucide="box"></i></div>
                 <div class="brand-text">
-                    <h2>CENTRAL DE ESTUDOS</h2>
+                    <h2>Central de Estudos</h2>
                     <span>Academic OS</span>
                 </div>
             </div>
 
             <div class="auth-tabs" id="auth-tabs-container">
                 <div class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Entrar</div>
-                <div class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">Criar Conta</div>
+                <div class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">Criar conta</div>
             </div>
 
             <form id="form-login" onsubmit="handleLogin(event)">
@@ -242,12 +209,12 @@
                 <div style="text-align: right; margin-bottom: 1rem;">
                     <a href="#" onclick="showRecoverForm()" style="font-size:0.75rem; color:var(--primary); font-weight:600; text-decoration:none;">Esqueci minha senha</a>
                 </div>
-                <button type="submit" class="btn-primary">Entrar no Sistema</button>
+                <button type="submit" class="btn-primary" style="width:100%;">Entrar no sistema</button>
             </form>
 
             <form id="form-register" style="display:none;" onsubmit="handleRegister(event)">
                 <div class="form-group">
-                    <label>Nome Completo</label>
+                    <label>Nome completo</label>
                     <input type="text" id="reg-name" class="input-field" placeholder="Seu nome" required>
                 </div>
                 <div class="form-group">
@@ -259,23 +226,23 @@
                     <input type="password" id="reg-password" class="input-field" placeholder="Mínimo 6 caracteres" required minlength="6">
                 </div>
                 <div class="form-group">
-                    <label>Confirmar Senha</label>
+                    <label>Confirmar senha</label>
                     <input type="password" id="reg-confirm-password" class="input-field" placeholder="Repita a senha" required minlength="6">
                 </div>
-                <button type="submit" class="btn-primary">Criar Minha Conta</button>
+                <button type="submit" class="btn-primary" style="width:100%;">Criar minha conta</button>
             </form>
 
             <form id="form-recover" style="display:none;" onsubmit="handleRecoverPassword(event)">
-                <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:1rem;">Informe seu e-mail cadastrado para receber o link de redefinição de senha.</p>
+                <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:1rem;">Informe seu e-mail para receber o link de redefinição de senha.</p>
                 <div class="form-group">
                     <label>E-mail</label>
                     <input type="email" id="recover-email" class="input-field" placeholder="seu@email.com" required>
                 </div>
-                <button type="submit" class="btn-primary" style="margin-bottom:0.75rem;">Enviar Link</button>
-                <button type="button" class="btn-secondary" style="width:100%;" onclick="switchAuthTab('login')">Voltar ao Login</button>
+                <button type="submit" class="btn-primary" style="width:100%; margin-bottom:0.5rem;">Enviar link</button>
+                <button type="button" class="btn-secondary" style="width:100%; justify-content:center;" onclick="switchAuthTab('login')">Voltar ao login</button>
             </form>
 
-            <div id="auth-error-msg" style="color:#EF4444; font-size:0.75rem; font-weight:700; margin-top:1rem; text-align:center; display:none; word-break: break-word;"></div>
+            <div id="auth-error-msg" style="color:#EF4444; font-size:0.75rem; font-weight:600; margin-top:1rem; text-align:center; display:none;"></div>
         </div>
     </div>
 
@@ -285,7 +252,7 @@
             <div class="brand">
                 <div class="brand-icon"><i data-lucide="box"></i></div>
                 <div class="brand-text">
-                    <h2>CENTRAL DE ESTUDOS</h2>
+                    <h2>Central de Estudos</h2>
                     <span>Academic OS</span>
                 </div>
             </div>
@@ -318,11 +285,11 @@
                 <div class="user-info">
                     <div class="avatar" id="user-avatar-initial">U</div>
                     <div>
-                        <div style="font-weight: 700; font-size: 0.85rem;" id="user-display-name">Carregando...</div>
+                        <div style="font-weight: 600; font-size: 0.85rem;" id="user-display-name">Carregando...</div>
                         <div style="font-size: 0.7rem; color: var(--text-muted);" id="user-display-email">...</div>
                     </div>
                 </div>
-                <button class="icon-btn" title="Sair da Conta" onclick="handleLogout()"><i data-lucide="log-out" size="16"></i></button>
+                <button class="icon-btn" title="Sair da conta" onclick="handleLogout()"><i data-lucide="log-out" size="16"></i></button>
             </div>
         </div>
     </aside>
@@ -334,7 +301,7 @@
                 <span id="current-date">--</span>
             </div>
             <div class="header-actions">
-                <button class="icon-btn" title="Alternar Tema" onclick="toggleTheme()"><i data-lucide="moon" id="theme-icon" size="18"></i></button>
+                <button class="icon-btn" title="Alternar tema" onclick="toggleTheme()"><i data-lucide="moon" id="theme-icon" size="18"></i></button>
             </div>
         </header>
 
@@ -344,17 +311,17 @@
                 <div class="left-column">
                     <div class="hero-card-wallpaper" id="card-proximo-compromisso"></div>
 
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>MINHA SEMANA ACADÊMICA</h3>
-                            <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600;">Grade de Horários</span>
+                    <div>
+                        <div class="section-header">
+                            <h2>Minha semana acadêmica</h2>
+                            <span style="font-size: 0.75rem; color: var(--text-muted);">Grade de horários</span>
                         </div>
                         
                         <div class="dash-weekly-grid" id="dash-weekly-schedule"></div>
 
-                        <div id="dash-unassigned-disciplines" style="margin-top: 1rem; border-top: 1px dashed var(--border); padding-top: 0.75rem; display: none;">
-                            <div style="font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.4rem;">
-                                ⚠️ Disciplinas sem horário definido:
+                        <div id="dash-unassigned-disciplines" style="margin-top: 0.85rem; display: none;">
+                            <div style="font-size: 0.7rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.3rem;">
+                                Disciplinas sem horário definido:
                             </div>
                             <div id="dash-unassigned-list" style="display: flex; gap: 0.5rem; flex-wrap: wrap;"></div>
                         </div>
@@ -363,20 +330,22 @@
 
                 <div class="right-column">
                     <div class="card foco-box">
-                        <div class="card-header" style="width: 100%;"><h3>FOCO RÁPIDO</h3></div>
-                        <div class="timer-circle">
-                            <div><div class="timer-time" id="dash-timer">25:00</div></div>
+                        <div class="section-header" style="width: 100%; margin-bottom: 0.5rem; border: none; padding: 0;">
+                            <h2>Foco rápido</h2>
                         </div>
-                        <select class="select-disc" id="dash-materia-select"></select>
-                        <button class="btn-primary" style="width: 100%; margin-top: 0.75rem;" onclick="switchPage('foco', document.querySelectorAll('.nav-item')[3])"><i data-lucide="play" size="16"></i> Iniciar foco</button>
+                        <div class="timer-circle">
+                            <div class="timer-time" id="dash-timer">25:00</div>
+                        </div>
+                        <select class="select-disc" id="dash-materia-select" style="margin-bottom: 0.75rem;"></select>
+                        <button class="btn-primary" style="width: 100%;" onclick="switchPage('foco', document.querySelectorAll('.nav-item')[3])"><i data-lucide="play" size="15"></i> Iniciar foco</button>
                     </div>
 
                     <div class="card">
-                        <div class="card-header">
-                            <h3>CALENDÁRIO</h3>
+                        <div class="section-header" style="border: none; padding: 0; margin-bottom: 0.75rem;">
+                            <h2>Calendário</h2>
                             <a href="#" style="font-size: 0.75rem; color: var(--primary); font-weight: 600; text-decoration: none;" onclick="switchPage('calendario', document.querySelectorAll('.nav-item')[4])">Ver agenda</a>
                         </div>
-                        <div style="font-weight: 700; margin-bottom: 0.75rem;" id="dash-cal-month-title">Agosto 2026</div>
+                        <div style="font-weight: 600; font-size: 0.85rem; margin-bottom: 0.75rem;" id="dash-cal-month-title">Agosto 2026</div>
                         <div class="calendar-grid" id="calendar-days-container"></div>
                     </div>
                 </div>
@@ -385,41 +354,17 @@
 
         <!-- PAGE DISCIPLINAS -->
         <div id="view-disciplinas" class="page-view">
-            <div class="metrics-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 1.5rem; display: grid; gap: 1rem;">
-                <div class="metric-card" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem; display: flex; align-items: center; gap: 0.85rem;">
-                    <div class="metric-icon" style="background: #E0E7FF; color: #4338CA; width: 36px; height: 36px; border-radius: 8px; display: grid; place-items: center;"><i data-lucide="book-open" size="18"></i></div>
-                    <div>
-                        <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600;">Total de Disciplinas</div>
-                        <div style="font-size: 1.1rem; font-weight: 700;" id="stat-total-disc">0</div>
-                    </div>
-                </div>
-                <div class="metric-card" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem; display: flex; align-items: center; gap: 0.85rem;">
-                    <div class="metric-icon" style="background: #D1FAE5; color: #059669; width: 36px; height: 36px; border-radius: 8px; display: grid; place-items: center;"><i data-lucide="calendar" size="18"></i></div>
-                    <div>
-                        <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600;">Aulas na Semana</div>
-                        <div style="font-size: 1.1rem; font-weight: 700;" id="stat-aulas-semana">0</div>
-                    </div>
-                </div>
-                <div class="metric-card" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem; display: flex; align-items: center; gap: 0.85rem;">
-                    <div class="metric-icon" style="background: #FEF3C7; color: #D97706; width: 36px; height: 36px; border-radius: 8px; display: grid; place-items: center;"><i data-lucide="clock" size="18"></i></div>
-                    <div>
-                        <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600;">Próxima Aula</div>
-                        <div style="font-size: 0.85rem; font-weight: 700;" id="stat-proxima-aula">--</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card" style="margin-bottom: 1.5rem;">
-                <div class="card-header">
-                    <h3 id="form-disc-title">Adicionar Nova Disciplina</h3>
-                    <button id="btn-cancel-edit" class="btn-secondary" style="display:none;" onclick="resetDiscForm()">Cancelar Edição</button>
+            <div style="margin-bottom: 1.5rem;">
+                <div class="section-header">
+                    <h2 id="form-disc-title">Adicionar nova disciplina</h2>
+                    <button id="btn-cancel-edit" class="btn-secondary" style="display:none;" onclick="resetDiscForm()">Cancelar edição</button>
                 </div>
 
                 <input type="hidden" id="edit-disc-id">
 
                 <div class="form-grid-disc">
                     <div class="form-group">
-                        <label>Nome da Disciplina *</label>
+                        <label>Nome da disciplina *</label>
                         <input type="text" id="disc-nome" class="input-field" placeholder="Ex: Farmacologia Aplicada">
                     </div>
                     <div class="form-group">
@@ -440,41 +385,41 @@
                         <input type="text" id="disc-periodo" class="input-field" placeholder="Ex: 5º Período">
                     </div>
                     <div class="form-group">
-                        <label>Cor de Identificação</label>
-                        <input type="color" id="disc-cor" class="input-field" value="#10B981" style="height:38px; padding:2px; cursor:pointer;">
+                        <label>Cor de identificação</label>
+                        <input type="color" id="disc-cor" class="input-field" value="#10B981" style="height:35px; padding:2px; cursor:pointer;">
                     </div>
                 </div>
 
-                <div class="time-slots-container">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.75rem;">
-                        <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Horários de Aula</span>
-                        <button type="button" class="btn-secondary" onclick="addSlotRow()"><i data-lucide="plus" size="14"></i> Adicionar Horário</button>
+                <div style="margin-top: 0.75rem; border-top: 1px solid var(--border); padding-top: 0.75rem;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.5rem;">
+                        <span style="font-size: 0.75rem; font-weight: 600; color: var(--text-muted);">Horários de aula</span>
+                        <button type="button" class="btn-secondary" onclick="addSlotRow()"><i data-lucide="plus" size="14"></i> Adicionar horário</button>
                     </div>
                     <div id="slots-rows-container"></div>
                 </div>
 
-                <div class="form-group" style="margin-top: 1rem;">
-                    <label>Observações / Notas</label>
+                <div class="form-group" style="margin-top: 0.75rem;">
+                    <label>Observações</label>
                     <input type="text" id="disc-observacoes" class="input-field" placeholder="Ex: Aulas de laboratório quinzenais...">
                 </div>
 
-                <div style="margin-top: 1.25rem; display: flex; justify-content: flex-end;">
-                    <button class="btn-primary" id="btn-save-disc" onclick="saveDisciplina()"><i data-lucide="save" size="16"></i> Salvar Disciplina</button>
+                <div style="margin-top: 1rem; display: flex; justify-content: flex-end;">
+                    <button class="btn-primary" id="btn-save-disc" onclick="saveDisciplina()"><i data-lucide="save" size="15"></i> Salvar disciplina</button>
                 </div>
             </div>
 
-            <div class="card" style="margin-bottom: 1.5rem;">
-                <div class="card-header"><h3>Minha Grade Semanal</h3></div>
+            <div style="margin-bottom: 1.5rem;">
+                <div class="section-header"><h2>Minha grade semanal</h2></div>
                 <div class="weekly-grid-container" id="weekly-schedule-grid"></div>
             </div>
 
-            <div class="card">
-                <div class="card-header" style="flex-wrap: wrap; gap: 0.75rem;">
-                    <h3>Matérias Cadastradas</h3>
+            <div>
+                <div class="section-header">
+                    <h2>Matérias cadastradas</h2>
                     <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                        <input type="text" id="search-disc" class="input-field" placeholder="Buscar matéria..." oninput="renderDisciplinasUI()" style="width: 220px; padding: 0.4rem 0.6rem;">
-                        <select id="filter-dia" class="select-disc" onchange="renderDisciplinasUI()" style="width: 140px; padding: 0.4rem 0.6rem;">
-                            <option value="">Todos os Dias</option>
+                        <input type="text" id="search-disc" class="input-field" placeholder="Buscar matéria..." oninput="renderDisciplinasUI()" style="width: 180px;">
+                        <select id="filter-dia" class="select-disc" onchange="renderDisciplinasUI()" style="width: 130px;">
+                            <option value="">Todos os dias</option>
                             <option value="Segunda">Segunda</option>
                             <option value="Terça">Terça</option>
                             <option value="Quarta">Quarta</option>
@@ -483,8 +428,8 @@
                             <option value="Sábado">Sábado</option>
                             <option value="Domingo">Domingo</option>
                         </select>
-                        <select id="filter-turno" class="select-disc" onchange="renderDisciplinasUI()" style="width: 130px; padding: 0.4rem 0.6rem;">
-                            <option value="">Todos Turnos</option>
+                        <select id="filter-turno" class="select-disc" onchange="renderDisciplinasUI()" style="width: 120px;">
+                            <option value="">Todos turnos</option>
                             <option value="Matutino">Matutino</option>
                             <option value="Vespertino">Vespertino</option>
                             <option value="Noturno">Noturno</option>
@@ -498,27 +443,25 @@
 
         <!-- PAGE TAREFAS -->
         <div id="view-tarefas" class="page-view">
-            <div class="card" style="margin-bottom: 1.5rem;">
-                <div class="card-header">
-                    <h3 id="form-task-title">Cadastrar Nova Tarefa</h3>
-                    <button id="btn-cancel-task-edit" class="btn-secondary" style="display:none;" onclick="resetTaskForm()">Cancelar Edição</button>
+            <div style="margin-bottom: 1.5rem;">
+                <div class="section-header">
+                    <h2 id="form-task-title">Cadastrar nova tarefa</h2>
+                    <button id="btn-cancel-task-edit" class="btn-secondary" style="display:none;" onclick="resetTaskForm()">Cancelar edição</button>
                 </div>
 
                 <input type="hidden" id="edit-task-id">
 
                 <div class="form-grid-task">
                     <div class="form-group" style="grid-column: span 2;">
-                        <label>Título da Tarefa *</label>
-                        <input type="text" id="task-titulo" class="input-field" placeholder="Ex: Relatório Prático de Microbiologia">
+                        <label>Título da tarefa *</label>
+                        <input type="text" id="task-titulo" class="input-field" placeholder="Ex: Relatório prático de microbiologia">
                     </div>
                     <div class="form-group">
-                        <label>Disciplina Associada</label>
-                        <select id="task-disciplina-id" class="select-disc">
-                            <option value="">Nenhuma / Geral</option>
-                        </select>
+                        <label>Disciplina associada</label>
+                        <select id="task-disciplina-id" class="select-disc"><option value="">Nenhuma / Geral</option></select>
                     </div>
                     <div class="form-group">
-                        <label>Data de Entrega / Prazo *</label>
+                        <label>Data de entrega *</label>
                         <input type="date" id="task-data" class="input-field">
                     </div>
                     <div class="form-group">
@@ -532,82 +475,69 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Observações / Instruções</label>
-                    <input type="text" id="task-observacoes" class="input-field" placeholder="Ex: Enviar em formato PDF pelo portal acadêmico até 23:59">
+                    <label>Observações</label>
+                    <input type="text" id="task-observacoes" class="input-field" placeholder="Ex: Enviar em formato PDF pelo portal acadêmico">
                 </div>
 
-                <div style="margin-top: 1rem; display: flex; justify-content: flex-end;">
-                    <button class="btn-primary" onclick="saveTarefa()"><i data-lucide="save" size="16"></i> Salvar Tarefa</button>
+                <div style="margin-top: 0.85rem; display: flex; justify-content: flex-end;">
+                    <button class="btn-primary" onclick="saveTarefa()"><i data-lucide="save" size="15"></i> Salvar tarefa</button>
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-header" style="flex-wrap: wrap; gap: 0.75rem;">
-                    <h3>Gerenciador de Tarefas</h3>
+            <div>
+                <div class="section-header">
+                    <h2>Gerenciador de tarefas</h2>
                     <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                        <input type="text" id="search-task" class="input-field" placeholder="Buscar tarefa..." oninput="renderTarefasUI()" style="width: 200px; padding: 0.4rem 0.6rem;">
-                        <select id="filter-task-status" class="select-disc" onchange="renderTarefasUI()" style="width: 130px; padding: 0.4rem 0.6rem;">
+                        <input type="text" id="search-task" class="input-field" placeholder="Buscar tarefa..." oninput="renderTarefasUI()" style="width: 180px;">
+                        <select id="filter-task-status" class="select-disc" onchange="renderTarefasUI()" style="width: 120px;">
                             <option value="todas">Todas</option>
                             <option value="pendentes" selected>Pendentes</option>
                             <option value="concluidas">Concluídas</option>
                             <option value="atrasadas">Atrasadas</option>
                         </select>
-                        <select id="filter-task-prio" class="select-disc" onchange="renderTarefasUI()" style="width: 130px; padding: 0.4rem 0.6rem;">
-                            <option value="">Todas Prioridades</option>
+                        <select id="filter-task-prio" class="select-disc" onchange="renderTarefasUI()" style="width: 130px;">
+                            <option value="">Todas prioridades</option>
                             <option value="Alta">Alta</option>
                             <option value="Média">Média</option>
                             <option value="Baixa">Baixa</option>
                         </select>
-                        <select id="filter-task-disc" class="select-disc" onchange="renderTarefasUI()" style="width: 160px; padding: 0.4rem 0.6rem;">
-                            <option value="">Todas Disciplinas</option>
+                        <select id="filter-task-disc" class="select-disc" onchange="renderTarefasUI()" style="width: 150px;">
+                            <option value="">Todas disciplinas</option>
                         </select>
                     </div>
                 </div>
 
-                <div id="full-tarefas-grid" class="disc-grid-advanced"></div>
+                <div id="full-tarefas-grid" class="task-list-container"></div>
             </div>
         </div>
 
-        <!-- PAGE CALENDÁRIO ACADÊMICO (ETAPA 3) -->
+        <!-- PAGE CALENDÁRIO ACADÊMICO -->
         <div id="view-calendario" class="page-view">
-            <!-- PAINEL DE PERSONALIZAÇÃO DE ESCALA -->
-            <div class="card" style="margin-bottom: 1.25rem; padding: 0.85rem 1.25rem;">
-                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-                    <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <i data-lucide="sliders" size="16" style="color: var(--primary);"></i>
-                        <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-main);">Proporção do Calendário</span>
-                    </div>
-
-                    <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
-                        <div style="display: flex; gap: 0.25rem;">
-                            <button class="btn-secondary" onclick="updateCalPreset('sm')" style="padding: 0.3rem 0.6rem; font-size: 0.72rem;">Compacto</button>
-                            <button class="btn-secondary" onclick="updateCalPreset('md')" style="padding: 0.3rem 0.6rem; font-size: 0.72rem;">Normal</button>
-                            <button class="btn-secondary" onclick="updateCalPreset('lg')" style="padding: 0.3rem 0.6rem; font-size: 0.72rem;">Expandido</button>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 0.5rem; border-left: 1px solid var(--border); padding-left: 0.75rem;">
-                            <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: 600;">Escala:</span>
-                            <input type="range" id="cal-scale-slider" min="0.85" max="1.30" step="0.05" value="1.0" oninput="handleCalScaleChange(this.value)" style="width: 100px; cursor: pointer;">
-                        </div>
-                    </div>
+            <div style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 0.6rem 1rem;">
+                <span style="font-size: 0.75rem; font-weight: 600; color: var(--text-muted);">Proporção da visualização:</span>
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                    <button class="btn-secondary" onclick="updateCalPreset('sm')" style="padding: 0.25rem 0.5rem; font-size: 0.72rem;">Compacto</button>
+                    <button class="btn-secondary" onclick="updateCalPreset('md')" style="padding: 0.25rem 0.5rem; font-size: 0.72rem;">Normal</button>
+                    <button class="btn-secondary" onclick="updateCalPreset('lg')" style="padding: 0.25rem 0.5rem; font-size: 0.72rem;">Expandido</button>
+                    <input type="range" id="cal-scale-slider" min="0.85" max="1.30" step="0.05" value="1.0" oninput="handleCalScaleChange(this.value)" style="width: 80px; cursor: pointer;">
                 </div>
             </div>
 
-            <!-- FORMULÁRIO DE EVENTO -->
-            <div class="card" style="margin-bottom: 1.5rem;">
-                <div class="card-header">
-                    <h3 id="form-event-title">Novo Evento Acadêmico</h3>
-                    <button id="btn-cancel-event-edit" class="btn-secondary" style="display:none;" onclick="resetEventForm()">Cancelar Edição</button>
+            <div style="margin-bottom: 1.5rem;">
+                <div class="section-header">
+                    <h2 id="form-event-title">Novo evento acadêmico</h2>
+                    <button id="btn-cancel-event-edit" class="btn-secondary" style="display:none;" onclick="resetEventForm()">Cancelar edição</button>
                 </div>
 
                 <input type="hidden" id="edit-event-id">
 
                 <div class="form-grid-event">
                     <div class="form-group" style="grid-column: span 2;">
-                        <label>Título do Evento *</label>
+                        <label>Título do evento *</label>
                         <input type="text" id="event-titulo" class="input-field" placeholder="Ex: Prova Regimental N1">
                     </div>
                     <div class="form-group">
-                        <label>Tipo de Evento</label>
+                        <label>Tipo de evento</label>
                         <select id="event-tipo" class="select-disc">
                             <option value="Prova" selected>Prova</option>
                             <option value="Seminário">Seminário</option>
@@ -617,71 +547,65 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Disciplina Associada</label>
-                        <select id="event-disciplina-id" class="select-disc">
-                            <option value="">Nenhuma / Evento Geral</option>
-                        </select>
+                        <label>Disciplina associada</label>
+                        <select id="event-disciplina-id" class="select-disc"><option value="">Nenhuma / Evento Geral</option></select>
                     </div>
                     <div class="form-group">
-                        <label>Data do Evento *</label>
+                        <label>Data do evento *</label>
                         <input type="date" id="event-data" class="input-field">
                     </div>
                     <div class="form-group">
-                        <label>Horário (Opcional)</label>
+                        <label>Horário (opcional)</label>
                         <input type="time" id="event-horario" class="input-field">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label>Descrição / Conteúdo Programático</label>
+                    <label>Descrição / Conteúdo</label>
                     <input type="text" id="event-descricao" class="input-field" placeholder="Ex: Capítulos 1 ao 5 do livro-texto">
                 </div>
 
-                <div style="margin-top: 1rem; display: flex; justify-content: flex-end;">
-                    <button class="btn-primary" onclick="saveEvento()"><i data-lucide="save" size="16"></i> Salvar Evento</button>
+                <div style="margin-top: 0.85rem; display: flex; justify-content: flex-end;">
+                    <button class="btn-primary" onclick="saveEvento()"><i data-lucide="save" size="15"></i> Salvar evento</button>
                 </div>
             </div>
 
-            <!-- GRADE DO CALENDÁRIO MENSAL E PRÓXIMAS DATAS -->
             <div class="dashboard-grid">
                 <div class="left-column">
-                    <div class="card">
-                        <div class="card-header">
-                            <div style="display: flex; gap: 0.5rem; align-items: center;">
-                                <button class="btn-secondary" onclick="changeCalMonth(-1)"><i data-lucide="chevron-left" size="16"></i> Anterior</button>
-                                <button class="btn-secondary" onclick="resetCalToToday()"><i data-lucide="calendar" size="14"></i> Hoje</button>
+                    <div>
+                        <div class="section-header">
+                            <div style="display: flex; gap: 0.4rem; align-items: center;">
+                                <button class="btn-secondary" onclick="changeCalMonth(-1)"><i data-lucide="chevron-left" size="14"></i> Anterior</button>
+                                <button class="btn-secondary" onclick="resetCalToToday()">Hoje</button>
                             </div>
-                            <h3 id="full-cal-month-title">Agosto 2026</h3>
-                            <button class="btn-secondary" onclick="changeCalMonth(1)">Próximo <i data-lucide="chevron-right" size="16"></i></button>
+                            <h2 id="full-cal-month-title">Agosto 2026</h2>
+                            <button class="btn-secondary" onclick="changeCalMonth(1)">Próximo <i data-lucide="chevron-right" size="14"></i></button>
                         </div>
                         <div class="calendar-grid" id="full-calendar-grid"></div>
                     </div>
 
-                    <!-- DETALHES DO DIA SELECIONADO -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 id="selected-day-events-title">Eventos do Dia</h3>
+                    <div>
+                        <div class="section-header">
+                            <h2 id="selected-day-events-title">Eventos do dia</h2>
                         </div>
-                        <div id="selected-day-events-list" style="display: flex; flex-direction: column; gap: 0.75rem;"></div>
+                        <div id="selected-day-events-list" style="display: flex; flex-direction: column; gap: 0.5rem;"></div>
                     </div>
                 </div>
 
                 <div class="right-column">
-                    <!-- SEÇÃO PRÓXIMAS DATAS -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>PRÓXIMAS DATAS</h3>
-                            <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: 600;">Eventos Futuros</span>
+                    <div>
+                        <div class="section-header">
+                            <h2>Próximas datas</h2>
                         </div>
-                        <div class="next-dates-container" id="proximas-datas-list"></div>
+                        <div class="next-dates-list" id="proximas-datas-list"></div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div id="view-foco" class="page-view"><div class="card"><h3>Foco Pomodoro</h3><p>Módulo aguardando próxima etapa.</p></div></div>
-        <div id="view-anotacoes" class="page-view"><div class="card"><h3>Anotações</h3><p>Módulo aguardando próxima etapa.</p></div></div>
-        <div id="view-configuracoes" class="page-view"><div class="card"><h3>Configurações</h3><p>Módulo aguardando próxima etapa.</p></div></div>
+        <div id="view-foco" class="page-view"><div class="section-header"><h2>Foco Pomodoro</h2></div><p style="color:var(--text-muted);">Módulo em desenvolvimento.</p></div>
+        <div id="view-anotacoes" class="page-view"><div class="section-header"><h2>Anotações</h2></div><p style="color:var(--text-muted);">Módulo em desenvolvimento.</p></div>
+        <div id="view-configuracoes" class="page-view"><div class="section-header"><h2>Configurações</h2></div><p style="color:var(--text-muted);">Módulo em desenvolvimento.</p></div>
     </main>
 
     <!-- FIREBASE SDK v10 -->
@@ -735,14 +659,12 @@
         let isMigratingTasks = false;
         let isMigratingEvents = false;
 
-        // AUTHENTICATION LISTENER
         onAuthStateChanged(auth, async (user) => {
             const overlay = document.getElementById('auth-overlay');
             if (user) {
                 currentUser = user;
                 overlay.style.display = 'none';
 
-                // Carregar Perfil do Usuário
                 const userDocRef = doc(db, 'users', user.uid);
                 let profileData = { nome: user.displayName || 'Estudante', email: user.email };
 
@@ -767,7 +689,6 @@
                 document.getElementById('user-avatar-initial').innerText = (profileData.nome || 'E').charAt(0).toUpperCase();
                 document.getElementById('page-title').innerText = `Boa noite, ${(profileData.nome || 'Estudante').split(' ')[0]} 👋`;
 
-                // CARREGAR PREFERÊNCIAS DO CALENDÁRIO (/users/{user.uid}/configuracoes/preferencias)
                 const prefRef = doc(db, 'users', user.uid, 'configuracoes', 'preferencias');
                 try {
                     const prefSnap = await getDoc(prefRef);
@@ -779,7 +700,6 @@
                     console.error("Erro ao ler preferências de escala:", pErr);
                 }
 
-                // 1. ESCUTA DE DISCIPLINAS
                 const discColRef = collection(db, 'users', user.uid, 'disciplinas');
                 if (unsubscribeDisciplinas) unsubscribeDisciplinas();
 
@@ -822,7 +742,6 @@
                     window.renderCalendarioUI();
                 });
 
-                // 2. ESCUTA DE TAREFAS
                 const taskColRef = collection(db, 'users', user.uid, 'tarefas');
                 if (unsubscribeTarefas) unsubscribeTarefas();
 
@@ -867,7 +786,6 @@
                     window.renderTarefasUI();
                 });
 
-                // 3. ESCUTA DE EVENTOS (/users/{user.uid}/eventos)
                 const eventColRef = collection(db, 'users', user.uid, 'eventos');
                 if (unsubscribeEventos) unsubscribeEventos();
 
@@ -926,7 +844,6 @@
             }
         });
 
-        // SALVAR ESCALA DO CALENDÁRIO NO FIRESTORE
         window.saveCalendarScaleToFirestore = async (scaleVal) => {
             if (!currentUser) return;
             try {
@@ -940,7 +857,6 @@
             }
         };
 
-        // CRUD EVENTOS (FIRESTORE)
         window.saveEvento = async () => {
             if (!currentUser) return;
 
@@ -952,16 +868,11 @@
             const horario = document.getElementById('event-horario').value || '';
             const descricao = document.getElementById('event-descricao').value.trim();
 
-            if (!titulo) {
-                alert('Por favor, informe o título do evento.');
-                return;
-            }
-            if (!dataVal) {
-                alert('Por favor, selecione a data do evento.');
+            if (!titulo || !dataVal) {
+                alert('Por favor, informe o título e a data do evento.');
                 return;
             }
 
-            // Tratamento preciso de fuso horário separando ano, mês e dia
             const dtParts = dataVal.split('-');
             const tsEvento = Timestamp.fromDate(new Date(parseInt(dtParts[0]), parseInt(dtParts[1]) - 1, parseInt(dtParts[2])));
 
@@ -986,25 +897,22 @@
                 }
                 window.resetEventForm();
             } catch (err) {
-                console.error("Erro ao salvar evento no Firestore:", err);
-                alert("Erro ao salvar evento.");
+                console.error("Erro ao salvar evento:", err);
             }
         };
 
         window.deleteEvento = async (id) => {
             if (!currentUser) return;
-            if (confirm("Deseja realmente excluir este evento acadêmico?")) {
+            if (confirm("Deseja realmente excluir este evento?")) {
                 try {
                     const docRef = doc(db, 'users', currentUser.uid, 'eventos', id);
                     await deleteDoc(docRef);
                 } catch (err) {
-                    console.error("Erro ao excluir evento do Firestore:", err);
-                    alert("Erro ao excluir evento.");
+                    console.error("Erro ao excluir evento:", err);
                 }
             }
         };
 
-        // CRUD TAREFAS
         window.saveTarefa = async () => {
             if (!currentUser) return;
 
@@ -1076,7 +984,6 @@
             }
         };
 
-        // CRUD DISCIPLINAS
         window.saveDisciplina = async () => {
             if (!currentUser) return;
 
@@ -1132,7 +1039,6 @@
             }
         };
 
-        // CONTROLE AUTH
         window.handleLogin = async (e) => {
             e.preventDefault();
             showAuthError('');
@@ -1179,7 +1085,7 @@
 
             try {
                 await sendPasswordResetEmail(auth, email);
-                alert('E-mail de redefinição enviado! Verifique sua caixa de entrada.');
+                alert('E-mail de redefinição enviado!');
                 switchAuthTab('login');
             } catch (err) {
                 showAuthError(translateAuthError(err.code));
@@ -1187,7 +1093,7 @@
         };
 
         window.handleLogout = async () => {
-            if (confirm("Deseja realmente sair da sua conta?")) {
+            if (confirm("Deseja sair da sua conta?")) {
                 await signOut(auth);
             }
         };
@@ -1207,7 +1113,7 @@
                 case 'auth/invalid-credential': return 'E-mail ou senha incorretos.';
                 case 'auth/user-not-found': return 'Usuário não encontrado.';
                 case 'auth/wrong-password': return 'Senha incorreta.';
-                case 'auth/email-already-in-use': return 'Este e-mail já está cadastrado.';
+                case 'auth/email-already-in-use': return 'E-mail já cadastrado.';
                 case 'auth/weak-password': return 'A senha deve ter pelo menos 6 caracteres.';
                 default: return 'Ocorreu um erro ao processar. Tente novamente.';
             }
@@ -1234,7 +1140,6 @@
             return mapa[index] || 'Segunda';
         }
 
-        // CONTROLE DE ESCALA E PROPORÇÕES DO CALENDÁRIO
         window.setCalendarScaleUI = function(scaleVal, persist = true) {
             const clamped = Math.min(Math.max(parseFloat(scaleVal), 0.85), 1.30);
             document.documentElement.style.setProperty('--cal-scale', clamped);
@@ -1261,12 +1166,12 @@
         function createSlotRowHTML(dia = 'Segunda', inicio = '13:00', fim = '16:30', sala = '') {
             const optionsDia = DIAS_SEMANA.map(d => `<option value="${d}" ${d === dia ? 'selected' : ''}>${d}</option>`).join('');
             return `
-                <div class="slot-row">
+                <div class="slot-row" style="display:grid; grid-template-columns: 2fr 1.5fr 1.5fr 2fr auto; gap:0.5rem; align-items:center; margin-bottom:0.4rem;">
                     <select class="select-disc slot-dia">${optionsDia}</select>
                     <input type="time" class="input-field slot-inicio" value="${inicio}">
                     <input type="time" class="input-field slot-fim" value="${fim}">
-                    <input type="text" class="input-field slot-sala" placeholder="Sala/Lab" value="${sala}">
-                    <button type="button" class="btn-danger" onclick="this.parentElement.remove()"><i data-lucide="trash-2" size="14"></i></button>
+                    <input type="text" class="input-field slot-sala" placeholder="Sala" value="${sala}">
+                    <button type="button" class="btn-danger" onclick="this.parentElement.remove()"><i data-lucide="trash-2" size="13"></i></button>
                 </div>
             `;
         }
@@ -1303,7 +1208,7 @@
             document.getElementById('slots-rows-container').innerHTML = '';
             addSlotRow();
             
-            document.getElementById('form-disc-title').innerText = 'Adicionar Nova Disciplina';
+            document.getElementById('form-disc-title').innerText = 'Adicionar nova disciplina';
             document.getElementById('btn-cancel-edit').style.display = 'none';
         };
 
@@ -1327,12 +1232,11 @@
                 addSlotRow();
             }
 
-            document.getElementById('form-disc-title').innerText = `Editar Disciplina: ${disc.nome}`;
+            document.getElementById('form-disc-title').innerText = `Editar disciplina: ${disc.nome}`;
             document.getElementById('btn-cancel-edit').style.display = 'inline-block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // TAREFAS HELPERS
         window.resetTaskForm = function() {
             document.getElementById('edit-task-id').value = '';
             document.getElementById('task-titulo').value = '';
@@ -1341,7 +1245,7 @@
             document.getElementById('task-prioridade').value = 'Média';
             document.getElementById('task-observacoes').value = '';
 
-            document.getElementById('form-task-title').innerText = 'Cadastrar Nova Tarefa';
+            document.getElementById('form-task-title').innerText = 'Cadastrar nova tarefa';
             document.getElementById('btn-cancel-task-edit').style.display = 'none';
         };
 
@@ -1364,12 +1268,11 @@
             document.getElementById('task-prioridade').value = t.prioridade || 'Média';
             document.getElementById('task-observacoes').value = t.observacoes || '';
 
-            document.getElementById('form-task-title').innerText = `Editar Tarefa: ${t.titulo}`;
+            document.getElementById('form-task-title').innerText = `Editar tarefa: ${t.titulo}`;
             document.getElementById('btn-cancel-task-edit').style.display = 'inline-block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // CALENDÁRIO HELPERS E RENDERIZAÇÃO
         window.resetEventForm = function() {
             document.getElementById('edit-event-id').value = '';
             document.getElementById('event-titulo').value = '';
@@ -1379,7 +1282,7 @@
             document.getElementById('event-horario').value = '';
             document.getElementById('event-descricao').value = '';
 
-            document.getElementById('form-event-title').innerText = 'Novo Evento Acadêmico';
+            document.getElementById('form-event-title').innerText = 'Novo evento acadêmico';
             document.getElementById('btn-cancel-event-edit').style.display = 'none';
         };
 
@@ -1403,7 +1306,7 @@
             document.getElementById('event-horario').value = ev.horario || '';
             document.getElementById('event-descricao').value = ev.descricao || '';
 
-            document.getElementById('form-event-title').innerText = `Editar Evento: ${ev.titulo}`;
+            document.getElementById('form-event-title').innerText = `Editar evento: ${ev.titulo}`;
             document.getElementById('btn-cancel-event-edit').style.display = 'inline-block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -1518,41 +1421,32 @@
                 const discNome = discObj ? discObj.nome : 'Evento Geral';
                 const discCor = discObj ? discObj.cor : 'var(--primary)';
 
-                let badgeClass = 'badge-tipo-outro';
-                if (ev.tipo === 'Prova') badgeClass = 'badge-tipo-prova';
-                else if (ev.tipo === 'Seminário') badgeClass = 'badge-tipo-seminario';
-                else if (ev.tipo === 'Trabalho') badgeClass = 'badge-tipo-trabalho';
-                else if (ev.tipo === 'Apresentação') badgeClass = 'badge-tipo-apresentacao';
-
                 listContainer.innerHTML += `
-                    <div class="dash-weekly-card" style="border-left-color: ${discCor}; padding: 0.75rem;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.25rem;">
-                            <span class="badge-info ${badgeClass}">${ev.tipo}</span>
+                    <div class="dash-weekly-card" style="border-left-color: ${discCor}; padding: 0.65rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span class="badge-info">${ev.tipo}</span>
                             <div style="display:flex; gap:0.25rem;">
-                                <button class="btn-secondary" onclick="editEvento('${ev.id}')" title="Editar"><i data-lucide="edit-2" size="12"></i></button>
-                                <button class="btn-danger" onclick="deleteEvento('${ev.id}')" title="Excluir"><i data-lucide="trash-2" size="12"></i></button>
+                                <button class="btn-secondary" style="padding:0.2rem 0.4rem;" onclick="editEvento('${ev.id}')"><i data-lucide="edit-2" size="12"></i></button>
+                                <button class="btn-danger" style="padding:0.2rem 0.4rem;" onclick="deleteEvento('${ev.id}')"><i data-lucide="trash-2" size="12"></i></button>
                             </div>
                         </div>
-                        <div style="font-weight: 800; font-size: 0.9rem; color: var(--text-main);">${ev.titulo}</div>
-                        <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">📚 ${discNome} ${ev.horario ? '• ⏰ ' + ev.horario : ''}</div>
-                        ${ev.descricao ? `<div style="font-size: 0.72rem; color: var(--text-muted); font-style: italic; margin-top:0.4rem; background:var(--bg-body); padding:0.35rem; border-radius:4px;">💡 ${ev.descricao}</div>` : ''}
+                        <div style="font-weight: 700; font-size: 0.85rem; color: var(--text-main); margin-top: 0.2rem;">${ev.titulo}</div>
+                        <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.15rem;">📚 ${discNome} ${ev.horario ? '• ⏰ ' + ev.horario : ''}</div>
+                        ${ev.descricao ? `<div style="font-size: 0.72rem; color: var(--text-muted); font-style: italic; margin-top:0.3rem;">💡 ${ev.descricao}</div>` : ''}
                     </div>
                 `;
             });
             lucide.createIcons();
         }
 
-        // RENDERIZAÇÃO DA SEÇÃO PRÓXIMAS DATAS
         function renderProximasDatas() {
             const container = document.getElementById('proximas-datas-list');
             if (!container) return;
 
             container.innerHTML = '';
-
             const hojeInicio = new Date();
             hojeInicio.setHours(0,0,0,0);
 
-            // Filtrar eventos futuros (incluindo o dia atual)
             const futuros = window.eventos.filter(e => {
                 if (e.dataEvento && e.dataEvento.toDate) {
                     const ed = e.dataEvento.toDate();
@@ -1562,7 +1456,6 @@
                 return false;
             });
 
-            // Ordenação estritamente cronológica
             futuros.sort((a, b) => {
                 const dA = a.dataEvento.toDate();
                 const dB = b.dataEvento.toDate();
@@ -1584,28 +1477,20 @@
                 const discNome = discObj ? discObj.nome : 'Evento Geral';
                 const discCor = discObj ? discObj.cor : 'var(--primary)';
 
-                let badgeClass = 'badge-tipo-outro';
-                if (ev.tipo === 'Prova') badgeClass = 'badge-tipo-prova';
-                else if (ev.tipo === 'Seminário') badgeClass = 'badge-tipo-seminario';
-                else if (ev.tipo === 'Trabalho') badgeClass = 'badge-tipo-trabalho';
-                else if (ev.tipo === 'Apresentação') badgeClass = 'badge-tipo-apresentacao';
-
                 container.innerHTML += `
-                    <div class="next-date-card" style="border-left-color: ${discCor};">
-                        <div style="display: flex; gap: 0.85rem; align-items: center;">
-                            <div class="next-date-badge">
-                                <div class="next-date-day">${diaNum}</div>
-                                <div class="next-date-month">${mesAbrev}</div>
+                    <div class="next-date-row" style="border-left-color: ${discCor};">
+                        <div style="text-align:center; min-width:45px;">
+                            <div style="font-size:1.1rem; font-weight:700; color:var(--text-main); line-height:1;">${diaNum}</div>
+                            <div style="font-size:0.65rem; font-weight:700; color:var(--primary);">${mesAbrev}</div>
+                        </div>
+                        <div style="flex:1;">
+                            <div style="display:flex; gap:0.4rem; align-items:center; margin-bottom:0.15rem;">
+                                <span class="badge-info">${ev.tipo}</span>
+                                <span style="font-size:0.72rem; font-weight:600; color:${discCor};">${discNome}</span>
                             </div>
-                            <div>
-                                <div style="display: flex; gap: 0.4rem; align-items: center; margin-bottom: 0.2rem;">
-                                    <span class="badge-info ${badgeClass}">${ev.tipo}</span>
-                                    <span style="font-size: 0.7rem; font-weight: 700; color: ${discCor};">${discNome}</span>
-                                </div>
-                                <div style="font-weight: 800; font-size: 0.88rem; color: var(--text-main); line-height: 1.2;">${ev.titulo}</div>
-                                ${ev.horario ? `<div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 600; margin-top: 2px;">⏰ Horário: ${ev.horario}</div>` : ''}
-                                ${ev.descricao ? `<div style="font-size: 0.7rem; color: var(--text-muted); font-style: italic; margin-top: 3px;">💡 ${ev.descricao}</div>` : ''}
-                            </div>
+                            <div style="font-weight:700; font-size:0.85rem; color:var(--text-main);">${ev.titulo}</div>
+                            ${ev.horario ? `<div style="font-size:0.7rem; color:var(--text-muted);">⏰ Horário: ${ev.horario}</div>` : ''}
+                            ${ev.descricao ? `<div style="font-size:0.7rem; color:var(--text-muted); font-style:italic;">💡 ${ev.descricao}</div>` : ''}
                         </div>
                     </div>
                 `;
@@ -1633,7 +1518,7 @@
 
             if (selectTaskFilter) {
                 const currentFilterVal = selectTaskFilter.value;
-                selectTaskFilter.innerHTML = `<option value="">Todas Disciplinas</option>` + 
+                selectTaskFilter.innerHTML = `<option value="">Todas disciplinas</option>` + 
                     window.disciplinas.map(d => `<option value="${d.id}">${d.nome}</option>`).join('');
                 selectTaskFilter.value = currentFilterVal;
             }
@@ -1664,7 +1549,7 @@
             });
 
             if (filteredTasks.length === 0) {
-                grid.innerHTML = `<p style="color:var(--text-muted); grid-column: 1/-1;">Nenhuma tarefa encontrada.</p>`;
+                grid.innerHTML = `<p style="color:var(--text-muted); font-size:0.8rem;">Nenhuma tarefa encontrada.</p>`;
                 return;
             }
 
@@ -1684,35 +1569,27 @@
                     if (!t.concluida && dCheck < hoje) isAtrasada = true;
                 }
 
-                let prioBadgeClass = 'badge-prio-media';
-                if (t.prioridade === 'Alta') prioBadgeClass = 'badge-prio-alta';
-                else if (t.prioridade === 'Baixa') prioBadgeClass = 'badge-prio-baixa';
-
                 grid.innerHTML += `
-                    <div class="task-card-item ${t.concluida ? 'completed' : ''}" style="border-left-color: ${corBorder};">
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                            <span class="badge-info" style="background:${corBorder}22; color:${corBorder};">${nomeDisc}</span>
-                            <div style="display: flex; gap: 0.25rem;">
-                                <button class="btn-secondary" onclick="editTarefa('${t.id}')" title="Editar"><i data-lucide="edit-2" size="12"></i></button>
-                                <button class="btn-danger" onclick="deleteTarefa('${t.id}')" title="Excluir"><i data-lucide="trash-2" size="12"></i></button>
+                    <div class="task-row-item ${t.concluida ? 'completed' : ''}" style="border-left-color: ${corBorder};">
+                        <div style="display:flex; align-items:center; gap:0.75rem; flex:1;">
+                            <input type="checkbox" ${t.concluida ? 'checked' : ''} onchange="toggleTarefaConcluida('${t.id}', ${t.concluida})" style="cursor:pointer; width:16px; height:16px;">
+                            <div>
+                                <div style="display:flex; gap:0.4rem; align-items:center; margin-bottom:0.15rem;">
+                                    <span class="badge-info" style="color:${corBorder}; font-weight:700;">${nomeDisc}</span>
+                                    <span class="badge-info">${t.prioridade}</span>
+                                    ${isAtrasada ? `<span class="badge-danger">Atrasada</span>` : ''}
+                                </div>
+                                <div class="task-title" style="font-weight: 600; font-size: 0.875rem; color: var(--text-main);">${t.titulo}</div>
+                                ${t.observacoes ? `<div style="font-size:0.72rem; color:var(--text-muted); font-style:italic; margin-top:2px;">💡 ${t.observacoes}</div>` : ''}
                             </div>
                         </div>
 
-                        <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text-main); margin-top:0.2rem;">${t.titulo}</h4>
-
-                        <div style="display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap; margin-top: 0.2rem;">
-                            <span class="badge-info ${prioBadgeClass}">${t.prioridade}</span>
-                            <span class="badge-info">📅 Entrega: ${dateStr}</span>
-                            ${isAtrasada ? `<span class="badge-danger">⚠️ Atrasada</span>` : ''}
-                        </div>
-
-                        ${t.observacoes ? `<div style="font-size: 0.72rem; color: var(--text-muted); font-style: italic; margin-top: 0.3rem; background: var(--bg-body); padding: 0.35rem 0.5rem; border-radius: 4px;">💡 ${t.observacoes}</div>` : ''}
-
-                        <div style="margin-top: 0.5rem; border-top: 1px solid var(--border); padding-top: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
-                            <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: 600;">Status: <strong>${t.concluida ? 'Concluída' : 'Pendente'}</strong></span>
-                            <button class="${t.concluida ? 'btn-secondary' : 'btn-primary'}" style="width: auto; padding: 0.3rem 0.6rem; font-size: 0.72rem;" onclick="toggleTarefaConcluida('${t.id}', ${t.concluida})">
-                                ${t.concluida ? 'Reabrir Tarefa' : 'Concluir Tarefa'}
-                            </button>
+                        <div style="display:flex; align-items:center; gap:1rem;">
+                            <span style="font-size:0.75rem; color:var(--text-muted); font-weight:500;">📅 ${dateStr}</span>
+                            <div style="display:flex; gap:0.25rem;">
+                                <button class="btn-secondary" style="padding:0.25rem 0.5rem;" onclick="editTarefa('${t.id}')"><i data-lucide="edit-2" size="13"></i></button>
+                                <button class="btn-danger" style="padding:0.25rem 0.5rem;" onclick="deleteTarefa('${t.id}')"><i data-lucide="trash-2" size="13"></i></button>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -1774,45 +1651,33 @@
                     filtered.forEach(d => {
                         const slotsBadge = (d.horarios && d.horarios.length > 0) 
                             ? d.horarios.map(s => 
-                                `<div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.25rem;">
-                                    📅 <strong>${s.dia}</strong>: ${s.inicio} às ${s.fim} <span class="badge-info">${s.sala || 'A definir'}</span>
+                                `<div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.2rem;">
+                                    <strong>${s.dia}</strong>: ${s.inicio} às ${s.fim} • <span class="badge-info">${s.sala || 'A definir'}</span>
                                  </div>`
                               ).join('')
-                            : `<div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.25rem; font-style:italic;">⚠️ Horário não definido</div>`;
+                            : `<div style="font-size:0.72rem; color:var(--text-muted); font-style:italic;">Horário não definido</div>`;
 
                         fullGrid.innerHTML += `
                             <div class="disc-card-item" style="border-left-color: ${d.cor};">
-                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
-                                    <span class="badge-info" style="background:${d.cor}22; color:${d.cor};">${d.turno} • ${d.periodo || 'Geral'}</span>
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.4rem;">
+                                    <span class="badge-info" style="color:${d.cor}; font-weight:700;">${d.turno} • ${d.periodo || 'Geral'}</span>
                                     <div style="display: flex; gap: 0.25rem;">
-                                        <button class="btn-secondary" onclick="editDisciplina('${d.id}')" title="Editar"><i data-lucide="edit-2" size="12"></i></button>
-                                        <button class="btn-danger" onclick="deleteDisciplina('${d.id}')" title="Excluir"><i data-lucide="trash-2" size="12"></i></button>
+                                        <button class="btn-secondary" style="padding:0.25rem 0.5rem;" onclick="editDisciplina('${d.id}')"><i data-lucide="edit-2" size="13"></i></button>
+                                        <button class="btn-danger" style="padding:0.25rem 0.5rem;" onclick="deleteDisciplina('${d.id}')"><i data-lucide="trash-2" size="13"></i></button>
                                     </div>
                                 </div>
-                                <h4 style="font-size: 1rem; font-weight: 800; margin-bottom: 0.2rem;">${d.nome}</h4>
-                                <p style="font-size: 0.78rem; color: var(--text-muted); font-weight: 600; margin-bottom: 0.75rem;">👨‍🏫 ${d.professor || 'Professor não informado'}</p>
+                                <h3 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 0.15rem;">${d.nome}</h3>
+                                <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.6rem;">👨‍🏫 ${d.professor || 'Professor não informado'}</p>
                                 
-                                <div style="border-top: 1px solid var(--border); padding-top: 0.5rem; margin-top: 0.5rem;">
-                                    <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; color:var(--text-muted);">Horários de Aula:</div>
+                                <div style="border-top: 1px solid var(--border); padding-top: 0.4rem; margin-top: 0.4rem;">
                                     ${slotsBadge}
                                 </div>
 
-                                ${d.observacoes ? `<div style="font-size: 0.72rem; color: var(--text-muted); font-style: italic; margin-top: 0.75rem; background: var(--bg-body); padding: 0.4rem 0.6rem; border-radius: 4px;">💡 ${d.observacoes}</div>` : ''}
+                                ${d.observacoes ? `<div style="font-size: 0.72rem; color: var(--text-muted); font-style: italic; margin-top: 0.5rem;">💡 ${d.observacoes}</div>` : ''}
                             </div>
                         `;
                     });
                 }
-            }
-
-            const statTotal = document.getElementById('stat-total-disc');
-            const statAulas = document.getElementById('stat-aulas-semana');
-            const statProxima = document.getElementById('stat-proxima-aula');
-
-            if (statTotal) statTotal.innerText = window.disciplinas.length;
-            if (statAulas) statAulas.innerText = totalAulasSemana;
-            if (statProxima) {
-                if (todasAulas.length > 0) statProxima.innerText = `${todasAulas[0].disciplina} (${todasAulas[0].dia})`;
-                else statProxima.innerText = 'Nenhuma aula';
             }
 
             renderWeeklyGrid();
@@ -1826,10 +1691,10 @@
             if (todasAulas.length === 0) {
                 heroCard.innerHTML = `
                     <div>
-                        <span style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--primary-dark);">PRÓXIMA AULA</span>
+                        <span style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--primary-dark);">Próxima aula</span>
                         <h2 class="hero-title">Nenhuma aula cadastrada</h2>
-                        <p style="font-size: 0.85rem; color: var(--text-muted);">Cadastre disciplinas com horários para visualizar seu compromisso aqui.</p>
-                        <button class="btn-primary" style="margin-top: 1rem; width:auto;" onclick="switchPage('disciplinas', document.querySelectorAll('.nav-item')[1])"><i data-lucide="plus" size="16"></i> Organizar Disciplinas</button>
+                        <p style="font-size: 0.825rem; color: var(--text-muted);">Cadastre disciplinas com horários para visualizar seu compromisso aqui.</p>
+                        <button class="btn-primary" style="margin-top: 0.85rem;" onclick="switchPage('disciplinas', document.querySelectorAll('.nav-item')[1])"><i data-lucide="plus" size="15"></i> Organizar disciplinas</button>
                     </div>
                 `;
                 lucide.createIcons();
@@ -1856,14 +1721,14 @@
 
             heroCard.innerHTML = `
                 <div>
-                    <span style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--primary-dark);">PRÓXIMO COMPROMISSO</span>
+                    <span style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--primary-dark);">Próximo compromisso</span>
                     <span class="badge-tag">${tagTexto}</span>
                     <h2 class="hero-title" style="color: ${proxima.cor};">${proxima.disciplina}</h2>
-                    <div style="display:flex; flex-direction:column; gap:0.25rem; color: var(--text-muted); font-weight: 600; font-size: 0.85rem;">
+                    <div style="display:flex; flex-direction:column; gap:0.2rem; color: var(--text-muted); font-size: 0.825rem;">
                         <div>👨‍🏫 ${proxima.professor || 'Professor não informado'}</div>
                         <div>⏰ ${proxima.dia} • ${proxima.inicio} – ${proxima.fim} (${proxima.sala || 'Sala a definir'})</div>
                     </div>
-                    <button class="btn-primary" style="margin-top: 1.25rem; width:auto;" onclick="switchPage('foco', document.querySelectorAll('.nav-item')[3])"><i data-lucide="play" size="16"></i> Iniciar foco</button>
+                    <button class="btn-primary" style="margin-top: 1rem;" onclick="switchPage('foco', document.querySelectorAll('.nav-item')[3])"><i data-lucide="play" size="15"></i> Iniciar foco</button>
                 </div>
             `;
             lucide.createIcons();
@@ -1882,14 +1747,14 @@
 
                 let cardsHTML = '';
                 if (aulasDoDia.length === 0) {
-                    cardsHTML = `<div style="font-size: 0.68rem; color: var(--text-muted); text-align: center; padding: 1.5rem 0;">Sem aulas</div>`;
+                    cardsHTML = `<div style="font-size: 0.68rem; color: var(--text-muted); text-align: center; padding: 1rem 0;">Sem aulas</div>`;
                 } else {
                     aulasDoDia.forEach(aula => {
                         cardsHTML += `
                             <div class="dash-weekly-card" style="border-left-color: ${aula.cor};">
-                                <div style="font-weight: 800; color: var(--text-main); line-height: 1.2;">${aula.disciplina}</div>
-                                <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 0.2rem;">${aula.professor ? '👨‍🏫 ' + aula.professor : ''}</div>
-                                <div style="display:flex; justify-content:space-between; align-items:center; margin-top: 0.35rem; font-weight: 700; font-size: 0.65rem;">
+                                <div style="font-weight: 700; color: var(--text-main); line-height: 1.2;">${aula.disciplina}</div>
+                                <div style="color: var(--text-muted); font-size: 0.65rem; margin-top: 0.15rem;">${aula.professor ? '👨‍🏫 ' + aula.professor : ''}</div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-top: 0.3rem; font-size: 0.65rem;">
                                     <span>⏰ ${aula.inicio} – ${aula.fim}</span>
                                     <span class="badge-info">${aula.sala}</span>
                                 </div>
@@ -1916,7 +1781,7 @@
                 if (semHorario.length > 0) {
                     unassignedBox.style.display = 'block';
                     unassignedList.innerHTML = semHorario.map(d => 
-                        `<span class="badge-info" style="border-left: 3px solid ${d.cor}; padding: 0.3rem 0.5rem;">${d.nome} (Horário não definido)</span>`
+                        `<span class="badge-info" style="border-left: 3px solid ${d.cor}; padding: 0.25rem 0.4rem;">${d.nome}</span>`
                     ).join('');
                 } else {
                     unassignedBox.style.display = 'none';
@@ -1956,10 +1821,10 @@
                 } else {
                     slotsDoDia.forEach(s => {
                         cardsHTML += `
-                            <div class="weekly-slot-card" style="border-left-color: ${s.cor};">
-                                <div style="font-weight: 700; font-size: 0.8rem;">${s.disciplina}</div>
-                                <div style="color: var(--text-muted); font-size: 0.7rem; margin-top: 0.15rem;">${s.professor ? '👨‍🏫 ' + s.professor : ''}</div>
-                                <div style="display:flex; justify-content:space-between; margin-top: 0.4rem; font-weight: 600; font-size: 0.68rem;">
+                            <div class="dash-weekly-card" style="border-left-color: ${s.cor};">
+                                <div style="font-weight: 700; font-size: 0.78rem;">${s.disciplina}</div>
+                                <div style="color: var(--text-muted); font-size: 0.68rem; margin-top: 0.1rem;">${s.professor ? '👨‍🏫 ' + s.professor : ''}</div>
+                                <div style="display:flex; justify-content:space-between; margin-top: 0.35rem; font-size: 0.65rem;">
                                     <span>⏰ ${s.inicio} - ${s.fim}</span>
                                     <span class="badge-info">${s.sala || 'Sala'}</span>
                                 </div>
@@ -1969,15 +1834,14 @@
                 }
 
                 gridContainer.innerHTML += `
-                    <div class="weekly-day-col">
-                        <div class="weekly-day-title">${dia}</div>
+                    <div class="dash-weekly-col">
+                        <div class="dash-weekly-header">${dia}</div>
                         ${cardsHTML}
                     </div>
                 `;
             });
         }
 
-        // HELPERS UI
         function switchAuthTab(tab) {
             document.getElementById('form-login').style.display = tab === 'login' ? 'block' : 'none';
             document.getElementById('form-register').style.display = tab === 'register' ? 'block' : 'none';
