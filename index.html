@@ -30,6 +30,8 @@
             --radius-lg: 16px;
             --radius-md: 10px;
             --radius-sm: 8px;
+
+            --cal-scale: 1;
         }
 
         [data-theme="dark"] {
@@ -164,14 +166,24 @@
         .form-group label { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
         select.select-disc, input.input-field, textarea.input-field { width: 100%; padding: 0.6rem; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 0.8rem; color: var(--text-main); background: var(--bg-card); outline: none; }
 
-        /* CALENDÁRIO WIDGET E FULL CALENDAR */
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.25rem; text-align: center; font-size: 0.75rem; }
+        /* CALENDÁRIO WIDGET E FULL CALENDAR RESPONSIVO COM ESCALA */
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.25rem; text-align: center; font-size: calc(0.75rem * var(--cal-scale)); }
         .cal-day-name { font-weight: 700; color: var(--text-muted); padding-bottom: 0.5rem; }
-        .cal-day { padding: 0.4rem 0; border-radius: 50%; cursor: pointer; color: var(--text-main); font-weight: 500; position: relative; }
+        .cal-day { padding: calc(0.4rem * var(--cal-scale)) 0; border-radius: 50%; cursor: pointer; color: var(--text-main); font-weight: 500; position: relative; min-height: calc(32px * var(--cal-scale)); display: grid; place-items: center; }
         .cal-day.active { background: var(--primary); color: white; font-weight: 700; }
         .cal-day.has-event::after { content: ''; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; background: #EF4444; border-radius: 50%; }
         .cal-day.active.has-event::after { background: white; }
         .cal-day.muted { color: var(--text-muted); opacity: 0.4; }
+
+        /* SEÇÃO PRÓXIMAS DATAS */
+        .next-dates-container { display: flex; flex-direction: column; gap: 0.75rem; }
+        .next-date-card {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md);
+            padding: 0.85rem 1rem; border-left: 5px solid var(--primary); display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+        }
+        .next-date-badge { text-align: center; min-width: 60px; padding: 0.35rem 0.5rem; background: var(--bg-body); border-radius: var(--radius-sm); border: 1px solid var(--border); }
+        .next-date-day { font-size: 1rem; font-weight: 800; color: var(--text-main); line-height: 1; }
+        .next-date-month { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; color: var(--primary); margin-top: 2px; }
 
         /* FOCO RÁPIDO */
         .foco-box { text-align: center; display: flex; flex-direction: column; align-items: center; }
@@ -192,6 +204,12 @@
         .badge-tipo-trabalho { background: #FEF3C7; color: #92400E; }
         .badge-tipo-apresentacao { background: #E0E7FF; color: #3730A3; }
         .badge-tipo-outro { background: var(--border); color: var(--text-main); }
+
+        @media (max-width: 768px) {
+            :root { --cal-scale: 1 !important; }
+            #main-content { margin-left: 0; padding: 1.25rem; }
+            .dashboard-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -212,7 +230,6 @@
                 <div class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">Criar Conta</div>
             </div>
 
-            <!-- FORMULÁRIO DE LOGIN -->
             <form id="form-login" onsubmit="handleLogin(event)">
                 <div class="form-group">
                     <label>E-mail</label>
@@ -228,7 +245,6 @@
                 <button type="submit" class="btn-primary">Entrar no Sistema</button>
             </form>
 
-            <!-- FORMULÁRIO DE CADASTRO -->
             <form id="form-register" style="display:none;" onsubmit="handleRegister(event)">
                 <div class="form-group">
                     <label>Nome Completo</label>
@@ -249,7 +265,6 @@
                 <button type="submit" class="btn-primary">Criar Minha Conta</button>
             </form>
 
-            <!-- FORMULÁRIO DE RECUPERAÇÃO -->
             <form id="form-recover" style="display:none;" onsubmit="handleRecoverPassword(event)">
                 <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:1rem;">Informe seu e-mail cadastrado para receber o link de redefinição de senha.</p>
                 <div class="form-group">
@@ -327,10 +342,8 @@
         <div id="view-dashboard" class="page-view active">
             <div class="dashboard-grid">
                 <div class="left-column">
-                    <!-- PRÓXIMO COMPROMISSO -->
                     <div class="hero-card-wallpaper" id="card-proximo-compromisso"></div>
 
-                    <!-- QUADRO PRINCIPAL: MINHA SEMANA ACADÊMICA -->
                     <div class="card">
                         <div class="card-header">
                             <h3>MINHA SEMANA ACADÊMICA</h3>
@@ -349,7 +362,6 @@
                 </div>
 
                 <div class="right-column">
-                    <!-- FOCO RÁPIDO -->
                     <div class="card foco-box">
                         <div class="card-header" style="width: 100%;"><h3>FOCO RÁPIDO</h3></div>
                         <div class="timer-circle">
@@ -359,7 +371,6 @@
                         <button class="btn-primary" style="width: 100%; margin-top: 0.75rem;" onclick="switchPage('foco', document.querySelectorAll('.nav-item')[3])"><i data-lucide="play" size="16"></i> Iniciar foco</button>
                     </div>
 
-                    <!-- CALENDÁRIO WIDGET -->
                     <div class="card">
                         <div class="card-header">
                             <h3>CALENDÁRIO</h3>
@@ -398,7 +409,6 @@
                 </div>
             </div>
 
-            <!-- FORMULÁRIO DE DISCIPLINAS -->
             <div class="card" style="margin-bottom: 1.5rem;">
                 <div class="card-header">
                     <h3 id="form-disc-title">Adicionar Nova Disciplina</h3>
@@ -453,13 +463,11 @@
                 </div>
             </div>
 
-            <!-- GRADE SEMANAL -->
             <div class="card" style="margin-bottom: 1.5rem;">
                 <div class="card-header"><h3>Minha Grade Semanal</h3></div>
                 <div class="weekly-grid-container" id="weekly-schedule-grid"></div>
             </div>
 
-            <!-- LISTA DE DISCIPLINAS -->
             <div class="card">
                 <div class="card-header" style="flex-wrap: wrap; gap: 0.75rem;">
                     <h3>Matérias Cadastradas</h3>
@@ -562,6 +570,28 @@
 
         <!-- PAGE CALENDÁRIO ACADÊMICO (ETAPA 3) -->
         <div id="view-calendario" class="page-view">
+            <!-- PAINEL DE PERSONALIZAÇÃO DE ESCALA -->
+            <div class="card" style="margin-bottom: 1.25rem; padding: 0.85rem 1.25rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i data-lucide="sliders" size="16" style="color: var(--primary);"></i>
+                        <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-main);">Proporção do Calendário</span>
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+                        <div style="display: flex; gap: 0.25rem;">
+                            <button class="btn-secondary" onclick="updateCalPreset('sm')" style="padding: 0.3rem 0.6rem; font-size: 0.72rem;">Compacto</button>
+                            <button class="btn-secondary" onclick="updateCalPreset('md')" style="padding: 0.3rem 0.6rem; font-size: 0.72rem;">Normal</button>
+                            <button class="btn-secondary" onclick="updateCalPreset('lg')" style="padding: 0.3rem 0.6rem; font-size: 0.72rem;">Expandido</button>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem; border-left: 1px solid var(--border); padding-left: 0.75rem;">
+                            <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: 600;">Escala:</span>
+                            <input type="range" id="cal-scale-slider" min="0.85" max="1.30" step="0.05" value="1.0" oninput="handleCalScaleChange(this.value)" style="width: 100px; cursor: pointer;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- FORMULÁRIO DE EVENTO -->
             <div class="card" style="margin-bottom: 1.5rem;">
                 <div class="card-header">
@@ -597,8 +627,8 @@
                         <input type="date" id="event-data" class="input-field">
                     </div>
                     <div class="form-group">
-                        <label>Horário</label>
-                        <input type="time" id="event-horario" class="input-field" value="08:00">
+                        <label>Horário (Opcional)</label>
+                        <input type="time" id="event-horario" class="input-field">
                     </div>
                 </div>
 
@@ -612,25 +642,38 @@
                 </div>
             </div>
 
-            <!-- GRADE DO CALENDÁRIO MENSAL E EVENTOS -->
+            <!-- GRADE DO CALENDÁRIO MENSAL E PRÓXIMAS DATAS -->
             <div class="dashboard-grid">
                 <div class="left-column">
                     <div class="card">
                         <div class="card-header">
-                            <button class="btn-secondary" onclick="changeCalMonth(-1)"><i data-lucide="chevron-left" size="16"></i> Anterior</button>
+                            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                <button class="btn-secondary" onclick="changeCalMonth(-1)"><i data-lucide="chevron-left" size="16"></i> Anterior</button>
+                                <button class="btn-secondary" onclick="resetCalToToday()"><i data-lucide="calendar" size="14"></i> Hoje</button>
+                            </div>
                             <h3 id="full-cal-month-title">Agosto 2026</h3>
                             <button class="btn-secondary" onclick="changeCalMonth(1)">Próximo <i data-lucide="chevron-right" size="16"></i></button>
                         </div>
                         <div class="calendar-grid" id="full-calendar-grid"></div>
                     </div>
-                </div>
 
-                <div class="right-column">
+                    <!-- DETALHES DO DIA SELECIONADO -->
                     <div class="card">
                         <div class="card-header">
                             <h3 id="selected-day-events-title">Eventos do Dia</h3>
                         </div>
                         <div id="selected-day-events-list" style="display: flex; flex-direction: column; gap: 0.75rem;"></div>
+                    </div>
+                </div>
+
+                <div class="right-column">
+                    <!-- SEÇÃO PRÓXIMAS DATAS -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>PRÓXIMAS DATAS</h3>
+                            <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: 600;">Eventos Futuros</span>
+                        </div>
+                        <div class="next-dates-container" id="proximas-datas-list"></div>
                     </div>
                 </div>
             </div>
@@ -699,7 +742,7 @@
                 currentUser = user;
                 overlay.style.display = 'none';
 
-                // Perfil /users/{user.uid}
+                // Carregar Perfil do Usuário
                 const userDocRef = doc(db, 'users', user.uid);
                 let profileData = { nome: user.displayName || 'Estudante', email: user.email };
 
@@ -723,6 +766,18 @@
                 document.getElementById('user-display-email').innerText = profileData.email || user.email;
                 document.getElementById('user-avatar-initial').innerText = (profileData.nome || 'E').charAt(0).toUpperCase();
                 document.getElementById('page-title').innerText = `Boa noite, ${(profileData.nome || 'Estudante').split(' ')[0]} 👋`;
+
+                // CARREGAR PREFERÊNCIAS DO CALENDÁRIO (/users/{user.uid}/configuracoes/preferencias)
+                const prefRef = doc(db, 'users', user.uid, 'configuracoes', 'preferencias');
+                try {
+                    const prefSnap = await getDoc(prefRef);
+                    if (prefSnap.exists() && prefSnap.data().tamanhoCalendario) {
+                        const scaleVal = prefSnap.data().tamanhoCalendario;
+                        window.setCalendarScaleUI(scaleVal, false);
+                    }
+                } catch (pErr) {
+                    console.error("Erro ao ler preferências de escala:", pErr);
+                }
 
                 // 1. ESCUTA DE DISCIPLINAS
                 const discColRef = collection(db, 'users', user.uid, 'disciplinas');
@@ -836,7 +891,7 @@
                                     tipo: item.tipo || 'Prova',
                                     disciplinaId: item.disciplinaId || null,
                                     dataEvento: tsData,
-                                    horario: item.horario || '08:00',
+                                    horario: item.horario || '',
                                     descricao: item.descricao || item.observacoes || '',
                                     criadaEm: serverTimestamp(),
                                     atualizadaEm: serverTimestamp()
@@ -871,6 +926,20 @@
             }
         });
 
+        // SALVAR ESCALA DO CALENDÁRIO NO FIRESTORE
+        window.saveCalendarScaleToFirestore = async (scaleVal) => {
+            if (!currentUser) return;
+            try {
+                const prefRef = doc(db, 'users', currentUser.uid, 'configuracoes', 'preferencias');
+                await setDoc(prefRef, {
+                    tamanhoCalendario: parseFloat(scaleVal),
+                    atualizadaEm: serverTimestamp()
+                }, { merge: true });
+            } catch (err) {
+                console.error("Erro ao salvar preferências no Firestore:", err);
+            }
+        };
+
         // CRUD EVENTOS (FIRESTORE)
         window.saveEvento = async () => {
             if (!currentUser) return;
@@ -880,7 +949,7 @@
             const tipo = document.getElementById('event-tipo').value;
             const disciplinaIdVal = document.getElementById('event-disciplina-id').value;
             const dataVal = document.getElementById('event-data').value;
-            const horario = document.getElementById('event-horario').value || '08:00';
+            const horario = document.getElementById('event-horario').value || '';
             const descricao = document.getElementById('event-descricao').value.trim();
 
             if (!titulo) {
@@ -892,6 +961,7 @@
                 return;
             }
 
+            // Tratamento preciso de fuso horário separando ano, mês e dia
             const dtParts = dataVal.split('-');
             const tsEvento = Timestamp.fromDate(new Date(parseInt(dtParts[0]), parseInt(dtParts[1]) - 1, parseInt(dtParts[2])));
 
@@ -934,7 +1004,7 @@
             }
         };
 
-        // CRUD TAREFAS (FIRESTORE)
+        // CRUD TAREFAS
         window.saveTarefa = async () => {
             if (!currentUser) return;
 
@@ -1006,7 +1076,7 @@
             }
         };
 
-        // CRUD DISCIPLINAS (FIRESTORE)
+        // CRUD DISCIPLINAS
         window.saveDisciplina = async () => {
             if (!currentUser) return;
 
@@ -1149,6 +1219,7 @@
 
         const DIAS_SEMANA = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
         const MESES_NOME = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+        const MESES_ABREV = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
 
         window.disciplinas = [];
         window.tarefas = [];
@@ -1162,6 +1233,30 @@
             const mapa = { 1: 'Segunda', 2: 'Terça', 3: 'Quarta', 4: 'Quinta', 5: 'Sexta', 6: 'Sábado', 0: 'Domingo' };
             return mapa[index] || 'Segunda';
         }
+
+        // CONTROLE DE ESCALA E PROPORÇÕES DO CALENDÁRIO
+        window.setCalendarScaleUI = function(scaleVal, persist = true) {
+            const clamped = Math.min(Math.max(parseFloat(scaleVal), 0.85), 1.30);
+            document.documentElement.style.setProperty('--cal-scale', clamped);
+            const slider = document.getElementById('cal-scale-slider');
+            if (slider) slider.value = clamped;
+
+            if (persist && window.saveCalendarScaleToFirestore) {
+                window.saveCalendarScaleToFirestore(clamped);
+            }
+        };
+
+        window.updateCalPreset = function(preset) {
+            let scale = 1.0;
+            if (preset === 'sm') scale = 0.85;
+            else if (preset === 'md') scale = 1.0;
+            else if (preset === 'lg') scale = 1.20;
+            window.setCalendarScaleUI(scale, true);
+        };
+
+        window.handleCalScaleChange = function(val) {
+            window.setCalendarScaleUI(val, true);
+        };
 
         function createSlotRowHTML(dia = 'Segunda', inicio = '13:00', fim = '16:30', sala = '') {
             const optionsDia = DIAS_SEMANA.map(d => `<option value="${d}" ${d === dia ? 'selected' : ''}>${d}</option>`).join('');
@@ -1281,7 +1376,7 @@
             document.getElementById('event-tipo').value = 'Prova';
             document.getElementById('event-disciplina-id').value = '';
             document.getElementById('event-data').value = '';
-            document.getElementById('event-horario').value = '08:00';
+            document.getElementById('event-horario').value = '';
             document.getElementById('event-descricao').value = '';
 
             document.getElementById('form-event-title').innerText = 'Novo Evento Acadêmico';
@@ -1305,7 +1400,7 @@
                 document.getElementById('event-data').value = `${yyyy}-${mm}-${dd}`;
             }
 
-            document.getElementById('event-horario').value = ev.horario || '08:00';
+            document.getElementById('event-horario').value = ev.horario || '';
             document.getElementById('event-descricao').value = ev.descricao || '';
 
             document.getElementById('form-event-title').innerText = `Editar Evento: ${ev.titulo}`;
@@ -1318,8 +1413,13 @@
             renderCalendarioUI();
         }
 
+        function resetCalToToday() {
+            currentCalDate = new Date();
+            selectedCalDayStr = new Date().toISOString().split('T')[0];
+            renderCalendarioUI();
+        }
+
         window.renderCalendarioUI = function() {
-            // Atualiza select de disciplinas no formulário de eventos
             const selectEventDisc = document.getElementById('event-disciplina-id');
             if (selectEventDisc) {
                 const cVal = selectEventDisc.value;
@@ -1339,6 +1439,7 @@
             renderCalendarGrid('calendar-days-container', false);
 
             renderSelectedDayEvents();
+            renderProximasDatas();
             lucide.createIcons();
         };
 
@@ -1357,12 +1458,10 @@
             const totalDaysInMonth = new Date(yyyy, mm + 1, 0).getDate();
             const prevMonthDays = new Date(yyyy, mm, 0).getDate();
 
-            // Dias do mês anterior
             for (let x = firstDayIndex; x > 0; x--) {
                 gridContainer.innerHTML += `<div class="cal-day muted">${prevMonthDays - x + 1}</div>`;
             }
 
-            // Dias do mês atual
             for (let day = 1; day <= totalDaysInMonth; day++) {
                 const dStr = `${yyyy}-${String(mm + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 
@@ -1435,12 +1534,82 @@
                             </div>
                         </div>
                         <div style="font-weight: 800; font-size: 0.9rem; color: var(--text-main);">${ev.titulo}</div>
-                        <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">📚 ${discNome} • ⏰ ${ev.horario || '08:00'}</div>
+                        <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">📚 ${discNome} ${ev.horario ? '• ⏰ ' + ev.horario : ''}</div>
                         ${ev.descricao ? `<div style="font-size: 0.72rem; color: var(--text-muted); font-style: italic; margin-top:0.4rem; background:var(--bg-body); padding:0.35rem; border-radius:4px;">💡 ${ev.descricao}</div>` : ''}
                     </div>
                 `;
             });
             lucide.createIcons();
+        }
+
+        // RENDERIZAÇÃO DA SEÇÃO PRÓXIMAS DATAS
+        function renderProximasDatas() {
+            const container = document.getElementById('proximas-datas-list');
+            if (!container) return;
+
+            container.innerHTML = '';
+
+            const hojeInicio = new Date();
+            hojeInicio.setHours(0,0,0,0);
+
+            // Filtrar eventos futuros (incluindo o dia atual)
+            const futuros = window.eventos.filter(e => {
+                if (e.dataEvento && e.dataEvento.toDate) {
+                    const ed = e.dataEvento.toDate();
+                    ed.setHours(0,0,0,0);
+                    return ed >= hojeInicio;
+                }
+                return false;
+            });
+
+            // Ordenação estritamente cronológica
+            futuros.sort((a, b) => {
+                const dA = a.dataEvento.toDate();
+                const dB = b.dataEvento.toDate();
+                if (dA.getTime() !== dB.getTime()) return dA - dB;
+                return (a.horario || '').localeCompare(b.horario || '');
+            });
+
+            if (futuros.length === 0) {
+                container.innerHTML = `<p style="color:var(--text-muted); font-size:0.8rem;">Nenhum evento acadêmico próximo.</p>`;
+                return;
+            }
+
+            futuros.forEach(ev => {
+                const dObj = ev.dataEvento.toDate();
+                const diaNum = String(dObj.getDate()).padStart(2, '0');
+                const mesAbrev = MESES_ABREV[dObj.getMonth()];
+
+                const discObj = window.disciplinas.find(d => d.id === ev.disciplinaId);
+                const discNome = discObj ? discObj.nome : 'Evento Geral';
+                const discCor = discObj ? discObj.cor : 'var(--primary)';
+
+                let badgeClass = 'badge-tipo-outro';
+                if (ev.tipo === 'Prova') badgeClass = 'badge-tipo-prova';
+                else if (ev.tipo === 'Seminário') badgeClass = 'badge-tipo-seminario';
+                else if (ev.tipo === 'Trabalho') badgeClass = 'badge-tipo-trabalho';
+                else if (ev.tipo === 'Apresentação') badgeClass = 'badge-tipo-apresentacao';
+
+                container.innerHTML += `
+                    <div class="next-date-card" style="border-left-color: ${discCor};">
+                        <div style="display: flex; gap: 0.85rem; align-items: center;">
+                            <div class="next-date-badge">
+                                <div class="next-date-day">${diaNum}</div>
+                                <div class="next-date-month">${mesAbrev}</div>
+                            </div>
+                            <div>
+                                <div style="display: flex; gap: 0.4rem; align-items: center; margin-bottom: 0.2rem;">
+                                    <span class="badge-info ${badgeClass}">${ev.tipo}</span>
+                                    <span style="font-size: 0.7rem; font-weight: 700; color: ${discCor};">${discNome}</span>
+                                </div>
+                                <div style="font-weight: 800; font-size: 0.88rem; color: var(--text-main); line-height: 1.2;">${ev.titulo}</div>
+                                ${ev.horario ? `<div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 600; margin-top: 2px;">⏰ Horário: ${ev.horario}</div>` : ''}
+                                ${ev.descricao ? `<div style="font-size: 0.7rem; color: var(--text-muted); font-style: italic; margin-top: 3px;">💡 ${ev.descricao}</div>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
         }
 
         window.renderTarefasUI = function() {
